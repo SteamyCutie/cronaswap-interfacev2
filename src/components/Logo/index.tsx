@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react'
 import { IconProps } from 'react-feather'
 import Image from '../Image'
 import { classNames } from '../../functions'
-import { cloudinaryLoader } from '../../functions/cloudinary'
+// import { cloudinaryLoader } from '../../functions/cloudinary'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -24,7 +24,7 @@ const Logo: FC<LogoProps> = ({ srcs, width, height, style, alt = '', className, 
     <div className="rounded-full" style={{ width, height, ...style }}>
       <Image
         src={src || 'https://raw.githubusercontent.com/sushiswap/icons/master/token/unknown.png'}
-        loader={cloudinaryLoader}
+        // loader={cloudinaryLoader}
         onError={() => {
           if (src) BAD_SRCS[src] = true
           refresh((i) => i + 1)

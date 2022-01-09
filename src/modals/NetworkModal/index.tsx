@@ -34,28 +34,28 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://mainnet.infura.io/v3'],
     blockExplorerUrls: ['https://etherscan.com'],
   },
-  
+
   [ChainId.CRONOS]: {
-    chainId: '0x7A',
-    chainName: 'Fuse',
+    chainId: '0x19',
+    chainName: 'Cronos Mainnet',
     nativeCurrency: {
-      name: 'Fuse',
-      symbol: 'FUSE',
+      name: 'Cro',
+      symbol: 'CRO',
       decimals: 18,
     },
-    rpcUrls: ['https://rpc.fuse.io'],
-    blockExplorerUrls: ['https://explorer.fuse.io'],
+    rpcUrls: ['https://evm-cronos.crypto.org'],
+    blockExplorerUrls: ['https://cronoscan.com'],
   },
   [ChainId.CRONOS_TESTNET]: {
-    chainId: '0x28',
-    chainName: 'Telos',
+    chainId: '0x152',
+    chainName: 'Cronos Testnet',
     nativeCurrency: {
-      name: 'Telos',
-      symbol: 'TLOS',
+      name: 'tCro',
+      symbol: 'TCRO',
       decimals: 18,
     },
-    rpcUrls: ['https://mainnet.telos.net/evm'],
-    blockExplorerUrls: ['https://rpc1.us.telos.net/v2/explore'],
+    rpcUrls: ['https://cronos-testnet-3.crypto.org:8545'],
+    blockExplorerUrls: ['https://cronos.crypto.org/explorer/testnet3'],
   },
 }
 
@@ -70,16 +70,12 @@ export default function NetworkModal(): JSX.Element | null {
     <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={672}>
       <ModalHeader onClose={toggleNetworkModal} title="Select a Network" />
       <div className="mb-6 text-lg text-primary">
-        You are currently browsing <span className="font-bold text-pink">SUSHI</span>
-        <br /> on the <span className="font-bold text-blue">{NETWORK_LABEL[chainId]}</span> network
+        You are currently browsing <span className="font-bold text-pink">CRONA</span> on the{' '}
+        <span className="font-bold text-blue">{NETWORK_LABEL[chainId]}</span> network
       </div>
 
       <div className="grid grid-flow-row-dense grid-cols-1 gap-5 overflow-y-auto md:grid-cols-2">
-        {[
-          ChainId.ETHEREUM,
-          ChainId.CRONOS,
-          ChainId.CRONOS_TESTNET,
-        ].map((key: ChainId, i: number) => {
+        {[ChainId.CRONOS, ChainId.CRONOS_TESTNET].map((key: ChainId, i: number) => {
           if (chainId === key) {
             return (
               <button key={i} className="w-full col-span-1 p-px rounded bg-gradient-to-r from-blue to-pink">

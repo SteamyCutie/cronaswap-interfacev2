@@ -1,4 +1,4 @@
-import { ChainId, SUSHI_ADDRESS } from '@cronaswap/core-sdk'
+import { ChainId, CRONA_ADDRESS } from '@cronaswap/core-sdk'
 import React, { useMemo } from 'react'
 import ScrollableGraph from '../../components/ScrollableGraph'
 import AnalyticsContainer from '../../features/analytics/AnalyticsContainer'
@@ -51,7 +51,7 @@ export default function XSushi() {
     variables: { block: block1d, where: { id: XSUSHI.address.toLowerCase() } },
   })?.[0]
 
-  const sushiDayData = useTokenDayData({ token: SUSHI_ADDRESS['1'], chainId: ChainId.ETHEREUM })
+  const sushiDayData = useTokenDayData({ token: CRONA_ADDRESS['1'], chainId: ChainId.ETHEREUM })
 
   const bar = useBar()
 

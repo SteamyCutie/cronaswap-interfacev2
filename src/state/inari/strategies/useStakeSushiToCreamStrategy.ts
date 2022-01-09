@@ -1,5 +1,5 @@
 import { CRXSUSHI, SUSHI, XSUSHI } from '../../../config/tokens'
-import { ChainId, CurrencyAmount, SUSHI_ADDRESS, Token } from '@cronaswap/core-sdk'
+import { ChainId, CurrencyAmount, CRONA_ADDRESS, Token } from '@cronaswap/core-sdk'
 import { StrategyGeneralInfo, StrategyHook, StrategyTokenDefinitions } from '../types'
 import { useApproveCallback } from '../../../hooks/useApproveCallback'
 import { useInariContract, useZenkoContract } from '../../../hooks/useContract'
@@ -29,7 +29,7 @@ export const GENERAL = (i18n: I18n): StrategyGeneralInfo => ({
 export const tokenDefinitions: StrategyTokenDefinitions = {
   inputToken: {
     chainId: ChainId.ETHEREUM,
-    address: SUSHI_ADDRESS[ChainId.ETHEREUM],
+    address: CRONA_ADDRESS[ChainId.ETHEREUM],
     decimals: 18,
     symbol: 'SUSHI',
   },

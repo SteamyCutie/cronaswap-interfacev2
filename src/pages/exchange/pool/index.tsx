@@ -89,7 +89,7 @@ export default function Pool() {
   return (
     <Container id="pool-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="2xl">
       <Head>
-        <title>Pool | Sushi</title>
+        <title>Pool | CronaSwap</title>
         <meta
           key="description"
           name="description"
@@ -146,7 +146,7 @@ export default function Pool() {
           <div className={classNames('grid gap-4', migrationSupported ? 'grid-cols-3' : 'grid-cols-2')}>
             <Button
               id="add-pool-button"
-              color="gradient"
+              color="blue"
               className="grid items-center justify-center grid-flow-col gap-2 whitespace-nowrap"
               onClick={() => router.push(`/add/${currencyId(NATIVE[chainId])}`)}
             >

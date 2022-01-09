@@ -392,7 +392,7 @@ export default function Swap() {
   return (
     <Container id="swap-page" className="py-4 md:py-8 lg:py-24">
       <Head>
-        <title>{i18n._(t`SushiSwap`)} | Sushi</title>
+        <title>{i18n._(t`SushiSwap`)} | CronaSwap</title>
         <meta
           key="description"
           name="description"
@@ -555,7 +555,7 @@ export default function Swap() {
             ) : !account ? (
               <Web3Connect size="lg" color="blue" className="w-full" />
             ) : showWrap ? (
-              <Button color="gradient" size="lg" disabled={Boolean(wrapInputError)} onClick={onWrap}>
+              <Button color="blue" size="lg" disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP
                     ? i18n._(t`Wrap`)

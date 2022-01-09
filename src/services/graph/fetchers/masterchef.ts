@@ -15,12 +15,7 @@ import { getTokenSubset } from './exchange'
 import { request } from 'graphql-request'
 
 export const MINICHEF = {
-  [ChainId.MATIC]: 'sushiswap/matic-minichef',
-  [ChainId.XDAI]: 'matthewlilley/xdai-minichef',
-  [ChainId.HARMONY]: 'sushiswap/harmony-minichef',
-  [ChainId.ARBITRUM]: 'matthewlilley/arbitrum-minichef',
-  [ChainId.CELO]: 'sushiswap/celo-minichef',
-  [ChainId.MOONRIVER]: 'sushiswap/moonriver-minichef',
+  [ChainId.CRONOS]: 'sushiswap/matic-minichef',
 }
 
 export const miniChef = async (query, chainId = ChainId.ETHEREUM, variables = undefined) =>

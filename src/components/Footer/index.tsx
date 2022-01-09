@@ -33,54 +33,13 @@ const Footer = () => {
             </div>
           </ExternalLink>
         )}
-        {chainId && chainId === ChainId.MATIC && (
+        {chainId && chainId === ChainId.CRONOS && (
           <ExternalLink
-            id={`polygon-bridge-link`}
+            id={`cronos-bridge-link`}
             href="https://wallet.matic.network/bridge/"
             className="text-low-emphesis"
           >
             {i18n._(t`Matic Bridge`)}
-          </ExternalLink>
-        )}
-        {chainId && chainId === ChainId.CELO && (
-          <ExternalLink id={`celo-bridge-link`} href="https://app.optics.xyz/" className="text-low-emphesis">
-            {i18n._(t`Celo Bridge`)}
-          </ExternalLink>
-        )}
-        {chainId && chainId === ChainId.HARMONY && (
-          <ExternalLink
-            id={`harmony-bridge-link`}
-            href=" https://bridge.harmony.one/tokens"
-            className="text-low-emphesis"
-          >
-            {i18n._(t`Harmony Bridge`)}
-          </ExternalLink>
-        )}
-        {chainId && chainId === ChainId.XDAI && (
-          <ExternalLink id={`xdai-bridge-link`} href=" https://omni.xdaichain.com/" className="text-low-emphesis">
-            {i18n._(t`xDai Bridge`)}
-          </ExternalLink>
-        )}
-
-        {chainId && chainId === ChainId.PALM && (
-          <ExternalLink id={`palm-bridge-link`} href=" https://app.palm.io/bridge" className="text-low-emphesis">
-            {i18n._(t`Palm Bridge`)}
-          </ExternalLink>
-        )}
-
-        {chainId && chainId === ChainId.ARBITRUM && (
-          <ExternalLink id={`arbitrum-bridge-link`} href=" https://bridge.arbitrum.io/" className="text-low-emphesis">
-            {i18n._(t`Arbitrum Bridge`)}
-          </ExternalLink>
-        )}
-
-        {chainId && chainId === ChainId.MOONRIVER && (
-          <ExternalLink
-            id={`moonriver-bridge-link`}
-            href="https://movr.anyswap.exchange/#/bridge"
-            className="text-low-emphesis"
-          >
-            {i18n._(t`Moonriver Bridge`)}
           </ExternalLink>
         )}
         <Polling />

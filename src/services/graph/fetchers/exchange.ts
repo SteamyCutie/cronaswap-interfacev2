@@ -19,17 +19,7 @@ import { pager } from '../functions'
 
 export const EXCHANGE = {
   [ChainId.ETHEREUM]: 'sushiswap/exchange',
-  [ChainId.XDAI]: 'sushiswap/xdai-exchange',
-  [ChainId.MATIC]: 'sushiswap/matic-exchange',
-  [ChainId.FANTOM]: 'sushiswap/fantom-exchange',
-  [ChainId.BSC]: 'sushiswap/bsc-exchange',
-  [ChainId.HARMONY]: 'sushiswap/harmony-exchange',
-  [ChainId.AVALANCHE]: 'sushiswap/avalanche-exchange',
-  [ChainId.CELO]: 'jiro-ono/sushitestsubgraph',
-  [ChainId.ARBITRUM]: 'sushiswap/arbitrum-exchange',
-  [ChainId.MOONRIVER]: 'sushiswap/moonriver-exchange',
-  [ChainId.OKEX]: 'okex-exchange/oec',
-  [ChainId.HECO]: 'heco-exchange/heco',
+  [ChainId.CRONOS]: 'sushiswap/exchange',
 }
 
 export const exchange = async (chainId = ChainId.ETHEREUM, query, variables = {}) =>

@@ -39,7 +39,7 @@ function Balances() {
   return (
     <>
       <Head>
-        <title>Balances | Sushi</title>
+        <title>Balances | CronaSwap</title>
         <meta key="description" name="description" content="" />
       </Head>
       <Card

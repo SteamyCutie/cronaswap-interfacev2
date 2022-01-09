@@ -104,7 +104,7 @@ export function ButtonConfirmed({
       />
     )
   } else {
-    return <Button color={disabled ? 'gray' : 'gradient'} size="lg" disabled={disabled} {...rest} />
+    return <Button color={disabled ? 'gray' : 'blue'} size="lg" disabled={disabled} {...rest} />
   }
 }
 
@@ -119,6 +119,6 @@ export function ButtonError({
   if (error) {
     return <Button color="red" size="lg" {...rest} />
   } else {
-    return <Button color={disabled ? 'gray' : 'gradient'} disabled={disabled} size="lg" {...rest} />
+    return <Button color={disabled ? 'gray' : 'blue'} disabled={disabled} size="lg" {...rest} />
   }
 }

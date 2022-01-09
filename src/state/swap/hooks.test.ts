@@ -1,12 +1,12 @@
 import { parse } from 'qs'
 
-import { ChainId, SUSHI_ADDRESS } from '@cronaswap/core-sdk'
+import { ChainId, CRONA_ADDRESS } from '@cronaswap/core-sdk'
 
 import { Field } from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 describe('hooks', () => {
-  const sushiAddress = SUSHI_ADDRESS[ChainId.ETHEREUM]
+  const sushiAddress = CRONA_ADDRESS[ChainId.ETHEREUM]
   describe('#queryParametersToSwapState', () => {
     test('ETH to DAI', () => {
       expect(

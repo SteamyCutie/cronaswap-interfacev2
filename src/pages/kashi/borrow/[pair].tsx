@@ -48,7 +48,7 @@ function Pair() {
   return (
     <>
       <Head>
-        <title>{i18n._(t`Borrow ${pair?.asset?.symbol}-${pair?.collateral?.symbol}`)} | Sushi</title>
+        <title>{i18n._(t`Borrow ${pair?.asset?.symbol}-${pair?.collateral?.symbol}`)} | CronaSwap</title>
         <meta
           key="description"
           name="description"

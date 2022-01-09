@@ -1,5 +1,5 @@
 import { AXSUSHI, SUSHI } from '../../../config/tokens'
-import { ChainId, SUSHI_ADDRESS } from '@cronaswap/core-sdk'
+import { ChainId, CRONA_ADDRESS } from '@cronaswap/core-sdk'
 import { StrategyGeneralInfo, StrategyHook, StrategyTokenDefinitions } from '../types'
 import { useEffect, useMemo } from 'react'
 import { I18n } from '@lingui/core'
@@ -24,9 +24,9 @@ export const GENERAL = (i18n: I18n): StrategyGeneralInfo => ({
 export const tokenDefinitions: StrategyTokenDefinitions = {
   inputToken: {
     chainId: ChainId.ETHEREUM,
-    address: SUSHI_ADDRESS[ChainId.ETHEREUM],
+    address: CRONA_ADDRESS[ChainId.ETHEREUM],
     decimals: 18,
-    symbol: 'SUSHI',
+    symbol: 'CRONA',
   },
   outputToken: {
     chainId: ChainId.ETHEREUM,

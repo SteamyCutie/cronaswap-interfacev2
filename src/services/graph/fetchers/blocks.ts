@@ -7,17 +7,7 @@ import { request } from 'graphql-request'
 
 export const BLOCKS = {
   [ChainId.ETHEREUM]: 'blocklytics/ethereum-blocks',
-  [ChainId.XDAI]: 'matthewlilley/xdai-blocks',
-  [ChainId.MATIC]: 'matthewlilley/polygon-blocks',
-  [ChainId.FANTOM]: 'matthewlilley/fantom-blocks',
-  [ChainId.BSC]: 'matthewlilley/bsc-blocks',
-  [ChainId.HARMONY]: 'sushiswap/harmony-blocks',
-  [ChainId.AVALANCHE]: 'matthewlilley/avalanche-blocks',
-  [ChainId.CELO]: 'ubeswap/celo-blocks',
-  [ChainId.ARBITRUM]: 'sushiswap/arbitrum-blocks',
-  [ChainId.OKEX]: 'okexchain-blocks/oec',
-  [ChainId.HECO]: 'hecoblocks/heco',
-  [ChainId.MOONRIVER]: 'sushiswap/moonriver-blocks',
+  [ChainId.CRONOS]: 'cronaswap/blocks',
 }
 
 export const fetcher = async (chainId = ChainId.ETHEREUM, query, variables = undefined) => {

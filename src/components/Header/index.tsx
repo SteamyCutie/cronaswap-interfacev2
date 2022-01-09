@@ -1,4 +1,4 @@
-import { ChainId, Currency, NATIVE, SUSHI_ADDRESS } from '@cronaswap/core-sdk'
+import { ChainId, Currency, NATIVE, CRONA_ADDRESS } from '@cronaswap/core-sdk'
 import { Feature, featureEnabled } from '../../functions/feature'
 import React from 'react'
 
@@ -96,6 +96,17 @@ function AppBar(): JSX.Element {
                           </a>
                         </NavLink>
                       )}
+
+                      {chainId && featureEnabled(Feature.BOOST, chainId) && (
+                        <NavLink href={'/boost'}>
+                          <a
+                            id={`boost-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Boost`)}
+                          </a>
+                        </NavLink>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -148,20 +159,20 @@ function AppBar(): JSX.Element {
                       </>
                     )}
 
-                    {chainId && chainId in SUSHI_ADDRESS && library && library.provider.isMetaMask && (
+                    {chainId && chainId in CRONA_ADDRESS && library && library.provider.isMetaMask && (
                       <>
-                        <QuestionHelper text={i18n._(t`Add SUSHI to your MetaMask wallet`)}>
+                        <QuestionHelper text={i18n._(t`Add CRONA to your MetaMask wallet`)}>
                           <div
                             className="hidden rounded-md cursor-pointer sm:inline-flex bg-dark-900 hover:bg-dark-800 p-0.5"
                             onClick={() => {
                               const params: any = {
                                 type: 'ERC20',
                                 options: {
-                                  address: SUSHI_ADDRESS[chainId],
-                                  symbol: 'SUSHI',
+                                  address: CRONA_ADDRESS[chainId],
+                                  symbol: 'CRONA',
                                   decimals: 18,
                                   image:
-                                    'https://raw.githubusercontent.com/sushiswap/logos/main/network/ethereum/0x6B3595068778DD592e39A122f4f5a5cF09C90fE2.jpg',
+                                    'https://raw.githubusercontent.com/cronaswap/default-token-list/main/tokens/assets/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png',
                                 },
                               }
                               if (library && library.provider.isMetaMask && library.provider.request) {
@@ -317,6 +328,17 @@ function AppBar(): JSX.Element {
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`Stake`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.BOOST, chainId) && (
+                  <Link href={'/boost'}>
+                    <a
+                      id={`boost-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`Boost`)}
                     </a>
                   </Link>
                 )}

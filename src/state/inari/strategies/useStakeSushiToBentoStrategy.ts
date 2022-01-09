@@ -1,4 +1,4 @@
-import { ChainId, SUSHI_ADDRESS } from '@cronaswap/core-sdk'
+import { ChainId, CRONA_ADDRESS } from '@cronaswap/core-sdk'
 import { SUSHI, XSUSHI } from '../../../config/tokens'
 import { StrategyGeneralInfo, StrategyHook, StrategyTokenDefinitions } from '../types'
 import { useEffect, useMemo } from 'react'
@@ -28,7 +28,7 @@ export const GENERAL = (i18n: I18n): StrategyGeneralInfo => ({
 export const tokenDefinitions: StrategyTokenDefinitions = {
   inputToken: {
     chainId: ChainId.ETHEREUM,
-    address: SUSHI_ADDRESS[ChainId.ETHEREUM],
+    address: CRONA_ADDRESS[ChainId.ETHEREUM],
     decimals: 18,
     symbol: 'SUSHI',
   },
@@ -61,7 +61,7 @@ const useStakeSushiToBentoStrategy = (): StrategyHook => {
     if (!balances) return
 
     setBalances({
-      inputTokenBalance: balances[SUSHI_ADDRESS[ChainId.ETHEREUM]],
+      inputTokenBalance: balances[CRONA_ADDRESS[ChainId.ETHEREUM]],
       outputTokenBalance: tryParseAmount(xSushiBentoBalance?.value?.toFixed(18) || '0', XSUSHI),
     })
   }, [balances, setBalances, xSushiBentoBalance?.value])

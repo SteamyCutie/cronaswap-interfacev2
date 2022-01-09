@@ -1429,10 +1429,10 @@
   dependencies:
     chalk "^4.0.0"
 
-"@cronaswap/core-sdk@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.0.tgz#1046d335ce8f3df4aa8635a5960ea9b9cbcd89f7"
-  integrity sha512-xCI8BhnOpy8bdlIF4YL5gl8psVYFanRk0iwpQrMOaMAsDCeVzrN/8eFgM/07zg/mAjVMU1MAjtmytY4vPsmx5Q==
+"@cronaswap/core-sdk@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.1.tgz#1e1c81f5a3ee7e8500a9f793a031204543e28dc0"
+  integrity sha512-YvQsfexBJWp1+qfIK6GBR5zYYGMHshpQ4TUyqLOilU9cbt+fjYsyxa4Qf4AdCF0Ob9sFn62V2dY4iuDLQZfYXQ==
   dependencies:
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.0"
@@ -1445,10 +1445,10 @@
     tiny-warning "^1.0.0"
     toformat "^2.0.0"
 
-"@cronaswap/default-token-list@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.0.tgz#d1db57345eb848b428656471cdace88f190ca45a"
-  integrity sha512-Zf2LkupRkuu9QiyuFr1pQtxk4EKQZ6r+kUfhm9vzaOZclgj+UqkxfMP9QL7qblUFEh1opoVUCyeBfKk8wPZnuA==
+"@cronaswap/default-token-list@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.6.tgz#bb8fcf7e6bb5931468f8d159d81398876b9684de"
+  integrity sha512-XCob4ntUuhsMpLQMfwfN3RRVA4uMs3yZwTcFVZqubmg+gdpdjRFjV9Wof2KA8IriRM8g4Su7WtPq7+RooEPXOg==
 
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
@@ -1924,6 +1924,11 @@
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@fontsource/dm-sans/-/dm-sans-4.5.0.tgz#0dae7ab3563b3ffd47181a3fa4c9c6a33fb04c5e"
   integrity sha512-GKsjzK7NU6G1NHAxXRCquZQmZSvj3ah5AMR4N6PU2YpshIpr+NLIwYc+SJty+ZJ4Btysr9KN40+X4ng34heGjw==
+
+"@fontsource/kumbh-sans@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/kumbh-sans/-/kumbh-sans-4.5.1.tgz#06a6cf39ede65b966b7d262862c09f7dc97fc7fb"
+  integrity sha512-L/mJX4o3CdIHazjc6p6+mj2m5ndLjQLHTZz5q7fHOJ2K5cUoIELtkVpHPOW4ds23Hesi8DFqKRnEHHtS9nh19A==
 
 "@gnosis.pm/safe-apps-provider@0.9.0":
   version "0.9.0"

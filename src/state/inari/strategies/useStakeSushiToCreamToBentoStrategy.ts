@@ -1,5 +1,5 @@
 import { CRXSUSHI, SUSHI } from '../../../config/tokens'
-import { ChainId, SUSHI_ADDRESS, Token } from '@cronaswap/core-sdk'
+import { ChainId, CRONA_ADDRESS, Token } from '@cronaswap/core-sdk'
 import { StrategyGeneralInfo, StrategyHook, StrategyTokenDefinitions } from '../types'
 import { e10, tryParseAmount } from '../../../functions'
 import { useActiveWeb3React } from '../../../services/web3'
@@ -29,7 +29,7 @@ export const GENERAL = (i18n: I18n): StrategyGeneralInfo => ({
 export const tokenDefinitions: StrategyTokenDefinitions = {
   inputToken: {
     chainId: ChainId.ETHEREUM,
-    address: SUSHI_ADDRESS[ChainId.ETHEREUM],
+    address: CRONA_ADDRESS[ChainId.ETHEREUM],
     decimals: 18,
     symbol: 'SUSHI',
   },

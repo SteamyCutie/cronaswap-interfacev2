@@ -431,7 +431,7 @@ export default function Zap() {
   return (
     <Container id="remove-liquidity-page" className="py-4 space-y-4 md:py-12 lg:py-24" maxWidth="2xl">
       <Head>
-        <title>Remove Liquidity | Sushi</title>
+        <title>Remove Liquidity | CronaSwap</title>
         <meta key="description" name="description" content="Remove liquidity from the SushiSwap AMM" />
       </Head>
 

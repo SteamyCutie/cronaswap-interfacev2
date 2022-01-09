@@ -47,7 +47,7 @@ const Strategies = () => {
   return (
     <>
       <Head>
-        <title>Vesting | Sushi</title>
+        <title>Vesting | CronaSwap</title>
         <meta name="description" content="Vesting..." />
       </Head>
       <Container maxWidth="5xl" className="flex flex-col gap-8 px-4 py-8">

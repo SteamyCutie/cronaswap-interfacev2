@@ -312,7 +312,7 @@ export default function Add() {
   return (
     <>
       <Head>
-        <title>Add Liquidity | Sushi</title>
+        <title>Add Liquidity | CronaSwap</title>
         <meta
           key="description"
           name="description"
@@ -450,7 +450,7 @@ export default function Add() {
               )}
 
               {addIsUnsupported ? (
-                <Button color="gradient" size="lg" disabled>
+                <Button color="blue" size="lg" disabled>
                   {i18n._(t`Unsupported Asset`)}
                 </Button>
               ) : !account ? (
@@ -466,7 +466,7 @@ export default function Add() {
                       <RowBetween>
                         {approvalA !== ApprovalState.APPROVED && (
                           <Button
-                            color="gradient"
+                            color="blue"
                             size="lg"
                             onClick={approveACallback}
                             disabled={approvalA === ApprovalState.PENDING}
@@ -483,7 +483,7 @@ export default function Add() {
                         )}
                         {approvalB !== ApprovalState.APPROVED && (
                           <Button
-                            color="gradient"
+                            color="blue"
                             size="lg"
                             onClick={approveBCallback}
                             disabled={approvalB === ApprovalState.PENDING}

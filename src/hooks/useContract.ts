@@ -6,7 +6,6 @@ import {
   ChainId,
   ENS_REGISTRAR_ADDRESS,
   FACTORY_ADDRESS,
-  KASHI_ADDRESS,
   MAKER_ADDRESS,
   MASTERCHEF_ADDRESS,
   MASTERCHEF_V2_ADDRESS,
@@ -14,7 +13,7 @@ import {
   MINICHEF_ADDRESS,
   MULTICALL2_ADDRESS,
   ROUTER_ADDRESS,
-  SUSHI_ADDRESS,
+  CRONA_ADDRESS,
   TIMELOCK_ADDRESS,
   WNATIVE_ADDRESS,
 } from '@cronaswap/core-sdk'
@@ -135,7 +134,7 @@ export function useMulticall2Contract() {
 
 export function useSushiContract(withSignerIfPossible = true): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && SUSHI_ADDRESS[chainId], SUSHI_ABI, withSignerIfPossible)
+  return useContract(chainId && CRONA_ADDRESS[chainId], SUSHI_ABI, withSignerIfPossible)
 }
 
 export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {

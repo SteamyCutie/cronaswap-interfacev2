@@ -321,7 +321,7 @@ const PoolDeposit = ({ currencyA, currencyB }) => {
             <div className="flex space-x-4">
               {approvalA !== ApprovalState.APPROVED && (
                 <Button
-                  color="gradient"
+                  color="blue"
                   size="lg"
                   onClick={approveACallback}
                   disabled={approvalA === ApprovalState.PENDING}
@@ -338,7 +338,7 @@ const PoolDeposit = ({ currencyA, currencyB }) => {
               )}
               {approvalB !== ApprovalState.APPROVED && (
                 <Button
-                  color="gradient"
+                  color="blue"
                   size="lg"
                   onClick={approveBCallback}
                   disabled={approvalB === ApprovalState.PENDING}
