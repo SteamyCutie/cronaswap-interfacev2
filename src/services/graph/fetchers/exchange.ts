@@ -19,7 +19,7 @@ import { pager } from '../functions'
 
 export const EXCHANGE = {
   [ChainId.ETHEREUM]: 'sushiswap/exchange',
-  [ChainId.CRONOS]: 'sushiswap/exchange',
+  [ChainId.CRONOS]: 'cronaswap/exchange',
 }
 
 export const exchange = async (chainId = ChainId.ETHEREUM, query, variables = {}) =>

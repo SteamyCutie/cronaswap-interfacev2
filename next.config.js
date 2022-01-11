@@ -45,52 +45,25 @@ const nextConfig = {
         destination: '/swap',
         permanent: true,
       },
-
-      // {
-      //   source: '/yield',
-      //   destination: '/yield',
-      //   permanent: true,
-      // },
-      {
-        source: '/bento',
-        destination: '/bentobox',
-        permanent: true,
-      },
-      {
-        source: '/bento/kashi',
-        destination: '/lend',
-        permanent: true,
-      },
-      // Analytics
-      {
-        source: '/analytics',
-        destination: '/analytics/dashboard',
-        permanent: true,
-      },
-      {
-        source: '/portfolio',
-        destination: '/analytics/portfolio',
-        permanent: true,
-      },
     ]
   },
   async rewrites() {
     return [
       {
-        source: '/zap',
-        destination: '/exchange/zap',
-      },
-      {
         source: '/yield',
-        destination: '/yield',
+        destination: '/farm',
       },
       {
         source: '/stake',
-        destination: '/bar',
+        destination: '/stake',
       },
       {
         source: '/boost',
         destination: '/boost',
+      },
+      {
+        source: '/zap',
+        destination: '/exchange/zap',
       },
       {
         source: '/add/:token*',
@@ -113,18 +86,6 @@ const nextConfig = {
         destination: '/exchange/swap/:token*',
       },
       {
-        source: '/limit-order',
-        destination: '/exchange/limit-order',
-      },
-      {
-        source: '/limit-order/:token*',
-        destination: '/exchange/limit-order/:token*',
-      },
-      {
-        source: '/open-order',
-        destination: '/exchange/open-order',
-      },
-      {
         source: '/migrate',
         destination: '/exchange/migrate',
       },
@@ -135,40 +96,6 @@ const nextConfig = {
       {
         source: '/find',
         destination: '/exchange/find',
-      },
-      // Kashi
-      {
-        source: '/borrow',
-        destination: '/kashi/borrow',
-      },
-      {
-        source: '/borrow/:token*',
-        destination: '/kashi/borrow/:token*',
-      },
-      {
-        source: '/lend',
-        destination: '/kashi/lend',
-      },
-      {
-        source: '/lend/:token*',
-        destination: '/kashi/lend/:token*',
-      },
-      // Onsen
-      // {
-      //   source: '/farm',
-      //   destination: '/onsen',
-      // },
-      // {
-      //   source: '/farm/:type*',
-      //   destination: '/onsen/:type*',
-      // },
-      {
-        source: '/me',
-        destination: '/user',
-      },
-      {
-        source: '/balances',
-        destination: '/user/balances',
       },
     ]
   },

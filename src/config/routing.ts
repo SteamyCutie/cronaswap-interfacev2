@@ -1,4 +1,4 @@
-import { AMPL, DAI, NFTX, OHM, STETH, SUSHI, USDC, USDT, WBTC, CRONOS } from './tokens'
+import { CRONA, ETHEREUM, CRONOS } from './tokens'
 
 // a list of tokens by chain
 import { ChainId, Token, WNATIVE } from '@cronaswap/core-sdk'
@@ -20,14 +20,11 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 
   [ChainId.ETHEREUM]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.ETHEREUM],
-    DAI,
-    USDC,
-    USDT,
-    WBTC,
-    NFTX,
-    STETH,
-    OHM,
-    SUSHI[ChainId.ETHEREUM],
+    ETHEREUM.DAI,
+    ETHEREUM.USDC,
+    ETHEREUM.USDT,
+    ETHEREUM.WBTC,
+    CRONA[ChainId.ETHEREUM],
   ],
   [ChainId.CRONOS]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.CRONOS],
@@ -36,6 +33,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     CRONOS.USDT,
     CRONOS.WBTC,
     CRONOS.WETH,
+    CRONA[ChainId.CRONOS],
   ],
 }
 
@@ -58,14 +56,21 @@ export const ADDITIONAL_BASES: {
 export const CUSTOM_BASES: {
   [chainId: number]: { [tokenAddress: string]: Token[] }
 } = {
-  [ChainId.ETHEREUM]: { [AMPL.address]: [DAI, WNATIVE[ChainId.ETHEREUM]] },
+  // [ChainId.ETHEREUM]: { [AMPL.address]: [DAI, WNATIVE[ChainId.ETHEREUM]] },
 }
 
 /**
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainTokenList = {
-  [ChainId.ETHEREUM]: [...WRAPPED_NATIVE_ONLY[ChainId.ETHEREUM], DAI, USDC, USDT, WBTC, OHM, SUSHI[ChainId.ETHEREUM]],
+  [ChainId.ETHEREUM]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.ETHEREUM],
+    ETHEREUM.DAI,
+    ETHEREUM.USDC,
+    ETHEREUM.USDT,
+    ETHEREUM.WBTC,
+    CRONA[ChainId.ETHEREUM],
+  ],
   [ChainId.CRONOS]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.CRONOS],
     CRONOS.USDC,
@@ -73,14 +78,20 @@ export const COMMON_BASES: ChainTokenList = {
     CRONOS.DAI,
     CRONOS.WETH,
     CRONOS.USDT,
-    SUSHI[ChainId.CRONOS],
+    CRONA[ChainId.CRONOS],
   ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
-  [ChainId.ETHEREUM]: [...WRAPPED_NATIVE_ONLY[ChainId.ETHEREUM], DAI, USDC, USDT, WBTC, OHM],
+  [ChainId.ETHEREUM]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.ETHEREUM],
+    ETHEREUM.DAI,
+    ETHEREUM.USDC,
+    ETHEREUM.USDT,
+    ETHEREUM.WBTC,
+  ],
   [ChainId.CRONOS]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.CRONOS],
     CRONOS.USDC,
@@ -95,12 +106,12 @@ export const PINNED_PAIRS: {
   readonly [chainId in ChainId]?: [Token, Token][]
 } = {
   [ChainId.ETHEREUM]: [
-    [SUSHI[ChainId.ETHEREUM], WNATIVE[ChainId.ETHEREUM]],
-    [USDC, USDT],
-    [DAI, USDT],
+    [CRONA[ChainId.ETHEREUM], WNATIVE[ChainId.ETHEREUM]],
+    [ETHEREUM.USDC, ETHEREUM.USDT],
+    [ETHEREUM.DAI, ETHEREUM.USDT],
   ],
   [ChainId.CRONOS]: [
-    [SUSHI[ChainId.CRONOS], WNATIVE[ChainId.CRONOS]],
+    [CRONA[ChainId.CRONOS], WNATIVE[ChainId.CRONOS]],
     [CRONOS.USDC, CRONOS.USDT],
     [CRONOS.DAI, CRONOS.USDT],
   ],

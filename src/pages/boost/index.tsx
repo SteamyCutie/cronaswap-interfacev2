@@ -1,7 +1,7 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { BAR_ADDRESS, ZERO } from '@cronaswap/core-sdk'
 import React, { useState } from 'react'
-import { SUSHI, XSUSHI } from '../../config/tokens'
+import { CRONA, XCRONA } from '../../config/tokens'
 import Button from '../../components/Button'
 import { ChainId } from '@cronaswap/core-sdk'
 import Container from '../../components/Container'
@@ -14,12 +14,8 @@ import { t } from '@lingui/macro'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
 import { useLingui } from '@lingui/react'
-import useSushiBar from '../../hooks/useSushiBar'
-import { useBar, useBlock, useFactory, useNativePrice, useSushiPrice, useTokens } from '../../services/graph'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { useWalletModalToggle } from '../../state/application/hooks'
 import { classNames } from '../../functions'
-import { aprToApy } from '../../functions/convert/apyApr'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -53,23 +49,17 @@ const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matt
 export default function Stake() {
   const { i18n } = useLingui()
   const { account } = useActiveWeb3React()
-  const sushiBalance = useTokenBalance(account ?? undefined, SUSHI[ChainId.ETHEREUM])
-  const xSushiBalance = useTokenBalance(account ?? undefined, XSUSHI)
-
-  const { enter, leave } = useSushiBar()
+  const sushiBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.ETHEREUM])
+  const xSushiBalance = useTokenBalance(account ?? undefined, XCRONA)
 
   const walletConnected = !!account
-  const toggleWalletModal = useWalletModalToggle()
 
   const [activeTab, setActiveTab] = useState(0)
-  const [modalOpen, setModalOpen] = useState(false)
 
   const [input, setInput] = useState<string>('')
   const [usingBalance, setUsingBalance] = useState(false)
 
   const balance = activeTab === 0 ? sushiBalance : xSushiBalance
-
-  const formattedBalance = balance?.toSignificant(4)
 
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
@@ -96,68 +86,8 @@ export default function Stake() {
   const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO))
 
   const handleClickButton = async () => {
-    if (buttonDisabled) return
-
-    if (!walletConnected) {
-      toggleWalletModal()
-    } else {
-      setPendingTx(true)
-
-      if (activeTab === 0) {
-        if (approvalState === ApprovalState.NOT_APPROVED) {
-          const success = await sendTx(() => approve())
-          if (!success) {
-            setPendingTx(false)
-            // setModalOpen(true)
-            return
-          }
-        }
-        const success = await sendTx(() => enter(parsedAmount))
-        if (!success) {
-          setPendingTx(false)
-          // setModalOpen(true)
-          return
-        }
-      } else if (activeTab === 1) {
-        const success = await sendTx(() => leave(parsedAmount))
-        if (!success) {
-          setPendingTx(false)
-          // setModalOpen(true)
-          return
-        }
-      }
-
-      handleInput('')
-      setPendingTx(false)
-    }
+    // todo
   }
-
-  const block1d = useBlock({ daysAgo: 1, chainId: ChainId.ETHEREUM })
-
-  const exchange = useFactory({ chainId: ChainId.ETHEREUM })
-
-  const exchange1d = useFactory({
-    chainId: ChainId.ETHEREUM,
-    variables: {
-      block: block1d,
-    },
-    shouldFetch: !!block1d,
-  })
-
-  const ethPrice = useNativePrice({ chainId: ChainId.ETHEREUM })
-
-  const xSushi = useTokens({
-    chainId: ChainId.ETHEREUM,
-    variables: { where: { id: XSUSHI.address.toLowerCase() } },
-  })?.[0]
-
-  const bar = useBar()
-
-  const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
-
-  const APY1d = aprToApy(
-    (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xSushiPrice)) * 100 ?? 0
-  )
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">

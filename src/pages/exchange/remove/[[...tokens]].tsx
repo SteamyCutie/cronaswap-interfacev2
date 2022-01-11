@@ -23,13 +23,13 @@ import { Field } from '../../../state/burn/actions'
 import Head from 'next/head'
 import Header from '../../../features/trade/Header'
 import Link from 'next/link'
-import LiquidityHeader from '../../../features/legacy/liquidity/LiquidityHeader'
-import LiquidityPrice from '../../../features/legacy/liquidity/LiquidityPrice'
+import LiquidityHeader from '../../../features/liquidity/LiquidityHeader'
+import LiquidityPrice from '../../../features/liquidity/LiquidityPrice'
 import { MinimalPositionCard } from '../../../components/PositionCard'
 import NavLink from '../../../components/NavLink'
 import PercentInputPanel from '../../../components/PercentInputPanel'
 import ReactGA from 'react-ga'
-import RemoveLiquidityReceiveDetails from '../../../features/legacy/liquidity/RemoveLiquidityReceiveDetails'
+import RemoveLiquidityReceiveDetails from '../../../features/liquidity/RemoveLiquidityReceiveDetails'
 import { TransactionResponse } from '@ethersproject/providers'
 import Web3Connect from '../../../components/Web3Connect'
 import { currencyId } from '../../../functions/currency'
@@ -573,7 +573,7 @@ export default function Remove() {
                       disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
                       error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                     >
-                      {error || i18n._(t`Confirm Withdrawal`)}
+                      {error || i18n._(t`Remove`)}
                     </ButtonError>
                   </div>
                 )}

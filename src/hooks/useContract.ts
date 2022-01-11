@@ -43,7 +43,6 @@ import LIMIT_ORDER_HELPER_ABI from '../constants/abis/limit-order-helper.json'
 import MAKER_ABI from '../constants/abis/maker.json'
 import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
 import MASTERCHEF_V2_ABI from '../constants/abis/masterchef-v2.json'
-import MEOWSHI_ABI from '../constants/abis/meowshi.json'
 import MERKLE_DISTRIBUTOR_ABI from '../constants/abis/merkle-distributor.json'
 import MINICHEF_ABI from '../constants/abis/minichef-v2.json'
 import MULTICALL2_ABI from '../constants/abis/multicall2.json'
@@ -196,10 +195,6 @@ export function useComplexRewarderContract(address, withSignerIfPossible?: boole
 
 export function useCloneRewarderContract(address, withSignerIfPossibe?: boolean): Contract | null {
   return useContract(address, CLONE_REWARDER_ABI, withSignerIfPossibe)
-}
-
-export function useMeowshiContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x650F44eD6F1FE0E1417cb4b3115d52494B4D9b6D', MEOWSHI_ABI, withSignerIfPossible)
 }
 
 export function useLimitOrderContract(withSignerIfPossibe?: boolean): Contract | null {

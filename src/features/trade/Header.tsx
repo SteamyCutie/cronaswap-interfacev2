@@ -2,7 +2,6 @@ import { ChainId, Currency, Percent } from '@cronaswap/core-sdk'
 import React, { FC, useState } from 'react'
 
 import Gas from '../../components/Gas'
-import MyOrders from '../legacy/limit-order/MyOrders'
 import NavLink from '../../components/NavLink'
 import Settings from '../../components/Settings'
 import { currencyId } from '../../functions'
@@ -49,7 +48,7 @@ const ExchangeHeader: FC<ExchangeHeaderProps> = ({ input, output, allowedSlippag
             {i18n._(t`Swap`)}
           </a>
         </NavLink>
-        
+
         <NavLink
           activeClassName="font-bold border rounded text-high-emphesis border-dark-800 bg-dark-900"
           href={`/${!isRemove ? 'add' : 'remove'}${input ? `/${currencyId(input)}` : ''}${

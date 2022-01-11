@@ -36,7 +36,7 @@ function AppBar(): JSX.Element {
             <div className="px-4 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Image src="/logo.png" alt="Sushi" width="32px" height="32px" />
+                  <Image src="/logo.png" alt="CronaSwap" width="171px" height="32px" />
                   <div className="hidden sm:block sm:ml-4">
                     <div className="flex space-x-2">
                       {/* <Buy /> */}
@@ -119,7 +119,7 @@ function AppBar(): JSX.Element {
                   <div className="flex items-center justify-between w-full space-x-2 sm:justify-end">
                     {chainId && [ChainId.ETHEREUM].includes(chainId) && library && library.provider.isMetaMask && (
                       <>
-                        <QuestionHelper text={i18n._(t`Add xSUSHI to your MetaMask wallet`)}>
+                        <QuestionHelper text={i18n._(t`Add xCRONA to your MetaMask wallet`)}>
                           <div
                             className="hidden p-0.5 rounded-md cursor-pointer sm:inline-flex bg-dark-900 hover:bg-dark-800"
                             onClick={() => {
@@ -128,7 +128,7 @@ function AppBar(): JSX.Element {
                                   type: 'ERC20',
                                   options: {
                                     address: '0x8798249c2e607446efb7ad49ec89dd1865ff4272',
-                                    symbol: 'XSUSHI',
+                                    symbol: 'XCRONA',
                                     decimals: 18,
                                     image:
                                       'https://raw.githubusercontent.com/sushiswap/logos/main/network/ethereum/0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272.jpg',
@@ -141,7 +141,7 @@ function AppBar(): JSX.Element {
                                   })
                                   .then((success) => {
                                     if (success) {
-                                      console.log('Successfully added XSUSHI to MetaMask')
+                                      console.log('Successfully added XCRONA to MetaMask')
                                     } else {
                                       throw new Error('Something went wrong.')
                                     }
@@ -152,7 +152,7 @@ function AppBar(): JSX.Element {
                           >
                             <Image
                               src="/images/tokens/xsushi-square.jpg"
-                              alt="xSUSHI"
+                              alt="xCRONA"
                               width="38px"
                               height="38px"
                               objectFit="contain"
@@ -187,7 +187,7 @@ function AppBar(): JSX.Element {
                                   })
                                   .then((success) => {
                                     if (success) {
-                                      console.log('Successfully added SUSHI to MetaMask')
+                                      console.log('Successfully added CRONA to MetaMask')
                                     } else {
                                       throw new Error('Something went wrong.')
                                     }
@@ -197,12 +197,12 @@ function AppBar(): JSX.Element {
                             }}
                           >
                             <Image
-                              src="/images/tokens/sushi-square.jpg"
-                              alt="SUSHI"
+                              src="/logox32.png"
+                              alt="CRONA"
                               width="38px"
                               height="38px"
                               objectFit="contain"
-                              className="rounded-md"
+                              className="rounded-full"
                             />
                           </div>
                         </QuestionHelper>

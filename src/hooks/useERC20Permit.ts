@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, JSBI, Percent, Token, TradeType, Trade as V2Trade } from '@cronaswap/core-sdk'
-import { DAI, SUSHI, USDC } from '../config/tokens'
+import { DAI, CRONA, USDC } from '../config/tokens'
 import { useMemo, useState } from 'react'
 
 import { splitSignature } from '@ethersproject/bytes'
@@ -37,7 +37,7 @@ const PERMITTABLE_TOKENS: {
       name: 'Dai Stablecoin',
       version: '1',
     },
-    [SUSHI[1].address]: { type: PermitType.AMOUNT, name: 'SushiSwap' },
+    [CRONA[1].address]: { type: PermitType.AMOUNT, name: 'SushiSwap' },
   },
 }
 
