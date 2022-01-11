@@ -52,6 +52,7 @@
     "@ethersproject/strings": "^5.4.0",
     "@ethersproject/units": "^5.4.0",
     "@fontsource/dm-sans": "^4.5.0",
+    "@fontsource/kumbh-sans": "^4.5.1",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.4",
@@ -62,7 +63,6 @@
     "@lingui/macro": "^3.10.2",
     "@lingui/react": "^3.10.2",
     "@lingui/remote-loader": "^3.10.4",
-    "@metamask/jazzicon": "^2.0.0",
     "@next/bundle-analyzer": "^11.1.0",
     "@popperjs/core": "^2.9.2",
     "@ramp-network/ramp-instant-sdk": "^2.4.6",
@@ -161,8 +161,7 @@
     "tailwindcss": "^2.2.9",
     "tailwindcss-border-gradient-radius": "^2.0.0",
     "typescript": "^4.4.0",
-    "wcag-contrast": "^3.0.0",
-    "@fontsource/kumbh-sans": "^4.5.1"
+    "wcag-contrast": "^3.0.0"
   },
   "next-unused": {
     "debug": true,

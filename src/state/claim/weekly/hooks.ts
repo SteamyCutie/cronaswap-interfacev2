@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, SUSHI } from '@cronaswap/core-sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, CRONA } from '@cronaswap/core-sdk'
 import { WEEKLY_MERKLE_ROOT as MERKLE_ROOT } from '../../../constants/index'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { useEffect, useState } from 'react'
@@ -85,7 +85,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const sushi = chainId ? SUSHI[chainId] : undefined
+  const sushi = chainId ? CRONA[chainId] : undefined
 
   // console.log('claimStats:', {
   //   canClaim: canClaim,
@@ -125,7 +125,7 @@ export function useClaimCallback(account: string | null | undefined): {
         })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claimed ${unClaimedAmount?.toSignificant(4)} SUSHI`,
+            summary: `Claimed ${unClaimedAmount?.toSignificant(4)} CRONA`,
             claim: { recipient: account },
           })
           return response.hash

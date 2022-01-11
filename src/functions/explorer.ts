@@ -13,16 +13,13 @@ const explorers = {
   cronos: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
     switch (type) {
       case 'transaction':
-        return `${link}/transaction/${data}`
-      case 'token':
-        return `${link}/address/${data}`
-      case 'address':
-        return `${link}/address/${data}`
+        return `${link}/tx/${data}`
       default:
         return `${link}/${type}/${data}`
     }
   },
 }
+
 interface ChainObject {
   [chainId: number]: {
     link: string

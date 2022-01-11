@@ -57,31 +57,35 @@ function AppBar(): JSX.Element {
                         </a>
                       </NavLink>
                       {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                        <NavLink href={'/farm'}>
+                        <NavLink href={'/yield'}>
                           <a
-                            id={`farm-nav-link`}
+                            id={`yield-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Farm`)}
+                            {i18n._(t`Yield`)}
                           </a>
                         </NavLink>
                       )}
-                      {chainId && featureEnabled(Feature.KASHI, chainId) && (
+                      {chainId && featureEnabled(Feature.LENDING, chainId) && (
                         <>
-                          <NavLink href={'/lend'}>
+                          <NavLink href={'/lending'}>
                             <a
                               id={`lend-nav-link`}
                               className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                             >
-                              {i18n._(t`Lend`)}
+                              {i18n._(t`Lending`)}
                             </a>
                           </NavLink>
-                          <NavLink href={'/borrow'}>
+                        </>
+                      )}
+                      {chainId && featureEnabled(Feature.LAUNCH, chainId) && (
+                        <>
+                          <NavLink href={'/launchpad'}>
                             <a
-                              id={`borrow-nav-link`}
+                              id={`lend-nav-link`}
                               className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                             >
-                              {i18n._(t`Borrow`)}
+                              {i18n._(t`LaunchPad`)}
                             </a>
                           </NavLink>
                         </>

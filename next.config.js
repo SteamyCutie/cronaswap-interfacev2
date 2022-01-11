@@ -46,11 +46,11 @@ const nextConfig = {
       //   permanent: true,
       // },
 
-      {
-        source: '/yield',
-        destination: '/farm',
-        permanent: true,
-      },
+      // {
+      //   source: '/yield',
+      //   destination: '/yield',
+      //   permanent: true,
+      // },
       {
         source: '/bento',
         destination: '/bentobox',
@@ -79,6 +79,10 @@ const nextConfig = {
       {
         source: '/zap',
         destination: '/exchange/zap',
+      },
+      {
+        source: '/yield',
+        destination: '/yield',
       },
       {
         source: '/stake',

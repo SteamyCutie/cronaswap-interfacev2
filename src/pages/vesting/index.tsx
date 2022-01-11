@@ -24,26 +24,11 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../services/web3'
 import { useLingui } from '@lingui/react'
 import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-
-import DoubleGlowShadow from '../../components/DoubleGlowShadow'
-import InariButton from '../../features/inari/Button'
-import InariDescription from '../../features/inari/InariDescription'
-import SideSwitch from '../../features/inari/SideSwitch'
-import { ArrowRightIcon } from '@heroicons/react/outline'
-import BalancePanel from '../../features/inari/BalancePanel'
-import { useDerivedInariState, useInariState, useSelectedInariStrategy } from '../../state/inari/hooks'
 import NetworkGuard from '../../guards/Network'
 import { ChainId } from '@cronaswap/core-sdk'
-import StrategyStepDisplay from '../../features/inari/StrategyStepDisplay'
-import StrategySelector from '../../features/inari/StrategySelector'
-import { Field } from '../../state/inari/types'
 
 const Strategies = () => {
   const { i18n } = useLingui()
-  const { inputValue, outputValue } = useInariState()
-  const { tokens, general } = useDerivedInariState()
-  const { balances } = useSelectedInariStrategy()
-
   return (
     <>
       <Head>
@@ -51,115 +36,51 @@ const Strategies = () => {
         <meta name="description" content="Vesting..." />
       </Head>
       <Container maxWidth="5xl" className="flex flex-col gap-8 px-4 py-8">
-        <div className="flex items-center gap-8">
-          <VestingLayout />
+        <div className="space-y-10 md:block">
+          <div className="relative w-full p-4 overflow-hidden rounded bg-dark-600">
+            <div className="font-bold text-lg text-white">{i18n._(t`Claim CRONA For Airdrop Activity`)}</div>
+            <div className="pt-2 text-sm font-bold text-gray-400">
+              <ul className="list-disc px-6 ">
+                <li>
+                  1% - unlocked at 1st day, 3% - unlocked at 5th day, 6% - unlocked at 10th day, after vesting start.
+                </li>
+                <li>90% of tokens will be linearly unlocked within 1 year and can be claimed after unlocking.</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div className="grid grid-cols-12 space-y-10 md:gap-10 md:space-y-0">
-          <div className="col-span-12 md:col-span-3">
-            <div className="flex flex-col gap-5">
-              <StrategySelector />
-              <Link href={'/tools/meowshi'}>
-                <div
-                  className={`bg-dark-900 cursor-pointer border border-transparent pl-5 py-2 rounded whitespace-nowrap w-full font-bold h-[48px] flex items-center text-sm`}
-                >
-                  {'SUSHI → MEOW'}
-                </div>
-              </Link>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <AirdropVesting />
+          <AirdropVesting />
+        </div>
+
+        <div className="space-y-10 md:block">
+          <div className="relative w-full p-4 overflow-hidden rounded bg-cyan-blue">
+            <div className="font-bold text-lg text-white">
+              {i18n._(t`Claim CRONA For Seed / Private / Public Sale`)}
+            </div>
+            <div className="pt-2 text-sm font-bold text-gray-400">
+              <ul className="list-disc px-6 text-white">
+                <li>
+                  1% - unlocked at 1st day, 3% - unlocked at 5th day, 6% - unlocked at 10th day, after vesting start.
+                </li>
+                <li>90% of tokens will be linearly unlocked within 1 year and can be claimed after unlocking.</li>
+              </ul>
             </div>
           </div>
-          <div className="grid col-span-12 gap-4 md:col-span-9">
-            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-              <StrategyStepDisplay />
-              <SideSwitch />
-            </div>
-            <DoubleGlowShadow className="max-w-[100%]">
-              <div className="grid gap-8 p-5 border-2 rounded bg-dark-900 border-dark-700">
-                <div className="flex flex-col items-start md:flex-row">
-                  <div className="w-full mr-2 md:w-3/5">
-                    <BalancePanel
-                      label={i18n._(t`From`)}
-                      showMax
-                      value={inputValue}
-                      token={tokens?.inputToken}
-                      symbol={general?.inputSymbol}
-                      balance={balances?.inputTokenBalance}
-                      field={Field.INPUT}
-                    />
-                  </div>
-                  <div className="flex items-center md:w-[60px] z-1 relative md:ml-[-16px] md:mr-[-16px] md:mt-[34px] justify-center w-full">
-                    <div className="w-[60px] h-[60px] rounded-full md:bg-dark-800 border-2 border-dark-900 p-2 flex items-center justify-center transform rotate-90 md:rotate-0">
-                      <ArrowRightIcon width={24} height={24} className="text-high-emphesis" />
-                    </div>
-                  </div>
-                  <div className="w-full md:w-2/5 md:ml-2">
-                    <BalancePanel
-                      label={i18n._(t`To`)}
-                      value={outputValue}
-                      token={tokens?.outputToken}
-                      symbol={general?.outputSymbol}
-                      balance={balances?.outputTokenBalance}
-                      field={Field.OUTPUT}
-                    />
-                  </div>
-                </div>
-                <InariButton color="gradient" className="font-bold">
-                  Execute
-                </InariButton>
-                <div className="relative mt-0 -m-5 rounded-b p-7 bg-dark-700">
-                  <InariDescription />
-                </div>
-              </div>
-            </DoubleGlowShadow>
-          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TokenSaleVesting />
+          <TokenSaleVesting />
+          <TokenSaleVesting />
+          <TokenSaleVesting />
         </div>
       </Container>
     </>
   )
 }
 
-const VestingLayout = () => {
-  const { i18n } = useLingui()
-
-  return (
-    <div className="flex flex-col w-full space-y-4 md:flex-row md:space-x-8 md:space-y-0">
-      <div className="hidden space-y-10 md:block">
-        <div className="relative w-full p-4 overflow-hidden rounded bg-dark-900">
-          <div className="font-bold text-white">{i18n._(t`Community Approval`)}</div>
-          <div
-            className="pt-2 text-sm font-bold text-gray-400"
-            style={{
-              maxWidth: '300px',
-              minHeight: '150px',
-            }}
-          >
-            <>
-              {i18n._(t`Vesting is executed within the guidelines selected by the community in`)}{' '}
-              <ExternalLink href="https://snapshot.org/#/sushi/proposal/QmPwBGy98NARoEcUfuWPgzMdJdiaZub1gVic67DcSs6NZQ">
-                SIMP3
-              </ExternalLink>
-              .
-              <br />
-              <br />
-              {i18n._(t`Please refer to the`)}{' '}
-              <ExternalLink href="https://forum.sushiswapclassic.org/t/simp-3-vesting-and-the-future-of-sushiswap/1794">
-                {i18n._(t`forum discussion`)}
-              </ExternalLink>{' '}
-              {i18n._(t`for deliberations on additional points.`)}
-              <br />
-              <br />
-              {i18n._(t`Additional records and weekly merkle updates can be found on`)}{' '}
-              <ExternalLink href="https://github.com/sushiswap/sushi-vesting">Github</ExternalLink>
-            </>
-          </div>
-        </div>
-      </div>
-      <WeeklyVesting />
-      <ProtocolVesting />
-    </div>
-  )
-}
-
-const ProtocolVesting = () => {
+const AirdropVesting = () => {
   const { i18n } = useLingui()
 
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
@@ -220,74 +141,39 @@ const ProtocolVesting = () => {
   const pendingTreasurySignature = false
 
   return (
-    <div className="flex flex-col gap-3 md:max-w-[400px]">
+    <div className="flex flex-col gap-3 md:max-w-full">
       <div className="relative w-full h-full overflow-hidden rounded bg-dark-900">
         <div className="flex flex-col gap-3 p-4">
-          <div className="flex flex-row justify-between">
-            <div className="font-bold text-white">{i18n._(t`Claimable SUSHI from Protocols`)}</div>
-            <QuestionHelper text="If you participated in staking progammes from Alpha Homora, Cream, DefiDollar, Dracula, Harvest, Pickle, Yam, or Badger you can claim your vested SUSHI directly here" />
-          </div>
-          {/* <div style={{ display: 'flex', alignItems: 'baseline' }}> */}
-          <div className="flex flex-col items-baseline pb-4">
-            <div className="font-bold text-white text-[36px]">
-              {unclaimedAmount?.toFixed(4, { groupSeparator: ',' } ?? {})}
-            </div>
+          <div className="font-bold text-lg text-white">{i18n._(t`Claimable CRONA from Testnet Airdrop`)}</div>
+          <div className="flex flex-col items-baseline">
+            <div className="font-bold text-white text-[26px]">1320.0132</div>
             {account ? (
-              <div className="text-sm text-secondary">
-                {totalLocked ? (
-                  i18n._(t`Historical Total Locked: ${formatNumber(totalLocked)} SUSHI`)
-                ) : (
-                  <Dots>{i18n._(t`Historical Total Locked: Fetching Total`)}</Dots>
-                )}
-              </div>
+              <div className="text-sm text-secondary">{i18n._(t`Your Claimable CRONAs`)}</div>
             ) : (
-              <div className="text-sm text-secondary">{i18n._(t`Historical Total Locked: Connect Wallet`)}</div>
+              <div className="text-sm text-secondary">{i18n._(t`Your Claimable CRONAs: Connect Wallet`)}</div>
             )}
           </div>
+          <div className="flex flex-col pb-4 space-y-2">
+            <div className="flex flex-row justify-between text-md">
+              <h2>Collect your CRONAs</h2> <span>1223.998</span>
+            </div>
+          </div>
 
-          <Button
-            color={
-              !isAddress(account ?? '') ||
-              claimConfirmed ||
-              !unclaimedAmount ||
-              Number(unclaimedAmount?.toFixed(8)) <= 0 ||
-              pendingTreasurySignature
-                ? 'gray'
-                : 'gradient'
-            }
-            disabled={
-              !isAddress(account ?? '') ||
-              claimConfirmed ||
-              !unclaimedAmount ||
-              Number(unclaimedAmount?.toFixed(8)) <= 0 ||
-              pendingTreasurySignature
-            }
-            size="default"
-            onClick={onClaim}
-            className="inline-flex items-center justify-center"
-          >
-            {pendingTreasurySignature ? (
-              <Dots>{i18n._(t`Pending Treasury Transfer`)}</Dots>
-            ) : (
-              <> {claimConfirmed ? i18n._(t`Claimed`) : i18n._(t`Claim SUSHI`)}</>
-            )}
-
-            {attempting && (
-              <Loader
-                stroke="white"
-                style={{
-                  marginLeft: '10px',
-                }}
-              />
-            )}
-          </Button>
+          <div className="flex flex-row justify-between gap-4">
+            <Button color="gradient" size="default" className="inline-flex items-center justify-center">
+              {i18n._(t`Collect`)}
+            </Button>
+            <Button color="gray" size="default" className="inline-flex items-center justify-center">
+              {i18n._(t`Claim CRONA`)}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-const WeeklyVesting = () => {
+const TokenSaleVesting = () => {
   const { i18n } = useLingui()
 
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
@@ -295,8 +181,8 @@ const WeeklyVesting = () => {
 
   const { account } = useActiveWeb3React()
   const [attempting, setAttempting] = useState<boolean>(false)
-  const { claimCallback } = useClaimCallback(account)
-  const unclaimedAmount: CurrencyAmount<Currency> | undefined = useUserUnclaimedAmount(account)
+  const { claimCallback } = useProtocolClaimCallback(account)
+  const unclaimedAmount: CurrencyAmount<Currency> | undefined = useUserUnclaimedProtocolAmount(account)
   const { claimSubmitted } = useUserHasSubmittedClaim(account ?? undefined)
   const claimConfirmed = false
 
@@ -324,7 +210,9 @@ const WeeklyVesting = () => {
   useEffect(() => {
     const fetchLockup = async () => {
       if (account) {
-        fetch('https://raw.githubusercontent.com/sushiswap/sushi-vesting/master/amounts-10959148-12171394.json')
+        fetch(
+          'https://raw.githubusercontent.com/sushiswap/sushi-vesting/master/amounts-protocols-10959148-12171394.json'
+        )
           .then((response) => response.json())
           .then((data) => {
             // console.log('vesting:', data)
@@ -345,41 +233,27 @@ const WeeklyVesting = () => {
   // remove once treasury signature passed
   const pendingTreasurySignature = false
 
-  let vault = ''
-  if (!pendingTreasurySignature && Number(unclaimedAmount?.toFixed(8)) > 0) {
-    vault = 'https://raw.githubusercontent.com/sushiswap/sushi-content/master/images/sushi-vault-reverse.png'
-  } else if (!pendingTreasurySignature && Number(unclaimedAmount?.toFixed(8)) <= 0) {
-    vault = 'https://raw.githubusercontent.com/sushiswap/sushi-content/master/images/vesting-safe-off.png'
-  } else if (pendingTreasurySignature) {
-    vault = 'https://raw.githubusercontent.com/sushiswap/sushi-content/master/images/vesting-safe-closed.png'
-  }
-
   return (
-    <div className="flex flex-col gap-3 md:max-w-[400px]">
+    <div className="flex flex-col gap-3 md:max-w-full">
       <div className="relative w-full h-full overflow-hidden rounded bg-dark-900">
         <div className="flex flex-col gap-3 p-4">
-          <div className="flex flex-row justify-between">
-            <div className="font-bold text-white">{i18n._(t`Your Claimable SUSHI this Week`)}</div>
-            <QuestionHelper text="Your Vested SUSHI will be released each week for the next 6 months. The amount released each week is determined by your historical farming rewards. You do not need to harvest each week as unclaimed amounts from each week will continue to accrue onto the next." />
-          </div>
-          {/* <div style={{ display: 'flex', alignItems: 'baseline' }}> */}
+          <div className="font-bold text-lg text-white">{i18n._(t`Claimable CRONA from Seed Sale`)}</div>
           <div className="flex flex-col items-baseline pb-4">
-            <div className="font-bold text-white text-[36px]">
-              {unclaimedAmount?.toFixed(4, { groupSeparator: ',' } ?? {})}
-            </div>
+            <div className="font-bold text-white text-[26px]">1320.0132</div>
             {account ? (
-              <div className="text-sm text-secondary">
-                {totalLocked ? (
-                  i18n._(t`Historical Total Locked: ${formatNumber(totalLocked)} SUSHI`)
-                ) : (
-                  <Dots>{i18n._(t`Historical Total Locked: Fetching Total`)}</Dots>
-                )}
-              </div>
+              <div className="text-sm text-secondary">{i18n._(t`Your Claimable CRONAs`)}</div>
             ) : (
-              <div className="text-sm text-secondary">{i18n._(t`Historical Total Locked: Connect Wallet`)}</div>
+              <div className="text-sm text-secondary">{i18n._(t`Your Claimable CRONAs: Connect Wallet`)}</div>
             )}
           </div>
-
+          <div className="flex flex-col pb-4 space-y-2">
+            <div className="flex flex-row justify-between text-md">
+              <h2>Your Purchased CRONAs</h2> <span>1223.998</span>
+            </div>
+            <div className="flex flex-row justify-between text-lg">
+              <h2>Your UnClaimed CRONAs</h2> <span>1223.998</span>
+            </div>
+          </div>
           <Button
             color={
               !isAddress(account ?? '') ||
@@ -402,9 +276,9 @@ const WeeklyVesting = () => {
             className="inline-flex items-center justify-center"
           >
             {pendingTreasurySignature ? (
-              <Dots>{i18n._(t`Pending Treasury Transfer`)}</Dots>
+              <Dots>{i18n._(t`Pending Claim`)}</Dots>
             ) : (
-              <> {claimConfirmed ? i18n._(t`Claimed`) : i18n._(t`Claim SUSHI`)}</>
+              <> {claimConfirmed ? i18n._(t`Claimed`) : i18n._(t`Claim CRONA`)}</>
             )}
 
             {attempting && (
@@ -422,6 +296,6 @@ const WeeklyVesting = () => {
   )
 }
 
-Strategies.Guard = NetworkGuard([ChainId.ETHEREUM])
+Strategies.Guard = NetworkGuard([ChainId.CRONOS])
 
 export default Strategies

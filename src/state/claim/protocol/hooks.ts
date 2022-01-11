@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, SUSHI } from '@cronaswap/core-sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, CRONA } from '@cronaswap/core-sdk'
 import { PROTOCOL_MERKLE_ROOT as MERKLE_ROOT } from '../../../constants'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { useEffect, useState } from 'react'
@@ -86,7 +86,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const sushi = chainId ? SUSHI[chainId] : undefined
+  const sushi = chainId ? CRONA[chainId] : undefined
 
   // console.log('claimStats:', {
   //   canClaim: canClaim,
