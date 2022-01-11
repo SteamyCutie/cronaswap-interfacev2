@@ -29,7 +29,6 @@ const features = {
     Feature.LENDING,
     Feature.MIGRATE,
     Feature.ANALYTICS,
-    Feature.LAUNCH,
     Feature.STAKING,
     Feature.BOOST,
   ],

@@ -37,7 +37,7 @@ const PERMITTABLE_TOKENS: {
       name: 'Dai Stablecoin',
       version: '1',
     },
-    [CRONA[1].address]: { type: PermitType.AMOUNT, name: 'SushiSwap' },
+    [CRONA[1].address]: { type: PermitType.AMOUNT, name: 'CronaSwap' },
   },
 }
 

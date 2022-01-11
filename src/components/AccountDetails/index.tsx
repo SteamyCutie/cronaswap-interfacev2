@@ -109,7 +109,7 @@ const AccountDetails: FC<AccountDetailsProps> = ({
           <div className="flex items-center justify-between">
             {formatConnectorName()}
             <div className="flex space-x-3">
-              {connector === injected &&
+              {/* {connector === injected &&
                 connector.constructor.name !== 'WalletLinkConnector' &&
                 connector.constructor.name !== 'BscConnector' &&
                 connector.constructor.name !== 'KeystoneConnector' && (
@@ -123,7 +123,7 @@ const AccountDetails: FC<AccountDetailsProps> = ({
                   >
                     {i18n._(t`Disconnect`)}
                   </Button>
-                )}
+                )} */}
               <Button
                 variant="outlined"
                 color="gray"

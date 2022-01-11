@@ -67,7 +67,7 @@ export const portis = new PortisConnector({
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: RPC[ChainId.ETHEREUM],
-  appName: 'SushiSwap',
+  appName: 'CronaSwap',
   appLogoUrl: 'https://raw.githubusercontent.com/sushiswap/art/master/sushi/logo-256x256.png',
 })
 

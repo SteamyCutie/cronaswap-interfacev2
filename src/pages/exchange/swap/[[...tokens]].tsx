@@ -391,11 +391,11 @@ export default function Swap() {
   return (
     <Container id="swap-page" className="py-4 md:py-8 lg:py-24">
       <Head>
-        <title>{i18n._(t`SushiSwap`)} | CronaSwap</title>
+        <title>{i18n._(t`CronaSwap`)} | CronaSwap</title>
         <meta
           key="description"
           name="description"
-          content="SushiSwap allows for swapping of ERC20 compatible tokens across multiple networks"
+          content="CronaSwap allows for swapping of ERC20 compatible tokens across multiple networks"
         />
       </Head>
       <TokenWarningModal

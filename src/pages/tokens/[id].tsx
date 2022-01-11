@@ -9,7 +9,7 @@ export default function Token() {
     <Container id={`token-${id}-page`} className="py-4 md:py-8 lg:py-12" maxWidth="2xl">
       <Head>
         <title>Token {id} | CronaSwap</title>
-        <meta key="description" name="description" content="SushiSwap tokens." />
+        <meta key="description" name="description" content="CronaSwap tokens." />
       </Head>
     </Container>
   )
