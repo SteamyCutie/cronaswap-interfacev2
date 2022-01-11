@@ -183,11 +183,11 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
 
   const isETH = currencyId?.toUpperCase() === 'ETH'
 
-  const isDual = [ChainId.CELO].includes(chainId)
+  // const isDual = [ChainId.CELO].includes(chainId)
 
-  const useNative = isETH && !isDual
+  const useNative = isETH
 
-  if (isETH && isDual) {
+  if (isETH) {
     currencyId = WNATIVE_ADDRESS[chainId]
   }
 

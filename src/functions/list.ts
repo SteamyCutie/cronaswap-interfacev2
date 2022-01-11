@@ -5,7 +5,7 @@ import { DEFAULT_LIST_OF_LISTS } from '../config/token-lists'
 import { TokenList } from '@uniswap/token-lists'
 import { Version } from '@uniswap/token-lists'
 import { parseENSAddress } from './ens'
-import schema from '@uniswap/token-lists/src/tokenlist.schema'
+import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 

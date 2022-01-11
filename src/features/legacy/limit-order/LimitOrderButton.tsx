@@ -85,7 +85,7 @@ const LimitOrderButton: FC<LimitOrderButtonProps> = ({ currency, color, ...rest 
     )
 
     try {
-      await order.signOrderWithProvider(chainId, library)
+      // await order.signOrderWithProvider(chainId., library)
       setOpenConfirmationModal(false)
 
       const resp = await order.send()

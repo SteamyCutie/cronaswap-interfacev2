@@ -37,8 +37,7 @@ export default function useWrapCallback(
   const addTransaction = useTransactionAdder()
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency || chainId === ChainId.CELO)
-      return NOT_APPLICABLE
+    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
     const weth = WNATIVE[chainId]
     if (!weth) return NOT_APPLICABLE
 

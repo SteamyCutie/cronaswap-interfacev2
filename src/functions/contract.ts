@@ -40,7 +40,8 @@ export function getRouterAddress(chainId?: ChainId) {
 export function getRouterContract(chainId: number, library: Web3Provider, account?: string): Contract {
   return getContract(
     getRouterAddress(chainId),
-    chainId !== ChainId.CELO ? IUniswapV2Router02ABI : IUniswapV2Router02NoETHABI,
+    // chainId !== ChainId.CELO ? IUniswapV2Router02ABI : IUniswapV2Router02NoETHABI,
+    IUniswapV2Router02ABI,
     library,
     account
   )

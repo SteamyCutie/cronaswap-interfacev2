@@ -401,6 +401,6 @@ function LimitOrder() {
   )
 }
 
-LimitOrder.Guard = NetworkGuard([ChainId.MATIC])
+LimitOrder.Guard = NetworkGuard([ChainId.ETHEREUM])
 
 export default LimitOrder

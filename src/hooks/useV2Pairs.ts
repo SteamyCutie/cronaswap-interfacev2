@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, FACTORY_ADDRESS, Pair, computePairAddress } from '@cronaswap/core-sdk'
 
-import IUniswapV2PairABI from '@sushiswap/core/abi/IUniswapV2Pair'
+import IUniswapV2PairABI from '@sushiswap/core/abi/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
 import { useMemo } from 'react'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'

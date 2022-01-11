@@ -7,14 +7,12 @@ import { useLingui } from '@lingui/react'
 
 const DEFAULT_NETWORK = {
   [ChainId.ETHEREUM]: 'ethereum',
-  [ChainId.BSC]: 'bsc',
-  [ChainId.MATIC]: 'matic',
+  [ChainId.CRONOS]: 'cronos',
 }
 
 const DEFAULT_CRYPTO_CURRENCY = {
   [ChainId.ETHEREUM]: 'ETH',
-  [ChainId.BSC]: 'BNB',
-  [ChainId.MATIC]: 'MATIC',
+  [ChainId.CRONOS]: 'CRO',
 }
 
 export default function Buy() {

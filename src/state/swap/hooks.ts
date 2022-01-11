@@ -58,7 +58,8 @@ export function useSwapActionHandlers(): {
           field,
           currencyId: currency.isToken
             ? currency.address
-            : currency.isNative && currency.chainId !== ChainId.CELO
+            : // : currency.isNative && currency.chainId !== ChainId.CELO
+            currency.isNative
             ? 'ETH'
             : '',
         })

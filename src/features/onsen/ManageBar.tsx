@@ -101,12 +101,12 @@ const ManageBar = ({ farm }) => {
     [Chef.MASTERCHEF]: { [ChainId.ETHEREUM]: MASTERCHEF_ADDRESS[ChainId.ETHEREUM] },
     [Chef.MASTERCHEF_V2]: { [ChainId.ETHEREUM]: MASTERCHEF_V2_ADDRESS[ChainId.ETHEREUM] },
     [Chef.MINICHEF]: {
-      [ChainId.MATIC]: MINICHEF_ADDRESS[ChainId.MATIC],
-      [ChainId.XDAI]: MINICHEF_ADDRESS[ChainId.XDAI],
-      [ChainId.HARMONY]: MINICHEF_ADDRESS[ChainId.HARMONY],
-      [ChainId.ARBITRUM]: MINICHEF_ADDRESS[ChainId.ARBITRUM],
-      [ChainId.CELO]: MINICHEF_ADDRESS[ChainId.CELO],
-      [ChainId.MOONRIVER]: MINICHEF_ADDRESS[ChainId.MOONRIVER],
+      // [ChainId.MATIC]: MINICHEF_ADDRESS[ChainId.MATIC],
+      // [ChainId.XDAI]: MINICHEF_ADDRESS[ChainId.XDAI],
+      // [ChainId.HARMONY]: MINICHEF_ADDRESS[ChainId.HARMONY],
+      // [ChainId.ARBITRUM]: MINICHEF_ADDRESS[ChainId.ARBITRUM],
+      // [ChainId.CELO]: MINICHEF_ADDRESS[ChainId.CELO],
+      // [ChainId.MOONRIVER]: MINICHEF_ADDRESS[ChainId.MOONRIVER],
     },
   }
 

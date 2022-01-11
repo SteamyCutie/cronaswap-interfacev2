@@ -57,6 +57,6 @@ function OpenOrdersPage() {
   )
 }
 
-OpenOrdersPage.Guard = NetworkGuard([ChainId.MATIC])
+OpenOrdersPage.Guard = NetworkGuard([ChainId.ETHEREUM])
 
 export default OpenOrdersPage

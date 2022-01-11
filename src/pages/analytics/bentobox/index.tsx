@@ -41,7 +41,7 @@ export default function BentoBox(): JSX.Element {
     return new Map(tokens1w.map((token) => [token.id, token]))
   }, [tokens1w])
 
-  const bentoBox = useBentoBox({ chainId, shouldFetch: featureEnabled(Feature.BENTOBOX, chainId) })
+  const bentoBox = useBentoBox({ chainId, shouldFetch: featureEnabled(Feature.LENDING, chainId) })
 
   // Combine Bento Box Tokens with Token data from exchange
   const bentoBoxTokensFormatted = useMemo<Array<any>>(

@@ -30,7 +30,7 @@ const PoolDeposit = ({ currencyA, currencyB }) => {
   const { i18n } = useLingui()
   const { account, chainId, library } = useActiveWeb3React()
 
-  const [useETH, setUseETH] = useState(chainId !== ChainId.CELO)
+  const [useETH, setUseETH] = useState(chainId !== ChainId.ETHEREUM) // Modify by CronnaSwap
 
   chainId && useETH && currencyA && currencyEquals(currencyA, WNATIVE[chainId]) && (currencyA = NATIVE[chainId])
   chainId && useETH && currencyB && currencyEquals(currencyB, WNATIVE[chainId]) && (currencyB = NATIVE[chainId])
@@ -300,7 +300,7 @@ const PoolDeposit = ({ currencyA, currencyB }) => {
             currencyBalance={currencyBalances[Field.CURRENCY_B]}
             fiatValue={currencyBFiatValue}
           />
-          {(oneCurrencyIsETH || oneCurrencyIsWETH) && chainId != ChainId.CELO && (
+          {(oneCurrencyIsETH || oneCurrencyIsWETH) && (
             <a
               className="cursor-pointer text-baseline text-blue opacity-80 hover:opacity-100 whitespace-nowrap"
               onClick={() => setUseETH(!useETH)}

@@ -5,7 +5,7 @@ import {
   MASTERCHEF_ADDRESS,
   MASTERCHEF_V2_ADDRESS,
   MINICHEF_ADDRESS,
-  SUSHI,
+  CRONA,
 } from '@cronaswap/core-sdk'
 import { Chef, PairType } from './enum'
 import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react'
@@ -37,7 +37,6 @@ export function useChefContract(chef: Chef) {
 
 const CHEFS = {
   [ChainId.ETHEREUM]: [Chef.MASTERCHEF, Chef.MASTERCHEF_V2],
-  [ChainId.MATIC]: [Chef.MINICHEF],
 }
 
 export function useChefContracts(chefs: Chef[]) {
@@ -94,7 +93,7 @@ export function usePendingSushi(farm) {
 
   const amount = value ? JSBI.BigInt(value.toString()) : undefined
 
-  return amount ? CurrencyAmount.fromRawAmount(SUSHI[chainId], amount) : undefined
+  return amount ? CurrencyAmount.fromRawAmount(CRONA[chainId], amount) : undefined
 }
 
 export function usePendingToken(farm, contract) {

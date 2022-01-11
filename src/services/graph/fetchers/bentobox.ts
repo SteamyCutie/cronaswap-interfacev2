@@ -8,11 +8,6 @@ import { pager } from '../functions'
 
 export const BENTOBOX = {
   [ChainId.ETHEREUM]: 'lufycz/bentobox',
-  [ChainId.XDAI]: 'sushiswap/xdai-bentobox',
-  [ChainId.MATIC]: 'lufycz/matic-bentobox',
-  [ChainId.FANTOM]: 'sushiswap/fantom-bentobox',
-  [ChainId.BSC]: 'sushiswap/bsc-bentobox',
-  [ChainId.ARBITRUM]: 'sushiswap/arbitrum-bentobox',
 }
 
 const fetcher = async (chainId = ChainId.ETHEREUM, query, variables = undefined) =>

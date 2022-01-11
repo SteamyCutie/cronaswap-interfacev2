@@ -115,7 +115,7 @@ export default function Zap() {
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    if (chainId !== ChainId.HARMONY && gatherPermitSignature) {
+    if (gatherPermitSignature) {
       try {
         await gatherPermitSignature()
       } catch (error) {

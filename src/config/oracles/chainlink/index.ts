@@ -24,11 +24,5 @@ export const CHAINLINK_PRICE_FEED_MAP: {
   [chainId in ChainId]?: ChainlinkPriceFeedMap
 } = {
   [ChainId.ETHEREUM]: MAINNET,
-  [ChainId.KOVAN]: KOVAN,
-  [ChainId.BSC]: BSC,
-  [ChainId.HECO]: HECO,
-  [ChainId.MATIC]: MATIC,
-  [ChainId.XDAI]: XDAI,
-  [ChainId.ARBITRUM]: ARBITRUM,
-  [ChainId.AVALANCHE]: AVALANCHE,
+  [ChainId.CRONOS]: KOVAN,
 }

@@ -126,10 +126,10 @@ async function getPairs(bentoBoxContract, chainId: ChainId) {
   let logs = []
   let success = false
   const masterAddress = KASHI_ADDRESS[chainId]
-  if (chainId !== ChainId.BSC && chainId !== ChainId.MATIC) {
-    logs = await bentoBoxContract.queryFilter(bentoBoxContract.filters.LogDeploy(masterAddress))
-    success = true
-  }
+  // if (chainId !== ChainId.BSC && chainId !== ChainId.MATIC) {
+  //   logs = await bentoBoxContract.queryFilter(bentoBoxContract.filters.LogDeploy(masterAddress))
+  //   success = true
+  // }
   if (!success) {
     logs = (
       (await bentobox.clones({
@@ -208,7 +208,7 @@ export function KashiProvider({ children }) {
   const tokens = useAllTokens()
   const strategies = useBentoStrategies({
     chainId,
-    shouldFetch: chainId && (chainId === ChainId.ETHEREUM || chainId === ChainId.MATIC),
+    shouldFetch: chainId && chainId === ChainId.ETHEREUM,
   })
 
   // const info = useSingleCallResult(boringHelperContract, 'getUIInfo', [
@@ -224,12 +224,12 @@ export function KashiProvider({ children }) {
       !chainId ||
       ![
         ChainId.ETHEREUM,
-        ChainId.KOVAN,
-        ChainId.BSC,
-        ChainId.MATIC,
-        ChainId.XDAI,
-        ChainId.ARBITRUM,
-        ChainId.AVALANCHE,
+        // ChainId.KOVAN,
+        // ChainId.BSC,
+        // ChainId.MATIC,
+        // ChainId.XDAI,
+        // ChainId.ARBITRUM,
+        // ChainId.AVALANCHE,
       ].includes(chainId)
     ) {
       return

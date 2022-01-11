@@ -75,12 +75,12 @@ export default function Yield(): JSX.Element {
               </div>
             </div>
             <div className="h-full w-6/12 p-0.5">
-              <div className={2 === 1 ? activeTabStyle : inactiveTabStyle}>
+              <div className={1 != 1 ? activeTabStyle : inactiveTabStyle}>
                 <p>Finished</p>
               </div>
             </div>
             <div className="h-full w-6/12 p-0.5">
-              <div className={2 === 1 ? activeTabStyle : inactiveTabStyle}>
+              <div className={2 != 2 ? activeTabStyle : inactiveTabStyle}>
                 <p>My Farms</p>
               </div>
             </div>

@@ -165,51 +165,50 @@ export default function useFarmRewards() {
         const sushiPerBlock = sushiPerSecond * averageBlockTime
         const sushiPerDay = sushiPerBlock * blocksPerDay
 
-        const rewardPerSecond =
-          pool.rewarder.rewardPerSecond && chainId == ChainId.ARBITRUM
-            ? pool.rewarder.rewardPerSecond / 1e18
-            : ((pool.allocPoint / pool.miniChef.totalAllocPoint) * pool.rewarder.rewardPerSecond) / 1e18
+        const rewardPerSecond = pool.rewarder.rewardPerSecond
+          ? pool.rewarder.rewardPerSecond / 1e18
+          : ((pool.allocPoint / pool.miniChef.totalAllocPoint) * pool.rewarder.rewardPerSecond) / 1e18
 
         const rewardPerBlock = rewardPerSecond * averageBlockTime
 
         const rewardPerDay = rewardPerBlock * blocksPerDay
 
         const reward = {
-          [ChainId.MATIC]: {
-            token: 'MATIC',
-            icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/matic/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270.jpg',
-            rewardPerBlock,
-            rewardPerDay: rewardPerSecond * 86400,
-            rewardPrice: maticPrice,
-          },
-          [ChainId.XDAI]: {
-            token: 'STAKE',
-            icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/xdai/0xb7D311E2Eb55F2f68a9440da38e7989210b9A05e.jpg',
-            rewardPerBlock,
-            rewardPerDay: rewardPerSecond * 86400,
-            rewardPrice: stakePrice,
-          },
-          [ChainId.HARMONY]: {
-            token: 'ONE',
-            icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/harmony/0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a.jpg',
-            rewardPerBlock,
-            rewardPerDay: rewardPerSecond * 86400,
-            rewardPrice: onePrice,
-          },
-          [ChainId.CELO]: {
-            token: 'CELO',
-            icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/celo.jpg',
-            rewardPerBlock,
-            rewardPerDay: rewardPerSecond * 86400,
-            rewardPrice: celoPrice,
-          },
-          [ChainId.MOONRIVER]: {
-            token: 'MOVR',
-            icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/movr.jpg',
-            rewardPerBlock,
-            rewardPerDay: rewardPerSecond * 86400,
-            rewardPrice: movrPrice,
-          },
+          // [ChainId.MATIC]: {
+          //   token: 'MATIC',
+          //   icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/matic/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270.jpg',
+          //   rewardPerBlock,
+          //   rewardPerDay: rewardPerSecond * 86400,
+          //   rewardPrice: maticPrice,
+          // },
+          // [ChainId.XDAI]: {
+          //   token: 'STAKE',
+          //   icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/xdai/0xb7D311E2Eb55F2f68a9440da38e7989210b9A05e.jpg',
+          //   rewardPerBlock,
+          //   rewardPerDay: rewardPerSecond * 86400,
+          //   rewardPrice: stakePrice,
+          // },
+          // [ChainId.HARMONY]: {
+          //   token: 'ONE',
+          //   icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/harmony/0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a.jpg',
+          //   rewardPerBlock,
+          //   rewardPerDay: rewardPerSecond * 86400,
+          //   rewardPrice: onePrice,
+          // },
+          // [ChainId.CELO]: {
+          //   token: 'CELO',
+          //   icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/celo.jpg',
+          //   rewardPerBlock,
+          //   rewardPerDay: rewardPerSecond * 86400,
+          //   rewardPrice: celoPrice,
+          // },
+          // [ChainId.MOONRIVER]: {
+          //   token: 'MOVR',
+          //   icon: 'https://raw.githubusercontent.com/sushiswap/icons/master/token/movr.jpg',
+          //   rewardPerBlock,
+          //   rewardPerDay: rewardPerSecond * 86400,
+          //   rewardPrice: movrPrice,
+          // },
         }
 
         rewards[0] = {
@@ -222,7 +221,7 @@ export default function useFarmRewards() {
           rewards[1] = reward[chainId]
         }
 
-        if (chainId === ChainId.ARBITRUM && ['9', '11'].includes(pool.id)) {
+        if (['9', '11'].includes(pool.id)) {
           rewards[1] = {
             token: 'SPELL',
             icon: 'https://raw.githubusercontent.com/sushiswap/logos/main/network/ethereum/0x090185f2135308BaD17527004364eBcC2D37e5F6.jpg',

@@ -2,9 +2,8 @@ import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from '@cronaswap/core-sdk'
 
 const NETWORK_POLLING_INTERVALS: { [chainId: number]: number } = {
-  [ChainId.ARBITRUM]: 1_000,
-  [ChainId.ARBITRUM_TESTNET]: 1_000,
-  [ChainId.HARMONY]: 15_000,
+  [ChainId.CRONOS]: 1_000,
+  [ChainId.CRONOS_TESTNET]: 1_000,
 }
 
 export default function getLibrary(provider: any): Web3Provider {

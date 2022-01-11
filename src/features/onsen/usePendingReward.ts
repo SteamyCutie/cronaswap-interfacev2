@@ -20,12 +20,12 @@ const usePending = (farm) => {
   const contract = useMemo(
     () => ({
       [ChainId.ETHEREUM]: cloneRewarder,
-      [ChainId.MATIC]: complexRewarder,
-      [ChainId.XDAI]: complexRewarder,
-      [ChainId.HARMONY]: complexRewarder,
-      [ChainId.ARBITRUM]: cloneRewarder,
-      [ChainId.CELO]: complexRewarder,
-      [ChainId.MOONRIVER]: complexRewarder,
+      // [ChainId.MATIC]: complexRewarder,
+      // [ChainId.XDAI]: complexRewarder,
+      // [ChainId.HARMONY]: complexRewarder,
+      // [ChainId.ARBITRUM]: cloneRewarder,
+      // [ChainId.CELO]: complexRewarder,
+      // [ChainId.MOONRIVER]: complexRewarder,
     }),
     [complexRewarder, cloneRewarder]
   )

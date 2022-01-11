@@ -108,7 +108,7 @@ export const getCvxPrice = async (variables = {}) => {
 
 export const getMaticPrice = async (variables = {}) => {
   // console.log('getMaticPrice')
-  return getTokenPrice(ChainId.MATIC, tokenPriceQuery, {
+  return getTokenPrice(ChainId.ETHEREUM, tokenPriceQuery, {
     id: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     ...variables,
   })
@@ -145,29 +145,29 @@ export const getSushiPrice = async (variables = {}) => {
 }
 
 export const getStakePrice = async (variables = {}) => {
-  return getTokenPrice(ChainId.XDAI, tokenPriceQuery, {
+  return getTokenPrice(ChainId.ETHEREUM, tokenPriceQuery, {
     id: '0xb7d311e2eb55f2f68a9440da38e7989210b9a05e',
     ...variables,
   })
 }
 
 export const getOnePrice = async (variables = undefined) => {
-  return getNativePrice(ChainId.HARMONY, variables)
+  return getNativePrice(ChainId.ETHEREUM, variables)
 }
 
 export const getAvaxPrice = async (variables = undefined) => {
-  return getNativePrice(ChainId.AVALANCHE, variables)
+  return getNativePrice(ChainId.ETHEREUM, variables)
 }
 
 export const getCeloPrice = async () => {
-  return getTokenPrice(ChainId.CELO, tokenPriceQuery, {
-    id: '0x471ece3750da237f93b8e339c536989b8978a438',
+  return getTokenPrice(ChainId.ETHEREUM, tokenPriceQuery, {
+    id: '0x090185f2135308bad17527004364ebcc2d37e5f6',
   })
 }
 
 export const getMovrPrice = async () => {
-  return getTokenPrice(ChainId.MOONRIVER, tokenPriceQuery, {
-    id: '0xf50225a84382c74cbdea10b0c176f71fc3de0c4d',
+  return getTokenPrice(ChainId.ETHEREUM, tokenPriceQuery, {
+    id: '0x090185f2135308bad17527004364ebcc2d37e5f6',
   })
 }
 
