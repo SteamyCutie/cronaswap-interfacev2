@@ -161,7 +161,8 @@
     "tailwindcss": "^2.2.9",
     "tailwindcss-border-gradient-radius": "^2.0.0",
     "typescript": "^4.4.0",
-    "wcag-contrast": "^3.0.0"
+    "wcag-contrast": "^3.0.0",
+    "deficonnect": "^1.1.7"
   },
   "next-unused": {
     "debug": true,

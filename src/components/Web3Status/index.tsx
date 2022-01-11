@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { SUPPORTED_WALLETS, injected } from '../../config/wallets'
+import { injected } from '../../config/wallets'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -33,12 +33,6 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const SOCK = (
-  <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
-    🧦
-  </span>
-)
-
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
   if (connector === injected) {
@@ -50,34 +44,11 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
         <Image src="/images/wallets/wallet-connect.png" alt={'Wallet Connect'} width="16px" height="16px" />
       </IconWrapper>
     )
-  } else if (connector.constructor.name === 'LatticeConnector') {
+  } else if (connector.constructor.name === 't') {
+    //crypto defiwallet
     return (
       <IconWrapper size={16}>
-        <Image src="/images/wallets/lattice.png" alt={'Lattice'} width="16px" height="16px" />
-      </IconWrapper>
-    )
-  } else if (connector.constructor.name === 'WalletLinkConnector') {
-    return (
-      <IconWrapper size={16}>
-        <Image src="/images/wallets/coinbase.svg" alt={'Coinbase Wallet'} width="16px" height="16px" />
-      </IconWrapper>
-    )
-  } else if (connector.constructor.name === 'FortmaticConnector') {
-    return (
-      <IconWrapper size={16}>
-        <Image src="/images/wallets/fortmatic.png" alt={'Fortmatic'} width="16px" height="16px" />
-      </IconWrapper>
-    )
-  } else if (connector.constructor.name === 'PortisConnector') {
-    return (
-      <IconWrapper size={16}>
-        <Image src="/images/wallets/portis.png" alt={'Portis'} width="16px" height="16px" />
-      </IconWrapper>
-    )
-  } else if (connector.constructor.name === 'KeystoneConnector') {
-    return (
-      <IconWrapper size={16}>
-        <Image src="/images/wallets/keystone.png" alt={'Keystone'} width="16px" height="16px" />
+        <Image src="/images/wallets/cryptodefi.svg" alt={'Crypto DeFi Wallet'} width="16px" height="16px" />
       </IconWrapper>
     )
   }

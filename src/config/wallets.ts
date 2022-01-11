@@ -37,6 +37,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#010101',
     primary: true,
   },
+
   METAMASK: {
     connector: injected,
     name: 'MetaMask',
@@ -45,24 +46,46 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D',
   },
-  WALLET_CONNECT: {
+
+  CRYPTO_WALLET: {
     connector: async () => {
-      const WalletConnectConnector = (await import('@web3-react/walletconnect-connector')).WalletConnectConnector
-      return new WalletConnectConnector({
-        rpc: RPC,
-        bridge: 'https://bridge.walletconnect.org',
-        qrcode: true,
-        supportedChainIds,
-        // pollingInterval: 15000,
+      const DefiConnectConnector = (await import('deficonnect')).DeFiWeb3Connector
+      return new DefiConnectConnector({
+        supportedChainIds: [25, 338],
+        rpc: {
+          25: 'https://evm-cronos.crypto.org/', // cronos mainet
+          338: 'https://cronos-testnet-3.crypto.org:8545', // cronos testnet
+        },
+        pollingInterval: 15000,
       })
     },
-    name: 'WalletConnect',
-    iconName: 'wallet-connect.svg',
-    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+    name: 'Crypto DeFi Wallet',
+    iconName: 'cryptodefi.svg',
+    description: 'Connect to Crypto DeFi Wallet',
     href: null,
     color: '#4196FC',
     mobile: true,
   },
+
+  // WALLET_CONNECT: {
+  //   connector: async () => {
+  //     const WalletConnectConnector = (await import('@web3-react/walletconnect-connector')).WalletConnectConnector
+  //     return new WalletConnectConnector({
+  //       rpc: RPC,
+  //       bridge: 'https://bridge.walletconnect.org',
+  //       qrcode: true,
+  //       supportedChainIds,
+  //       // pollingInterval: 15000,
+  //     })
+  //   },
+  //   name: 'WalletConnect',
+  //   iconName: 'wallet-connect.svg',
+  //   description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+  //   href: null,
+  //   color: '#4196FC',
+  //   mobile: true,
+  // },
+
   // KEYSTONE: {
   //   connector: async () => {
   //     const KeystoneConnector = (await import('@keystonehq/keystone-connector')).KeystoneConnector
