@@ -5,7 +5,7 @@ import React from 'react'
 import Search from '../../components/Search'
 import { classNames } from '../../functions'
 import { Disclosure, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/solid'
+import { ChevronDownIcon, ExternalLinkIcon, LockClosedIcon, CalculatorIcon } from '@heroicons/react/solid'
 import DoubleLogo from '../../components/DoubleLogo'
 import Button from '../../components/Button'
 
@@ -26,8 +26,13 @@ export default function Yield(): JSX.Element {
   const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-dark-900`
   const inactiveTabStyle = `${tabStyle} text-secondary`
 
+  // values for static FarmList
+  const balances = 58.007773274;
+  const staked = 58.007773274;
+  const cronaEarned = 634537.99824;
+
   return (
-    <Container id="farm-page" className="grid h-full py-4 px-2 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
+    <Container id="farm-page" className="grid h-full px-2 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
       <Head>
         <title>Farm | CronaSwap</title>
         <meta key="description" name="description" content="Farm CronaSwap" />
@@ -36,7 +41,7 @@ export default function Yield(): JSX.Element {
         <Menu positionsLength={positions.length} />
       </div> */}
 
-      <div className="space-y-6 col-span-4 lg:col-span-3">
+      <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* search bar */}
         <div className="flex flex-row justify-between gap-10">
           {/* select tab */}
@@ -89,35 +94,35 @@ export default function Yield(): JSX.Element {
                       {/* <DoubleLogo currency0={token0} currency1={token1} size={40} /> */}
                       <div className="flex flex-col justify-center">
                         <div className="text-xs md:text-base text-blue">FARMING</div>
-                        <div className="font-bold text-xs md:text-base">CRONA-CRO</div>
+                        <div className="text-xs font-bold md:text-base">CRONA-CRO</div>
                       </div>
                     </div>
 
                     {/* Earned */}
                     <div className="flex flex-col justify-center">
                       <div className="text-xs md:text-base text-secondary">Earned</div>
-                      <div className="font-bold text-xs md:text-base">422.88</div>
+                      <div className="text-xs font-bold md:text-base">422.88</div>
                     </div>
 
                     {/* Liquidity */}
-                    <div className="hidden lg:block flex-col justify-center ">
+                    <div className="flex-col justify-center hidden lg:block ">
                       <div className="text-xs md:text-base text-secondary">Liquidity</div>
-                      <div className="font-bold text-xs md:text-base">$177,778,88.00</div>
+                      <div className="text-xs font-bold md:text-base">$177,778,88.00</div>
                     </div>
 
                     {/* Multiplier */}
-                    <div className="hidden lg:block flex-col justify-center">
+                    <div className="flex-col justify-center hidden lg:block">
                       <div className="text-xs md:text-base text-secondary">Multiplier</div>
-                      <div className="font-bold text-xs md:text-base">40x</div>
+                      <div className="text-xs font-bold md:text-base">40x</div>
                     </div>
 
                     {/* APR */}
                     <div className="flex flex-col justify-center">
                       <div className="text-xs md:text-base text-secondary">APR</div>
-                      <div className="font-bold text-xs md:text-base">26.78% / 278.68%</div>
+                      <div className="text-xs font-bold md:text-base">26.78% / 278.68%</div>
                     </div>
 
-                    <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-col items-center justify-center">
                       <ChevronDownIcon className={`${open ? 'transform rotate-180' : ''} w-5 h-5 text-purple-500`} />
                     </div>
                   </div>
@@ -134,29 +139,74 @@ export default function Yield(): JSX.Element {
                   leaveTo="opacity-0"
                 >
                   <Disclosure.Panel className="flex w-full p-4 border-t-0 rounded rounded-t-none bg-dark-800">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 ">
-                      {/* deposit */}
-                      <div className="flex flex-col justify-center space-y-4 ">
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                      {/* Stake */}
+                      <div className="flex flex-col justify-center space-y-4">
                         <div className="text-xs md:text-base text-secondary">Stake LP Tokens</div>
-                        <div className="bg-dark-900 w-200 h-12">4228</div>
-                        <div className="flex flex-row justify-between gap-4">
-                          <Button color="blue">Approve</Button>
-                          <Button color="gray">Stake</Button>
+                        <div className='flex justify-between gap-4 text-sm rounded-lg bg-dark-900'>
+                          <div className='flex flex-col w-1/2 px-3 py-3 align-middle gap-y-4'>
+                            <div>Stake</div>
+                            <div className="w-screen text-base">12.8878</div>
+                          </div>
+                          <div className='flex flex-col w-1/2 px-2 py-3 text-sm align-middle gap-y-4'>
+                            <div>Balances: {staked}</div>
+                            <div className='flex items-center gap-1'>
+                              <Button size="xs" className='border-2 border-gray'>Max</Button>
+                              <div>CRONA-CRO LP</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <Button color="blue" className='w-1/2 text-lg'>Approve</Button>
+                          <Button color="gray" className='w-1/2 text-lg'>Stake</Button>
                         </div>
                       </div>
 
-                      {/* withdraw */}
+                      {/* Unstake */}
                       <div className="flex flex-col justify-center space-y-4">
                         <div className="text-xs md:text-base text-secondary">Unstake LP Tokens</div>
-                        <div className="bg-dark-900 w-200 h-12">4228</div>
-                        <Button color="gray">Unstake</Button>
+                        <div className='flex justify-between gap-4 text-sm rounded-lg bg-dark-900'>
+                          <div className='flex flex-col w-1/2 px-3 py-3 align-middle gap-y-4'>
+                            <div>Unstake</div>
+                            <div className="text-base">12.8878</div>
+                          </div>
+                          <div className='flex flex-col w-1/2 px-2 py-3 text-sm align-middle gap-y-4'>
+                            <div>Staked: {balances}</div>
+                            <div className='flex items-center gap-1'>
+                              <Button size="xs" className='border-2 border-gray'>Max</Button>
+                              <div>CRONA-CRO LP</div>
+                            </div>
+                          </div>
+                        </div>
+                        <Button color="blue" className='w-full text-lg'>Unstake</Button>
                       </div>
 
                       {/* CRONA EARNED */}
                       <div className="flex flex-col justify-center space-y-4">
-                        <div className="text-xs md:text-base text-secondary">CRONA EARNED</div>
-                        <div className="bg-dark-900 w-200 h-12">4228</div>
-                        <div className="bg-dark-900 w-200 h-12">4228</div>
+                        <div className="text-xs md:text-base text-secondary">CRONA Earned</div>
+                        <div className='flex flex-col justify-between gap-4 text-sm rounded-lg bg-dark-900'>
+                          <div className='flex mt-4'>
+                            <div className='flex flex-col w-2/3 px-3 align-middle gap-y-2'>
+                              <div className="text-lg">{cronaEarned}</div>
+                              <div className="text-sm">~154.76 USD</div>
+                              <div className="text-sm">Locked CRONA boost earning</div>
+                            </div>
+                            <div className='flex flex-col w-1/3 px-2 align-middle gap-y-1'>
+                              <Button color="gray" size="xs" className='text-lg border-2 h-1/2 border-gray'>Harvest</Button>
+                              <Button color="gray" size="xs" className='text-lg border-2 h-1/2 border-gray'>Boost</Button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between px-5 pt-1 pb-3 text-base">
+                            <div className='flex items-center gap-1'>
+                              <a href="https://cronos.crypto.org/explorer/address/0xadbd1231fb360047525BEdF962581F3eee7b49fe/contracts" target="_blank">View Contract</a>
+                              <ExternalLinkIcon className='h-5' />
+                            </div>
+                            <div className='flex items-center gap-1'>
+                              <a href="" target="_blank">Get CRONA-CRO LP</a>
+                              <ExternalLinkIcon className='h-5' />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Disclosure.Panel>
