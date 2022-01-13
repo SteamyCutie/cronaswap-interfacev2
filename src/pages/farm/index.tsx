@@ -43,9 +43,9 @@ export default function Yield(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* search bar */}
-        <div className="flex flex-row justify-between">
+        <div className="md:flex flex-row justify-between">
           {/* select tab */}
-          <div className="flex w-4/12 rounded h-14 bg-dark-800">
+          <div className="m-auto mb-2 flex md:m-0 md:w-4/12 rounded h-14 bg-dark-800">
             <div className="h-full w-6/12 p-0.5">
               <div className={0 === 0 ? activeTabStyle : inactiveTabStyle}>
                 <p>Live</p>
@@ -63,7 +63,7 @@ export default function Yield(): JSX.Element {
             </div>
           </div>
 
-          <div className='flex w-5/12 gap-10'>
+          <div className='flex md:w-5/12 gap-10'>
             {/* sort select menu*/}
             <div className='w-1/3 h-14'>
               <div className="relative inline-block w-full h-full group">
@@ -138,7 +138,7 @@ export default function Yield(): JSX.Element {
                     {/* APR */}
                     <div className="flex flex-col justify-center">
                       <div className="text-xs md:text-base text-secondary">APR</div>
-                      <div className='flex'>
+                      <div className='md:flex'>
                         <div className="text-xs font-bold md:text-base">26.78% / </div>
                         <div className='flex items-center'>
                           <LockClosedIcon className='h-4' />

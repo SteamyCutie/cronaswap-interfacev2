@@ -1556,10 +1556,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.26.6.tgz#134ef1ea0675580c2cc7524589d09f3d42c678a7"
   integrity sha512-Zx60MMI1vffX8c2UbUMlszrGIug3TWa25bD7NF3blJ5k/MVCZFsPafEZ+jEi7kcqoxdhMhgJTI6AmUhnMfq9SQ==
 
-"@cronaswap/core-sdk@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.1.tgz#1e1c81f5a3ee7e8500a9f793a031204543e28dc0"
-  integrity sha512-YvQsfexBJWp1+qfIK6GBR5zYYGMHshpQ4TUyqLOilU9cbt+fjYsyxa4Qf4AdCF0Ob9sFn62V2dY4iuDLQZfYXQ==
+"@cronaswap/core-sdk@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.2.tgz#7efe99b4ef0d139808457b430ffe69870df2d8ef"
+  integrity sha512-m8R1EjD5YSFUO62Tzme0xHjG3G6R2hUFUdFI82g/YaFSqceQKgiuckcTsUQmHKhuEwZcmFr9ZQxK8x+kmCO6wQ==
   dependencies:
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.0"

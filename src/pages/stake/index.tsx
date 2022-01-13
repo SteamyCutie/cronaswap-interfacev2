@@ -1,5 +1,5 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { BAR_ADDRESS, ZERO } from '@cronaswap/core-sdk'
+import { MASTERCHEF_ADDRESS, ZERO } from '@cronaswap/core-sdk'
 import React, { useState } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
 import Button from '../../components/Button'
@@ -14,6 +14,8 @@ import { request } from 'graphql-request'
 import { t } from '@lingui/macro'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
+import useCronaBar from '../../hooks/useCronaBar'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
@@ -50,9 +52,12 @@ const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matt
 export default function Stake() {
   const { i18n } = useLingui()
   const { account } = useActiveWeb3React()
-  const sushiBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.ETHEREUM])
-  const xSushiBalance = useTokenBalance(account ?? undefined, XCRONA)
+  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.CRONOS])
+  const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA)
   const walletConnected = !!account
+  const toggleWalletModal = useWalletModalToggle()
+
+  const { enterStaking, leaveStaking } = useCronaBar()
 
   const [activeTab, setActiveTab] = useState(0)
   const [modalOpen, setModalOpen] = useState(false)
@@ -60,13 +65,13 @@ export default function Stake() {
   const [input, setInput] = useState<string>('')
   const [usingBalance, setUsingBalance] = useState(false)
 
-  const balance = activeTab === 0 ? sushiBalance : xSushiBalance
+  const balance = activeTab === 0 ? cronaBalance : xCronaBalance
 
   const formattedBalance = balance?.toSignificant(4)
 
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
-  const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.ETHEREUM])
+  const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[ChainId.CRONOS])
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -90,6 +95,40 @@ export default function Stake() {
 
   const handleClickButton = async () => {
     //todo
+    if (buttonDisabled) return
+
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      if (activeTab === 0) {
+        if (approvalState === ApprovalState.NOT_APPROVED) {
+          const success = await sendTx(() => approve())
+          if (!success) {
+            setPendingTx(false)
+            // setModalOpen(true)
+            return
+          }
+        }
+        const success = await sendTx(() => enterStaking(parsedAmount))
+        if (!success) {
+          setPendingTx(false)
+          // setModalOpen(true)
+          return
+        }
+      } else if (activeTab === 1) {
+        const success = await sendTx(() => leaveStaking(parsedAmount))
+        if (!success) {
+          setPendingTx(false)
+          // setModalOpen(true)
+          return
+        }
+      }
+
+      handleInput('')
+      setPendingTx(false)
+    }
   }
 
   return (
@@ -174,6 +213,7 @@ export default function Stake() {
             <div>
               <TransactionFailedModal isOpen={modalOpen} onDismiss={() => setModalOpen(false)} />
               <div className="w-full max-w-xl px-3 pt-2 pb-6 rounded bg-dark-900 md:pb-9 md:pt-4 md:px-8">
+                {/* select method */}
                 <div className="flex w-full rounded h-14 bg-dark-800">
                   <div
                     className="h-full w-6/12 p-0.5"
@@ -207,6 +247,7 @@ export default function Stake() {
                   </div>
                 </div>
 
+                {/* CRONA Amount Input */}
                 <Input.Numeric
                   value={input}
                   onUserInput={handleInput}
@@ -220,9 +261,8 @@ export default function Stake() {
                 {/* input overlay: */}
                 <div className="relative w-full h-0 pointer-events-none bottom-14">
                   <div
-                    className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
-                      inputError ? ' border border-red' : ''
-                    }`}
+                    className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${inputError ? ' border border-red' : ''
+                      }`}
                   >
                     <div className="flex space-x-2 ">
                       {inputError && (
@@ -235,9 +275,8 @@ export default function Stake() {
                         />
                       )}
                       <p
-                        className={`text-sm md:text-lg font-bold whitespace-nowrap ${
-                          input ? 'text-high-emphesis' : 'text-secondary'
-                        }`}
+                        className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
+                          }`}
                       >
                         {`${input ? input : '0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
                       </p>
@@ -256,8 +295,10 @@ export default function Stake() {
                     </div>
                   </div>
                 </div>
+
+                {/* Confirm Button */}
                 {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
-                activeTab === 0 ? (
+                  activeTab === 0 ? (
                   <Button
                     className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
                     disabled={approvalState === ApprovalState.PENDING}
@@ -275,10 +316,10 @@ export default function Stake() {
                       buttonDisabled
                         ? buttonStyleDisabled
                         : !walletConnected
-                        ? buttonStyleConnectWallet
-                        : insufficientFunds
-                        ? buttonStyleInsufficientFunds
-                        : buttonStyleEnabled
+                          ? buttonStyleConnectWallet
+                          : insufficientFunds
+                            ? buttonStyleInsufficientFunds
+                            : buttonStyleEnabled
                     }
                     onClick={handleClickButton}
                     disabled={buttonDisabled || inputError}
@@ -286,12 +327,12 @@ export default function Stake() {
                     {!walletConnected
                       ? i18n._(t`Connect Wallet`)
                       : !input
-                      ? i18n._(t`Enter Amount`)
-                      : insufficientFunds
-                      ? i18n._(t`Insufficient Balance`)
-                      : activeTab === 0
-                      ? i18n._(t`Confirm Staking`)
-                      : i18n._(t`Confirm Withdrawal`)}
+                        ? i18n._(t`Enter Amount`)
+                        : insufficientFunds
+                          ? i18n._(t`Insufficient Balance`)
+                          : activeTab === 0
+                            ? i18n._(t`Confirm Staking`)
+                            : i18n._(t`Confirm Withdrawal`)}
                   </button>
                 )}
               </div>
@@ -314,7 +355,7 @@ export default function Stake() {
                     />
                     <div className="flex flex-col justify-center">
                       <p className="text-sm font-bold md:text-lg text-high-emphesis">
-                        {xSushiBalance ? xSushiBalance.toSignificant(4) : '-'}
+                        {xCronaBalance ? xCronaBalance.toSignificant(4) : '-'}
                       </p>
                       <p className="text-sm md:text-base text-primary">xCRONA</p>
                     </div>
@@ -338,7 +379,7 @@ export default function Stake() {
                     />
                     <div className="flex flex-col justify-center">
                       <p className="text-sm font-bold md:text-lg text-high-emphesis">
-                        {sushiBalance ? sushiBalance.toSignificant(4) : '-'}
+                        {cronaBalance ? cronaBalance.toSignificant(4) : '-'}
                       </p>
                       <p className="text-sm md:text-base text-primary">CRONA</p>
                     </div>
