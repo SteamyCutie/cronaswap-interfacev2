@@ -167,7 +167,7 @@ function AppBar(): JSX.Element {
                       <>
                         <QuestionHelper text={i18n._(t`Add CRONA to your MetaMask wallet`)}>
                           <div
-                            className="hidden rounded-md cursor-pointer sm:inline-flex bg-dark-900 hover:bg-dark-800 p-0.5"
+                            className="hidden rounded-full cursor-pointer sm:inline-flex bg-dark-900 hover:bg-dark-800 p-0.5"
                             onClick={() => {
                               const params: any = {
                                 type: 'ERC20',
@@ -176,7 +176,7 @@ function AppBar(): JSX.Element {
                                   symbol: 'CRONA',
                                   decimals: 18,
                                   image:
-                                    'https://raw.githubusercontent.com/cronaswap/default-token-list/main/tokens/assets/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png',
+                                    'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png',
                                 },
                               }
                               if (library && library.provider.isMetaMask && library.provider.request) {
@@ -225,17 +225,17 @@ function AppBar(): JSX.Element {
                       )}
                       <Web3Status />
                     </div>
-                    <div className="hidden md:block">
+                    {/* <div className="hidden md:block">
                       <LanguageSwitch />
-                    </div>
+                    </div> */}
                     <More />
                   </div>
                 </div>
                 <div className="flex -mr-2 sm:hidden">
                   {/* Mobile menu button */}
-                  <div className="block mr-2 md:hidden">
+                  {/* <div className="block mr-2 md:hidden">
                     <LanguageSwitch />
-                  </div>
+                  </div> */}
                   <Popover.Button className="inline-flex items-center justify-center p-2 rounded-md text-primary hover:text-high-emphesis focus:outline-none">
                     <span className="sr-only">{i18n._(t`Open main menu`)}</span>
                     {open ? (

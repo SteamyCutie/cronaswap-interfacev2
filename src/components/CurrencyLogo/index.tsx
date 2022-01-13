@@ -19,7 +19,7 @@ export function getCurrencyLogoUrls(currency) {
     //   `https://raw.githubusercontent.com/cronaswap/default-token-list/main/tokens/assets/${BLOCKCHAIN[currency.chainId]}/${currency.address}/logo.svg`
     // )
     urls.push(
-      `https://raw.githubusercontent.com/cronaswap/default-token-list/main/tokens/assets/${
+      `https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/${
         BLOCKCHAIN[currency.chainId]
       }/${currency.address}/logo.png`
     )

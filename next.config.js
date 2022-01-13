@@ -51,7 +51,7 @@ const nextConfig = {
     return [
       {
         source: '/yield',
-        destination: '/farm',
+        destination: '/farms',
       },
       {
         source: '/stake',

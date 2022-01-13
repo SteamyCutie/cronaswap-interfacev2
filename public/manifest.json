@@ -1,8 +1,8 @@
 {
-  "name": "SushiSwap",
-  "short_name": "SushiSwap",
+  "name": "CronaSwap",
+  "short_name": "CronaSwap",
   "lang": "en",
-  "description": "Swap, yield, lend, borrow, leverage, limit, launch all on one community driven ecosystem",
+  "description": "Swap, yield, lend, borrow, leverage, launch all on one community driven ecosystem",
   "background_color": "#0D0415",
   "theme_color": "#F338C3",
   "dir": "ltr",

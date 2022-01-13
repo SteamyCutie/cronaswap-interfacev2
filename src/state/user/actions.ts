@@ -39,3 +39,14 @@ export const removeSerializedPair = createAction<{
   tokenBAddress: string
 }>('user/removeSerializedPair')
 export const toggleURLWarning = createAction<void>('app/toggleURLWarning')
+
+// migrate from cronaswapv1
+export enum FarmStakedOnly {
+  ON_FINISHED = 'onFinished',
+  TRUE = 'true',
+  FALSE = 'false',
+}
+
+export const updateUserFarmStakedOnly = createAction<{ userFarmStakedOnly: FarmStakedOnly }>(
+  'user/updateUserFarmStakedOnly'
+)

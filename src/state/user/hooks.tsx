@@ -13,6 +13,8 @@ import {
   updateUserExpertMode,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
+  FarmStakedOnly,
+  updateUserFarmStakedOnly,
 } from './actions'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch, useAppSelector } from '../hooks'
@@ -305,4 +307,25 @@ export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Pe
     () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
     [allowedSlippage, defaultSlippageTolerance]
   )
+}
+
+// migrate from cronaswapv1
+export function useUserFarmStakedOnly(isActive: boolean): [boolean, (stakedOnly: boolean) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userFarmStakedOnly = useSelector<AppState, AppState['user']['userFarmStakedOnly']>((state) => {
+    return state.user.userFarmStakedOnly
+  })
+
+  const setUserFarmStakedOnly = useCallback(
+    (stakedOnly: boolean) => {
+      const farmStakedOnly = stakedOnly ? FarmStakedOnly.TRUE : FarmStakedOnly.FALSE
+      dispatch(updateUserFarmStakedOnly({ userFarmStakedOnly: farmStakedOnly }))
+    },
+    [dispatch]
+  )
+
+  return [
+    userFarmStakedOnly === FarmStakedOnly.ON_FINISHED ? !isActive : userFarmStakedOnly === FarmStakedOnly.TRUE,
+    setUserFarmStakedOnly,
+  ]
 }

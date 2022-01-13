@@ -47,6 +47,12 @@ const items = (i18n: I18n) => [
     external: true,
   },
   {
+    name: i18n._(t`Audit`),
+    description: i18n._(t`CronaSwap audit by Certik.`),
+    href: 'https://docs.cronaswap.org/security-audits',
+    external: true,
+  },
+  {
     name: i18n._(t`Vesting`),
     description: i18n._(t`Daily unlocks from the vesting period.`),
     href: '/vesting',

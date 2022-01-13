@@ -9,6 +9,8 @@ import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 
+import farmsReducer from './farms' //migrate from cronaswapv1
+
 const reducer = combineReducers({
   application,
   user,
@@ -19,6 +21,7 @@ const reducer = combineReducers({
   multicall,
   lists,
   create,
+  farms: farmsReducer,
 })
 
 export default reducer

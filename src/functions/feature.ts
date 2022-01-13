@@ -26,7 +26,6 @@ const features = {
     Feature.AMM,
     Feature.LIQUIDITY_MINING,
     Feature.ZAP,
-    Feature.LENDING,
     Feature.MIGRATE,
     Feature.ANALYTICS,
     Feature.STAKING,

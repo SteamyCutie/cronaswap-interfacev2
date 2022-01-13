@@ -1,7 +1,6 @@
 export * from './array'
 export * from './convert'
 export * from './currency'
-export * from './bentobox'
 export * from './block'
 export * from './ens'
 export * from './contract'

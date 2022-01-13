@@ -82,3 +82,6 @@ export const EIP_1559_ACTIVATION_BLOCK: { [chainId in ChainId]?: number } = {
   // [ChainId.GÖRLI]: 5062605,
   // [ChainId.RINKEBY]: 8897988,
 }
+
+// migrate from cronaswapv1
+export { default as farmsConfig } from './farms'
