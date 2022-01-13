@@ -17,11 +17,7 @@
   "Approving": "",
   "Approving {0}": "",
   "Are you sure?": "",
-<<<<<<< Updated upstream
-  "Audit": "Audit",
-=======
   "Audit": "",
->>>>>>> Stashed changes
   "Auto": "",
   "Available Networks": "",
   "Balance": "",
@@ -53,11 +49,7 @@
   "Create Pool & Supply": "",
   "Create pool": "",
   "CronaSwap": "",
-<<<<<<< Updated upstream
-  "CronaSwap audit by Certik.": "CronaSwap audit by Certik.",
-=======
   "CronaSwap audit by Certik.": "",
->>>>>>> Stashed changes
   "CronaSwap is a supporter of Open Source.": "",
   "Daily unlocks from the vesting period.": "",
   "Dev": "",
@@ -84,7 +76,7 @@
   "Farm": "",
   "Find Pool": "",
   "Follow our official Twitter.": "",
-  "For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as CRONA\nproportional to your share of the CronaBar. When your CRONA is staked into the CronaBar, you receive\nxCRONA in return for voting rights and a fully composable token that can interact with other protocols.\nYour xCRONA is continuously compounding, when you unstake you will receive all the originally deposited\nCRONA and any additional from fees.": "For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as CRONA\nproportional to your share of the CronaBar. When your CRONA is staked into the CronaBar, you receive\nxCRONA in return for voting rights and a fully composable token that can interact with other protocols.\nYour xCRONA is continuously compounding, when you unstake you will receive all the originally deposited\nCRONA and any additional from fees.",
+  "For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as CRONA\nproportional to your share of the CronaBar. When your CRONA is staked into the CronaBar, you receive\nxCRONA in return for voting rights and a fully composable token that can interact with other protocols.\nYour xCRONA is continuously compounding, when you unstake you will receive all the originally deposited\nCRONA and any additional from fees.": "",
   "GitHub": "",
   "Go Back": "",
   "Import": "",
