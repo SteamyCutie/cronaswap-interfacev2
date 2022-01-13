@@ -36,7 +36,8 @@ const Strategies = () => {
         <meta name="description" content="Vesting..." />
       </Head>
       <Container maxWidth="5xl" className="flex flex-col gap-8 px-4 py-8">
-        <div className="space-y-10 md:block">
+        {/* Not need for now, so hidden */}
+        {/* <div className="space-y-10 md:block">
           <div className="relative w-full p-4 overflow-hidden rounded bg-dark-600">
             <div className="font-bold text-lg text-white">{i18n._(t`Claim CRONA For Airdrop Activity`)}</div>
             <div className="pt-2 text-sm font-bold text-gray-400">
@@ -52,7 +53,7 @@ const Strategies = () => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <AirdropVesting />
           <AirdropVesting />
-        </div>
+        </div> */}
 
         <div className="space-y-10 md:block">
           <div className="relative w-full p-4 overflow-hidden rounded bg-cyan-blue">
@@ -257,10 +258,10 @@ const TokenSaleVesting = () => {
           <Button
             color={
               !isAddress(account ?? '') ||
-              claimConfirmed ||
-              !unclaimedAmount ||
-              Number(unclaimedAmount?.toFixed(8)) <= 0 ||
-              pendingTreasurySignature
+                claimConfirmed ||
+                !unclaimedAmount ||
+                Number(unclaimedAmount?.toFixed(8)) <= 0 ||
+                pendingTreasurySignature
                 ? 'gray'
                 : 'gradient'
             }
