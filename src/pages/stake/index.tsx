@@ -1,5 +1,5 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { MASTERCHEF_ADDRESS, ZERO } from '@cronaswap/core-sdk'
+import { MASTERCHEF_ADDRESS, BAR_ADDRESS, ZERO } from '@cronaswap/core-sdk'
 import React, { useState } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
 import Button from '../../components/Button'
@@ -72,6 +72,7 @@ export default function Stake() {
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
   const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[ChainId.CRONOS])
+  console.log(MASTERCHEF_ADDRESS[ChainId.CRONOS], "++++++++")
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -167,7 +168,7 @@ export default function Stake() {
             </div>
             <div className="max-w-lg pr-3 mb-2 text-sm leading-5 text-gray-500 md:text-base md:mb-4 md:pr-0">
               {i18n._(t`For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as CRONA
-                                proportional to your share of the SushiBar. When your CRONA is staked into the SushiBar, you receive
+                                proportional to your share of the CronaBar. When your CRONA is staked into the CronaBar, you receive
                                 xCRONA in return for voting rights and a fully composable token that can interact with other protocols.
                                 Your xCRONA is continuously compounding, when you unstake you will receive all the originally deposited
                                 CRONA and any additional from fees.`)}
@@ -188,7 +189,7 @@ export default function Stake() {
                     </p>
                     {/* <img className="ml-3 cursor-pointer" src={MoreInfoSymbol} alt={'more info'} /> */}
                   </div>
-                  <div className="flex">
+                  {/* <div className="flex">
                     <a
                       href={`https://analytics.sushi.com/bar`}
                       target="_blank"
@@ -200,13 +201,13 @@ export default function Stake() {
                     >
                       {i18n._(t`View Stats`)}
                     </a>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex flex-col">
                   <p className="mb-1 text-lg font-bold text-right text-high-emphesis md:text-3xl">123.89%</p>
-                  <p className="w-32 text-sm text-right text-primary md:w-64 md:text-base">
+                  {/* <p className="w-32 text-sm text-right text-primary md:w-64 md:text-base">
                     {i18n._(t`Yesterday's APR`)}
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
@@ -242,9 +243,10 @@ export default function Stake() {
                   <p className="font-bold text-large md:text-2xl text-high-emphesis">
                     {activeTab === 0 ? i18n._(t`Stake CRONA`) : i18n._(t`Unstake`)}
                   </p>
-                  <div className="border-gradient-r-pink-red-light-brown-dark-pink-red border-transparent border-solid border rounded-3xl px-4 md:px-3.5 py-1.5 md:py-0.5 text-high-emphesis text-xs font-medium md:text-base md:font-normal">
+                  {/* Hidden now */}
+                  {/* <div className="border-gradient-r-pink-red-light-brown-dark-pink-red border-transparent border-solid border rounded-3xl px-4 md:px-3.5 py-1.5 md:py-0.5 text-high-emphesis text-xs font-medium md:text-base md:font-normal">
                     {`1 xCRONA = 1 CRONA`}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* CRONA Amount Input */}
@@ -338,7 +340,7 @@ export default function Stake() {
               </div>
             </div>
           </div>
-          <div className="w-full max-w-xl mx-auto md:mx-0 md:ml-6 md:block md:w-72">
+          <div className="w-full max-w-xl mx-auto my-auto md:mx-0 md:ml-6 md:block md:w-72">
             <div className="flex flex-col w-full px-4 pt-6 pb-5 rounded bg-dark-900 md:px-8 md:pt-7 md:pb-9">
               <div className="flex flex-wrap">
                 <div className="flex flex-col flex-grow md:mb-14">
@@ -386,16 +388,16 @@ export default function Stake() {
                   </div>
                 </div>
 
-                <div className="flex flex-col w-full mb-4 mt-7 md:mb-0">
-                  {/* <div className="flex items-center justify-between">
-                        <div className="flex items-center flex-1 flex-nowrap">
-                            <p className="text-base font-bold md:text-lg text-high-emphesis">Weighted APR</p>
-                            <img className="w-4 ml-2 cursor-pointer" src={MoreInfoSymbol} alt={'more info'} />
-                        </div>
-                        <div className="flex flex-1 md:flex-initial">
-                            <p className="ml-5 text-base text-primary md:ml-0">{`${weightedApr}%`}</p>
-                        </div>
-                    </div> */}
+                {/* <div className="flex flex-col w-full mb-4 mt-7 md:mb-0">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center flex-1 flex-nowrap">
+                      <p className="text-base font-bold md:text-lg text-high-emphesis">Weighted APR</p>
+                      <img className="w-4 ml-2 cursor-pointer" src={MoreInfoSymbol} alt={'more info'} />
+                    </div>
+                    <div className="flex flex-1 md:flex-initial">
+                      <p className="ml-5 text-base text-primary md:ml-0">{`${weightedApr}%`}</p>
+                    </div>
+                  </div>
                   {account && (
                     <a
                       href={`https://analytics.sushi.com/users/${account}`}
@@ -409,10 +411,10 @@ export default function Stake() {
                                 text-sm font-bold cursor-pointer
                             `}
                     >
-                      {i18n._(t`Your SushiBar Stats`)}
+                      {i18n._(t`Your CronaBar Stats`)}
                     </a>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
