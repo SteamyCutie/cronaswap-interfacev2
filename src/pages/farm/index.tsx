@@ -43,9 +43,9 @@ export default function Yield(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* search bar */}
-        <div className="flex flex-row justify-between gap-10">
+        <div className="flex flex-row justify-between">
           {/* select tab */}
-          <div className="flex w-full rounded h-14 bg-dark-800">
+          <div className="flex w-4/12 rounded h-14 bg-dark-800">
             <div className="h-full w-6/12 p-0.5">
               <div className={0 === 0 ? activeTabStyle : inactiveTabStyle}>
                 <p>Live</p>
@@ -63,22 +63,41 @@ export default function Yield(): JSX.Element {
             </div>
           </div>
 
-          {/* filter menu */}
+          <div className='flex w-5/12 gap-10'>
+            {/* sort select menu*/}
+            <div className='w-1/3 h-14'>
+              <div className="relative inline-block w-full h-full group">
+                <button
+                  className="inline-flex items-center justify-between w-full h-full px-4 py-2 font-semibold text-gray-700 bg-gray-300 rounded"
+                >
+                  <span className="mr-1">Hot</span>
+                  <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                </button>
+                <ul className="hidden pt-1 text-gray-700 group-hover:block">
+                  <li className=""><a className="block px-4 py-2 whitespace-no-wrap bg-gray-200 hover:bg-gray-400" href="#">APR</a></li>
+                  <li className=""><a className="block px-4 py-2 whitespace-no-wrap bg-gray-200 hover:bg-gray-400" href="#">Multiplier</a></li>
+                  <li className=""><a className="block px-4 py-2 whitespace-no-wrap bg-gray-200 hover:bg-gray-400" href="#">Earned</a></li>
+                  <li className=""><a className="block px-4 py-2 whitespace-no-wrap bg-gray-200 hover:bg-gray-400" href="#">Liquidity</a></li>
+                </ul>
+              </div>
+            </div>
 
-          <Search
-            search={search}
-            term={term}
-            inputProps={{
-              className:
-                'relative w-full bg-transparent border border-transparent focus:border-gradient-r-blue-pink-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5',
-            }}
-          />
+            {/* filter menu */}
+            <Search
+              search={search}
+              term={term}
+              inputProps={{
+                className:
+                  'relative w-full bg-transparent border border-transparent focus:border-gradient-r-blue-pink-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5',
+              }}
+            />
+          </div>
         </div>
 
         {/* <FarmList farms={result} term={term} /> */}
 
         {/* FarmListItem */}
-        <div className="space-y-4">
+        <div>
           <Disclosure>
             {({ open }) => (
               <>
@@ -119,7 +138,14 @@ export default function Yield(): JSX.Element {
                     {/* APR */}
                     <div className="flex flex-col justify-center">
                       <div className="text-xs md:text-base text-secondary">APR</div>
-                      <div className="text-xs font-bold md:text-base">26.78% / 278.68%</div>
+                      <div className='flex'>
+                        <div className="text-xs font-bold md:text-base">26.78% / </div>
+                        <div className='flex items-center'>
+                          <LockClosedIcon className='h-4' />
+                          <div className="text-xs font-bold md:text-base">278.68%</div>
+                          <CalculatorIcon className='h-4' />
+                        </div>
+                      </div>
                     </div>
 
                     <div className="flex flex-col items-center justify-center">
