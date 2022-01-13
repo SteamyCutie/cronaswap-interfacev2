@@ -1,42 +1,42 @@
 import { Currency, CurrencyAmount, Token } from '@cronaswap/core-sdk'
 
 import { useCallback } from 'react'
-import { useSushiBarContract } from './useContract'
+import { useMasterChefContract } from './useContract'
 import { useTransactionAdder } from '../state/transactions/hooks'
 
 const useSushiBar = () => {
   const addTransaction = useTransactionAdder()
-  const barContract = useSushiBarContract()
+  const masterchefContract = useMasterChefContract()
 
-  const enter = useCallback(
+  const enterStaking = useCallback(
     async (amount: CurrencyAmount<Token> | undefined) => {
       if (amount?.quotient) {
         try {
-          const tx = await barContract?.enter(amount?.quotient.toString())
-          return addTransaction(tx, { summary: 'Enter SushiBar' })
+          const tx = await masterchefContract?.enterStaking(amount?.quotient.toString())
+          return addTransaction(tx, { summary: 'Enter CronaBar' })
         } catch (e) {
           return e
         }
       }
     },
-    [addTransaction, barContract]
+    [addTransaction, masterchefContract]
   )
 
-  const leave = useCallback(
+  const leaveStaking = useCallback(
     async (amount: CurrencyAmount<Token> | undefined) => {
       if (amount?.quotient) {
         try {
-          const tx = await barContract?.leave(amount?.quotient.toString())
-          return addTransaction(tx, { summary: 'Leave SushiBar' })
+          const tx = await masterchefContract?.leaveStaking(amount?.quotient.toString())
+          return addTransaction(tx, { summary: 'Leave CronaBar' })
         } catch (e) {
           return e
         }
       }
     },
-    [addTransaction, barContract]
+    [addTransaction, masterchefContract]
   )
 
-  return { enter, leave }
+  return { enterStaking, leaveStaking }
 }
 
 export default useSushiBar
