@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { useMasterChefContract } from './useContract'
 import { useTransactionAdder } from '../state/transactions/hooks'
 
-const useSushiBar = () => {
+const useCronaBar = () => {
   const addTransaction = useTransactionAdder()
   const masterchefContract = useMasterChefContract()
 
@@ -39,4 +39,4 @@ const useSushiBar = () => {
   return { enterStaking, leaveStaking }
 }
 
-export default useSushiBar
+export default useCronaBar

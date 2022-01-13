@@ -1,5 +1,5 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { BAR_ADDRESS, ZERO } from '@cronaswap/core-sdk'
+import { MASTERCHEF_ADDRESS, ZERO } from '@cronaswap/core-sdk'
 import React, { useState } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
 import Button from '../../components/Button'
@@ -14,7 +14,7 @@ import { request } from 'graphql-request'
 import { t } from '@lingui/macro'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
-import useSushiBar from '../../hooks/useSushiBar'
+import useCronaBar from '../../hooks/useCronaBar'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
@@ -52,12 +52,12 @@ const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matt
 export default function Stake() {
   const { i18n } = useLingui()
   const { account } = useActiveWeb3React()
-  const sushiBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.CRONOS])
-  const xSushiBalance = useTokenBalance(account ?? undefined, XCRONA)
+  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.CRONOS])
+  const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA)
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
 
-  const { enterStaking, leaveStaking } = useSushiBar()
+  const { enterStaking, leaveStaking } = useCronaBar()
 
   const [activeTab, setActiveTab] = useState(0)
   const [modalOpen, setModalOpen] = useState(false)
@@ -65,13 +65,13 @@ export default function Stake() {
   const [input, setInput] = useState<string>('')
   const [usingBalance, setUsingBalance] = useState(false)
 
-  const balance = activeTab === 0 ? sushiBalance : xSushiBalance
+  const balance = activeTab === 0 ? cronaBalance : xCronaBalance
 
   const formattedBalance = balance?.toSignificant(4)
 
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
-  const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.CRONOS])
+  const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[ChainId.CRONOS])
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -355,7 +355,7 @@ export default function Stake() {
                     />
                     <div className="flex flex-col justify-center">
                       <p className="text-sm font-bold md:text-lg text-high-emphesis">
-                        {xSushiBalance ? xSushiBalance.toSignificant(4) : '-'}
+                        {xCronaBalance ? xCronaBalance.toSignificant(4) : '-'}
                       </p>
                       <p className="text-sm md:text-base text-primary">xCRONA</p>
                     </div>
@@ -379,7 +379,7 @@ export default function Stake() {
                     />
                     <div className="flex flex-col justify-center">
                       <p className="text-sm font-bold md:text-lg text-high-emphesis">
-                        {sushiBalance ? sushiBalance.toSignificant(4) : '-'}
+                        {cronaBalance ? cronaBalance.toSignificant(4) : '-'}
                       </p>
                       <p className="text-sm md:text-base text-primary">CRONA</p>
                     </div>
