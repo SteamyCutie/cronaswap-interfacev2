@@ -67,7 +67,6 @@
     "@popperjs/core": "^2.9.2",
     "@ramp-network/ramp-instant-sdk": "^2.4.6",
     "@reduxjs/toolkit": "^1.6.0",
-    "@sentry/nextjs": "^6.11.0",
     "@sushiswap/chainlink-whitelist": "0.2.5",
     "@sushiswap/core": "^2.0.0-canary.1",
     "@sushiswap/limit-order-pair-list": "0.2.2",
