@@ -27,6 +27,11 @@ import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
 import NetworkGuard from '../../guards/Network'
 import { ChainId } from '@cronaswap/core-sdk'
 
+import { usePubSaleContract } from 'hooks/useContract'
+import { usePurchased, useClaimable } from './hooks/usePublicSaleInfo'
+import { getBalanceNumber } from 'functions/formatBalance'
+import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
+
 const Strategies = () => {
   const { i18n } = useLingui()
   return (
@@ -39,9 +44,9 @@ const Strategies = () => {
         {/* Not need for now, so hidden */}
         {/* <div className="space-y-10 md:block">
           <div className="relative w-full p-4 overflow-hidden rounded bg-dark-600">
-            <div className="font-bold text-lg text-white">{i18n._(t`Claim CRONA For Airdrop Activity`)}</div>
+            <div className="text-lg font-bold text-white">{i18n._(t`Claim CRONA For Airdrop Activity`)}</div>
             <div className="pt-2 text-sm font-bold text-gray-400">
-              <ul className="list-disc px-6 ">
+              <ul className="px-6 list-disc ">
                 <li>
                   1% - unlocked at 1st day, 3% - unlocked at 5th day, 6% - unlocked at 10th day, after vesting start.
                 </li>
@@ -57,11 +62,11 @@ const Strategies = () => {
 
         <div className="space-y-10 md:block">
           <div className="relative w-full p-4 overflow-hidden rounded bg-cyan-blue">
-            <div className="font-bold text-lg text-white">
+            <div className="text-lg font-bold text-white">
               {i18n._(t`Claim CRONA For Seed / Private / Public Sale`)}
             </div>
             <div className="pt-2 text-sm font-bold text-gray-400">
-              <ul className="list-disc px-6 text-white">
+              <ul className="px-6 text-white list-disc">
                 <li>
                   1% - unlocked at 1st day, 3% - unlocked at 5th day, 6% - unlocked at 10th day, after vesting start.
                 </li>
@@ -145,7 +150,7 @@ const AirdropVesting = () => {
     <div className="flex flex-col gap-3 md:max-w-full">
       <div className="relative w-full h-full overflow-hidden rounded bg-dark-900">
         <div className="flex flex-col gap-3 p-4">
-          <div className="font-bold text-lg text-white">{i18n._(t`Claimable CRONA from Testnet Airdrop`)}</div>
+          <div className="text-lg font-bold text-white">{i18n._(t`Claimable CRONA from Testnet Airdrop`)}</div>
           <div className="flex flex-col items-baseline">
             <div className="font-bold text-white text-[26px]">1320.0132</div>
             {account ? (
@@ -186,6 +191,11 @@ const TokenSaleVesting = () => {
   const unclaimedAmount: CurrencyAmount<Currency> | undefined = useUserUnclaimedProtocolAmount(account)
   const { claimSubmitted } = useUserHasSubmittedClaim(account ?? undefined)
   const claimConfirmed = false
+  const pubSaleContract = usePubSaleContract()
+  const [pendingTx, setPendingTx] = useState(false)
+  const { callWithGasPrice } = useCallWithGasPrice()
+  const DEFAULT_GAS_LIMIT = 250000
+
 
   function onClaim() {
     setAttempting(true)
@@ -196,6 +206,27 @@ const TokenSaleVesting = () => {
         console.log(error)
       })
   }
+
+  // const handleClaim = async () => {
+  //   setPendingTx(true)
+  //   try {
+  //     const tx = await callWithGasPrice(pubSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
+  //     const receipt = await tx.wait()
+  //     if (receipt.status) {
+  //       toastSuccess(
+  //         t('Pub-sale claimed!'),
+  //         <ToastDescriptionWithTx txHash={receipt.transactionHash}>
+  //           {t('CRONAs has been sent to your wallet.')}
+  //         </ToastDescriptionWithTx>,
+  //       )
+  //       setPendingTx(false)
+  //     }
+  //   } catch (error) {
+  //     console.error(error)
+  //     // toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+  //     setPendingTx(false)
+  //   }
+  // }
 
   // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
   useEffect(() => {
@@ -234,13 +265,24 @@ const TokenSaleVesting = () => {
   // remove once treasury signature passed
   const pendingTreasurySignature = false
 
+  // New Adding
+  const userPurchased = usePurchased()
+  const userClaimable = useClaimable()
+  // const cronaPriceUSDC = usePriceCronaUSDC()
+
+  const hasFetchedCronaAmount = userPurchased ? userPurchased.gte(0) : false
+  const purchasedCrona = hasFetchedCronaAmount ? getBalanceNumber(userPurchased, 18) : 0
+  const claimableCrona = hasFetchedCronaAmount ? getBalanceNumber(userClaimable, 18) : 0
+  const unclaimedCrona = hasFetchedCronaAmount ? purchasedCrona - claimableCrona : 0
+  console.log("Purchased++++++", claimableCrona)
+
   return (
     <div className="flex flex-col gap-3 md:max-w-full">
       <div className="relative w-full h-full overflow-hidden rounded bg-dark-900">
         <div className="flex flex-col gap-3 p-4">
-          <div className="font-bold text-lg text-white">{i18n._(t`Claimable CRONA from Seed Sale`)}</div>
+          <div className="text-lg font-bold text-white">{i18n._(t`Claimable CRONA from Seed Sale`)}</div>
           <div className="flex flex-col items-baseline pb-4">
-            <div className="font-bold text-white text-[26px]">1320.0132</div>
+            <div className="font-bold text-white text-[26px]">{claimableCrona}</div>
             {account ? (
               <div className="text-sm text-secondary">{i18n._(t`Your Claimable CRONAs`)}</div>
             ) : (
@@ -249,29 +291,19 @@ const TokenSaleVesting = () => {
           </div>
           <div className="flex flex-col pb-4 space-y-2">
             <div className="flex flex-row justify-between text-md">
-              <h2>Your Purchased CRONAs</h2> <span>1223.998</span>
+              <h2>Your Purchased CRONAs</h2> <span>{purchasedCrona}</span>
             </div>
             <div className="flex flex-row justify-between text-lg">
-              <h2>Your UnClaimed CRONAs</h2> <span>1223.998</span>
+              <h2>Your UnClaimed CRONAs</h2> <span>{unclaimedCrona}</span>
             </div>
           </div>
           <Button
             color={
-              !isAddress(account ?? '') ||
-                claimConfirmed ||
-                !unclaimedAmount ||
-                Number(unclaimedAmount?.toFixed(8)) <= 0 ||
-                pendingTreasurySignature
+              !claimableCrona
                 ? 'gray'
                 : 'gradient'
             }
-            disabled={
-              !isAddress(account ?? '') ||
-              claimConfirmed ||
-              !unclaimedAmount ||
-              Number(unclaimedAmount?.toFixed(8)) <= 0 ||
-              pendingTreasurySignature
-            }
+            disabled={!claimableCrona}
             size="default"
             onClick={onClaim}
             className="inline-flex items-center justify-center"
@@ -287,6 +319,7 @@ const TokenSaleVesting = () => {
                 stroke="white"
                 style={{
                   marginLeft: '10px',
+                  height: '16px',
                 }}
               />
             )}

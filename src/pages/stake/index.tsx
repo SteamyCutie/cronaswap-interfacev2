@@ -19,6 +19,8 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
+import { aprToApy } from '../../functions/convert/apyApr'
+import { useBar, useBlock, useFactory, useNativePrice, useSushiPrice, useTokens } from '../../services/graph'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -72,7 +74,6 @@ export default function Stake() {
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
   const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[ChainId.CRONOS])
-  console.log(MASTERCHEF_ADDRESS[ChainId.CRONOS], "++++++++")
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -131,6 +132,34 @@ export default function Stake() {
       setPendingTx(false)
     }
   }
+
+  const block1d = useBlock({ daysAgo: 1, chainId: ChainId.CRONOS })
+
+  const exchange = useFactory({ chainId: ChainId.CRONOS })
+
+  const exchange1d = useFactory({
+    chainId: ChainId.CRONOS,
+    variables: {
+      block: block1d,
+    },
+    shouldFetch: !!block1d,
+  })
+
+  const ethPrice = useNativePrice({ chainId: ChainId.CRONOS })
+
+  const bar = useBar()
+
+  const xCrona = useTokens({
+    chainId: ChainId.CRONOS,
+    variables: { where: { id: XCRONA.address.toLowerCase() } },
+  })?.[0]
+
+  const [xCronaPrice] = [xCrona?.derivedETH * ethPrice, xCrona?.derivedETH * ethPrice * bar?.totalSupply]
+
+  const APY1d = aprToApy(
+    (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xCronaPrice)) * 100 ?? 0
+  )
+  console.log(exchange1d, '++++++++')
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
@@ -204,7 +233,9 @@ export default function Stake() {
                   </div> */}
                 </div>
                 <div className="flex flex-col">
-                  <p className="mb-1 text-lg font-bold text-right text-high-emphesis md:text-3xl">123.89%</p>
+                  <p className="mb-1 text-lg font-bold text-right text-high-emphesis md:text-3xl">
+                    {`${APY1d ? APY1d.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
+                  </p>
                   {/* <p className="w-32 text-sm text-right text-primary md:w-64 md:text-base">
                     {i18n._(t`Yesterday's APR`)}
                   </p> */}

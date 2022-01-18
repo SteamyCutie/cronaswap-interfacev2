@@ -11,6 +11,7 @@ import {
   tokenSubsetQuery,
   tokensQuery,
   transactionsQuery,
+  tokenFieldsQuery,
 } from '../queries'
 
 import { ChainId } from '@cronaswap/core-sdk'
@@ -22,7 +23,7 @@ export const EXCHANGE = {
   [ChainId.CRONOS]: 'cronaswap/exchange',
 }
 
-export const exchange = async (chainId = ChainId.ETHEREUM, query, variables = {}) =>
+export const exchange = async (chainId = ChainId.CRONOS, query, variables = {}) =>
   pager(`${GRAPH_HOST[chainId]}/subgraphs/name/${EXCHANGE[chainId]}`, query, variables)
 
 export const getPairs = async (chainId = ChainId.ETHEREUM, variables = undefined) => {
@@ -36,9 +37,10 @@ export const getTokenSubset = async (chainId = ChainId.ETHEREUM, variables) => {
   return tokens
 }
 
-export const getTokens = async (chainId = ChainId.ETHEREUM, variables) => {
+export const getTokens = async (chainId = ChainId.CRONOS, variables) => {
   // console.log('getTokens')
   const { tokens } = await exchange(chainId, tokensQuery, variables)
+  console.log('***********', tokens)
   return tokens
 }
 
@@ -68,7 +70,7 @@ export const getTokenPrice = async (chainId = ChainId.ETHEREUM, query, variables
   return token?.derivedETH * nativePrice
 }
 
-export const getNativePrice = async (chainId = ChainId.ETHEREUM, variables = undefined) => {
+export const getNativePrice = async (chainId = ChainId.CRONOS, variables = undefined) => {
   // console.log('getEthPrice')
   const data = await getBundle(chainId, undefined, variables)
   return data?.bundles[0]?.ethPrice

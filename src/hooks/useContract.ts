@@ -52,6 +52,10 @@ import TIMELOCK_ABI from '../constants/abis/timelock.json'
 import UNI_FACTORY_ABI from '../constants/abis/uniswap-v2-factory.json'
 import WETH9_ABI from '../constants/abis/weth.json'
 import ZENKO_ABI from '../constants/abis/zenko.json'
+import SEEDSALE_ABI from '../constants/abis/seedSale.json'
+import PRIVATESALEA_ABI from '../constants/abis/privateSaleA.json'
+import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
+import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -212,4 +216,20 @@ export function useInariContract(withSignerIfPossible?: boolean): Contract | nul
 
 export function useZenkoContract(withSignerIfPossible?: boolean): Contract | null {
   return useContract('0xa8f676c49f91655ab3b7c3ea2b73bb3088b2bc1f', ZENKO_ABI, withSignerIfPossible)
+}
+
+export function useSeedSaleContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x94f3Dfc9E8AE00892984d8fA003BF09a46987DFd', SEEDSALE_ABI, withSignerIfPossible)
+}
+
+export function usePrivateSaleAContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x1c41BE3D395494e636aE7Ec9b8B5AB32A9Ddd1Ce', PRIVATESALEA_ABI, withSignerIfPossible)
+}
+
+export function usePrivateSaleBContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x309afba23f791B5c38Ab9057D11D6869755fAcaf', PRIVATESALEB_ABI, withSignerIfPossible)
+}
+
+export function usePubSaleContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x941a3703E106707668f38E779c7984383638173e', PUBLICSALE_ABI, withSignerIfPossible)
 }
