@@ -121,3 +121,25 @@ export const useClaimable = () => {
 
   return userClaimable
 }
+
+export const useClaimed = () => {
+  const { slowRefresh } = useRefresh()
+  const { account } = useWeb3React()
+  const [userClaimed, setUserClaimed] = useState<BigNumber>()
+
+  useEffect(() => {
+    async function fetchUserClaimable() {
+      try {
+        const privateSaleBContract = usePrivateSaleBContract()
+        const claimed = await privateSaleBContract.claimed(account)
+        setUserClaimed(new BigNumber(claimed.toString()))
+      } catch {
+        setUserClaimed(new BigNumber(0))
+      }
+    }
+
+    fetchUserClaimable()
+  }, [account, slowRefresh])
+
+  return userClaimed
+}

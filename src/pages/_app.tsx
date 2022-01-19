@@ -30,6 +30,7 @@ import { remoteLoader } from '@lingui/remote-loader'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { RefreshContextProvider } from 'config/RefreshContext'
+import { ToastsProvider } from 'contexts/ToastsContext'
 
 const Web3ProviderNetwork = dynamic(() => import('../components/Web3ProviderNetwork'), { ssr: false })
 
@@ -169,11 +170,13 @@ function MyApp({
                   </>
                   <Provider>
                     <RefreshContextProvider>
-                      <Layout>
-                        <Guard>
-                          <Component {...pageProps} />
-                        </Guard>
-                      </Layout>
+                      <ToastsProvider>
+                        <Layout>
+                          <Guard>
+                            <Component {...pageProps} />
+                          </Guard>
+                        </Layout>
+                      </ToastsProvider>
                     </RefreshContextProvider>
                   </Provider>
                 </PersistGate>
