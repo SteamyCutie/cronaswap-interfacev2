@@ -1,4 +1,4 @@
-import { Toast } from 'components/Toast'
+import { Toast } from 'pages/vesting/components/Toast'
 
 type ToastSignature = (title: Toast['title'], description?: Toast['description']) => void
 export interface ToastContextApi {
