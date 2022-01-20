@@ -19,7 +19,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { ApplicationModal } from 'state/application/actions'
 import { getBalanceNumber } from 'functions/formatBalance'
-import { usePubSaleContract, useSeedSaleContract, usePrivateSaleAContract, usePrivateSaleBContract } from 'hooks/useContract'
+import { usePublicSaleContract, useSeedSaleContract, usePrivateSaleAContract, usePrivateSaleBContract } from 'hooks/useContract'
 import { usePurchased, useClaimable, useClaimed } from 'hooks/useVestingInfo'
 
 // import Link from 'next/link'
@@ -131,9 +131,9 @@ const PrivateSaleAVesting = () => {
   const pendingTreasurySignature = false
 
   // New Adding
-  const userPurchased = usePurchased(usePrivateSaleAContract())
-  const userClaimable = useClaimable(usePrivateSaleAContract())
-  const userClaimed = useClaimed(usePrivateSaleAContract())
+  const userPurchased = usePurchased(privateSaleAContract)
+  const userClaimable = useClaimable(privateSaleAContract)
+  const userClaimed = useClaimed(privateSaleAContract)
 
   const hasFetchedCronaAmount = userPurchased ? userPurchased.gte(0) : false
   const purchasedCrona = hasFetchedCronaAmount ? getBalanceNumber(userPurchased, 18) : 0
@@ -247,9 +247,9 @@ const PrivateSaleBVesting = () => {
   const pendingTreasurySignature = false
 
   // New Adding
-  const userPurchased = usePurchased(usePrivateSaleBContract())
-  const userClaimable = useClaimable(usePrivateSaleBContract())
-  const userClaimed = useClaimed(usePrivateSaleBContract())
+  const userPurchased = usePurchased(privateSaleBContract)
+  const userClaimable = useClaimable(privateSaleBContract)
+  const userClaimed = useClaimed(privateSaleBContract)
 
   const hasFetchedCronaAmount = userPurchased ? userPurchased.gte(0) : false
   const purchasedCrona = hasFetchedCronaAmount ? getBalanceNumber(userPurchased, 18) : 0
@@ -363,9 +363,9 @@ const SeedSaleVesting = () => {
   const pendingTreasurySignature = false
 
   // New Adding
-  const userPurchased = usePurchased(useSeedSaleContract())
-  const userClaimable = useClaimable(useSeedSaleContract())
-  const userClaimed = useClaimed(useSeedSaleContract())
+  const userPurchased = usePurchased(seedSaleContract)
+  const userClaimable = useClaimable(seedSaleContract)
+  const userClaimed = useClaimed(seedSaleContract)
 
   const hasFetchedCronaAmount = userPurchased ? userPurchased.gte(0) : false
   const purchasedCrona = hasFetchedCronaAmount ? getBalanceNumber(userPurchased, 18) : 0
@@ -438,7 +438,7 @@ const PublicSaleVesting = () => {
   const unclaimedAmount: CurrencyAmount<Currency> | undefined = useUserUnclaimedProtocolAmount(account)
   const { claimSubmitted } = useUserHasSubmittedClaim(account ?? undefined)
   const claimConfirmed = false
-  const pubSaleContract = usePubSaleContract()
+  const pubSaleContract = usePublicSaleContract()
   const [pendingTx, setPendingTx] = useState(false)
   const { callWithGasPrice } = useCallWithGasPrice()
   // const { toastError, toastSuccess } = useToast()
@@ -504,9 +504,9 @@ const PublicSaleVesting = () => {
   const pendingTreasurySignature = false
 
   // New Adding
-  const userPurchased = usePurchased(usePubSaleContract())
-  const userClaimable = useClaimable(usePubSaleContract())
-  const userClaimed = useClaimed(usePubSaleContract())
+  const userPurchased = usePurchased(pubSaleContract)
+  const userClaimable = useClaimable(pubSaleContract)
+  const userClaimed = useClaimed(pubSaleContract)
 
   const hasFetchedCronaAmount = userPurchased ? userPurchased.gte(0) : false
   const purchasedCrona = hasFetchedCronaAmount ? getBalanceNumber(userPurchased, 18) : 0
