@@ -1,7 +1,9 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { MASTERCHEF_ADDRESS, BAR_ADDRESS, ZERO } from '@cronaswap/core-sdk'
+import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
+import BigNumber from 'bignumber.js'
 import Button from '../../components/Button'
 import { ChainId } from '@cronaswap/core-sdk'
 import Container from '../../components/Container'
@@ -21,6 +23,8 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
 import { aprToApy } from '../../functions/convert/apyApr'
 import { useBar, useBlock, useFactory, useNativePrice, useSushiPrice, useTokens } from '../../services/graph'
+import { useDashboardContract } from 'hooks/useContract'
+import { getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -133,33 +137,33 @@ export default function Stake() {
     }
   }
 
-  const block1d = useBlock({ daysAgo: 1, chainId: ChainId.CRONOS })
+  const dashboardContract = useDashboardContract();
+  const [manualAPY, setManualAPY] = useState(0);
+  // const [autoAPY, setAutoAPY] = useState(0);
 
-  const exchange = useFactory({ chainId: ChainId.CRONOS })
+  const getManualAPY = async () => {
+    const apyofManual = await dashboardContract.apyOfPool(0)
+    const apyManual = getBalanceAmount(apyofManual._hex, 18)
+    setManualAPY(apyManual.toNumber() * 100)
+  }
+  getManualAPY()
 
-  const exchange1d = useFactory({
-    chainId: ChainId.CRONOS,
-    variables: {
-      block: block1d,
-    },
-    shouldFetch: !!block1d,
-  })
+  const aprToApy = (apr: number, compoundFrequency = 1, days = 365, performanceFee = 0) => {
+    const daysAsDecimalOfYear = days / 365
+    const aprAsDecimal = apr / 100
+    const timesCompounded = 365 * compoundFrequency
+    let apyAsDecimal = (apr / 100) * daysAsDecimalOfYear
+    if (timesCompounded > 0) {
+      apyAsDecimal = (1 + aprAsDecimal / timesCompounded) ** (timesCompounded * daysAsDecimalOfYear) - 1
+    }
+    if (performanceFee) {
+      const performanceFeeAsDecimal = performanceFee / 100
+      const takenAsPerformanceFee = apyAsDecimal * performanceFeeAsDecimal
+      apyAsDecimal -= takenAsPerformanceFee
+    }
+    return apyAsDecimal * 100
+  }
 
-  const ethPrice = useNativePrice({ chainId: ChainId.CRONOS })
-
-  const bar = useBar()
-
-  const xCrona = useTokens({
-    chainId: ChainId.CRONOS,
-    variables: { where: { id: XCRONA.address.toLowerCase() } },
-  })?.[0]
-
-  const [xCronaPrice] = [xCrona?.derivedETH * ethPrice, xCrona?.derivedETH * ethPrice * bar?.totalSupply]
-
-  const APY1d = aprToApy(
-    (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xCronaPrice)) * 100 ?? 0
-  )
-  console.log(exchange1d, '++++++++')
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
@@ -207,14 +211,15 @@ export default function Stake() {
             <Image src="/xsushi-sign.png" alt="xCRONA sign" width="100%" height="100%" layout="responsive" />
           </div>
         </div>
-        <div className="flex flex-col justify-center md:flex-row">
+        <div className="flex flex-col justify-center mb-5 md:flex-row">
+          {/* Manual Staking */}
           <div className="flex flex-col w-full max-w-xl mx-auto mb-4 md:m-0">
             <div className="mb-4">
               <div className="flex items-center justify-between w-full h-24 max-w-xl p-4 rounded md:pl-5 md:pr-7 bg-light-yellow bg-opacity-40">
                 <div className="flex flex-col">
                   <div className="flex items-center justify-center mb-4 flex-nowrap md:mb-2">
-                    <p className="text-sm font-bold whitespace-nowrap md:text-lg md:leading-5 text-high-emphesis">
-                      {i18n._(t`Staking APR`)}{' '}
+                    <p className="text-base font-bold text-center whitespace-nowrap md:text-lg md:leading-5 text-high-emphesis">
+                      {i18n._(t`Manual Staking APR`)}{' '}
                     </p>
                     {/* <img className="ml-3 cursor-pointer" src={MoreInfoSymbol} alt={'more info'} /> */}
                   </div>
@@ -234,11 +239,8 @@ export default function Stake() {
                 </div>
                 <div className="flex flex-col">
                   <p className="mb-1 text-lg font-bold text-right text-high-emphesis md:text-3xl">
-                    {`${APY1d ? APY1d.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
+                    {`${manualAPY ? manualAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
                   </p>
-                  {/* <p className="w-32 text-sm text-right text-primary md:w-64 md:text-base">
-                    {i18n._(t`Yesterday's APR`)}
-                  </p> */}
                 </div>
               </div>
             </div>
@@ -449,6 +451,170 @@ export default function Stake() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex flex-col justify-center mb-5 md:flex-row">
+          {/* Auto Compound Staking */}
+          <div className="flex flex-col w-full max-w-xl mx-auto mb-4 md:m-0">
+            <div className="mb-4">
+              <div className="flex items-center justify-between w-full h-24 max-w-xl p-4 rounded md:pl-5 md:pr-7 bg-light-yellow bg-opacity-40">
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-center mb-4 flex-nowrap md:mb-2">
+                    <p className="text-sm font-bold whitespace-nowrap md:text-lg md:leading-5 text-high-emphesis">
+                      {i18n._(t`Auto Compound Staking APR`)}{' '}
+                    </p>
+                    {/* <img className="ml-3 cursor-pointer" src={MoreInfoSymbol} alt={'more info'} /> */}
+                  </div>
+                  {/* <div className="flex">
+                    <a
+                      href={`https://analytics.sushi.com/bar`}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className={`
+                        py-1 px-4 md:py-1.5 md:px-7 rounded
+                        text-xs md:text-sm font-medium md:font-bold text-dark-900
+                        bg-light-yellow hover:bg-opacity-90`}
+                    >
+                      {i18n._(t`View Stats`)}
+                    </a>
+                  </div> */}
+                </div>
+                <div className="flex flex-col">
+                  <p className="mb-1 text-lg font-bold text-right text-high-emphesis md:text-3xl">
+                    {`${aprToApy(manualAPY) ? aprToApy(manualAPY).toFixed(2) + '%' : i18n._(t`Loading...`)}`}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <TransactionFailedModal isOpen={modalOpen} onDismiss={() => setModalOpen(false)} />
+              <div className="w-full max-w-xl px-3 pt-2 pb-6 rounded bg-dark-900 md:pb-9 md:pt-4 md:px-8">
+                {/* select method */}
+                <div className="flex w-full rounded h-14 bg-dark-800">
+                  <div
+                    className="h-full w-6/12 p-0.5"
+                    onClick={() => {
+                      setActiveTab(0)
+                      handleInput('')
+                    }}
+                  >
+                    <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>
+                      <p>{i18n._(t`Stake CRONA`)}</p>
+                    </div>
+                  </div>
+                  <div
+                    className="h-full w-6/12 p-0.5"
+                    onClick={() => {
+                      setActiveTab(1)
+                      handleInput('')
+                    }}
+                  >
+                    <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>
+                      <p>{i18n._(t`Unstake`)}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between w-full mt-6">
+                  <p className="font-bold text-large md:text-2xl text-high-emphesis">
+                    {activeTab === 0 ? i18n._(t`Stake CRONA`) : i18n._(t`Unstake`)}
+                  </p>
+                  {/* Hidden now */}
+                  {/* <div className="border-gradient-r-pink-red-light-brown-dark-pink-red border-transparent border-solid border rounded-3xl px-4 md:px-3.5 py-1.5 md:py-0.5 text-high-emphesis text-xs font-medium md:text-base md:font-normal">
+                    {`1 xCRONA = 1 CRONA`}
+                  </div> */}
+                </div>
+
+                {/* CRONA Amount Input */}
+                <Input.Numeric
+                  value={input}
+                  onUserInput={handleInput}
+                  className={classNames(
+                    'w-full h-14 px-3 md:px-5 mt-5 rounded bg-dark-800 text-sm md:text-lg font-bold text-dark-800 whitespace-nowrap caret-high-emphesis',
+                    inputError ? ' pl-9 md:pl-12' : ''
+                  )}
+                  placeholder=" "
+                />
+
+                {/* input overlay: */}
+                <div className="relative w-full h-0 pointer-events-none bottom-14">
+                  <div
+                    className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${inputError ? ' border border-red' : ''
+                      }`}
+                  >
+                    <div className="flex space-x-2 ">
+                      {inputError && (
+                        <Image
+                          className="mr-2 max-w-4 md:max-w-5"
+                          src="/error-triangle.svg"
+                          alt="error"
+                          width="20px"
+                          height="20px"
+                        />
+                      )}
+                      <p
+                        className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
+                          }`}
+                      >
+                        {`${input ? input : '0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
+                      </p>
+                    </div>
+                    <div className="flex items-center text-sm text-secondary md:text-base">
+                      <div className={input ? 'hidden md:flex md:items-center' : 'flex items-center'}>
+                        <p>{i18n._(t`Balance`)}:&nbsp;</p>
+                        <p className="text-base font-bold">{formattedBalance}</p>
+                      </div>
+                      <button
+                        className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
+                        onClick={handleClickMax}
+                      >
+                        {i18n._(t`MAX`)}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Confirm Button */}
+                {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
+                  activeTab === 0 ? (
+                  <Button
+                    className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
+                    disabled={approvalState === ApprovalState.PENDING}
+                    onClick={approve}
+                  >
+                    {approvalState === ApprovalState.PENDING ? (
+                      <Dots>{i18n._(t`Approving`)} </Dots>
+                    ) : (
+                      i18n._(t`Approve`)
+                    )}
+                  </Button>
+                ) : (
+                  <button
+                    className={
+                      buttonDisabled
+                        ? buttonStyleDisabled
+                        : !walletConnected
+                          ? buttonStyleConnectWallet
+                          : insufficientFunds
+                            ? buttonStyleInsufficientFunds
+                            : buttonStyleEnabled
+                    }
+                    onClick={handleClickButton}
+                    disabled={buttonDisabled || inputError}
+                  >
+                    {!walletConnected
+                      ? i18n._(t`Connect Wallet`)
+                      : !input
+                        ? i18n._(t`Enter Amount`)
+                        : insufficientFunds
+                          ? i18n._(t`Insufficient Balance`)
+                          : activeTab === 0
+                            ? i18n._(t`Confirm Staking`)
+                            : i18n._(t`Confirm Withdrawal`)}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="w-full max-w-xl mx-auto my-auto md:mx-0 md:ml-6 md:block md:w-72"></div>
         </div>
       </div>
     </Container>

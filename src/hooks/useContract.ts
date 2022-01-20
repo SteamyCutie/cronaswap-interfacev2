@@ -56,6 +56,7 @@ import SEEDSALE_ABI from '../constants/abis/seedSale.json'
 import PRIVATESALEA_ABI from '../constants/abis/privateSaleA.json'
 import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
 import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
+import DASHBOARD_ABI from '../constants/abis/dashboard.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -232,4 +233,8 @@ export function usePrivateSaleBContract(withSignerIfPossible?: boolean): Contrac
 
 export function usePubSaleContract(withSignerIfPossible?: boolean): Contract | null {
   return useContract('0x941a3703E106707668f38E779c7984383638173e', PUBLICSALE_ABI, withSignerIfPossible)
+}
+
+export function useDashboardContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x3647f6A3Ef1Aa70697b09407FF092fe878e9CeBA', DASHBOARD_ABI, withSignerIfPossible)
 }

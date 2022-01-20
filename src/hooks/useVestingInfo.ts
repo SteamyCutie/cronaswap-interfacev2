@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import BigNumber from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
-import { useSeedSaleContract } from 'hooks/useContract'
-import useRefresh from 'hooks/useRefresh'
-// import { getSeedSaleAddress } from 'utils/addressHelpers'
+import { usePubSaleContract } from 'hooks/useContract'
+// import { getPubSaleAddress } from 'utils/addressHelpers'
 // import multicall from 'utils/multicall'
-// import preSaleAbi from 'config/abi/privateSaleA.json'
+// import preSaleAbi from 'config/abi/publicSale.json'
 
 export interface PublicSaleProps {
   endDate: number
@@ -19,7 +18,7 @@ export interface PublicSaleProps {
 }
 
 // export const usePublicSaleData = () => {
-//   const { slowRefresh } = useRefresh()
+//
 
 //   const [balance, setBalance] = useState<PublicSaleProps>({
 //     endDate: 0,
@@ -35,7 +34,7 @@ export interface PublicSaleProps {
 //     async function fetchPublicSaleData() {
 //       try {
 //         const calls = ['basePrice', 'preSaleStart', 'preSaleEnd', 'preSaleTokenPool', 'purchasedPreSale'].map((method) => ({
-//           address: getSeedSaleAddress(),
+//           address: getPubSaleAddress(),
 //           name: method,
 //         }))
 
@@ -56,90 +55,87 @@ export interface PublicSaleProps {
 //     }
 
 //     fetchPublicSaleData()
-//   }, [slowRefresh])
+//   },])
 
 //   return balance
 // }
 
 // export const usePurchasedPreSale = () => {
-//   const { slowRefresh } = useRefresh()
+//   const { account } = useWeb3React()
 //   const [purchasedPreSale, setPurchasedPreSale] = useState<BigNumber>()
 
 //   useEffect(() => {
-//     async function fetchPurchasedPreSale() {
-//       const preSaleContract = useSeedSaleContract()
-//       const purchased = await preSaleContract.purchasedPreSale()
+//     async function FetchPurchasedPreSale() {
+//       const pubSaleContract = usePubSaleContract()
+//       const purchased = await pubSaleContract.purchasedPreSale()
 //       // setPurchasedPreSale(new BigNumber(purchased.toString()))
 //     }
 
-//     fetchPurchasedPreSale()
-//   }, [slowRefresh])
+//     FetchPurchasedPreSale()
+//   }, [account])
 
 //   return purchasedPreSale
 // }
 
-export const usePurchased = () => {
-  const { slowRefresh } = useRefresh()
+export const usePurchased = (saleContract: ethers.Contract) => {
   const { account } = useWeb3React()
   const [userPurchased, setUserPurchased] = useState<BigNumber>()
 
   useEffect(() => {
-    async function fetchUserPurchased() {
+    async function FetchUserPurchased() {
       try {
-        const preSaleContract = useSeedSaleContract()
-        const buyPurchased = await preSaleContract.purchased(account)
+        // const pubSaleContract = usePubSaleContract()
+        const buyPurchased = await saleContract.purchased(account)
         setUserPurchased(new BigNumber(buyPurchased.toString()))
       } catch {
         setUserPurchased(new BigNumber(0))
       }
     }
 
-    fetchUserPurchased()
-  }, [account, slowRefresh])
+    FetchUserPurchased()
+  }, [account])
 
   return userPurchased
 }
 
-export const useClaimable = () => {
-  const { slowRefresh } = useRefresh()
+export const useClaimable = (saleContract: ethers.Contract) => {
   const { account } = useWeb3React()
   const [userClaimable, setUserClaimable] = useState<BigNumber>()
 
   useEffect(() => {
-    async function fetchUserClaimable() {
+    async function FetchUserClaimable() {
       try {
-        const preSaleContract = useSeedSaleContract()
-        const claimable = await preSaleContract.claimable(account)
+        // const pubSaleContract = usePubSaleContract()
+        const claimable = await saleContract.claimable(account)
         setUserClaimable(new BigNumber(claimable.toString()))
       } catch {
         setUserClaimable(new BigNumber(0))
       }
     }
 
-    fetchUserClaimable()
-  }, [account, slowRefresh])
+    FetchUserClaimable()
+  }, [account])
 
   return userClaimable
 }
 
-export const useClaimed = () => {
-  const { slowRefresh } = useRefresh()
+export const useClaimed = (saleContract: ethers.Contract) => {
   const { account } = useWeb3React()
   const [userClaimed, setUserClaimed] = useState<BigNumber>()
 
   useEffect(() => {
-    async function fetchUserClaimable() {
+    async function FetchUserClaimable() {
       try {
-        const seedSaleContract = useSeedSaleContract()
-        const claimed = await seedSaleContract.claimed(account)
+        // const pubSaleContract = usePubSaleContract()
+        const claimed = await saleContract.claimed(account)
         setUserClaimed(new BigNumber(claimed.toString()))
       } catch {
         setUserClaimed(new BigNumber(0))
       }
     }
 
-    fetchUserClaimable()
-  }, [account, slowRefresh])
+    FetchUserClaimable()
+  }, [account])
 
   return userClaimed
 }
