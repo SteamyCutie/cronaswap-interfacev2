@@ -2,7 +2,6 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { DiscordIcon, MediumIcon, TwitterIcon } from '../Icon'
 import Image from 'next/image'
-import Link from 'next/link'
 import React from 'react'
 import { useActiveWeb3React } from '../../services/web3'
 
