@@ -1,145 +1,50 @@
+import { ANALYTICS_URL } from '../../constants'
+import { ChainId } from '@cronaswap/core-sdk'
+import ExternalLink from '../ExternalLink'
+import Polling from '../Polling'
 import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-import { DiscordIcon, MediumIcon, TwitterIcon } from '../Icon'
-import Image from 'next/image'
-import React from 'react'
 import { useActiveWeb3React } from '../../services/web3'
-
-import Container from '../Container'
-import Typography from '../Typography'
+import { useLingui } from '@lingui/react'
 
 const Footer = () => {
   const { chainId } = useActiveWeb3React()
   const { i18n } = useLingui()
-
   return (
-    <div className="z-10 w-full py-20 bg-dark-900/30 px-6 mt-20">
-      <Container maxWidth="7xl" className="mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 lg:grid-cols-6 sm:px-6">
-          <div className="flex flex-col gap-3">
-            <div className="flex justify-start items-center gap-2">
-              <div className="">
-                <Image src="/logo.png" alt="CronaSwap logo" width="150px" height="28px" />
-              </div>
-              {/* <Typography variant="h2" weight={700} className="tracking-[0.02em] scale-y-90">
-                CronaSwap
-              </Typography> */}
+    // <footer className="absolute bottom-0 flex items-center justify-between w-screen h-20 p-4 mx-auto text-center text-low-emphesis">
+    <footer className="flex-shrink-0 w-full">
+      <div className="flex items-center justify-between h-20 px-4">
+        {chainId && chainId in ANALYTICS_URL && (
+          <ExternalLink
+            id={`analytics-nav-link`}
+            href={ANALYTICS_URL[chainId] || 'https://analytics.sushi.com'}
+            className="text-low-emphesis"
+          >
+            <div className="flex items-center space-x-2">
+              <div>{i18n._(t`Analytics`)}</div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
             </div>
-            <Typography variant="sm" className="text-low-emphesis">
-              {i18n._(
-                t`CronaSwap aims to become a benchmark for DEX platforms. We want to take on the mantle in becoming the leading DEX platform on the market for token swaps.`
-              )}
-            </Typography>
-            <div className="flex gap-4 items-center">
-              <a href="https://twitter.com/cronaswap" target="_blank" rel="noreferrer">
-                <TwitterIcon width={16} className="text-low-emphesis" />
-              </a>
-              <a href="https://cronaswap.medium.com/" target="_blank" rel="noreferrer">
-                <MediumIcon width={16} className="text-low-emphesis" />
-              </a>
-              <a href="https://discord.com/invite/YXxega5vJG" target="_blank" rel="noreferrer">
-                <DiscordIcon width={16} className="text-low-emphesis" />
-              </a>
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <Typography variant="lg" weight={700} className="my-2.5">
-              {i18n._(t`About Us`)}
-            </Typography>
-            <a href="https://docs.cronaswap.org/" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Contact`)}
-              </Typography>
-            </a>
-            <a href="https://docs.cronaswap.org/hiring/careers" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Careers`)}
-              </Typography>
-            </a>
-            <a href="https://defillama.com/protocol/cronaswap" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Defi Llama`)}
-              </Typography>
-            </a>
-            <a href="https://www.coingecko.com/en/coins/cronaswap" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Coingecko`)}
-              </Typography>
-            </a>
-            <a href="https://coinmarketcap.com/currencies/cronaswap/" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`CoinMarketCap`)}
-              </Typography>
-            </a>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Typography variant="lg" weight={700} className="my-2.5">
-              {i18n._(t`Exchanges`)}
-            </Typography>
-            <a href="https://www.mexc.com/exchange/CRONA_USDT" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Mexc.com`)}
-              </Typography>
-            </a>
-          </div>
-          <div className="flex flex-col gap-1">
-            <Typography variant="lg" weight={700} className="my-2.5">
-              {i18n._(t`Developers`)}
-            </Typography>
-            <a href="https://docs.cronaswap.org" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Documentation`)}
-              </Typography>
-            </a>
-
-            <a href="https://github.com/cronaswap" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`GitHub`)}
-              </Typography>
-            </a>
-            <a href="https://snapshot.org/#/cronachef.eth" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Vote`)}
-              </Typography>
-            </a>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Typography variant="lg" weight={700} className="my-2.5">
-              {i18n._(t`Auditors`)}
-            </Typography>
-            <a href="https://www.certik.com/projects/cronaswap" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Cerkit`)}
-              </Typography>
-            </a>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Typography variant="lg" weight={700} className="my-2.5">
-              {i18n._(t`Business`)}
-            </Typography>
-            <a href="mailto:chef@cronaswap.org" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Contact Us`)}
-              </Typography>
-            </a>
-            <a href="https://github.com/cronaswap/default-token-list" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Token Listing`)}
-              </Typography>
-            </a>
-
-            <a href="https://forms.gle/6QpGGpFZhkFhGCqg8" target="_blank" rel="noreferrer">
-              <Typography variant="sm" className="text-low-emphesis">
-                {i18n._(t`Apply For Farm/IFO`)}
-              </Typography>
-            </a>
-          </div>
-        </div>
-      </Container>
-    </div>
+          </ExternalLink>
+        )}
+        {chainId && chainId === ChainId.CRONOS && (
+          <ExternalLink
+            id={`cronos-bridge-link`}
+            href="https://wallet.matic.network/bridge/"
+            className="text-low-emphesis"
+          >
+            {i18n._(t`Matic Bridge`)}
+          </ExternalLink>
+        )}
+        <Polling />
+      </div>
+    </footer>
   )
 }
 
