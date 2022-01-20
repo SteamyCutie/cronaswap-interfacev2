@@ -47,7 +47,7 @@ export const FARMS: AddressMap = {
       pid: 2,
       symbol: 'CLP',
       name: 'USDC-CRO',
-      token0: { id: '0xc21223249ca28397b4b6541dffaecc539bff0c59', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+      token0: { id: '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
     },
 

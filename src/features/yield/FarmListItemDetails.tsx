@@ -230,10 +230,10 @@ const FarmListItem = ({ farm }) => {
                   </ExternalLink>
                   <ExternalLink
                     startIcon={<LinkIcon size={16} />}
-                    href={`https://app.cronaswap.org/add/${farm?.pair?.token0?.id}/${farm?.pair?.token1?.id}`}
+                    href={`https://app.cronaswap.org/add/${farm?.token0?.id}/${farm?.token1?.id}`}
                   >
                     <Typography variant="sm">
-                      {i18n._(t`Get ${farm?.pair?.token0?.symbol}-${farm?.pair?.token0?.symbol} LP`)}
+                      {i18n._(t`Get ${farm?.token0?.symbol}-${farm?.token0?.symbol} LP`)}
                     </Typography>
                   </ExternalLink>
                 </div>
