@@ -5,12 +5,13 @@ import { useActiveWeb3React } from '../../services/web3'
 import { Contract } from '@ethersproject/contracts'
 import { Zero } from '@ethersproject/constants'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../../state/multicall/hooks'
-import { useMasterChefContract, useMasterChefV2Contract } from '../../hooks/useContract'
+import { useMasterChefContract } from '../../hooks/useContract'
 
 import zip from 'lodash/zip'
 import concat from 'lodash/concat'
 import { Chef } from './enum'
 import { CRONA } from '../../config/tokens'
+import { useToken } from '../../hooks/Tokens'
 
 export function useChefContract(chef: Chef) {
   const masterChefContract = useMasterChefContract()
@@ -175,6 +176,42 @@ export function useCronaMasterChefInfo(contract) {
 
 export function useMasterChefInfo() {
   return useCronaMasterChefInfo(useMasterChefContract())
+}
+
+// Has used for CronaSwapV2
+export function useTokenInfo(tokenContract?: Contract | null) {
+  const _totalSupply = useSingleCallResult(tokenContract ? tokenContract : null, 'totalSupply', undefined, NEVER_RELOAD)
+    ?.result?.[0]
+
+  const _burnt = useSingleCallResult(
+    tokenContract ? tokenContract : null,
+    'balanceOf',
+    ['0x000000000000000000000000000000000000dEaD'],
+    NEVER_RELOAD
+  )?.result?.[0]
+
+  const totalSupply = _totalSupply ? JSBI.BigInt(_totalSupply.toString()) : JSBI.BigInt(0)
+  const burnt = _burnt ? JSBI.BigInt(_burnt.toString()) : JSBI.BigInt(0)
+
+  const circulatingSupply = JSBI.subtract(totalSupply, burnt)
+
+  const token = useToken(tokenContract.address)
+
+  return useMemo(() => {
+    if (!token) {
+      return {
+        totalSupply: '0',
+        burnt: '0',
+        circulatingSupply: '0',
+      }
+    }
+
+    return {
+      totalSupply: CurrencyAmount.fromRawAmount(token, totalSupply).toFixed(0),
+      burnt: CurrencyAmount.fromRawAmount(token, burnt).toFixed(0),
+      circulatingSupply: CurrencyAmount.fromRawAmount(token, circulatingSupply).toFixed(0),
+    }
+  }, [totalSupply, burnt, circulatingSupply, token])
 }
 
 /*

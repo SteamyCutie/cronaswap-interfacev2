@@ -1,219 +1,180 @@
-// import React, { useContext } from 'react'
-// import { useWeb3React } from '@web3-react/core'
-// import { useModalOpen, useTokenStatsModalToggle } from '../../state/application/hooks'
+import React from 'react'
+import { useModalOpen, useTokenStatsModalToggle } from '../../state/application/hooks'
 
-// import { ApplicationModal } from '../../state/application/actions'
-// import ExternalLink from '../../components/ExternalLink'
-// import Image from 'next/image'
-// import Modal from '../../components/Modal'
-// import ModalHeader from '../../components/ModalHeader'
-// import styled from 'styled-components'
-// import { t } from '@lingui/macro'
-// import { useLingui } from '@lingui/react'
-// import Typography from '../../components/Typography'
-// import { useTokenInfo } from '../../features/farm/hooks'
-// import { formatNumberScale } from '../../functions'
-// import { ExternalLink as LinkIcon } from 'react-feather'
-// import { PriceContext } from '../../contexts/priceContext'
-// import { useSolarContract } from '../../hooks'
-// import QuestionHelper from '../../components/QuestionHelper'
+import { ApplicationModal } from '../../state/application/actions'
+import ExternalLink from '../../components/ExternalLink'
+import Image from 'next/image'
+import Modal from '../../components/Modal'
+import ModalHeader from '../../components/ModalHeader'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import Typography from '../../components/Typography'
+import { useTokenInfo } from '../../features/yield/hooks'
+import { formatNumberScale, getExplorerLink } from '../../functions'
+import { ExternalLink as LinkIcon } from 'react-feather'
+import QuestionHelper from '../../components/QuestionHelper'
+import { useCronaContract } from '../../hooks/useContract'
+import Button from '../../components/Button'
+import { RowFixed } from '../../components/Row'
+import { ChainId, CRONA_ADDRESS } from '@cronaswap/core-sdk'
+import { useActiveWeb3React } from '../../services/web3'
 
-// const CloseIcon = styled.div`
-//   position: absolute;
-//   right: 0;
-//   top: 0;
-//   &:hover {
-//     cursor: pointer;
-//     opacity: 0.6;
-//   }
-// `
+export default function TokenStatsModal({ token }: { token: any }) {
+  const { i18n } = useLingui()
+  const { chainId, library } = useActiveWeb3React()
 
-// const HeaderRow = styled.div`
-//   margin-bottom: 1rem;
-// `
+  let tokenInfo = useTokenInfo(useCronaContract())
 
-// const UpperSection = styled.div`
-//   position: relative;
+  const cronaPrice = formatNumberScale('0.545', true)
 
-//   h5 {
-//     margin: 0;
-//     margin-bottom: 0.5rem;
-//     font-size: 1rem;
-//     font-weight: 400;
-//   }
+  const modalOpen = useModalOpen(ApplicationModal.CRONA)
 
-//   h5:last-child {
-//     margin-bottom: 0px;
-//   }
+  const toggleWalletModal = useTokenStatsModalToggle()
 
-//   h4 {
-//     margin-top: 0;
-//     font-weight: 500;
-//   }
-// `
+  function getSummaryLine(title, value) {
+    return (
+      <div className="flex flex-col gap-2 bg-dark-800 rounded py-1 px-3 w-full">
+        <div className="flex items-center justify-between">
+          {title}
+          <Typography variant="sm" className="flex items-center font-bold py-0.5">
+            {value}
+          </Typography>
+        </div>
+      </div>
+    )
+  }
 
-// const OptionGrid = styled.div`
-//   display: grid;
-//   grid-gap: 10px;
-//   grid-template-columns: 1fr;
-// `
+  function getModalContent() {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <ModalHeader title={i18n._(t`${token['name']}`)} onClose={toggleWalletModal} />
+          <div className="flex flex-row w-full py-4">
+            {token.icon && (
+              <Image
+                src={token['icon']}
+                alt={token['name']}
+                width="64px"
+                height="64px"
+                objectFit="contain"
+                className="items-center"
+              />
+            )}
+            <div className="flex flex-1 flex-col">
+              <div className="flex flex-row">
+                <div className="text-primary text-2xl">{token['symbol']}</div>
+              </div>
+              <div className="flex items-center justify-between space-x-3 gap-2">
+                {token?.address && (
+                  // <ExternalLink href={getExplorerLink(chainId, token['address'][chainId], 'address')}
+                  //   className="px-3"
+                  //   color="blue"
+                  //   startIcon={<LinkIcon size={16} />}
+                  // >
+                  //   <Typography variant="xs" className="hover:underline py-0.5">
+                  //     {i18n._(t`View Contract`)}
+                  //   </Typography>
+                  // </ExternalLink>
 
-// const HoverText = styled.div`
-//   :hover {
-//     cursor: pointer;
-//   }
-// `
+                  <ExternalLink
+                    color="blue"
+                    startIcon={<LinkIcon size={16} />}
+                    href={getExplorerLink(chainId, token['address'][chainId], 'address')}
+                  >
+                    <Typography variant="sm">{i18n._(t`View Contract`)}</Typography>
+                  </ExternalLink>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center  text-primary text-bold">
+              <div className="ml-2 text-primary text-2xl">{`${cronaPrice}`}</div>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Typography weight={700}>{i18n._(t`Supply & Market Cap`)}</Typography>
+          </div>
+          <div className="flex flex-col flex-nowrap gap-1 -m-1">
+            {getSummaryLine(
+              <Typography variant="sm" className="flex items-center py-0.5">
+                {i18n._(t`Total Supply`)}
+              </Typography>,
+              formatNumberScale(tokenInfo.totalSupply, false)
+            )}
+            {getSummaryLine(
+              <Typography variant="sm" className="flex items-center py-0.5">
+                {i18n._(t`Burnt`)}
+              </Typography>,
+              formatNumberScale(tokenInfo.burnt, false)
+            )}
+            {getSummaryLine(
+              <Typography variant="sm" className="flex items-center py-0.5">
+                {i18n._(t`Circulating Supply`)}
+              </Typography>,
+              formatNumberScale(tokenInfo.circulatingSupply, false)
+            )}
+            {getSummaryLine(
+              <Typography variant="sm" className="flex items-center py-0.5">
+                {i18n._(t`Market Cap`)}
+              </Typography>,
+              formatNumberScale(Number(tokenInfo.circulatingSupply) * Number('0.55'), true)
+            )}
+          </div>
+        </div>
 
-// const WALLET_VIEWS = {
-//   OPTIONS: 'options',
-//   OPTIONS_SECONDARY: 'options_secondary',
-//   ACCOUNT: 'account',
-//   PENDING: 'pending',
-// }
+        {/* Add CRONA to metamask */}
+        {chainId && [ChainId.CRONOS].includes(chainId) && library && library.provider.isMetaMask && (
+          <Button
+            color="gradient"
+            className="mt-4 item-center"
+            onClick={() => {
+              const params: any = {
+                type: 'ERC20',
+                options: {
+                  address: CRONA_ADDRESS[chainId],
+                  symbol: 'CRONA',
+                  decimals: 18,
+                  image:
+                    'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png',
+                },
+              }
+              if (library && library.provider.isMetaMask && library.provider.request) {
+                library.provider
+                  .request({
+                    method: 'wallet_watchAsset',
+                    params,
+                  })
+                  .then((success) => {
+                    if (success) {
+                      console.log('Successfully added CRONA to MetaMask')
+                    } else {
+                      throw new Error('Something went wrong.')
+                    }
+                  })
+                  .catch(console.error)
+              }
+            }}
+          >
+            <RowFixed className="mx-auto space-x-2">
+              <span>{i18n._(t`Add ${token['symbol']} to MetaMask`)}</span>
+              <Image
+                src="/images/wallets/metamask.png"
+                alt={i18n._(t`Add ${token['symbol']} to MetaMask`)}
+                width={24}
+                height={24}
+                className="ml-1"
+              />
+            </RowFixed>
+          </Button>
+        )}
+      </div>
+    )
+  }
 
-// export default function TokenStatsModal({ token }: { token: any }) {
-//   const { i18n } = useLingui()
-
-//   const priceData = useContext(PriceContext)
-//   let tokenInfo = useTokenInfo(useSolarContract())
-
-//   if (token.symbol == 'MOVR') tokenInfo = { circulatingSupply: '1500000', burnt: '0', totalSupply: '0', vaults: '0' }
-
-//   const price = formatNumberScale(priceData?.[token.symbol.toLowerCase()], true, 2)
-
-//   const modalOpen = useModalOpen(token.symbol == 'SOLAR' ? ApplicationModal.SOLAR_STATS : ApplicationModal.MOVR_STATS)
-
-//   const toggleWalletModal = useTokenStatsModalToggle(token)
-
-//   function getSummaryLine(title, value) {
-//     return (
-//       <div className="flex flex-col gap-2 bg-dark-800 rounded py-1 px-3 w-full">
-//         <div className="flex items-center justify-between">
-//           {title}
-//           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//             {value}
-//           </Typography>
-//         </div>
-//       </div>
-//     )
-//   }
-
-//   function getModalContent() {
-//     return (
-//       <div className="space-y-6">
-//         <div className="space-y-2">
-//           <ModalHeader title={i18n._(t`${token['name']}`)} onClose={toggleWalletModal} />
-//           <div className="flex flex-row w-full py-4">
-//             {token.icon && (
-//               <Image
-//                 src={token['icon']}
-//                 alt={token['name']}
-//                 width="64px"
-//                 height="64px"
-//                 objectFit="contain"
-//                 className="items-center"
-//               />
-//             )}
-//             <div className="flex flex-1 flex-col">
-//               <div className="flex flex-row items-center px-3">
-//                 <div className="text-primary text-2xl">{token['symbol']}</div>
-//               </div>
-//               <div className="flex items-center justify-between space-x-3 gap-2">
-//                 {token?.address && (
-//                   <ExternalLink
-//                     href={
-//                       'https://blockscout.moonriver.moonbeam.network/tokens/0x6bD193Ee6D2104F14F94E2cA6efefae561A4334B'
-//                     }
-//                     className="px-3 ring-0 ring-transparent ring-opacity-0"
-//                     color="light-green"
-//                     startIcon={<LinkIcon size={16} />}
-//                   >
-//                     <Typography variant="xs" className="hover:underline py-0.5 currentColor">
-//                       {i18n._(t`View Contract`)}
-//                     </Typography>
-//                   </ExternalLink>
-//                 )}
-//               </div>
-//             </div>
-//             <div className="flex items-center  text-primary text-bold">
-//               <div className="ml-2 text-primary text-base text-secondary text-2xl">{`${price}`}</div>
-//             </div>
-//           </div>
-//         </div>
-//         <div className="space-y-2">
-//           <div className="flex items-center justify-between">
-//             <Typography weight={700}>{i18n._(t`Supply & Market Cap`)}</Typography>
-//           </div>
-//           <div className="flex flex-col flex-nowrap gap-1 -m-1">
-//             {getSummaryLine(
-//               <div className="flex items-center">
-//                 <Typography variant="sm" className="flex items-center py-0.5">
-//                   {i18n._(t`Circulating Supply`)}
-//                 </Typography>
-//                 {token.symbol == 'SOLAR' && (
-//                   <QuestionHelper
-//                     text={
-//                       <div className="flex flex-col gap-2 py-1 px-3 w-full">
-//                         <div className="flex items-center justify-between">
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             Total
-//                           </Typography>
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             {formatNumberScale(tokenInfo.totalSupply, false, 2)}
-//                           </Typography>
-//                         </div>
-//                         <div className="flex items-center justify-between">
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             Burnt
-//                           </Typography>
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             - {formatNumberScale(tokenInfo.burnt, false, 2)}
-//                           </Typography>
-//                         </div>
-//                         <div className="flex items-center justify-between">
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             Locked
-//                           </Typography>
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             - {formatNumberScale(tokenInfo.vaults, false, 2)}
-//                           </Typography>
-//                         </div>
-//                         <hr></hr>
-//                         <div className="flex items-center justify-between">
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             Circulating
-//                           </Typography>
-//                           <Typography variant="sm" className="flex items-center font-bold py-0.5">
-//                             {formatNumberScale(tokenInfo.circulatingSupply, false, 2)}
-//                           </Typography>
-//                         </div>
-//                       </div>
-//                     }
-//                   />
-//                 )}
-//               </div>,
-//               formatNumberScale(tokenInfo.circulatingSupply, false, 2)
-//             )}
-//             {getSummaryLine(
-//               <Typography variant="sm" className="flex items-center py-0.5">
-//                 {i18n._(t`Market Cap`)}
-//               </Typography>,
-//               formatNumberScale(
-//                 Number(tokenInfo.circulatingSupply) * (priceData?.[token.symbol.toLowerCase()] || 0),
-//                 true,
-//                 2
-//               )
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     )
-//   }
-
-//   return (
-//     <Modal isOpen={modalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
-//       {getModalContent()}
-//     </Modal>
-//   )
-// }
-export {}
+  return (
+    <Modal isOpen={modalOpen} onDismiss={toggleWalletModal} minHeight={0} maxHeight={90}>
+      {getModalContent()}
+    </Modal>
+  )
+}

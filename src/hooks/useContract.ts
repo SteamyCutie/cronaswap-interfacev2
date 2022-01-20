@@ -136,7 +136,7 @@ export function useMulticall2Contract() {
   return useContract(chainId && MULTICALL2_ADDRESS[chainId], MULTICALL2_ABI, false)
 }
 
-export function useSushiContract(withSignerIfPossible = true): Contract | null {
+export function useCronaContract(withSignerIfPossible = true): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && CRONA_ADDRESS[chainId], SUSHI_ABI, withSignerIfPossible)
 }
