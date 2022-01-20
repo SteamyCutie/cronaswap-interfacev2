@@ -57,12 +57,12 @@ function AppBar(): JSX.Element {
                         </a>
                       </NavLink>
                       {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                        <NavLink href={'/yield'}>
+                        <NavLink href={'/farm'}>
                           <a
                             id={`yield-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Yield`)}
+                            {i18n._(t`Farm`)}
                           </a>
                         </NavLink>
                       )}

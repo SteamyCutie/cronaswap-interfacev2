@@ -28,12 +28,11 @@ export function getCurrencyLogoUrls(currency) {
   return urls
 }
 
-const EthereumLogo = 'https://raw.githubusercontent.com/sushiswap/icons/master/token/eth.jpg'
 const CronosLogo =
-  'https://raw.githubusercontent.com/cronaswap/default-token-list/main/tokens/assets/cronos/0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23/logo.png'
+  'https://raw.githubusercontent.com/cronaswap/default-token-list/b0561b60b55a274d8cca9abd3388ac97136f8542/assets/icons/network/cronos.svg'
 
 const LOGO: { readonly [chainId in ChainId]?: string } = {
-  [ChainId.ETHEREUM]: EthereumLogo,
+  [ChainId.ETHEREUM]: CronosLogo,
   [ChainId.CRONOS]: CronosLogo,
   [ChainId.CRONOS_TESTNET]: CronosLogo,
 }
@@ -46,7 +45,7 @@ interface CurrencyLogoProps {
   squared?: boolean
 }
 
-const unknown = 'https://raw.githubusercontent.com/sushiswap/icons/master/token/unknown.png'
+const unknown = 'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/unknown.png'
 
 const CurrencyLogo: FunctionComponent<CurrencyLogoProps> = ({
   currency,
