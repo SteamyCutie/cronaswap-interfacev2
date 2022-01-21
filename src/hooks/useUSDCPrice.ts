@@ -3,6 +3,7 @@ import { ChainId, Currency, CurrencyAmount, Price, Token, USD } from '@cronaswap
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
 import { useV2TradeExactOut } from './useV2Trades'
+import { useDashboardContract } from './useContract'
 
 // import { wrappedCurrency } from "../functions/currency/wrappedCurrency";
 

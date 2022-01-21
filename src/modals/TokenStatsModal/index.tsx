@@ -12,20 +12,19 @@ import Typography from '../../components/Typography'
 import { useTokenInfo } from '../../features/yield/hooks'
 import { formatNumberScale, getExplorerLink } from '../../functions'
 import { ExternalLink as LinkIcon } from 'react-feather'
-import QuestionHelper from '../../components/QuestionHelper'
 import { useCronaContract } from '../../hooks/useContract'
 import Button from '../../components/Button'
 import { RowFixed } from '../../components/Row'
 import { ChainId, CRONA_ADDRESS } from '@cronaswap/core-sdk'
 import { useActiveWeb3React } from '../../services/web3'
 
-export default function TokenStatsModal({ token }: { token: any }) {
+export default function TokenStatsModal({ token, price }: { token: any; price: any }) {
   const { i18n } = useLingui()
   const { chainId, library } = useActiveWeb3React()
 
   let tokenInfo = useTokenInfo(useCronaContract())
 
-  const cronaPrice = formatNumberScale('0.545', true)
+  const cronaPrice = formatNumberScale(price, true)
 
   const modalOpen = useModalOpen(ApplicationModal.CRONA)
 
@@ -66,16 +65,6 @@ export default function TokenStatsModal({ token }: { token: any }) {
               </div>
               <div className="flex items-center justify-between space-x-3 gap-2">
                 {token?.address && (
-                  // <ExternalLink href={getExplorerLink(chainId, token['address'][chainId], 'address')}
-                  //   className="px-3"
-                  //   color="blue"
-                  //   startIcon={<LinkIcon size={16} />}
-                  // >
-                  //   <Typography variant="xs" className="hover:underline py-0.5">
-                  //     {i18n._(t`View Contract`)}
-                  //   </Typography>
-                  // </ExternalLink>
-
                   <ExternalLink
                     color="blue"
                     startIcon={<LinkIcon size={16} />}
@@ -118,7 +107,7 @@ export default function TokenStatsModal({ token }: { token: any }) {
               <Typography variant="sm" className="flex items-center py-0.5">
                 {i18n._(t`Market Cap`)}
               </Typography>,
-              formatNumberScale(Number(tokenInfo.circulatingSupply) * Number('0.55'), true)
+              formatNumberScale(Number(tokenInfo.circulatingSupply) * Number(price), true)
             )}
           </div>
         </div>

@@ -1,9 +1,10 @@
 import React from 'react'
 import Image from 'next/image'
-import { formatNumberScale } from '../../functions/format'
+import { formatBalance, formatNumber, formatNumberScale } from '../../functions/format'
 import { useTokenStatsModalToggle } from '../../state/application/hooks'
 import TokenStatsModal from '../../modals/TokenStatsModal'
 import { ChainId } from '@cronaswap/core-sdk'
+import { useCronaUsdcPrice } from '../../features/yield/hooks'
 
 const supportedTokens = {
   CRONA: {
@@ -21,7 +22,7 @@ interface TokenStatsProps {
   token: string
 }
 
-function TokenStatusInner({ token }) {
+function TokenStatusInner({ token, price }) {
   const toggleModal = useTokenStatsModalToggle()
   return (
     <div
@@ -38,18 +39,19 @@ function TokenStatusInner({ token }) {
           className="rounded-md"
         />
       )}
-      <div className="text-primary">{formatNumberScale(Number('0.545'), true)}</div>
+      <div className="text-primary">{formatNumberScale(price, true)}</div>
     </div>
   )
 }
 
 export default function TokenStats({ token, ...rest }: TokenStatsProps) {
   const selectedToken = supportedTokens[token]
+  const cronaPrice = useCronaUsdcPrice()
 
   return (
     <>
-      <TokenStatusInner token={selectedToken} />
-      <TokenStatsModal token={selectedToken} />
+      <TokenStatusInner token={selectedToken} price={formatBalance(cronaPrice ? cronaPrice : 0)} />
+      <TokenStatsModal token={selectedToken} price={formatBalance(cronaPrice ? cronaPrice : 0)} />
     </>
   )
 }

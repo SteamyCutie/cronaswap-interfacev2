@@ -5,13 +5,14 @@ import { useActiveWeb3React } from '../../services/web3'
 import { Contract } from '@ethersproject/contracts'
 import { Zero } from '@ethersproject/constants'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../../state/multicall/hooks'
-import { useMasterChefContract } from '../../hooks/useContract'
+import { useDashboardContract, useMasterChefContract } from '../../hooks/useContract'
 
 import zip from 'lodash/zip'
 import concat from 'lodash/concat'
 import { Chef } from './enum'
 import { CRONA } from '../../config/tokens'
 import { useToken } from '../../hooks/Tokens'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export function useChefContract(chef: Chef) {
   const masterChefContract = useMasterChefContract()
@@ -178,7 +179,13 @@ export function useMasterChefInfo() {
   return useCronaMasterChefInfo(useMasterChefContract())
 }
 
-// Has used for CronaSwapV2
+// Has used for CronaSwapV2 //////////////////////////////////////////
+
+export const useCronaUsdcPrice = (): BigNumber | undefined => {
+  const dashboard = useDashboardContract()
+  return useSingleCallResult(dashboard, 'rewardPriceInUSD')?.result?.[0]
+}
+
 export function useTokenInfo(tokenContract?: Contract | null) {
   const _totalSupply = useSingleCallResult(tokenContract ? tokenContract : null, 'totalSupply', undefined, NEVER_RELOAD)
     ?.result?.[0]
