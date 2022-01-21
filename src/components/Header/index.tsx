@@ -18,6 +18,7 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../services/web3'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
+import TokenStats from '../TokenStats'
 
 // import { ExternalLink, NavLink } from "./Link";
 // import { ReactComponent as Burger } from "../assets/images/burger.svg";
@@ -57,12 +58,12 @@ function AppBar(): JSX.Element {
                         </a>
                       </NavLink>
                       {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                        <NavLink href={'/yield'}>
+                        <NavLink href={'/farm'}>
                           <a
                             id={`yield-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Yield`)}
+                            {i18n._(t`Farm`)}
                           </a>
                         </NavLink>
                       )}
@@ -117,98 +118,9 @@ function AppBar(): JSX.Element {
 
                 <div className="fixed bottom-0 left-0 z-10 flex flex-row items-center justify-center w-full p-4 lg:w-auto bg-dark-1000 lg:relative lg:p-0 lg:bg-transparent">
                   <div className="flex items-center justify-between w-full space-x-2 sm:justify-end">
-                    {chainId && [ChainId.ETHEREUM].includes(chainId) && library && library.provider.isMetaMask && (
-                      <>
-                        <QuestionHelper text={i18n._(t`Add xCRONA to your MetaMask wallet`)}>
-                          <div
-                            className="hidden p-0.5 rounded-md cursor-pointer sm:inline-flex bg-dark-900 hover:bg-dark-800"
-                            onClick={() => {
-                              if (library && library.provider.isMetaMask && library.provider.request) {
-                                const params: any = {
-                                  type: 'ERC20',
-                                  options: {
-                                    address: '0x8798249c2e607446efb7ad49ec89dd1865ff4272',
-                                    symbol: 'XCRONA',
-                                    decimals: 18,
-                                    image:
-                                      'https://raw.githubusercontent.com/sushiswap/logos/main/network/ethereum/0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272.jpg',
-                                  },
-                                }
-                                library.provider
-                                  .request({
-                                    method: 'wallet_watchAsset',
-                                    params,
-                                  })
-                                  .then((success) => {
-                                    if (success) {
-                                      console.log('Successfully added XCRONA to MetaMask')
-                                    } else {
-                                      throw new Error('Something went wrong.')
-                                    }
-                                  })
-                                  .catch(console.error)
-                              }
-                            }}
-                          >
-                            <Image
-                              src="/images/tokens/xsushi-square.jpg"
-                              alt="xCRONA"
-                              width="38px"
-                              height="38px"
-                              objectFit="contain"
-                              className="rounded-md"
-                            />
-                          </div>
-                        </QuestionHelper>
-                      </>
-                    )}
-
-                    {chainId && chainId in CRONA_ADDRESS && library && library.provider.isMetaMask && (
-                      <>
-                        <QuestionHelper text={i18n._(t`Add CRONA to your MetaMask wallet`)}>
-                          <div
-                            className="hidden rounded-full cursor-pointer sm:inline-flex bg-dark-900 hover:bg-dark-800 p-0.5"
-                            onClick={() => {
-                              const params: any = {
-                                type: 'ERC20',
-                                options: {
-                                  address: CRONA_ADDRESS[chainId],
-                                  symbol: 'CRONA',
-                                  decimals: 18,
-                                  image:
-                                    'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png',
-                                },
-                              }
-                              if (library && library.provider.isMetaMask && library.provider.request) {
-                                library.provider
-                                  .request({
-                                    method: 'wallet_watchAsset',
-                                    params,
-                                  })
-                                  .then((success) => {
-                                    if (success) {
-                                      console.log('Successfully added CRONA to MetaMask')
-                                    } else {
-                                      throw new Error('Something went wrong.')
-                                    }
-                                  })
-                                  .catch(console.error)
-                              }
-                            }}
-                          >
-                            <Image
-                              src="/logox32.png"
-                              alt="CRONA"
-                              width="38px"
-                              height="38px"
-                              objectFit="contain"
-                              className="rounded-full"
-                            />
-                          </div>
-                        </QuestionHelper>
-                      </>
-                    )}
-
+                    <div className="w-auto flex items-center rounded mr-1 bg-dark-800 shadow-sm text-primary text-xs hover:bg-dark-700 whitespace-nowrap font-bold cursor-pointer select-none pointer-events-auto sm:block">
+                      <TokenStats token="CRONA" />
+                    </div>
                     {library && library.provider.isMetaMask && (
                       <div className="hidden sm:inline-block">
                         <Web3Network />

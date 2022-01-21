@@ -52,6 +52,12 @@ import TIMELOCK_ABI from '../constants/abis/timelock.json'
 import UNI_FACTORY_ABI from '../constants/abis/uniswap-v2-factory.json'
 import WETH9_ABI from '../constants/abis/weth.json'
 import ZENKO_ABI from '../constants/abis/zenko.json'
+import SEEDSALE_ABI from '../constants/abis/seedSale.json'
+import PRIVATESALEA_ABI from '../constants/abis/privateSaleA.json'
+import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
+import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
+import DASHBOARD_ABI from '../constants/abis/dashboard.json'
+import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -131,7 +137,7 @@ export function useMulticall2Contract() {
   return useContract(chainId && MULTICALL2_ADDRESS[chainId], MULTICALL2_ABI, false)
 }
 
-export function useSushiContract(withSignerIfPossible = true): Contract | null {
+export function useCronaContract(withSignerIfPossible = true): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && CRONA_ADDRESS[chainId], SUSHI_ABI, withSignerIfPossible)
 }
@@ -212,4 +218,28 @@ export function useInariContract(withSignerIfPossible?: boolean): Contract | nul
 
 export function useZenkoContract(withSignerIfPossible?: boolean): Contract | null {
   return useContract('0xa8f676c49f91655ab3b7c3ea2b73bb3088b2bc1f', ZENKO_ABI, withSignerIfPossible)
+}
+
+export function useSeedSaleContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x94f3Dfc9E8AE00892984d8fA003BF09a46987DFd', SEEDSALE_ABI, withSignerIfPossible)
+}
+
+export function usePrivateSaleAContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x1c41BE3D395494e636aE7Ec9b8B5AB32A9Ddd1Ce', PRIVATESALEA_ABI, withSignerIfPossible)
+}
+
+export function usePrivateSaleBContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x309afba23f791B5c38Ab9057D11D6869755fAcaf', PRIVATESALEB_ABI, withSignerIfPossible)
+}
+
+export function usePublicSaleContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x941a3703E106707668f38E779c7984383638173e', PUBLICSALE_ABI, withSignerIfPossible)
+}
+
+export function useDashboardContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x3647f6A3Ef1Aa70697b09407FF092fe878e9CeBA', DASHBOARD_ABI, withSignerIfPossible)
+}
+
+export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x98aFeD5b527e9ae7456857D697b739eD840853B0', VOTING_ESCROW_ABI, withSignerIfPossible)
 }

@@ -498,8 +498,8 @@ export default function Zap() {
                               </Link>
                             ) : oneCurrencyIsWETH ? (
                               <Link
-                                href={`/remove/${currencyA?.equals(WNATIVE[chainId]) ? 'ETH' : currencyIdA}/${
-                                  currencyB?.equals(WNATIVE[chainId]) ? 'ETH' : currencyIdB
+                                href={`/remove/${currencyA?.equals(WNATIVE[chainId]) ? 'CRO' : currencyIdA}/${
+                                  currencyB?.equals(WNATIVE[chainId]) ? 'CRO' : currencyIdB
                                 }`}
                               >
                                 <a className="text-baseline text-blue opacity-80 hover:opacity-100 whitespace-nowrap">

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useSushiBarContract, useSushiContract } from './useContract'
+import { useSushiBarContract, useCronaContract } from './useContract'
 
 import Fraction from '../entities/Fraction'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -11,7 +11,7 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 const useSushiBar = () => {
   const { account } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
-  const sushiContract = useSushiContract(true) // withSigner
+  const sushiContract = useCronaContract(true) // withSigner
   const barContract = useSushiBarContract(true) // withSigner
 
   const [allowance, setAllowance] = useState('0')

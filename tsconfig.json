@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "app/animation/*": ["./animation/*"],
       "app/components": ["./components"],

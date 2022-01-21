@@ -17,6 +17,7 @@ import {
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useCallback, useMemo } from 'react'
+import { parseUnits } from 'ethers/lib/utils'
 
 import ReactGA from 'react-ga'
 import flatMap from 'lodash/flatMap'
@@ -243,22 +244,22 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     () =>
       chainId
         ? flatMap(Object.keys(tokens), (tokenAddress) => {
-            const token = tokens[tokenAddress]
-            // for each token on the current chain,
-            return (
-              // loop though all bases on the current chain
-              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
-                // to construct pairs of the given token with each base
-                .map((base) => {
-                  if (base.address === token.address) {
-                    return null
-                  } else {
-                    return [base, token]
-                  }
-                })
-                .filter((p): p is [Token, Token] => p !== null)
-            )
-          })
+          const token = tokens[tokenAddress]
+          // for each token on the current chain,
+          return (
+            // loop though all bases on the current chain
+            (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+              // to construct pairs of the given token with each base
+              .map((base) => {
+                if (base.address === token.address) {
+                  return null
+                } else {
+                  return [base, token]
+                }
+              })
+              .filter((p): p is [Token, Token] => p !== null)
+          )
+        })
         : [],
     [tokens, chainId]
   )
@@ -305,4 +306,24 @@ export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Pe
     () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
     [allowedSlippage, defaultSlippageTolerance]
   )
+}
+
+export function useGasPrice(): string {
+  const chainId = process.env.REACT_APP_CHAIN_ID
+  const userGas = useSelector<AppState, AppState['user']['gasPrice']>((state) => state.user.gasPrice)
+  return chainId === ChainId.CRONOS.toString() ? userGas : GAS_PRICE_GWEI.testnet
+}
+
+export enum GAS_PRICE {
+  default = '5000',
+  fast = '6000',
+  instant = '7000',
+  testnet = '5000',
+}
+
+export const GAS_PRICE_GWEI = {
+  default: parseUnits(GAS_PRICE.default, 'gwei').toString(),
+  fast: parseUnits(GAS_PRICE.fast, 'gwei').toString(),
+  instant: parseUnits(GAS_PRICE.instant, 'gwei').toString(),
+  testnet: parseUnits(GAS_PRICE.testnet, 'gwei').toString(),
 }

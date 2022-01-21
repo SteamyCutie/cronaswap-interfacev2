@@ -23,7 +23,7 @@ const Logo: FC<LogoProps> = ({ srcs, width, height, style, alt = '', className, 
   return (
     <div className="rounded-full" style={{ width, height, ...style }}>
       <Image
-        src={src || 'https://raw.githubusercontent.com/sushiswap/icons/master/token/unknown.png'}
+        src={src || 'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/unknown.png'}
         // loader={cloudinaryLoader}
         onError={() => {
           if (src) BAD_SRCS[src] = true

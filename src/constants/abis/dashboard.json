@@ -1,0 +1,364 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_weth",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_usdc",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_reward",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_master",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_factory",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "pid",
+                "type": "uint256"
+            }
+        ],
+        "name": "apyOfPool",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "apyPool",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "pids",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "apyOfPools",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "apyPool",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "ethPriceInUSD",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "factory",
+        "outputs": [
+            {
+                "internalType": "contract ICronaSwapFactory",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "pids",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "infoOfPools",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "tokenPrice",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalTvl",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalTvlInUSD",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "allocPoint",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "apy",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "tvl",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "tvlInUSD",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "master",
+        "outputs": [
+            {
+                "internalType": "contract IMasterChef",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "pairAddresses",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "reward",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "pid",
+                "type": "uint256"
+            }
+        ],
+        "name": "rewardPerYearOfPool",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "rewardPriceInUSD",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "pair",
+                "type": "address"
+            }
+        ],
+        "name": "setPairAddress",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "pid",
+                "type": "uint256"
+            }
+        ],
+        "name": "tvlOfPool",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "allocPoint",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tvl",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tvlInUSD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "pids",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "tvlOfPools",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalTvl",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalTvlInUSD",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "allocPoint",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "tvl",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "tvlInUSD",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "usdc",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "valueOfAsset",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "valueInETH",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "valueInUSD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "weth",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

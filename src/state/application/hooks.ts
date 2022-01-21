@@ -63,6 +63,11 @@ export function useToggleVoteModal(): () => void {
   return useToggleModal(ApplicationModal.VOTE)
 }
 
+// Add for CronaSwapV2
+export function useTokenStatsModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.CRONA)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()
