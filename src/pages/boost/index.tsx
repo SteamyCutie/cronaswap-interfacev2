@@ -1,19 +1,20 @@
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { BAR_ADDRESS, ZERO } from '@cronaswap/core-sdk'
-import React, { useState } from 'react'
-import { CRONA, XCRONA } from '../../config/tokens'
-import Button from '../../components/Button'
-import { ChainId } from '@cronaswap/core-sdk'
-import Container from '../../components/Container'
-import Dots from '../../components/Dots'
+import React, { useState, useEffect } from 'react'
+import { useLingui } from '@lingui/react'
+import { BAR_ADDRESS, ZERO, ChainId } from '@cronaswap/core-sdk'
 import Head from 'next/head'
 import Image from 'next/image'
-import Input from '../../components/Input'
-import { request } from 'graphql-request'
 import { t } from '@lingui/macro'
+import { request } from 'graphql-request'
+import { getBalanceAmount } from '../../functions/formatBalance'
+import { useCronaContract } from '../../hooks/useContract'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { CRONA, XCRONA } from '../../config/tokens'
+import Button from '../../components/Button'
+import Container from '../../components/Container'
+import Dots from '../../components/Dots'
+import Input from '../../components/Input'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
-import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
 
@@ -46,7 +47,7 @@ const buttonStyleConnectWallet = `${buttonStyle} text-high-emphesis bg-cyan-blue
 
 const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matthewlilley/bar', query)
 
-export default function Stake() {
+export default function Boost() {
   const { i18n } = useLingui()
   const { account } = useActiveWeb3React()
   const sushiBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.ETHEREUM])
@@ -55,7 +56,7 @@ export default function Stake() {
   const walletConnected = !!account
 
   const [activeTab, setActiveTab] = useState(0)
-
+  const [cronaBalance, setCronaBalance] = useState<string>('')
   const [input, setInput] = useState<string>('')
   const [usingBalance, setUsingBalance] = useState(false)
 
@@ -84,6 +85,17 @@ export default function Stake() {
   const [pendingTx, setPendingTx] = useState(false)
 
   const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO))
+
+  let cronaContract = useCronaContract()
+
+  useEffect(() => {
+    const fetchInfo = async () => {
+      let tokenInfo = await cronaContract.balanceOf('0xf1f5cb17E17759A4fc1CD1C6EdC8aa1bFE6Cf8D0')
+      setCronaBalance(getBalanceAmount(tokenInfo._hex).toString())
+    }
+
+    fetchInfo()
+  }, [])
 
   const handleClickButton = async () => {
     // todo
@@ -194,7 +206,7 @@ export default function Stake() {
                     <div className="flex items-center justify-between w-full">
                       <p className="font-bold text-large md:text-2xl text-high-emphesis">{i18n._(t`Lock CRONA`)}</p>
                       <div className="text-high-emphesis text-xs font-medium md:text-base md:font-normal">
-                        Balance: 1,230.0 CRONA
+                        Balance: {cronaBalance} CRONA
                       </div>
                     </div>
 
