@@ -65,7 +65,7 @@ const FarmListItem = ({ farm }) => {
     >
       <Disclosure.Panel className="flex flex-col w-full border-t-0 rounded rounded-t-none bg-dark-800" static>
         {/* <div className="grid grid-cols-2 gap-4 p-4"> */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 p-4">
+        <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-3">
           <div className="col-span-2 text-center md:col-span-1">
             {account && (
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
@@ -221,7 +221,7 @@ const FarmListItem = ({ farm }) => {
               </div>
 
               <div className="flex flex-col p-2 space-y-2">
-                <div className="flex flex-row justify-between text-md px-2">
+                <div className="flex flex-row justify-between px-2 text-md">
                   <ExternalLink
                     startIcon={<LinkIcon size={16} />}
                     href={chainId && getExplorerLink(chainId, farm.lpToken, 'address')}

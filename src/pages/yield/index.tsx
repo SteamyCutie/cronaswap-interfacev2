@@ -66,6 +66,9 @@ export default function Yield(): JSX.Element {
   const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-dark-900`
   const inactiveTabStyle = `${tabStyle} text-secondary`
 
+  const [activeTab, setActiveTab] = useState(0)
+  const [sortOption, setSortOption] = useState('Hot')
+
   return (
     <Container id="farm-page" className="grid h-full px-2 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
       <Head>
@@ -77,7 +80,7 @@ export default function Yield(): JSX.Element {
         {/* Hero */}
         <div className="space-y-10 md:block">
           <div className="relative w-full p-4 overflow-hidden rounded bg-opaque-blue">
-            <div className="font-bold text-lg text-white">Farm</div>
+            <div className="text-lg font-bold text-white">Farm</div>
             <div className="text-md text-primary">
               <p>Stake liquidity pool tokens to earn rewards in CronaSwap.</p>
               <p>Farms TVL: {formatNumberScale(totalTvlInUSD, true)}</p>
@@ -86,51 +89,86 @@ export default function Yield(): JSX.Element {
         </div>
 
         {/* search bar */}
-        <div className="md:flex flex-row justify-between">
+        <div className="flex-row justify-between md:flex">
           {/* select tab */}
-          <div className="m-auto mb-2 flex md:m-0 md:w-3/12 rounded h-14 bg-dark-800">
-            <div className="h-full w-6/12 p-1">
-              <div className={0 === 0 ? activeTabStyle : inactiveTabStyle}>
-                <p>All Farms</p>
-              </div>
+          <div className="flex m-auto mb-2 rounded md:m-0 md:w-3/12 h-14 bg-dark-800">
+            <div className="w-6/12 h-full p-1" onClick={() => setActiveTab(0)}>
+              <NavLink href="http://localhost:3000/farm?filter=all">
+                <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>
+                  <p>All Farms</p>
+                </div>
+              </NavLink>
             </div>
-            <div className="h-full w-6/12 p-1">
-              <div className={1 != 1 ? activeTabStyle : inactiveTabStyle}>
-                <p>Inactive Farms</p>
-              </div>
+            <div className="w-6/12 h-full p-1" onClick={() => setActiveTab(1)}>
+              <NavLink href="http://localhost:3000/farm?filter=inactive">
+                <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>
+                  <p>Inactive Farms</p>
+                </div>
+              </NavLink>
             </div>
-            {/* <div className="h-full w-6/12 p-1">
+            {/* <div className="w-6/12 h-full p-1">
               <div className={2 != 2 ? activeTabStyle : inactiveTabStyle}>
                 <p>My Farms</p>
               </div>
             </div> */}
           </div>
 
-          <div className="flex md:w-5/12 gap-10">
+          <div className="flex gap-2 md:w-5/12">
             {/* sort select menu*/}
             <div className="w-1/3 h-14">
               <div className="relative inline-block w-full h-full group">
-                <button className="inline-flex items-center justify-between w-full h-full px-4 py-2 font-semibold bg-dark-800 rounded">
-                  <span className="mr-1">Hot</span>
-                  <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+                <button className="inline-flex items-center justify-between w-full h-full px-4 py-2 font-semibold rounded bg-dark-800">
+                  <span className="mr-1">{sortOption}</span>
+                  <ChevronDownIcon width={12} height={12} />
                 </button>
                 <ul className="hidden pt-1 group-hover:block">
-                  <li className="">
+                  <li
+                    className={sortOption === 'Hot' ? 'hidden' : 'w-full'}
+                    onClick={() => {
+                      requestSort('hot')
+                      setSortOption('Hot')
+                    }}
+                  >
+                    <a className="block px-4 py-2 whitespace-no-wrap bg-dark-800 hover:bg-gray-900" href="#">
+                      Hot
+                    </a>
+                    {sortConfig && sortConfig.key === 'hot'}
+                  </li>
+                  <li
+                    className={sortOption === 'APR' ? 'hidden' : 'w-full'}
+                    onClick={() => {
+                      requestSort('apr')
+                      setSortOption('APR')
+                    }}
+                  >
                     <a className="block px-4 py-2 whitespace-no-wrap bg-dark-800 hover:bg-gray-900" href="#">
                       APR
                     </a>
+                    {sortConfig && sortConfig.key === 'roiPerYear'}
                   </li>
-                  <li className="">
+                  <li
+                    className={sortOption === 'Multiplier' ? 'hidden' : 'w-full'}
+                    onClick={() => {
+                      requestSort('multiplier')
+                      setSortOption('Multiplier')
+                    }}
+                  >
                     <a className="block px-4 py-2 whitespace-no-wrap bg-dark-800 hover:bg-gray-900" href="#">
                       Multiplier
                     </a>
+                    {sortConfig && sortConfig.key === 'multiplier'}
                   </li>
-                  <li className="">
+                  <li
+                    className={sortOption === 'Liquidity' ? 'hidden' : 'w-full'}
+                    onClick={() => {
+                      requestSort('liquidity')
+                      setSortOption('Liquidity')
+                    }}
+                  >
                     <a className="block px-4 py-2 whitespace-no-wrap bg-dark-800 hover:bg-gray-900" href="#">
                       Liquidity
                     </a>
+                    {sortConfig && sortConfig.key === 'liquidity'}
                   </li>
                 </ul>
               </div>
@@ -149,7 +187,7 @@ export default function Yield(): JSX.Element {
         </div>
         {/* All Farms */}
         {/* //logo|name, Earned, APR, TVL, Multiplier */}
-        <div className="grid grid-cols-5 pb-4 px-4 text-sm  text-primary">
+        {/* <div className="grid grid-cols-5 px-4 pb-4 text-sm text-primary">
           <div className="flex items-center cursor-pointer hover:text-secondary" onClick={() => requestSort('symbol')}>
             <div className="hover:text-high-emphesis">{i18n._(t`Pool`)}</div>
             {sortConfig &&
@@ -157,12 +195,12 @@ export default function Yield(): JSX.Element {
               ((sortConfig.direction === 'ascending' && <ChevronUpIcon width={12} height={12} />) ||
                 (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
           </div>
-          <div className="hidden md:block ml-4">
+          <div className="hidden ml-4 md:block">
             <div className="flex items-center justify-end">
               <div>{i18n._(t`Earned`)}</div>
             </div>
           </div>
-          <div className="hidden md:block ml-4">
+          <div className="hidden ml-4 md:block">
             <div className="flex items-center justify-end">
               <div>{i18n._(t`Multiplier`)}</div>
               <QuestionHelper
@@ -171,7 +209,7 @@ export default function Yield(): JSX.Element {
               />
             </div>
           </div>
-          <div className="hover:text-secondary cursor-pointer" onClick={() => requestSort('apr')}>
+          <div className="cursor-pointer hover:text-secondary" onClick={() => requestSort('apr')}>
             <div className="flex items-center justify-end">
               <div>{i18n._(t`APR`)}</div>
               {sortConfig &&
@@ -180,7 +218,7 @@ export default function Yield(): JSX.Element {
                   (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
             </div>
           </div>
-          <div className="hover:text-secondary cursor-pointer" onClick={() => requestSort('tvl')}>
+          <div className="cursor-pointer hover:text-secondary" onClick={() => requestSort('tvl')}>
             <div className="flex items-center justify-end">
               <div>{i18n._(t`TVL`)}</div>
               {sortConfig &&
@@ -189,7 +227,7 @@ export default function Yield(): JSX.Element {
                   (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
             </div>
           </div>
-        </div>
+        </div> */}
         {/* <FarmList items={items} term={term} /> */}
 
         {items && items.length > 0 ? (
