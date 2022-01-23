@@ -36,7 +36,6 @@
     "@commitlint/cli": "^13.0.0",
     "@commitlint/config-conventional": "^13.0.0",
     "@cronaswap/core-sdk": "1.0.4",
-    "@cronaswap/uikit": "0.1.8",
     "@cronaswap/default-token-list": "1.0.6",
     "@ethereumjs/common": "^2.4.0",
     "@ethereumjs/tx": "^3.3.0",

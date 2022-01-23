@@ -181,13 +181,13 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const isETH = currencyId?.toUpperCase() === 'CRO'
 
-  // const isDual = [ChainId.CELO].includes(chainId)
+  const isDual = [ChainId.ETHEREUM].includes(chainId)
 
-  const useNative = isETH
+  const useNative = isETH && !isDual
 
-  if (isETH) {
+  if (isETH && isDual) {
     currencyId = WNATIVE_ADDRESS[chainId]
   }
 

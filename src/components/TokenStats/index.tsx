@@ -26,7 +26,7 @@ function TokenStatusInner({ token, price }) {
   const toggleModal = useTokenStatsModalToggle()
   return (
     <div
-      className="flex items-center px-4 py-2 text-sm rounded-lg bg-dark-900 hover:bg-dark-800  text-secondary"
+      className="flex items-center px-2 py-2 text-sm rounded-lg bg-dark-900 hover:bg-dark-800  text-secondary"
       onClick={toggleModal}
     >
       {token.icon && (
@@ -39,7 +39,7 @@ function TokenStatusInner({ token, price }) {
           className="rounded-md"
         />
       )}
-      <div className="text-primary">{formatNumberScale(price, true)}</div>
+      <div className="text-primary px-1">{formatNumberScale(price, true)}</div>
     </div>
   )
 }

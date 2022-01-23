@@ -57,6 +57,7 @@ import PRIVATESALEA_ABI from '../constants/abis/privateSaleA.json'
 import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
 import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
 import DASHBOARD_ABI from '../constants/abis/dashboard.json'
+import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -237,4 +238,8 @@ export function usePublicSaleContract(withSignerIfPossible?: boolean): Contract 
 
 export function useDashboardContract(withSignerIfPossible?: boolean): Contract | null {
   return useContract('0x3647f6A3Ef1Aa70697b09407FF092fe878e9CeBA', DASHBOARD_ABI, withSignerIfPossible)
+}
+
+export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0x98aFeD5b527e9ae7456857D697b739eD840853B0', VOTING_ESCROW_ABI, withSignerIfPossible)
 }
