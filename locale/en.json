@@ -21,8 +21,14 @@
   "Audit": "Audit",
   "Auditors": "Auditors",
   "Auto": "Auto",
+<<<<<<< HEAD
+  "Auto CRONA": "Auto CRONA",
+  "Auto Crona Bounty": "Auto Crona Bounty",
+  "Automatic restaking": "Automatic restaking",
+=======
   "Auto Compound Staking APR": "Auto Compound Staking APR",
   "Auto Crona Bounty": "Auto Crona Bounty",
+>>>>>>> 716a2c199e1d44df143fcce0cef320dfcd486aeb
   "Available Networks": "Available Networks",
   "Balance": "Balance",
   "Balance:": "Balance:",
