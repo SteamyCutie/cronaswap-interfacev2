@@ -206,6 +206,7 @@ export default function Stake() {
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfKgvVAO6VwiGkCkc9TzRUJFKPYqzg0siOV6T0oq0ELPz9KLw/viewform"
               target="_blank"
+              rel="noreferrer"
             >
               <div className="flex items-center gap-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply to Launch`)}</div>
@@ -405,7 +406,11 @@ export default function Stake() {
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">SEE Token Info</p>
-                <a href="https://cronoscan.com/address/0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389" target="_blank">
+                <a
+                  href="https://cronoscan.com/address/0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {i18n._(t`View Contract`)}
                 </a>
               </div>
@@ -609,7 +614,11 @@ export default function Stake() {
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">SEE Token Info</p>
-                <a href="https://cronoscan.com/address/0x77ea4a4cF9F77A034E4291E8f457Af7772c2B254" target="_blank">
+                <a
+                  href="https://cronoscan.com/address/0x77ea4a4cF9F77A034E4291E8f457Af7772c2B254"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {i18n._(t`View Contract`)}
                 </a>
               </div>
