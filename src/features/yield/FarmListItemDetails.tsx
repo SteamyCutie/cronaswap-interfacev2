@@ -194,7 +194,7 @@ const FarmListItem = ({ farm }) => {
                   <div className="text-2xl font-bold"> {formatNumber(pendingCrona?.toFixed(18))}</div>
                   <div className="text-sm">~{Number(formatNumber(pendingCrona?.toFixed(18))) * farm.tokenPrice}</div>
                 </div>
-                <div className="flex flex-col w-1/3 px-4 align-middle gap-y-1">
+                <div className="flex flex-col w-1/2 px-4 align-middle lg:w-1/3 gap-y-1">
                   <Button
                     color={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0 ? 'blue' : 'gradient'}
                     className="w-full"

@@ -65,6 +65,10 @@ module.exports = {
         primary: '#BFBFBF',
         secondary: '#7F7F7F',
         'high-emphesis': '#E3E3E3',
+        blackberry: '#3A1F3E',
+        bunting: '#202C45',
+        'Mardi-Gras': '#212B2B',
+        Myrtle: '#23274A',
       },
       lineHeight: {
         '48px': '48px',
