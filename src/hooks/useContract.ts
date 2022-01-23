@@ -61,6 +61,14 @@ import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
+import {
+  DASHBOARD_ADDRESSV1,
+  PRIVATE_SALEA_ADDRESS,
+  PRIVATE_SALEB_ADDRESS,
+  PUBLIC_SALE_ADDRESS,
+  SEED_SALE_ADDRESS,
+  VOTING_ESCROW_ADDRESS,
+} from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
 
@@ -220,26 +228,33 @@ export function useZenkoContract(withSignerIfPossible?: boolean): Contract | nul
   return useContract('0xa8f676c49f91655ab3b7c3ea2b73bb3088b2bc1f', ZENKO_ABI, withSignerIfPossible)
 }
 
+// add new address for cronaswapv2
 export function useSeedSaleContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x94f3Dfc9E8AE00892984d8fA003BF09a46987DFd', SEEDSALE_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(SEED_SALE_ADDRESS[chainId], SEEDSALE_ABI, withSignerIfPossible)
 }
 
 export function usePrivateSaleAContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x1c41BE3D395494e636aE7Ec9b8B5AB32A9Ddd1Ce', PRIVATESALEA_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(PRIVATE_SALEA_ADDRESS[chainId], PRIVATESALEA_ABI, withSignerIfPossible)
 }
 
 export function usePrivateSaleBContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x309afba23f791B5c38Ab9057D11D6869755fAcaf', PRIVATESALEB_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(PRIVATE_SALEB_ADDRESS[chainId], PRIVATESALEB_ABI, withSignerIfPossible)
 }
 
 export function usePublicSaleContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x941a3703E106707668f38E779c7984383638173e', PUBLICSALE_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(PUBLIC_SALE_ADDRESS[chainId], PUBLICSALE_ABI, withSignerIfPossible)
 }
 
-export function useDashboardContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x3647f6A3Ef1Aa70697b09407FF092fe878e9CeBA', DASHBOARD_ABI, withSignerIfPossible)
+export function useDashboardV1Contract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(DASHBOARD_ADDRESSV1[chainId], DASHBOARD_ABI, withSignerIfPossible)
 }
 
 export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x98aFeD5b527e9ae7456857D697b739eD840853B0', VOTING_ESCROW_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(VOTING_ESCROW_ADDRESS[chainId], VOTING_ESCROW_ABI, withSignerIfPossible)
 }

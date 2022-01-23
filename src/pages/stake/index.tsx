@@ -23,7 +23,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
 import { aprToApy } from '../../functions/convert/apyApr'
 import { useBar, useBlock, useFactory, useNativePrice, useSushiPrice, useTokens } from '../../services/graph'
-import { useDashboardContract } from 'hooks/useContract'
+import { useDashboardV1Contract } from 'hooks/useContract'
 import { getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 
@@ -138,7 +138,7 @@ export default function Stake() {
     }
   }
 
-  const dashboardContract = useDashboardContract()
+  const dashboardContract = useDashboardV1Contract()
   const [manualAPY, setManualAPY] = useState(0)
   // const [autoAPY, setAutoAPY] = useState(0);
 

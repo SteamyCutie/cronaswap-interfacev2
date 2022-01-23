@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import { FARMS } from '../../constants/farms'
-import { useDashboardContract } from '../../hooks/useContract'
+import { useDashboardV1Contract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../services/web3'
 
 // Todo: Rewrite in terms of web3 as opposed to subgraph
@@ -11,7 +11,7 @@ const useFarms = () => {
   const { chainId } = useActiveWeb3React()
 
   const [farms, setFarms] = useState<any | undefined>()
-  const dashboardContract = useDashboardContract()
+  const dashboardContract = useDashboardV1Contract()
 
   const fetchAllFarms = useCallback(async () => {
     // Reset pools list

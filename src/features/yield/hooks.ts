@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../../services/web3'
 import { Contract } from '@ethersproject/contracts'
 import { Zero } from '@ethersproject/constants'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../../state/multicall/hooks'
-import { useDashboardContract, useMasterChefContract } from '../../hooks/useContract'
+import { useDashboardV1Contract, useMasterChefContract } from '../../hooks/useContract'
 
 import zip from 'lodash/zip'
 import concat from 'lodash/concat'
@@ -182,7 +182,7 @@ export function useMasterChefInfo() {
 // Has used for CronaSwapV2 //////////////////////////////////////////
 
 export const useCronaUsdcPrice = (): BigNumber | undefined => {
-  const dashboard = useDashboardContract()
+  const dashboard = useDashboardV1Contract()
   return useSingleCallResult(dashboard, 'rewardPriceInUSD')?.result?.[0]
 }
 

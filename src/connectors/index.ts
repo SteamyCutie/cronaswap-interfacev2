@@ -14,7 +14,7 @@ import { Web3Provider } from '@ethersproject/providers'
 
 const RPC = {
   [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
-  [ChainId.CRONOS]: 'https://rpc.cronaswap.org',
+  [ChainId.CRONOS]: 'https://rpcv2.cronaswap.org',
   [ChainId.CRONOS_TESTNET]: 'https://devrpc.cronaswap.org',
 }
 
