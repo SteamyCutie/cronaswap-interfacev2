@@ -35,6 +35,7 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
     async (listUrl: string, sendDispatch = true) => {
       const requestId = nanoid()
       sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
+
       return getTokenList(listUrl, ensResolver)
         .then((tokenList) => {
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))

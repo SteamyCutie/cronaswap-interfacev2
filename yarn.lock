@@ -1393,10 +1393,10 @@
     tiny-warning "^1.0.0"
     toformat "^2.0.0"
 
-"@cronaswap/default-token-list@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.6.tgz#bb8fcf7e6bb5931468f8d159d81398876b9684de"
-  integrity sha512-XCob4ntUuhsMpLQMfwfN3RRVA4uMs3yZwTcFVZqubmg+gdpdjRFjV9Wof2KA8IriRM8g4Su7WtPq7+RooEPXOg==
+"@cronaswap/default-token-list@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.9.tgz#3890c04631c2b165c502a79caf9eb8742389442e"
+  integrity sha512-77v1wq16RwjU6Vc6ULiZajDvq2r0sBXLarJYmgoFi9E7VWcm1Ak+8APk5OrhrApur/NYRGlyCDfBdzdh2cTVBA==
 
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"

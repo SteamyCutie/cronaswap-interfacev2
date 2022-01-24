@@ -9,14 +9,14 @@ import Search from '../../components/Search'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import useSortableData from '../../hooks/useSortableData'
-import useFarms from '../../features/yield/useFarms'
+import useFarms from '../../features/farms/useFarms'
 import { formatNumberScale } from '../../functions'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import QuestionHelper from '../../components/QuestionHelper'
 import Dots from '../../components/Dots'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteScroll } from '../../features/yield/hooks'
-import FarmListItem from '../../features/yield/FarmListItem'
+import { useInfiniteScroll } from '../../features/farms/hooks'
+import FarmListItem from '../../features/farms/FarmListItem'
 
 export default function Yield(): JSX.Element {
   const { i18n } = useLingui()
@@ -51,11 +51,7 @@ export default function Yield(): JSX.Element {
     options,
   })
 
-  // const { result, search, term } = useFuse({
-  //     data: farms && farms.length > 0 ? farms : [],
-  //     options
-  // })
-
+  console.log(term)
   const flattenSearchResults = result.map((a: { item: any }) => (a.item ? a.item : a))
 
   // Sorting Setup
@@ -72,7 +68,7 @@ export default function Yield(): JSX.Element {
   return (
     <Container id="farm-page" className="grid h-full px-2 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
       <Head>
-        <title>Farm | CronaSwap</title>
+        <title>Farms V1 | CronaSwap</title>
         <meta key="description" name="description" content="Farm CronaSwap" />
       </Head>
 
@@ -80,10 +76,10 @@ export default function Yield(): JSX.Element {
         {/* Hero */}
         <div className="space-y-10 md:block">
           <div className="relative w-full p-4 overflow-hidden rounded bg-opaque-blue">
-            <div className="text-lg font-bold text-white">Farm</div>
+            <div className="text-lg font-bold text-white">Farms V1</div>
             <div className="text-md text-primary">
               <p>Stake liquidity pool tokens to earn rewards in CronaSwap.</p>
-              <p>Farms TVL: {formatNumberScale(totalTvlInUSD, true)}</p>
+              <p>Farms V1 TVL: {formatNumberScale(totalTvlInUSD, true)}</p>
             </div>
           </div>
         </div>
@@ -93,14 +89,14 @@ export default function Yield(): JSX.Element {
           {/* select tab */}
           <div className="flex m-auto mb-2 rounded md:m-0 md:w-3/12 h-14 bg-dark-800">
             <div className="w-6/12 h-full p-1" onClick={() => setActiveTab(0)}>
-              <NavLink href="http://localhost:3000/farm?filter=all">
+              <NavLink href="/farmv1?filter=all">
                 <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>
                   <p>All Farms</p>
                 </div>
               </NavLink>
             </div>
             <div className="w-6/12 h-full p-1" onClick={() => setActiveTab(1)}>
-              <NavLink href="http://localhost:3000/farm?filter=inactive">
+              <NavLink href="/farmv1?filter=inactive">
                 <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>
                   <p>Inactive Farms</p>
                 </div>
@@ -125,7 +121,7 @@ export default function Yield(): JSX.Element {
                   <li
                     className={sortOption === 'Hot' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('hot')
+                      requestSort('multiplier', 'desc')
                       setSortOption('Hot')
                     }}
                   >
@@ -137,19 +133,19 @@ export default function Yield(): JSX.Element {
                   <li
                     className={sortOption === 'APR' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('apr')
+                      requestSort('apr', 'desc')
                       setSortOption('APR')
                     }}
                   >
                     <a className="block px-4 py-2 whitespace-no-wrap bg-dark-800 hover:bg-gray-900" href="#">
                       APR
                     </a>
-                    {sortConfig && sortConfig.key === 'roiPerYear'}
+                    {sortConfig && sortConfig.key === 'apr'}
                   </li>
                   <li
                     className={sortOption === 'Multiplier' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('multiplier')
+                      requestSort('multiplier', 'desc')
                       setSortOption('Multiplier')
                     }}
                   >
@@ -161,7 +157,7 @@ export default function Yield(): JSX.Element {
                   <li
                     className={sortOption === 'Liquidity' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('liquidity')
+                      requestSort('liquidity', 'desc')
                       setSortOption('Liquidity')
                     }}
                   >
@@ -185,51 +181,6 @@ export default function Yield(): JSX.Element {
             />
           </div>
         </div>
-        {/* All Farms */}
-        {/* //logo|name, Earned, APR, TVL, Multiplier */}
-        {/* <div className="grid grid-cols-5 px-4 pb-4 text-sm text-primary">
-          <div className="flex items-center cursor-pointer hover:text-secondary" onClick={() => requestSort('symbol')}>
-            <div className="hover:text-high-emphesis">{i18n._(t`Pool`)}</div>
-            {sortConfig &&
-              sortConfig.key === 'symbol' &&
-              ((sortConfig.direction === 'ascending' && <ChevronUpIcon width={12} height={12} />) ||
-                (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
-          </div>
-          <div className="hidden ml-4 md:block">
-            <div className="flex items-center justify-end">
-              <div>{i18n._(t`Earned`)}</div>
-            </div>
-          </div>
-          <div className="hidden ml-4 md:block">
-            <div className="flex items-center justify-end">
-              <div>{i18n._(t`Multiplier`)}</div>
-              <QuestionHelper
-                text="The multiplier represents the amount of CRONA rewards each farm gets. 
-                      For example, if a 1x farm was getting 1 CRONA per second, a 40x farm would be getting 40 CRONA per second."
-              />
-            </div>
-          </div>
-          <div className="cursor-pointer hover:text-secondary" onClick={() => requestSort('apr')}>
-            <div className="flex items-center justify-end">
-              <div>{i18n._(t`APR`)}</div>
-              {sortConfig &&
-                sortConfig.key === 'roiPerYear' &&
-                ((sortConfig.direction === 'ascending' && <ChevronUpIcon width={12} height={12} />) ||
-                  (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
-            </div>
-          </div>
-          <div className="cursor-pointer hover:text-secondary" onClick={() => requestSort('tvl')}>
-            <div className="flex items-center justify-end">
-              <div>{i18n._(t`TVL`)}</div>
-              {sortConfig &&
-                sortConfig.key === 'tvl' &&
-                ((sortConfig.direction === 'ascending' && <ChevronUpIcon width={12} height={12} />) ||
-                  (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
-            </div>
-          </div>
-        </div> */}
-        {/* <FarmList items={items} term={term} /> */}
-
         {items && items.length > 0 ? (
           <InfiniteScroll
             dataLength={numDisplayed}

@@ -9,7 +9,6 @@ export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 const YEARN_LIST = 'https://yearn.science/static/tokenlist.json'
 const NFTX_LIST = 'https://nftx.ethereumdb.com/v2/tokenlist/'
 const SYNTHETIX_LIST = 'synths.snx.eth'
-const OPYN_LIST = 'https://raw.githubusercontent.com/opynfinance/opyn-tokenlist/master/opyn-v1.tokenlist.json'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const CMC_ALL_LIST = 'defi.cmc.eth'
 const CMC_STABLECOIN = 'stablecoin.cmc.eth'
@@ -26,23 +25,22 @@ const DHEDGE_LIST = 'https://list.dhedge.eth.link/'
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
-  COMPOUND_LIST,
-  AAVE_LIST,
-  CMC_ALL_LIST,
-  CMC_STABLECOIN,
-  UMA_LIST,
-  YEARN_LIST,
-  SYNTHETIX_LIST,
-  WRAPPED_LIST,
-  SET_LIST,
-  ROLL_LIST,
-  COINGECKO_LIST,
-  KLEROS_LIST,
-  OPYN_LIST,
-  NFTX_LIST,
-  OPTIMISM_LIST,
-  GEMINI_LIST,
-  DHEDGE_LIST,
+  // COMPOUND_LIST,
+  // AAVE_LIST,
+  // CMC_ALL_LIST,
+  // CMC_STABLECOIN,
+  // UMA_LIST,
+  // YEARN_LIST,
+  // SYNTHETIX_LIST,
+  // WRAPPED_LIST,
+  // SET_LIST,
+  // ROLL_LIST,
+  // COINGECKO_LIST,
+  // KLEROS_LIST,
+  // NFTX_LIST,
+  // OPTIMISM_LIST,
+  // GEMINI_LIST,
+  // DHEDGE_LIST,
   ...UNSUPPORTED_LIST_URLS, // need to load unsupported tokens as well
 ]
 

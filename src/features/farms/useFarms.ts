@@ -45,7 +45,7 @@ const useFarms = () => {
       })
 
     // console.log('farms:', farms)
-    const sorted = _.orderBy(farms, ['tvl'], ['desc'])
+    const sorted = _.orderBy(farms, ['multiplier'], ['desc'])
 
     setFarms({ farms: sorted, userFarms: [], stakeFarms: [] })
 

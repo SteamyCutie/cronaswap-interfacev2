@@ -110,12 +110,12 @@ const FarmListItem = ({ farm }) => {
               <Button
                 className="w-full"
                 color="blue"
-                disabled={pendingTx || !typedDepositValue || balance.lessThan(typedDepositValue) || farm?.id === '1'}
+                disabled={pendingTx || !typedDepositValue || balance.lessThan(typedDepositValue)}
                 onClick={async () => {
                   setPendingTx(true)
                   try {
                     // KMP decimals depend on asset, SLP is always 18
-                    const tx = await deposit(farm?.id, depositValue.toBigNumber(liquidityToken?.decimals))
+                    const tx = await deposit(farm?.pid, depositValue.toBigNumber(liquidityToken?.decimals))
 
                     addTransaction(tx, {
                       summary: `${i18n._(t`Deposit`)} ${
@@ -170,7 +170,7 @@ const FarmListItem = ({ farm }) => {
               onClick={async () => {
                 setPendingTx(true)
                 try {
-                  const tx = await withdraw(farm?.id, withdrawValue.toBigNumber(liquidityToken?.decimals))
+                  const tx = await withdraw(farm?.pid, withdrawValue.toBigNumber(liquidityToken?.decimals))
                   addTransaction(tx, {
                     summary: `${i18n._(t`Withdraw`)} ${
                       farm.token1 ? `${farm.token0.symbol}/${farm.token1.symbol}` : farm.token0.symbol

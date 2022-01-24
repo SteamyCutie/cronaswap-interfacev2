@@ -36,9 +36,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                 <DoubleLogo currency0={token0} currency1={token1} size={window.innerWidth > 768 ? 40 : 24} />
                 <div className="flex flex-col justify-center">
                   {/* <div className="text-xs md:text-base text-blue">FARMING</div> */}
-                  <div className="text-xs font-bold md:text-base">
-                    {farm?.pid} {farm?.name}
-                  </div>
+                  <div className="text-xs font-bold md:text-base">{farm?.name}</div>
                 </div>
               </div>
 

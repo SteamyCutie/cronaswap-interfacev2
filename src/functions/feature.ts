@@ -2,7 +2,8 @@ import { ChainId } from '@cronaswap/core-sdk'
 
 export enum Feature {
   AMM = 'AMM',
-  LIQUIDITY_MINING = 'Liquidity Mining',
+  FARMV1 = 'Farm V1',
+  FARMV2 = 'Farm V2',
   LENDING = 'Lending',
   ANALYTICS = 'Analytics',
   MIGRATE = 'Migrate',
@@ -14,18 +15,12 @@ export enum Feature {
 }
 
 const features = {
-  [ChainId.ETHEREUM]: [
-    Feature.AMM,
-    Feature.LIQUIDITY_MINING,
-    Feature.LENDING,
-    Feature.MIGRATE,
-    Feature.ANALYTICS,
-    Feature.STAKING,
-  ],
+  [ChainId.ETHEREUM]: [Feature.AMM],
 
   [ChainId.CRONOS]: [
     Feature.AMM,
-    Feature.LIQUIDITY_MINING,
+    Feature.FARMV1,
+    Feature.FARMV2,
     Feature.ZAP,
     Feature.MIGRATE,
     Feature.ANALYTICS,
@@ -36,12 +31,11 @@ const features = {
 
   [ChainId.CRONOS_TESTNET]: [
     Feature.AMM,
-    Feature.LIQUIDITY_MINING,
+    Feature.FARMV1,
+    Feature.FARMV2,
     Feature.ZAP,
-    Feature.LENDING,
-    Feature.MIGRATE,
-    Feature.ANALYTICS,
-    Feature.LAUNCH,
+    // Feature.LENDING,
+    // Feature.LAUNCH,
     Feature.STAKING,
     Feature.BOOST,
   ],

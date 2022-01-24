@@ -57,13 +57,23 @@ function AppBar(): JSX.Element {
                           {i18n._(t`Pool`)}
                         </a>
                       </NavLink>
-                      {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                        <NavLink href={'/farm'}>
+                      {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                        <NavLink href={'/farmv1'}>
                           <a
                             id={`yield-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Farm`)}
+                            {i18n._(t`Farm V1`)}
+                          </a>
+                        </NavLink>
+                      )}
+                      {chainId && featureEnabled(Feature.FARMV2, chainId) && (
+                        <NavLink href={'/farmv2'}>
+                          <a
+                            id={`yield-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Farm V2`)}
                           </a>
                         </NavLink>
                       )}
@@ -214,14 +224,26 @@ function AppBar(): JSX.Element {
                   </a>
                 </Link>
 
-                {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                  <Link href={'/farm'}>
+                {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                  <Link href={'/farmv1'}>
                     <a
                       id={`farm-nav-link`}
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {' '}
-                      {i18n._(t`Farm`)}
+                      {i18n._(t`Farm V1`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.FARMV2, chainId) && (
+                  <Link href={'/farmv2'}>
+                    <a
+                      id={`farm-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {' '}
+                      {i18n._(t`Farm V2`)}
                     </a>
                   </Link>
                 )}

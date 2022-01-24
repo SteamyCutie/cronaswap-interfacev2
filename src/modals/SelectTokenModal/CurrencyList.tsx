@@ -2,7 +2,6 @@ import { Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { RowBetween, RowFixed } from '../../components/Row'
 
-import Card from '../../components/Card'
 import Column from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { FixedSizeList } from 'react-window'

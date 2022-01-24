@@ -4,7 +4,7 @@ import { formatBalance, formatNumber, formatNumberScale } from '../../functions/
 import { useTokenStatsModalToggle } from '../../state/application/hooks'
 import TokenStatsModal from '../../modals/TokenStatsModal'
 import { ChainId } from '@cronaswap/core-sdk'
-import { useCronaUsdcPrice } from '../../features/yield/hooks'
+import { useCronaUsdcPrice } from '../../features/farms/hooks'
 
 const supportedTokens = {
   CRONA: {
