@@ -9,7 +9,7 @@ import Search from '../../components/Search'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import useSortableData from '../../hooks/useSortableData'
-import useFarms from '../../features/farms/useFarms'
+import useFarmsV2 from '../../features/farms/useFarmsV2'
 import { formatNumberScale } from '../../functions'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import QuestionHelper from '../../components/QuestionHelper'
@@ -24,7 +24,7 @@ export default function FarmsV2(): JSX.Element {
   const router = useRouter()
   const type = router.query.filter == null ? 'all' : (router.query.filter as string)
 
-  const query = useFarms()
+  const query = useFarmsV2()
   const farms = query?.farms
 
   let tokenPrice = 0

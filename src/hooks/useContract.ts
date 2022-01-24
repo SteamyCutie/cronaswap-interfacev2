@@ -56,14 +56,17 @@ import SEEDSALE_ABI from '../constants/abis/seedSale.json'
 import PRIVATESALEA_ABI from '../constants/abis/privateSaleA.json'
 import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
 import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
-import DASHBOARD_ABI from '../constants/abis/dashboard.json'
+import DASHBOARD_ABIV1 from '../constants/abis/dashboardv1.json'
+import DASHBOARD_ABIV2 from '../constants/abis/dashboardv2.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
 import {
-  DASHBOARD_ADDRESSV1,
+  DASHBOARDV1_ADDRESS,
+  DASHBOARDV2_ADDRESS,
+  MASTERCHEFV2_ADDRESS,
   PRIVATE_SALEA_ADDRESS,
   PRIVATE_SALEB_ADDRESS,
   PUBLIC_SALE_ADDRESS,
@@ -156,10 +159,12 @@ export function useMasterChefContract(withSignerIfPossible?: boolean): Contract 
   return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
 }
 
+// new masterchef for cronaswapv2
 export function useMasterChefV2Contract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MASTERCHEF_V2_ADDRESS[chainId], MASTERCHEF_V2_ABI, withSignerIfPossible)
+  return useContract(chainId && MASTERCHEFV2_ADDRESS[chainId], MASTERCHEF_V2_ABI, withSignerIfPossible)
 }
+
 export function useMiniChefContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && MINICHEF_ADDRESS[chainId], MINICHEF_ABI, withSignerIfPossible)
@@ -252,7 +257,12 @@ export function usePublicSaleContract(withSignerIfPossible?: boolean): Contract 
 
 export function useDashboardV1Contract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(DASHBOARD_ADDRESSV1[chainId], DASHBOARD_ABI, withSignerIfPossible)
+  return useContract(DASHBOARDV1_ADDRESS[chainId], DASHBOARD_ABIV1, withSignerIfPossible)
+}
+
+export function useDashboardV2Contract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(DASHBOARDV2_ADDRESS[chainId], DASHBOARD_ABIV2, withSignerIfPossible)
 }
 
 export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {

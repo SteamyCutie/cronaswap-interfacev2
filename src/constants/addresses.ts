@@ -2,9 +2,19 @@ import { ChainId } from '@cronaswap/core-sdk'
 
 type AddressMap = { [chainId: number]: string }
 
-export const DASHBOARD_ADDRESSV1: AddressMap = {
+export const MASTERCHEFV2_ADDRESS: AddressMap = {
+  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS_TESTNET]: '0x4E88d01e22437F99d9E9313C40306700b214132C',
+}
+
+export const DASHBOARDV1_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '0x3647f6A3Ef1Aa70697b09407FF092fe878e9CeBA',
   [ChainId.CRONOS_TESTNET]: '0xA745124f47D53B5c3d1a7A880BD9Edc5461F2e75',
+}
+
+export const DASHBOARDV2_ADDRESS: AddressMap = {
+  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS_TESTNET]: '0xD2A0A6cE020e819C73A4E05dF3576E671F942ccD',
 }
 
 export const VOTING_ESCROW_ADDRESS: AddressMap = {
