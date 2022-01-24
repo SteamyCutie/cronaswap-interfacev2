@@ -38,6 +38,11 @@ const nextConfig = {
         destination: '/swap',
         permanent: true,
       },
+      {
+        source: '/bridge',
+        destination: '/swap',
+        permanent: true,
+      },
     ]
   },
   async rewrites() {

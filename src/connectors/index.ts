@@ -12,7 +12,7 @@ import { NetworkConnector } from '../entities/NetworkConnector'
 import { DeFiWeb3Connector } from 'deficonnect' // crypto.com defi wallet
 import { Web3Provider } from '@ethersproject/providers'
 
-const RPC = {
+export const RPC = {
   [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
   [ChainId.CRONOS]: 'https://rpcv2.cronaswap.org',
   [ChainId.CRONOS_TESTNET]: 'https://devrpc.cronaswap.org',
@@ -46,14 +46,22 @@ export const injected = new InjectedConnector({
   supportedChainIds,
 })
 
-export const cryptowallet = new DeFiWeb3Connector({
-  supportedChainIds: [25, 338],
-  rpc: {
-    25: 'https://evm-cronos.crypto.org/', // cronos mainet
-    338: 'https://cronos-testnet-3.crypto.org:8545', // cronos testnet
-  },
-  pollingInterval: 15000,
+export const bridgeInjected = new InjectedConnector({
+  supportedChainIds: [
+    1, // mainnet
+    56, // binance smart chain
+    25, // cronos
+  ],
 })
+
+// export const cryptowallet = new DeFiWeb3Connector({
+//   supportedChainIds: [25, 338],
+//   rpc: {
+//     25: 'https://evm-cronos.crypto.org/', // cronos mainet
+//     338: 'https://cronos-testnet-3.crypto.org:8545', // cronos testnet
+//   },
+//   pollingInterval: 15000,
+// })
 
 // mainnet only
 // export const walletconnect = new WalletConnectConnector({

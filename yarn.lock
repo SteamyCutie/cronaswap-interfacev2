@@ -1377,10 +1377,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.26.6.tgz#134ef1ea0675580c2cc7524589d09f3d42c678a7"
   integrity sha512-Zx60MMI1vffX8c2UbUMlszrGIug3TWa25bD7NF3blJ5k/MVCZFsPafEZ+jEi7kcqoxdhMhgJTI6AmUhnMfq9SQ==
 
-"@cronaswap/core-sdk@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.4.tgz#070ac0aa9aa924dafac203ee5b721524b730c63c"
-  integrity sha512-GiNmKw4B/1aJl5llN2T2I5k46tRjGSBZEF8VfDy1AZLGwVOuOd+wlLPHeqLBd6EWn+S5tPxCpPQNDDw1e+o0iQ==
+"@cronaswap/core-sdk@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.7.tgz#bed6871be7f2ee437c70e2b9a5dd10613c3e010c"
+  integrity sha512-dhgNyRye1XlWwJcRbMdnlTECsZJ7PqGx7RRwW7UQUBXXOcIxvWoJZE76kuHgxzkECYlyuIsVik5Dkct5bLcwPg==
   dependencies:
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.0"
@@ -12136,6 +12136,11 @@ module-lookup-amd@^7.0.1:
     glob "^7.1.6"
     requirejs "^2.3.5"
     requirejs-config-file "^4.0.0"
+
+moment@^2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
 mrmime@^1.0.0:
   version "1.0.0"

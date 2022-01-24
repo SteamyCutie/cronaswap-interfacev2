@@ -9,6 +9,7 @@ export enum Feature {
   STAKING = 'Staking',
   LAUNCH = 'Launch',
   BOOST = 'Boost',
+  BRIDGE = 'Bridge',
   ZAP = 'Zap',
 }
 
@@ -29,6 +30,7 @@ const features = {
     Feature.MIGRATE,
     Feature.ANALYTICS,
     Feature.STAKING,
+    Feature.BRIDGE,
     Feature.BOOST,
   ],
 

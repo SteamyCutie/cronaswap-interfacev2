@@ -30,6 +30,7 @@ export const PROTOCOL_MERKLE_ROOT =
   'https://raw.githubusercontent.com/sushiswap/sushi-vesting/master/merkle/protocol-02/merkle-10959148-12171394.json'
 
 export const NetworkContextName = 'NETWORK'
+export const BridgeContextName = 'BRIDGE'
 
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50

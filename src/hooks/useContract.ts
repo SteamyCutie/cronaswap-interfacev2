@@ -58,6 +58,7 @@ import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
 import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
 import DASHBOARD_ABI from '../constants/abis/dashboard.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
+import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -257,4 +258,8 @@ export function useDashboardV1Contract(withSignerIfPossible?: boolean): Contract
 export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(VOTING_ESCROW_ADDRESS[chainId], VOTING_ESCROW_ABI, withSignerIfPossible)
+}
+
+export function useAnyswapTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, ANYSWAP_ERC20_ABI, withSignerIfPossible)
 }

@@ -112,6 +112,17 @@ function AppBar(): JSX.Element {
                           </a>
                         </NavLink>
                       )}
+
+                      {/* {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
+                        <NavLink href={'/bridge'}>
+                          <a
+                            id={`bridge-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Bridge`)}
+                          </a>
+                        </NavLink>
+                      )} */}
                     </div>
                   </div>
                 </div>
