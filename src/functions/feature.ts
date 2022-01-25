@@ -20,12 +20,12 @@ const features = {
   [ChainId.CRONOS]: [
     Feature.AMM,
     Feature.FARMV1,
-    Feature.FARMV2,
+    // Feature.FARMV2,
     Feature.ZAP,
-    Feature.MIGRATE,
+    // Feature.MIGRATE,
     Feature.ANALYTICS,
     Feature.STAKING,
-    Feature.BRIDGE,
+    // Feature.BRIDGE,
     Feature.BOOST,
   ],
 
