@@ -195,12 +195,16 @@ const FarmListItem = ({ farm }) => {
           <div className="col-span-2 md:col-span-1">
             <div className="flex justify-between">
               <div className="mb-2 text-xs md:text-base text-secondary">CRONA Earned</div>
-              <NavLink key={`farm-${farm?.pid}`} href="/boost">
-                <a className="flex items-center mb-2 text-xs md:text-base text-red">
-                  <FireIcon className="h-4" />
-                  Boost Reward
-                </a>
-              </NavLink>
+              {farm.chef == '1' ? (
+                <NavLink key={`farm-${farm?.pid}`} href="/boost">
+                  <a className="flex items-center mb-2 text-xs md:text-base text-red">
+                    <FireIcon className="h-4" />
+                    Boost Reward
+                  </a>
+                </NavLink>
+              ) : (
+                <></>
+              )}
             </div>
             <div className="flex flex-col justify-between gap-4 text-sm rounded-lg bg-dark-700">
               <div className="flex mt-4">
