@@ -676,22 +676,22 @@ export const FARMSV2: AddressMap = {
       token0: { id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
     },
 
-    // '0x91b94fd50f764a8a607f1cb59bb3d0c9b240425a': {
-    //   id: 1,
-    //   pid: 2,
-    //   symbol: 'CLP',
-    //   name: 'USDC-CRO',
-    //   token1: { id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-    //   token0: { id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
-    // },
+    '0x91b94fd50f764a8a607f1cb59bb3d0c9b240425a': {
+      id: 1,
+      pid: 1,
+      symbol: 'CLP',
+      name: 'USDC-CRO',
+      token1: { id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+      token0: { id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
 
-    // '0xecf2Ef00DBF270154f84Fc580262aE1a2eD31B6D': {
-    //   id: 2,
-    //   pid: 3,
-    //   symbol: 'CLP',
-    //   name: 'USDC-USDT',
-    //   token1: { id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-    //   token0: { id: '0xE912124f1204208e3EBA49BAbe3Fc1028351808d', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
-    // },
+    '0xecf2Ef00DBF270154f84Fc580262aE1a2eD31B6D': {
+      id: 2,
+      pid: 2,
+      symbol: 'CLP',
+      name: 'USDC-USDT',
+      token1: { id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+      token0: { id: '0xE912124f1204208e3EBA49BAbe3Fc1028351808d', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+    },
   },
 }

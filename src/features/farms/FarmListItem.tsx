@@ -5,12 +5,13 @@ import React from 'react'
 import { useCurrency } from '../../hooks/Tokens'
 
 import { Disclosure } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/solid'
+import { ChevronDownIcon, LockClosedIcon } from '@heroicons/react/solid'
 
 import FarmListItemDetails from './FarmListItemDetails'
 import { usePendingCrona } from './hooks'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
+import QuestionHelper from '../../components/QuestionHelper'
 
 const FarmListItem = ({ farm, ...rest }) => {
   const { i18n } = useLingui()
@@ -59,22 +60,34 @@ const FarmListItem = ({ farm, ...rest }) => {
               </div>
 
               {/* APR */}
-              {/* <div className="flex flex-col justify-center">
-                            <div className="text-xs md:text-base text-secondary">APR</div>
-                            <div className="md:flex">
-                            <div className="text-xs font-bold md:text-base">26.78% / </div>
-                            <div className="flex items-center">
-                                <LockClosedIcon className="h-4" />
-                                <div className="text-xs font-bold md:text-base">278.68%</div>
-                                <CalculatorIcon className="h-4" />
-                            </div>
-                            </div>
-                        </div> */}
+              {farm.chef === 0 ? (
+                <div className="flex flex-col justify-center w-2/12 lg:w-1/12">
+                  <div className="text-xs md:text-base text-secondary">APR</div>
+                  <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} </div>
+                </div>
+              ) : (
+                // <div className="flex flex-col justify-center w-2/12 lg:w-3/12">
+                //   <div className="text-xs md:text-base text-secondary">vAPR</div>
+                //   <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} (proj. 332.91%)<LockClosedIcon className="h-4" /></div>
+                // </div>
 
-              <div className="flex flex-col justify-center w-2/12 lg:w-1/12">
-                <div className="text-xs md:text-base text-secondary">APR</div>
-                <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} </div>
-              </div>
+                <div className="flex flex-col justify-center w-2/12 lg:w-3/12">
+                  <div className="text-xs md:text-base text-secondary">
+                    <div className="flex items-center">
+                      vAPR{' '}
+                      <QuestionHelper text="vAPR stands for “Variable Annual Percentage Rate”: it is the interest you’d earn on your deposits for a whole year, and it’s variable because it depends on today’s trading activity in this pool, the price of the assets you deposit, the price of the assets you’re rewarded with, and the current rewards rates." />
+                    </div>
+                  </div>
+
+                  <div className="md:flex">
+                    <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} / </div>
+                    <div className="flex items-center">
+                      <LockClosedIcon className="h-4 text-yellow" />
+                      <div className="text-xs font-bold md:text-base">{formatPercent(farm.boostApr)}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col items-center justify-center lg:w-1/12">
                 <ChevronDownIcon className={`${open ? 'transform rotate-180' : ''} w-5 h-5 text-purple-500`} />

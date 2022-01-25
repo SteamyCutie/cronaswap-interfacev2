@@ -34,6 +34,7 @@ const useFarms = () => {
       .map((pool: any) => {
         return {
           ...pool,
+          chef: 0,
           type: 'CLP',
           tokenPrice: tokenPrice / 1e18,
           totalTvlInUSD: totalTvlInUSD / 1e18,

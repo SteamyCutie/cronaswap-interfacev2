@@ -74,7 +74,7 @@ export default function FarmsV2(): JSX.Element {
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
         <div className="space-y-10 md:block">
-          <div className="relative w-full p-4 overflow-hidden rounded bg-opaque-blue">
+          <div className="relative w-full p-4 overflow-hidden rounded bg-purple bg-opacity-20 text-high-emphesis">
             <div className="text-lg font-bold text-white">Farms V2</div>
             <div className="text-md text-primary">
               <p>Stake liquidity pool tokens to earn rewards in CronaSwap.</p>

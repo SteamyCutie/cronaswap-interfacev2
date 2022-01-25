@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../../services/web3'
 import { Contract } from '@ethersproject/contracts'
 import { Zero } from '@ethersproject/constants'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../../state/multicall/hooks'
-import { useDashboardV1Contract, useMasterChefContract } from '../../hooks/useContract'
+import { useDashboardV1Contract, useMasterChefContract, useMasterChefV2Contract } from '../../hooks/useContract'
 
 import zip from 'lodash/zip'
 import concat from 'lodash/concat'
@@ -15,13 +15,15 @@ import { useToken } from '../../hooks/Tokens'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export function useChefContract(chef: Chef) {
-  const masterChefContract = useMasterChefContract()
+  const masterChefV1Contract = useMasterChefContract()
+  const masterChefV2Contract = useMasterChefV2Contract()
+
   const contracts = useMemo(
     () => ({
-      [Chef.MASTERCHEF]: masterChefContract,
-      [Chef.MASTERCHEF_V2]: masterChefContract,
+      [Chef.MASTERCHEF]: masterChefV1Contract,
+      [Chef.MASTERCHEF_V2]: masterChefV2Contract,
     }),
-    [masterChefContract]
+    [masterChefV1Contract, masterChefV2Contract]
   )
   return useMemo(() => {
     return contracts[chef]
@@ -31,7 +33,7 @@ export function useChefContract(chef: Chef) {
 export function useUserInfo(farm, token) {
   const { account } = useActiveWeb3React()
 
-  const contract = useChefContract(0)
+  const contract = useChefContract(farm.chef)
 
   const args = useMemo(() => {
     if (!account) {
@@ -54,7 +56,7 @@ export function useUserInfo(farm, token) {
 export function usePendingCrona(farm) {
   const { account, chainId } = useActiveWeb3React()
 
-  const contract = useChefContract(0)
+  const contract = useChefContract(farm.chef)
 
   const args = useMemo(() => {
     if (!account) {
