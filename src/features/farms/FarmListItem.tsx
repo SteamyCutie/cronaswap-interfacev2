@@ -1,6 +1,5 @@
 import { classNames, formatNumber, formatPercent } from '../../functions'
 
-import DoubleLogo from '../../components/DoubleLogo'
 import React from 'react'
 import { useCurrency } from '../../hooks/Tokens'
 

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { ChevronDownIcon } from '@heroicons/react/outline'
 import { Currency } from '@cronaswap/core-sdk'
-import CurrencyLogo from '../CurrencyLogo'
+import { CurrencyLogo } from '../CurrencyLogo'
 import CurrencySearchModal from '../../modals/SearchModal/CurrencySearchModal'
 import Lottie from 'lottie-react'
 import selectCoinAnimation from '../../animation/select-coin.json'

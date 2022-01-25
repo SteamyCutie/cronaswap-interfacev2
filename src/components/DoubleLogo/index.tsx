@@ -1,5 +1,5 @@
 import { Currency } from '@cronaswap/core-sdk'
-import CurrencyLogo from '../CurrencyLogo/CurrencyLogo'
+import { CurrencyLogo } from '../CurrencyLogo'
 import React from 'react'
 import { classNames } from '../../functions'
 

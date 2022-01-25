@@ -3,7 +3,7 @@ import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 're
 import { RowBetween, RowFixed } from '../../components/Row'
 
 import Column from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import { CurrencyLogo } from '../../components/CurrencyLogo'
 import { FixedSizeList } from 'react-window'
 import Loader from '../../components/Loader'
 import { MenuItem } from './styleds'

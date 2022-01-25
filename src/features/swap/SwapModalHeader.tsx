@@ -5,7 +5,7 @@ import { isAddress, shortenAddress } from '../../functions'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import Card from '../../components/Card'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import { CurrencyLogo } from '../../components/CurrencyLogo'
 import { Field } from '../../state/swap/actions'
 import { RowBetween } from '../../components/Row'
 import TradePrice from './TradePrice'
