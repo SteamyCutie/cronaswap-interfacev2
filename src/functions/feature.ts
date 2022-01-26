@@ -25,7 +25,7 @@ const features = {
     // Feature.MIGRATE,
     Feature.ANALYTICS,
     Feature.STAKING,
-    // Feature.BRIDGE,
+    Feature.BRIDGE,
     Feature.BOOST,
   ],
 

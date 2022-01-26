@@ -22,11 +22,12 @@ const useFarmsV2 = () => {
       return pool.pid
     })
 
-    const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } =
-      await dashboardContract?.infoOfPools(poolPids)
+    // const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } =
+    //   await dashboardContract?.infoOfPools(poolPids)
 
     // boostInfoOfPools
-    // const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } = await dashboardContract?.boostInfoOfPools(poolPids, account)
+    const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } =
+      await dashboardContract?.boostInfoOfPools(poolPids, account)
 
     const farms = farmingPools
       // .filter((pool: any) => {
