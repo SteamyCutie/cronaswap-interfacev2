@@ -69,6 +69,7 @@ module.exports = {
         bunting: '#202C45',
         'Mardi-Gras': '#212B2B',
         Myrtle: '#23274A',
+        'aqua-pearl': '#5CB6D5',
       },
       lineHeight: {
         '48px': '48px',

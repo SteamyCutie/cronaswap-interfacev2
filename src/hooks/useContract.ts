@@ -60,6 +60,7 @@ import DASHBOARD_ABIV1 from '../constants/abis/dashboardv1.json'
 import DASHBOARD_ABIV2 from '../constants/abis/dashboardv2.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
+import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -272,4 +273,8 @@ export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contrac
 
 export function useAnyswapTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ANYSWAP_ERC20_ABI, withSignerIfPossible)
+}
+
+export function useCronaVaultContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract('0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389', CRONAVAULT_ABI, withSignerIfPossible)
 }

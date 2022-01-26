@@ -1,10 +1,11 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { MASTERCHEF_ADDRESS, BAR_ADDRESS, ZERO, NATIVE } from '@cronaswap/core-sdk'
-import { ethers } from 'ethers'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ExternalLink } from 'react-feather'
 import { CRONA, XCRONA } from '../../config/tokens'
-import BigNumber from 'bignumber.js'
+import { useCronaUsdcPrice } from '../../features/farms/hooks'
+// import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import Button from '../../components/Button'
 import { ChainId } from '@cronaswap/core-sdk'
 import Container from '../../components/Container'
@@ -24,11 +25,14 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
 import { aprToApy } from '../../functions/convert/apyApr'
 import { useBar, useBlock, useFactory, useNativePrice, useSushiPrice, useTokens } from '../../services/graph'
-import { useDashboardV1Contract } from 'hooks/useContract'
-import { getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
+import { useMasterChefContract, useDashboardV1Contract, useCronaVaultContract } from 'hooks/useContract'
+import { getBalanceAmount } from 'functions/formatBalance'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import DoubleLogo from '../../components/DoubleLogo'
 import NavLink from 'app/components/NavLink'
+import { useGasPrice } from 'state/user/hooks'
+import { formatBalance } from '../../functions/format'
+import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -66,6 +70,7 @@ export default function Stake() {
   const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA)
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
+  const DEFAULT_GAS_LIMIT = 250000
 
   const { enterStaking, leaveStaking } = useCronaBar()
 
@@ -168,6 +173,51 @@ export default function Stake() {
     return apyAsDecimal * 100
   }
 
+  const cronaPriceInBigNumber = useCronaUsdcPrice()
+  const cronavaultContract = useCronaVaultContract()
+  const [results, setResults] = useState([0, 0, 0, 0])
+  const useCronaVault = async () => {
+    const autocronaBounty = await cronavaultContract.calculateHarvestCronaRewards()
+    const totalstaked = await cronavaultContract.balanceOf()
+    const withdrawFeePeriod = await cronavaultContract.withdrawFeePeriod()
+    const autocronaBountyValue = getBalanceAmount(autocronaBounty._hex, 18).toNumber()
+    const totalStakedValue = getBalanceAmount(totalstaked._hex, 18).toNumber()
+    const cronaPrice = Number(formatBalance(cronaPriceInBigNumber))
+    const withdrawFeePeriodValue = getBalanceAmount(withdrawFeePeriod._hex, 0).toNumber()
+    setResults([autocronaBountyValue, totalStakedValue, cronaPrice, withdrawFeePeriodValue])
+  }
+  useCronaVault()
+
+  const [pendingBountyTx, setPendingBountyTx] = useState(false)
+  const { callWithGasPrice } = useCallWithGasPrice()
+  const handleBountyClaim = async () => {
+    setPendingBountyTx(true)
+    try {
+      const tx = await callWithGasPrice(cronavaultContract, 'harvest', undefined, { gasLimit: 300000 })
+      const receipt = await tx.wait()
+    } catch (error) {
+      setPendingBountyTx(false)
+    }
+  }
+
+  const [pendingHarvestTx, setPendingHarvestTx] = useState(false)
+  const options = {
+    gasLimit: DEFAULT_GAS_LIMIT,
+  }
+  const masterChefContract = useMasterChefContract()
+  const handleHarvestFarm = async () => {
+    setPendingHarvestTx(true)
+    try {
+      const gasPrice = useGasPrice()
+      const tx = await masterChefContract.leaveStaking('0', { ...options, gasPrice })
+      const receipt = await tx.wait()
+      setPendingHarvestTx(false)
+    } catch (e) {
+      console.error(e)
+      setPendingHarvestTx(false)
+    }
+  }
+
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
       <Head>
@@ -195,7 +245,7 @@ export default function Stake() {
         />
       </Head>
       <div className="w-5/6 m-auto">
-        <div className="flex w-full py-10 mb-12 rounded bg-dark-400">
+        <div className="w-full py-10 mb-12 rounded md:flex bg-dark-400">
           <div className="w-7/12 ml-12 gap-y-10">
             <div className="text-2xl font-bold text-white mb-7">{i18n._(t`Crona Stake`)}</div>
             <div className="mb-3 text-base font-hero">
@@ -214,27 +264,26 @@ export default function Stake() {
               </div>
             </a>
           </div>
-          {/* Need to be changed */}
-          <div className="w-4/12 px-2 py-4 rounded-lg md:px-10 bg-dark-gray">
+          <div className="w-2/3 px-2 py-4 m-auto mt-3 rounded-lg md:w-4/12 md:px-10 bg-dark-gray">
             <div className="text-lg text-dark-650">{i18n._(t`Auto Crona Bounty`)}</div>
             <div className="flex items-end justify-between">
               <div>
-                <div className="text-2xl text-white">0.103</div>
-                <div className="text-base text-light-blue">~$0.05 USD</div>
+                <div className="text-2xl text-white">{`${Number(results[0]).toFixed(3)}`}</div>
+                <div className="text-base text-light-blue">{`${Number(results[0] * results[2]).toFixed(3)}`} USD</div>
               </div>
               <div className="w-1/4">
                 <Button
-                  className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90 text-xs md:text-sm lg:text-lg`}
-                  disabled={approvalState === ApprovalState.PENDING}
-                  onClick={approve}
+                  className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90 md:text-sm lg:text-lg`}
+                  disabled={!results[0]}
+                  onClick={handleBountyClaim}
                 >
-                  {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Claiming`)} </Dots> : i18n._(t`Claim`)}
+                  {pendingBountyTx ? <Dots>{i18n._(t`Claiming`)} </Dots> : i18n._(t`Claim`)}
                 </Button>
               </div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="justify-between w-full gap-4 md:flex">
           {/* Auto Compounding Staking */}
           <div className="w-full max-w-xl grid-rows-2 mx-auto mb-4 rounded-2xl gird bg-dark-400 md:m-0">
             <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl max-w-xl md:pl-5 md:pr-7 bg-gradient-to-r from-bunting to-blackberry bg-opacity-40">
@@ -387,6 +436,10 @@ export default function Stake() {
                 </div>
                 <div className="flex justify-between text-base">
                   <p className="text-dark-650">0.1% unstakng fee until</p>
+                  <p className="font-bold text-right text-aqua-pearl">
+                    {`${Number(results[3]) / 86400}`}d: {`${(Number(results[3]) / 1440) % 60}`}h :{' '}
+                    {`${Number(results[3]) % 60}`}m
+                  </p>
                 </div>
               </div>
             </div>
@@ -403,6 +456,7 @@ export default function Stake() {
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">Total staked</p>
+                <p className="font-bold text-right text-high-emphesis">{`${Number(results[1]).toFixed(0)}`} CRONA</p>
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">SEE Token Info</p>
@@ -410,6 +464,7 @@ export default function Stake() {
                   href="https://cronoscan.com/address/0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389"
                   target="_blank"
                   rel="noreferrer"
+                  className="font-bold"
                 >
                   {i18n._(t`View Contract`)}
                 </a>
@@ -557,45 +612,17 @@ export default function Stake() {
                       : i18n._(t`Confirm Withdrawal`)}
                   </button>
                 )}
-                {/* Need to be changed */}
-                {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
-                activeTab === 0 ? (
-                  <Button
-                    className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
-                    disabled={approvalState === ApprovalState.PENDING}
-                    onClick={approve}
-                  >
-                    {approvalState === ApprovalState.PENDING ? (
-                      <Dots>{i18n._(t`Approving`)} </Dots>
-                    ) : (
-                      i18n._(t`Approve`)
-                    )}
-                  </Button>
-                ) : (
-                  <button
-                    className={
-                      buttonDisabled
-                        ? buttonStyleDisabled
-                        : !walletConnected
-                        ? buttonStyleConnectWallet
-                        : insufficientFunds
-                        ? buttonStyleInsufficientFunds
-                        : buttonStyleEnabled
-                    }
-                    onClick={handleClickButton}
-                    disabled={buttonDisabled || inputError}
-                  >
-                    {!walletConnected
-                      ? i18n._(t`Connect Wallet`)
-                      : !input
-                      ? i18n._(t`Harvest`)
-                      : insufficientFunds
-                      ? i18n._(t`Insufficient Balance`)
-                      : activeTab === 0
-                      ? i18n._(t`Confirm Staking`)
-                      : i18n._(t`Confirm Withdrawal`)}
-                  </button>
-                )}
+                <button
+                  className={activeTab ? buttonStyleDisabled : buttonStyleEnabled}
+                  onClick={handleHarvestFarm}
+                  disabled={!activeTab}
+                >
+                  {!walletConnected
+                    ? i18n._(t`Connect Wallet`)
+                    : pendingHarvestTx
+                    ? i18n._(t`Harvesting`)
+                    : i18n._(t`Harvest`)}
+                </button>
               </div>
             </div>
             <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-gray-500 gap-y-2 md:px-8">
@@ -607,7 +634,7 @@ export default function Stake() {
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">Perfomance fee</p>
-                <p className="font-bold text-right text-high-emphesis">2.99%</p>
+                <p className="font-bold text-right text-high-emphesis">0.00%</p>
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">Total staked</p>
@@ -618,6 +645,7 @@ export default function Stake() {
                   href="https://cronoscan.com/address/0x77ea4a4cF9F77A034E4291E8f457Af7772c2B254"
                   target="_blank"
                   rel="noreferrer"
+                  className="font-bold"
                 >
                   {i18n._(t`View Contract`)}
                 </a>
