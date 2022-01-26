@@ -73,6 +73,7 @@ import {
   PUBLIC_SALE_ADDRESS,
   SEED_SALE_ADDRESS,
   VOTING_ESCROW_ADDRESS,
+  CRONAVAULT_ADDRESS,
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -275,6 +276,7 @@ export function useAnyswapTokenContract(tokenAddress?: string, withSignerIfPossi
   return useContract(tokenAddress, ANYSWAP_ERC20_ABI, withSignerIfPossible)
 }
 
-export function useCronaVaultContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389', CRONAVAULT_ABI, withSignerIfPossible)
+export function useCronaVaultContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(CRONAVAULT_ADDRESS[chainId], CRONAVAULT_ABI, withSignerIfPossible)
 }
