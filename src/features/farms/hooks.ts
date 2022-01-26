@@ -74,7 +74,7 @@ export function usePendingCrona(farm) {
   return amount ? CurrencyAmount.fromRawAmount(CRONA[chainId], amount) : undefined
 }
 
-export function useChefPositions(contract?: Contract | null, rewarder?: Contract | null, chainId = undefined) {
+export function useChefPositions(contract?: Contract | null) {
   const { account } = useActiveWeb3React()
 
   const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
@@ -85,25 +85,12 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
       return
     }
 
-    //filter 0 pool
-    return [...Array(numberOfPools.toNumber()).keys()]
-      .filter((pid) => pid != 0)
-      .map((pid) => [String(pid), String(account)])
+    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid), String(account)])
   }, [numberOfPools, account])
 
   const pendingCrona = useSingleContractMultipleData(args ? contract : null, 'pendingCrona', args)
 
   const userInfo = useSingleContractMultipleData(args ? contract : null, 'userInfo', args)
-
-  const getChef = useCallback(() => {
-    if (MASTERCHEF_ADDRESS[chainId] === contract.address) {
-      return Chef.MASTERCHEF
-    }
-
-    // else if (MASTERCHEF_V2_ADDRESS[chainId] === contract.address) {
-    //   return Chef.MASTERCHEF_V2
-    // }
-  }, [chainId, contract])
 
   return useMemo(() => {
     if (!pendingCrona || !userInfo) {
@@ -114,24 +101,15 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
         id: args[i][0],
         pendingCrona: data[0].result?.[0] || Zero,
         amount: data[1].result?.[0] || Zero,
-        chef: getChef(),
-        // pendingTokens: data?.[2]?.result,
       }))
       .filter(({ pendingCrona, amount }) => {
         return (pendingCrona && !pendingCrona.isZero()) || (amount && !amount.isZero())
       })
-  }, [args, getChef, pendingCrona, userInfo])
+  }, [args, pendingCrona, userInfo])
 }
 
-export function usePositions(chainId = undefined) {
-  // const [masterChefV1Positions, masterChefV2Positions] = [
-  //   useChefPositions(useMasterChefContract(), undefined, chainId),
-  //   useChefPositions(useMasterChefV2Contract(), undefined, chainId),
-  // ]
-  // return concat(masterChefV1Positions, masterChefV2Positions)
-
-  const [masterChefV1Positions] = [useChefPositions(useMasterChefContract(), undefined, chainId)]
-  return concat(masterChefV1Positions)
+export function usePositions() {
+  return useChefPositions(useMasterChefV2Contract())
 }
 
 export function useCronaFarms(contract?: Contract | null) {

@@ -45,5 +45,14 @@ export default function useMasterChef(chef: Chef) {
     [contract]
   )
 
-  return { deposit, withdraw, harvest }
+  const harvestAll = useCallback(async () => {
+    try {
+      return await contract?.harvestAllRewards()
+    } catch (e) {
+      console.error(e)
+      return e
+    }
+  }, [contract])
+
+  return { deposit, withdraw, harvest, harvestAll }
 }

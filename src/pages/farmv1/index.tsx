@@ -53,7 +53,6 @@ export default function Yield(): JSX.Element {
     options,
   })
 
-  console.log(term)
   const flattenSearchResults = result.map((a: { item: any }) => (a.item ? a.item : a))
 
   // Sorting Setup

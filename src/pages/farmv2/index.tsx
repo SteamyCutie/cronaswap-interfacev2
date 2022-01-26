@@ -10,23 +10,29 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import useSortableData from '../../hooks/useSortableData'
 import useFarmsV2 from '../../features/farms/useFarmsV2'
-import { formatNumberScale } from '../../functions'
+import { formatNumber, formatNumberScale } from '../../functions'
 import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/outline'
 import Dots from '../../components/Dots'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteScroll } from '../../features/farms/hooks'
+import { useInfiniteScroll, usePositions } from '../../features/farms/hooks'
 import FarmListItem from '../../features/farms/FarmListItem'
 import Typography from '../../components/Typography'
 import Button from '../../components/Button'
+import useMasterChef from '../../features/farms/useMasterChef'
+import { Chef } from '../../features/farms/enum'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 export default function FarmsV2(): JSX.Element {
   const { i18n } = useLingui()
+  const [pendingTx, setPendingTx] = useState(false)
+  const addTransaction = useTransactionAdder()
 
   const router = useRouter()
   const type = router.query.filter == null ? 'all' : (router.query.filter as string)
 
+  const positions = usePositions()
   const query = useFarmsV2()
-  const farms = query?.farms
+  const { harvestAll } = useMasterChef(Chef.MASTERCHEF_V2)
 
   let tokenPrice = 0
   let totalTvlInUSD = 0
@@ -51,6 +57,10 @@ export default function FarmsV2(): JSX.Element {
     data: datas && datas.length > 0 ? datas : [],
     options,
   })
+
+  const allStaked = positions.reduce((previousValue, currentValue) => {
+    return previousValue + currentValue.pendingCrona / 1e18
+  }, 0)
 
   const flattenSearchResults = result.map((a: { item: any }) => (a.item ? a.item : a))
 
@@ -97,7 +107,7 @@ export default function FarmsV2(): JSX.Element {
         </div> */}
 
         <div className="flex-row space-y-2 md:flex justify-between items-center w-full px-8 py-6 rounded bg-cyan-blue bg-opacity-20">
-          <div className="w-9/12 gap-y-10 space-y-2">
+          <div className="w-8/12 gap-y-10 space-y-2">
             <Typography variant="h2" className="text-high-emphesis mb-2" weight={700}>
               {i18n._(t`Farming V2`)}
             </Typography>
@@ -115,17 +125,34 @@ export default function FarmsV2(): JSX.Element {
             </a>
           </div>
 
-          <div className="px-2 py-4 m-auto rounded-lg  md:px-6 bg-cyan-blue bg-opacity-30">
+          <div className="w-4/12 px-2 py-4 m-auto rounded-lg  md:px-6 bg-cyan-blue bg-opacity-30">
+            <div className="text-lg font-bold text-white">{i18n._(t`CRONA To Harvest`)}</div>
             <div className="flex items-center justify-between space-x-10">
               <div>
-                <div className="text-xl text-white">{formatNumberScale(totalTvlInUSD, true)}</div>
-                <div className="text-base text-light-blue">{formatNumberScale(totalTvlInUSD, true)} USD</div>
+                <div className="text-xl font-bold text-white">{formatNumber(allStaked, false)}</div>
+                <div className="text-base text-light-blue"> {formatNumberScale(allStaked * tokenPrice, true)}</div>
               </div>
               <div>
-                <Button id="btn-create-new-pool" color="gradient" variant="outlined" size="sm">
-                  <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
-                    {i18n._(t`Harvest All`)}
-                  </a>
+                <Button
+                  id="btn-create-new-pool"
+                  color="gradient"
+                  variant="outlined"
+                  size="sm"
+                  disabled={pendingTx}
+                  onClick={async () => {
+                    setPendingTx(true)
+                    try {
+                      const tx = await harvestAll()
+                      addTransaction(tx, {
+                        summary: `${i18n._(t`Harvest`)} CRONA`,
+                      })
+                    } catch (error) {
+                      console.error(error)
+                    }
+                    setPendingTx(false)
+                  }}
+                >
+                  {i18n._(t`Harvest All`)}
                 </Button>
               </div>
             </div>
