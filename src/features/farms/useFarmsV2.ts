@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../../services/web3'
 
 // Todo: Rewrite in terms of web3 as opposed to subgraph
 const useFarmsV2 = () => {
-  const { chainId } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const [farms, setFarms] = useState<any | undefined>()
   const dashboardContract = useDashboardV2Contract()
@@ -22,7 +22,12 @@ const useFarmsV2 = () => {
       return pool.pid
     })
 
-    const { tokenPrice, totalTvlInUSD, allocPoint, apy, tvl, tvlInUSD } = await dashboardContract?.infoOfPools(poolPids)
+    // const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } =
+    //   await dashboardContract?.infoOfPools(poolPids)
+
+    // boostInfoOfPools
+    const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } =
+      await dashboardContract?.boostInfoOfPools(poolPids, account)
 
     const farms = farmingPools
       // .filter((pool: any) => {
@@ -32,12 +37,14 @@ const useFarmsV2 = () => {
       .map((pool: any) => {
         return {
           ...pool,
+          chef: 1,
           type: 'CLP',
           tokenPrice: tokenPrice / 1e18,
           totalTvlInUSD: totalTvlInUSD / 1e18,
           flpBalance: tvl[pool.id] / 1e18,
           tvl: tvlInUSD[pool.id] / 1e18,
           apr: apy[pool.id] / 1e16,
+          boostApr: boostApy ? boostApy[pool.id] / 1e16 : (apy[pool.id] * 2.5) / 1e16, // max boost 2.5x
           multiplier: Number(allocPoint[pool.id]),
         }
       })

@@ -1,7 +1,7 @@
 import { Currency, Token } from '@cronaswap/core-sdk'
 import { useCallback, useState } from 'react'
 
-import { getCurrencyLogoUrls } from '../components/CurrencyLogo'
+import { getCurrencyLogoUrls } from '../components/CurrencyLogo/CurrencyLogo'
 import { useActiveWeb3React } from '../services/web3'
 
 export default function useAddTokenToMetaMask(currencyToAdd: Currency | undefined): {

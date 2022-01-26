@@ -19,6 +19,9 @@ import Dots from '../../components/Dots'
 import NumericalInput from '../../components/NumericalInput'
 import ExternalLink from '../../components/ExternalLink'
 import Typography from '../../components/Typography'
+import { MASTERCHEFV2_ADDRESS } from '../../constants/addresses'
+import { FireIcon } from '@heroicons/react/outline'
+import NavLink from '../../components/NavLink'
 
 const FarmListItem = ({ farm }) => {
   const { i18n } = useLingui()
@@ -49,9 +52,12 @@ const FarmListItem = ({ farm }) => {
   const typedDepositValue = tryParseAmount(depositValue, liquidityToken)
   const typedWithdrawValue = tryParseAmount(withdrawValue, liquidityToken)
 
-  const [approvalState, approve] = useApproveCallback(typedDepositValue, MASTERCHEF_ADDRESS[chainId])
+  const [approvalState, approve] = useApproveCallback(
+    typedDepositValue,
+    farm.chef === 0 ? MASTERCHEF_ADDRESS[chainId] : MASTERCHEFV2_ADDRESS[chainId]
+  )
 
-  const { deposit, withdraw, harvest } = useMasterChef()
+  const { deposit, withdraw, harvest } = useMasterChef(farm.chef)
 
   return (
     <Transition
@@ -187,7 +193,19 @@ const FarmListItem = ({ farm }) => {
             </Button>
           </div>
           <div className="col-span-2 md:col-span-1">
-            <div className="mb-2 text-xs md:text-base text-secondary">CRONA Earned</div>
+            <div className="flex justify-between">
+              <div className="mb-2 text-xs md:text-base text-secondary">CRONA Earned</div>
+              {farm.chef == '1' ? (
+                <NavLink key={`farm-${farm?.pid}`} href="/boost">
+                  <a className="flex items-center mb-2 text-xs md:text-base text-red">
+                    <FireIcon className="h-4" />
+                    Boost Reward
+                  </a>
+                </NavLink>
+              ) : (
+                <></>
+              )}
+            </div>
             <div className="flex flex-col justify-between gap-4 text-sm rounded-lg bg-dark-700">
               <div className="flex mt-4">
                 <div className="flex flex-col w-2/3 px-4 align-middle">
@@ -197,6 +215,7 @@ const FarmListItem = ({ farm }) => {
                 <div className="flex flex-col w-1/2 px-4 align-middle lg:w-1/3 gap-y-1">
                   <Button
                     color={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0 ? 'blue' : 'gradient'}
+                    size="sm"
                     className="w-full"
                     variant={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0 ? 'outlined' : 'filled'}
                     disabled={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0}

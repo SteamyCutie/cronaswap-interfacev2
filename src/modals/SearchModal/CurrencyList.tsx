@@ -4,7 +4,7 @@ import { RowBetween, RowFixed } from '../../components/Row'
 
 import Card from '../../components/Card'
 import Column from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import { CurrencyLogo } from '../../components/CurrencyLogo'
 import { FixedSizeList } from 'react-window'
 import ImportRow from './ImportRow'
 import Loader from '../../components/Loader'

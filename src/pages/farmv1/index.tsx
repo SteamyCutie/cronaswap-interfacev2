@@ -17,6 +17,8 @@ import Dots from '../../components/Dots'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteScroll } from '../../features/farms/hooks'
 import FarmListItem from '../../features/farms/FarmListItem'
+import Typography from '../../components/Typography'
+import Button from '../../components/Button'
 
 export default function Yield(): JSX.Element {
   const { i18n } = useLingui()
@@ -74,13 +76,25 @@ export default function Yield(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
-        <div className="space-y-10 md:block">
-          <div className="relative w-full p-4 overflow-hidden rounded bg-opaque-blue">
-            <div className="text-lg font-bold text-white">Farms V1</div>
-            <div className="text-md text-primary">
-              <p>Stake liquidity pool tokens to earn rewards in CronaSwap.</p>
-              <p>Farms V1 TVL: {formatNumberScale(totalTvlInUSD, true)}</p>
-            </div>
+        <div className="flex-row space-y-2 md:flex justify-between items-center w-full p-4 rounded bg-opaque-blue">
+          <div className="space-y-2 md:block">
+            <Typography variant="h2" className="text-high-emphesis" weight={700}>
+              {i18n._(t`Farming V1`)}
+            </Typography>
+            <Typography variant="sm" weight={400}>
+              {i18n._(t`Stake liquidity pool tokens to earn rewards in CronaSwap.`)}
+            </Typography>
+            <Typography variant="sm" weight={400}>
+              {i18n._(t`Farms V1 TVL: ${formatNumberScale(totalTvlInUSD, true)}`)}
+            </Typography>
+          </div>
+
+          <div className="flex gap-3">
+            <Button id="btn-create-new-pool" color="gradient" variant="outlined" size="sm">
+              <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+                {i18n._(t`Apply for Farm Listing`)}
+              </a>
+            </Button>
           </div>
         </div>
 

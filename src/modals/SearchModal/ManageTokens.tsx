@@ -2,7 +2,7 @@ import React, { RefObject, useCallback, useMemo, useRef, useState } from 'react'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { useRemoveUserAddedToken, useUserAddedTokens } from '../../state/user/hooks'
 
-import CurrencyLogo from '../../components/CurrencyLogo'
+import { CurrencyLogo } from '../../components/CurrencyLogo'
 import CurrencyModalView from './CurrencyModalView'
 import ExternalLink from '../../components/ExternalLink'
 import { ExternalLinkIcon } from '../../components/ExternalLinkIcon'

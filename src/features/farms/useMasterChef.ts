@@ -1,11 +1,11 @@
-import { useMasterChefContract } from '../../hooks/useContract'
-
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 import { useCallback } from 'react'
+import { useChefContract } from './hooks'
+import { Chef } from './enum'
 
-export default function useMasterChef() {
-  const contract = useMasterChefContract()
+export default function useMasterChef(chef: Chef) {
+  const contract = useChefContract(chef)
 
   // Deposit
   const deposit = useCallback(
