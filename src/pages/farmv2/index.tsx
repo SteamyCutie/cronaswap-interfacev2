@@ -11,7 +11,7 @@ import { useLingui } from '@lingui/react'
 import useSortableData from '../../hooks/useSortableData'
 import useFarmsV2 from '../../features/farms/useFarmsV2'
 import { formatNumberScale } from '../../functions'
-import { ChevronDownIcon } from '@heroicons/react/outline'
+import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/outline'
 import Dots from '../../components/Dots'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteScroll } from '../../features/farms/hooks'
@@ -74,7 +74,7 @@ export default function FarmsV2(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
-        <div className="flex-row space-y-2 md:flex justify-between items-center w-full p-4 rounded bg-purple bg-opacity-20">
+        {/* <div className="flex-row space-y-2 md:flex justify-between items-center w-full p-4 rounded bg-cyan-blue bg-opacity-20">
           <div className="space-y-2 md:block">
             <Typography variant="h2" className="text-high-emphesis" weight={700}>
               {i18n._(t`Farming V2`)}
@@ -93,6 +93,42 @@ export default function FarmsV2(): JSX.Element {
                 {i18n._(t`Apply for Farm Listing`)}
               </a>
             </Button>
+          </div>
+        </div> */}
+
+        <div className="flex-row space-y-2 md:flex justify-between items-center w-full px-8 py-6 rounded bg-cyan-blue bg-opacity-20">
+          <div className="w-9/12 gap-y-10 space-y-2">
+            <Typography variant="h2" className="text-high-emphesis mb-2" weight={700}>
+              {i18n._(t`Farming V2`)}
+            </Typography>
+            <Typography variant="sm" weight={400}>
+              {i18n._(t`Stake liquidity pool tokens to earn rewards in CronaSwap.`)}
+            </Typography>
+            <Typography variant="sm" weight={400}>
+              {i18n._(t`FarmsV2 - TVL: ${formatNumberScale(totalTvlInUSD, true)}`)}
+            </Typography>
+            <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+              <div className="flex items-center mt-2 gap-2 text-sm font-bold font-Poppins">
+                <div className="text-light-blue">{i18n._(t`Apply for Farm Listing`)}</div>
+                <ArrowRightIcon height={14} className="" />
+              </div>
+            </a>
+          </div>
+
+          <div className="px-2 py-4 m-auto rounded-lg  md:px-6 bg-cyan-blue bg-opacity-30">
+            <div className="flex items-center justify-between space-x-10">
+              <div>
+                <div className="text-xl text-white">{formatNumberScale(totalTvlInUSD, true)}</div>
+                <div className="text-base text-light-blue">{formatNumberScale(totalTvlInUSD, true)} USD</div>
+              </div>
+              <div>
+                <Button id="btn-create-new-pool" color="gradient" variant="outlined" size="sm">
+                  <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+                    {i18n._(t`Harvest All`)}
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 

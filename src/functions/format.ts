@@ -62,6 +62,14 @@ export function formatPercent(percentString) {
   if (fixedPercent === '0.00') {
     return '0%'
   }
+
+  const wholeNumberLength = String(Math.floor(percent)).length
+
+  if (wholeNumberLength >= 13) return (percent / Math.pow(10, 12)).toFixed(1) + 'T%'
+  if (wholeNumberLength >= 10) return (percent / Math.pow(10, 9)).toFixed(1) + 'B%'
+  if (wholeNumberLength >= 7) return (percent / Math.pow(10, 6)).toFixed(1) + 'M%'
+  if (wholeNumberLength >= 4) return (percent / Math.pow(10, 3)).toFixed(1) + 'K%'
+
   if (Number(fixedPercent) > 0) {
     if (Number(fixedPercent) > 100) {
       return `${percent?.toFixed(0).toLocaleString()}%`

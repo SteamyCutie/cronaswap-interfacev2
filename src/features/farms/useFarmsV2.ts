@@ -27,7 +27,10 @@ const useFarmsV2 = () => {
 
     // boostInfoOfPools
     const { tokenPrice, totalTvlInUSD, allocPoint, apy, boostApy, tvl, tvlInUSD } =
-      await dashboardContract?.boostInfoOfPools(poolPids, account)
+      await dashboardContract?.boostInfoOfPools(
+        poolPids,
+        account ? account : '0x000000000000000000000000000000000000dead'
+      )
 
     const farms = farmingPools
       // .filter((pool: any) => {
