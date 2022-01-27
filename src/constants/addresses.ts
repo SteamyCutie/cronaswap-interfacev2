@@ -45,5 +45,5 @@ export const PUBLIC_SALE_ADDRESS: AddressMap = {
 
 export const CRONAVAULT_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389',
-  [ChainId.CRONOS_TESTNET]: '',
+  [ChainId.CRONOS_TESTNET]: '0xbA1366602230ACC2DD2796c6ba6B6Ee5aB28A0Aa',
 }

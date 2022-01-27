@@ -4,10 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { ExternalLink } from 'react-feather'
 import { CRONA, XCRONA } from '../../config/tokens'
 import { useCronaUsdcPrice } from '../../features/farms/hooks'
-// import BigNumber from 'bignumber.js'
-import { BigNumber } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
 import Button from '../../components/Button'
-import { ChainId } from '@cronaswap/core-sdk'
 import Container from '../../components/Container'
 import Dots from '../../components/Dots'
 import Head from 'next/head'
@@ -32,6 +30,8 @@ import NavLink from 'app/components/NavLink'
 import { useGasPrice } from 'state/user/hooks'
 import { formatBalance } from '../../functions/format'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { getDecimalAmount, getBalanceNumber, getFullDisplayBalance } from 'functions/formatBalance'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -55,37 +55,60 @@ const inactiveTabStyle = `${tabStyle} text-secondary`
 
 const buttonStyle =
   'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
-const buttonStyleEnabled = `${buttonStyle} text-high-emphesis bg-gradient-to-r from-pink-red to-light-brown hover:opacity-90`
+const buttonStyleEnabled = `${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`
 const buttonStyleInsufficientFunds = `${buttonStyleEnabled} opacity-60`
 const buttonStyleDisabled = `${buttonStyle} text-secondary bg-dark-700`
 const buttonStyleConnectWallet = `${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`
 
 const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matthewlilley/bar', query)
 
+const convertSharesToCrona = (shares: BigNumber, cronaPerFullShare: BigNumber, decimals = 18, decimalsToRound = 3) => {
+  const sharePriceNumber = getBalanceNumber(cronaPerFullShare, decimals)
+  const amountInCrona = new BigNumber(shares.multipliedBy(sharePriceNumber))
+  const cronaAsNumberBalance = getBalanceNumber(amountInCrona, decimals)
+  const cronaAsBigNumber = getDecimalAmount(new BigNumber(cronaAsNumberBalance), decimals)
+  const cronaAsDisplayBalance = getFullDisplayBalance(amountInCrona, decimals, decimalsToRound)
+  return { cronaAsNumberBalance, cronaAsBigNumber, cronaAsDisplayBalance }
+}
+
 export default function Stake() {
   const { i18n } = useLingui()
-  const { account } = useActiveWeb3React()
-  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.CRONOS])
+  const { account, chainId } = useActiveWeb3React()
+  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
   const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA)
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
+  const addTransaction = useTransactionAdder()
   const DEFAULT_GAS_LIMIT = 250000
 
+  const dashboardContract = useDashboardV1Contract()
+  const cronavaultContract = useCronaVaultContract()
   const { enterStaking, leaveStaking } = useCronaBar()
+  const { callWithGasPrice } = useCallWithGasPrice()
 
   const [activeTab, setActiveTab] = useState(0)
   const [modalOpen, setModalOpen] = useState(false)
+  // for Auto staking
+  const [activeTabAuto, setActiveTabAuto] = useState(0)
+  const [modalOpenAuto, setModalOpenAuto] = useState(false)
 
   const [input, setInput] = useState<string>('')
   const [usingBalance, setUsingBalance] = useState(false)
+  // for Auto staking
+  const [inputAuto, setInputAuto] = useState<string>('')
+  const [usingBalanceAuto, setUsingBalanceAuto] = useState(false)
 
   const balance = activeTab === 0 ? cronaBalance : xCronaBalance
+  const balanceAuto = activeTabAuto === 0 ? cronaBalance : xCronaBalance
 
   const formattedBalance = balance?.toSignificant(4)
+  const formattedBalanceAuto = balanceAuto?.toSignificant(4)
 
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
+  const parsedAmountAuto = usingBalanceAuto ? balanceAuto : tryParseAmount(inputAuto, balanceAuto?.currency)
 
-  const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[ChainId.CRONOS])
+  const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[chainId])
+  const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, MASTERCHEF_ADDRESS[chainId])
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -94,18 +117,38 @@ export default function Stake() {
     }
   }
 
+  const handleInputAuto = (v: string) => {
+    if (v.length <= INPUT_CHAR_LIMIT) {
+      setUsingBalanceAuto(false)
+      setInputAuto(v)
+    }
+  }
+
   const handleClickMax = () => {
     setInput(parsedAmount ? parsedAmount.toSignificant(balance.currency.decimals).substring(0, INPUT_CHAR_LIMIT) : '')
     setUsingBalance(true)
   }
 
+  const handleClickMaxAuto = () => {
+    setInputAuto(
+      parsedAmountAuto
+        ? parsedAmountAuto.toSignificant(balanceAuto.currency.decimals).substring(0, INPUT_CHAR_LIMIT)
+        : ''
+    )
+    setUsingBalanceAuto(true)
+  }
+
   const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount?.greaterThan(balance)
+  const insufficientFundsAuto = (balanceAuto && balanceAuto.equalTo(ZERO)) || parsedAmountAuto?.greaterThan(balanceAuto)
 
   const inputError = insufficientFunds
+  const inputErrorAuto = insufficientFundsAuto
 
   const [pendingTx, setPendingTx] = useState(false)
+  const [pendingTxAuto, setPendingTxAuto] = useState(false)
 
   const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO))
+  const buttonDisabledAuto = !inputAuto || pendingTxAuto || (parsedAmountAuto && parsedAmountAuto.equalTo(ZERO))
 
   const handleClickButton = async () => {
     //todo
@@ -145,7 +188,54 @@ export default function Stake() {
     }
   }
 
-  const dashboardContract = useDashboardV1Contract()
+  // for Auto Staking
+  const handleClickButtonAuto = async () => {
+    if (buttonDisabledAuto) return
+
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTxAuto(true)
+      if (activeTabAuto === 0) {
+        try {
+          const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
+          const tx = await callWithGasPrice(cronavaultContract, 'deposit', [convertedStakeAmount.toString()], {
+            gasLimit: DEFAULT_GAS_LIMIT,
+          })
+          addTransaction(tx, {
+            summary: `${i18n._(t`Stake`)} CRONA`,
+          })
+          const receipt = await tx.wait()
+          if (receipt.status) {
+            setPendingTxAuto(false)
+            // onDismiss()
+            // dispatch(fetchCronaVaultUserData({ account }))
+          }
+        } catch (error) {
+          setPendingTxAuto(false)
+        }
+      } else if (activeTabAuto === 1) {
+        try {
+          const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
+          const tx = await callWithGasPrice(cronavaultContract, 'withdraw', [convertedStakeAmount.toString()], {
+            gasLimit: DEFAULT_GAS_LIMIT,
+          })
+          addTransaction(tx, {
+            summary: `${i18n._(t`Unstake`)} CRONA`,
+          })
+          const receipt = await tx.wait()
+          if (receipt.status) {
+            setPendingTxAuto(false)
+            // onDismiss()
+            // dispatch(fetchCronaVaultUserData({ account }))
+          }
+        } catch (error) {
+          setPendingTxAuto(false)
+        }
+      }
+    }
+  }
+
   const [manualAPY, setManualAPY] = useState(0)
   // const [autoAPY, setAutoAPY] = useState(0);
 
@@ -173,31 +263,50 @@ export default function Stake() {
   }
 
   const cronaPriceInBigNumber = useCronaUsdcPrice()
-  const cronavaultContract = useCronaVaultContract()
-  const [results, setResults] = useState([0, 0, 0, 0])
+  const [results, setResults] = useState([0, 0, 0, 0, 0, 0])
   const useCronaVault = async () => {
     const autocronaBounty = await cronavaultContract.calculateHarvestCronaRewards()
     const totalstaked = await cronavaultContract.balanceOf()
+    const tvlOfManual = await dashboardContract.tvlOfPool(0)
     const withdrawFeePeriod = await cronavaultContract.withdrawFeePeriod()
+    const userInfo = await cronavaultContract.userInfo(account)
+    const userShares = userInfo.shares
+    const pricePerFullShare = await cronavaultContract.getPricePerFullShare()
+    const { cronaAsBigNumber } = convertSharesToCrona(
+      new BigNumber(userShares._hex),
+      new BigNumber(pricePerFullShare._hex)
+    )
+    const cronaAtLastUserAction = new BigNumber(userInfo.cronaAtLastUserAction._hex)
+    const autoCronaProfit = cronaAsBigNumber.minus(cronaAtLastUserAction)
+    const recentProfit = autoCronaProfit.gte(0) ? getBalanceNumber(autoCronaProfit, 18) : 0
     const autocronaBountyValue = getBalanceAmount(autocronaBounty._hex, 18).toNumber()
     const totalStakedValue = getBalanceAmount(totalstaked._hex, 18).toNumber()
+    const tvlOfManualValue = getBalanceAmount(tvlOfManual.tvl._hex, 18).toNumber() - totalStakedValue
     const cronaPrice = Number(formatBalance(cronaPriceInBigNumber))
     const withdrawFeePeriodValue = getBalanceAmount(withdrawFeePeriod._hex, 0).toNumber()
-    setResults([autocronaBountyValue, totalStakedValue, cronaPrice, withdrawFeePeriodValue])
+    setResults([
+      autocronaBountyValue,
+      totalStakedValue,
+      cronaPrice,
+      withdrawFeePeriodValue,
+      recentProfit,
+      tvlOfManualValue,
+    ])
   }
   useCronaVault()
 
   const [pendingBountyTx, setPendingBountyTx] = useState(false)
-  const { callWithGasPrice } = useCallWithGasPrice()
   const handleBountyClaim = async () => {
     setPendingBountyTx(true)
     try {
       const tx = await callWithGasPrice(cronavaultContract, 'harvest', undefined, { gasLimit: 300000 })
-      const receipt = await tx.wait()
-      setPendingBountyTx(false)
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
-      setPendingBountyTx(false)
+      console.error(error)
     }
+    setPendingBountyTx(false)
   }
 
   const [pendingHarvestTx, setPendingHarvestTx] = useState(false)
@@ -210,12 +319,13 @@ export default function Stake() {
     setPendingHarvestTx(true)
     try {
       const tx = await masterChefContract.leaveStaking('0', { ...options, gasPrice })
-      const receipt = await tx.wait()
-      setPendingHarvestTx(false)
+      addTransaction(tx, {
+        summary: `${i18n._(t`Harvest`)} CRONA`,
+      })
     } catch (e) {
       console.error(e)
-      setPendingHarvestTx(false)
     }
+    setPendingHarvestTx(false)
   }
 
   return (
@@ -296,60 +406,56 @@ export default function Stake() {
                 </p>
               </div>
               <DoubleLogo
-                currency0={CRONA[ChainId.CRONOS]}
-                currency1={NATIVE[ChainId.CRONOS]}
+                currency0={CRONA[chainId]}
+                currency1={NATIVE[chainId]}
                 size={window.innerWidth > 768 ? 40 : 24}
               />
             </div>
             <div>
-              <TransactionFailedModal isOpen={modalOpen} onDismiss={() => setModalOpen(false)} />
+              <TransactionFailedModal isOpen={modalOpenAuto} onDismiss={() => setModalOpenAuto(false)} />
               <div className="w-full px-3 pt-2 pb-6 rounded bg-dark-900 md:pb-9 md:pt-6 md:px-8">
                 {/* select method */}
                 <div className="flex w-full rounded h-14 bg-dark-800">
                   <div
                     className="h-full w-6/12 p-0.5"
                     onClick={() => {
-                      setActiveTab(0)
-                      handleInput('')
+                      setActiveTabAuto(0)
+                      handleInputAuto('')
                     }}
                   >
-                    <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTabAuto === 0 ? activeTabStyle : inactiveTabStyle}>
                       <p>{i18n._(t`Stake CRONA`)}</p>
                     </div>
                   </div>
                   <div
                     className="h-full w-6/12 p-0.5"
                     onClick={() => {
-                      setActiveTab(1)
-                      handleInput('')
+                      setActiveTabAuto(1)
+                      handleInputAuto('')
                     }}
                   >
-                    <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTabAuto === 1 ? activeTabStyle : inactiveTabStyle}>
                       <p>{i18n._(t`Unstake`)}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-between w-full mt-6">
                   <p className="font-bold text-large md:text-2xl text-high-emphesis">
-                    {activeTab === 0 ? i18n._(t`Stake CRONA`) : i18n._(t`Unstake`)}
+                    {activeTabAuto === 0 ? i18n._(t`Stake CRONA`) : i18n._(t`Unstake`)}
                   </p>
                   <div className={input ? 'hidden md:flex md:items-center' : 'flex items-center'}>
                     <p className="text-dark-650">{i18n._(t`Balance`)}:&nbsp;</p>
-                    <p className="text-base font-bold">{formattedBalance}</p>
+                    <p className="text-base font-bold">{formattedBalanceAuto}</p>
                   </div>
-                  {/* Hidden now */}
-                  {/* <div className="border-gradient-r-pink-red-light-brown-dark-pink-red border-transparent border-solid border rounded-3xl px-4 md:px-3.5 py-1.5 md:py-0.5 text-high-emphesis text-xs font-medium md:text-base md:font-normal">
-                    {`1 xCRONA = 1 CRONA`}
-                  </div> */}
                 </div>
 
                 {/* CRONA Amount Input */}
                 <Input.Numeric
-                  value={input}
-                  onUserInput={handleInput}
+                  value={inputAuto}
+                  onUserInput={handleInputAuto}
                   className={classNames(
                     'w-full h-14 px-3 md:px-5 mt-5 rounded bg-dark-800 text-sm md:text-lg font-bold text-dark-800 whitespace-nowrap caret-high-emphesis',
-                    inputError ? ' pl-9 md:pl-12' : ''
+                    inputErrorAuto ? ' pl-9 md:pl-12' : ''
                   )}
                   placeholder=" "
                 />
@@ -358,11 +464,11 @@ export default function Stake() {
                 <div className="relative w-full h-0 pointer-events-none bottom-14">
                   <div
                     className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
-                      inputError ? ' border border-red' : ''
+                      inputErrorAuto ? ' border border-red' : ''
                     }`}
                   >
                     <div className="flex space-x-2 ">
-                      {inputError && (
+                      {inputErrorAuto && (
                         <Image
                           className="mr-2 max-w-4 md:max-w-5"
                           src="/error-triangle.svg"
@@ -373,16 +479,16 @@ export default function Stake() {
                       )}
                       <p
                         className={`text-sm md:text-lg font-bold whitespace-nowrap ${
-                          input ? 'text-high-emphesis' : 'text-secondary'
+                          inputAuto ? 'text-high-emphesis' : 'text-secondary'
                         }`}
                       >
-                        {`${input ? Number(input).toFixed(4) : '0.0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
+                        {`${inputAuto ? Number(inputAuto).toFixed(4) : '0.0'} ${activeTabAuto === 0 ? '' : 'x'}CRONA`}
                       </p>
                     </div>
                     <div className="flex items-center text-sm text-secondary md:text-base">
                       <button
                         className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
-                        onClick={handleClickMax}
+                        onClick={handleClickMaxAuto}
                       >
                         {i18n._(t`MAX`)}
                       </button>
@@ -392,13 +498,13 @@ export default function Stake() {
 
                 {/* Confirm Button */}
                 {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
-                activeTab === 0 ? (
+                activeTabAuto === 0 ? (
                   <Button
                     className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
                     disabled={approvalState === ApprovalState.PENDING}
-                    onClick={approve}
+                    onClick={approveAuto}
                   >
-                    {approvalState === ApprovalState.PENDING ? (
+                    {approvalStateAuto === ApprovalState.PENDING ? (
                       <Dots>{i18n._(t`Approving`)} </Dots>
                     ) : (
                       i18n._(t`Approve`)
@@ -407,24 +513,24 @@ export default function Stake() {
                 ) : (
                   <button
                     className={
-                      buttonDisabled
+                      buttonDisabledAuto
                         ? buttonStyleDisabled
                         : !walletConnected
                         ? buttonStyleConnectWallet
-                        : insufficientFunds
+                        : insufficientFundsAuto
                         ? buttonStyleInsufficientFunds
                         : buttonStyleEnabled
                     }
-                    onClick={handleClickButton}
-                    disabled={buttonDisabled || inputError}
+                    onClick={handleClickButtonAuto}
+                    disabled={buttonDisabledAuto || inputErrorAuto}
                   >
                     {!walletConnected
                       ? i18n._(t`Connect Wallet`)
-                      : !input
+                      : !inputAuto
                       ? i18n._(t`Enter Amount`)
-                      : insufficientFunds
+                      : insufficientFundsAuto
                       ? i18n._(t`Insufficient Balance`)
-                      : activeTab === 0
+                      : activeTabAuto === 0
                       ? i18n._(t`Confirm Staking`)
                       : i18n._(t`Confirm Withdrawal`)}
                   </button>
@@ -433,6 +539,7 @@ export default function Stake() {
               <div className="grid grid-rows-2 px-3 gap-y-2 md:px-8">
                 <div className="flex justify-between text-base">
                   <p className="text-dark-650">Recent CRONA profit</p>
+                  <p className="font-bold text-right text-aqua-pearl">{`${Number(results[4].toFixed(2))}`}</p>
                 </div>
                 <div className="flex justify-between text-base">
                   <p className="text-dark-650">0.1% unstakng fee until</p>
@@ -483,8 +590,8 @@ export default function Stake() {
                 </p>
               </div>
               <DoubleLogo
-                currency0={CRONA[ChainId.CRONOS]}
-                currency1={NATIVE[ChainId.CRONOS]}
+                currency0={CRONA[chainId]}
+                currency1={NATIVE[chainId]}
                 size={window.innerWidth > 768 ? 40 : 24}
               />
             </div>
@@ -612,17 +719,17 @@ export default function Stake() {
                       : i18n._(t`Confirm Withdrawal`)}
                   </button>
                 )}
-                <button
+                <Button
                   className={activeTab ? buttonStyleDisabled : buttonStyleEnabled}
                   onClick={handleHarvestFarm}
-                  disabled={!activeTab}
+                  disabled={activeTab !== 0}
                 >
                   {!walletConnected
                     ? i18n._(t`Connect Wallet`)
                     : pendingHarvestTx
                     ? i18n._(t`Harvesting`)
                     : i18n._(t`Harvest`)}
-                </button>
+                </Button>
               </div>
             </div>
             <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-gray-500 gap-y-2 md:px-8">
@@ -638,6 +745,7 @@ export default function Stake() {
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">Total staked</p>
+                <p className="font-bold text-right text-high-emphesis">{`${Number(results[5]).toFixed(0)}`} CRONA</p>
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">SEE Token Info</p>

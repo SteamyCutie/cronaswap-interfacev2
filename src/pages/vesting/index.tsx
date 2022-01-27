@@ -26,6 +26,7 @@ import {
   usePrivateSaleBContract,
 } from 'hooks/useContract'
 import { usePurchased, useClaimable, useClaimed } from 'hooks/useVestingInfo'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 // import Link from 'next/link'
 // import { useClaimCallback, useUserUnclaimedAmount } from '../../state/claim/weekly/hooks'
@@ -35,6 +36,7 @@ import { usePurchased, useClaimable, useClaimed } from 'hooks/useVestingInfo'
 // import QuestionHelper from '../../components/QuestionHelper'
 // import { formatNumber } from '../../functions/format'
 // import { isAddress } from '@ethersproject/address'
+const addTransaction = useTransactionAdder()
 
 const Strategies = () => {
   const { i18n } = useLingui()
@@ -112,7 +114,9 @@ const PrivateSaleAVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(privateSaleAContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
     }
@@ -214,11 +218,9 @@ const PrivateSaleBVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(privateSaleBContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      // addTransaction(tx, {
-      //   summary: `${i18n._(t`Harvest`)} ${
-      //     farm.token1 ? `${farm.token0.symbol}/${farm.token1.symbol}` : farm.token0.symbol
-      //   }`,
-      // })
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
     }
@@ -320,7 +322,9 @@ const SeedSaleVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(seedSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
       // toastError(i18n._(t`Error`), i18n._(t`Please try again. Confirm the transaction and make sure you are paying enough gas!`))
@@ -433,7 +437,9 @@ const PublicSaleVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(pubSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
     }
