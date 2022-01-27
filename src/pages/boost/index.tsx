@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useLingui } from '@lingui/react'
-import { BAR_ADDRESS, ZERO, ChainId } from '@cronaswap/core-sdk'
+import { ZERO } from '@cronaswap/core-sdk'
 import Head from 'next/head'
 import Image from 'next/image'
 import { t } from '@lingui/macro'
-import { request } from 'graphql-request'
-import { getBalanceAmount } from '../../functions/formatBalance'
-import { useCronaContract } from '../../hooks/useContract'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { CRONA, XCRONA } from '../../config/tokens'
 import Button from '../../components/Button'
@@ -16,7 +13,13 @@ import Input from '../../components/Input'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { classNames } from '../../functions'
+import { classNames, formatBalance, formatNumber, formatNumberScale } from '../../functions'
+import { VOTING_ESCROW_ADDRESS } from '../../constants/addresses'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import useVotingEscrow from 'app/features/boost/useVotingEscrow'
+import { format, addDays, getUnixTime } from 'date-fns'
+import { useLockedBalance } from 'app/features/boost/hook'
+import { getFullDisplayBalance } from 'app/functions/formatBalance'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -34,9 +37,9 @@ const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
   return success
 }
 
-const tabStyle = 'flex justify-center items-center h-full w-full rounded-lg cursor-pointer text-sm md:text-base'
-const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-dark-900`
-const inactiveTabStyle = `${tabStyle} text-secondary`
+const tabStyle = 'rounded-lg p-3'
+const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-blue`
+const inactiveTabStyle = `${tabStyle} bg-dark-700 text-secondary`
 
 const buttonStyle =
   'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
@@ -45,26 +48,28 @@ const buttonStyleInsufficientFunds = `${buttonStyleEnabled} opacity-60`
 const buttonStyleDisabled = `${buttonStyle} text-secondary bg-dark-700`
 const buttonStyleConnectWallet = `${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`
 
-const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matthewlilley/bar', query)
-
 export default function Boost() {
   const { i18n } = useLingui()
-  const { account } = useActiveWeb3React()
-  const sushiBalance = useTokenBalance(account ?? undefined, CRONA[ChainId.ETHEREUM])
-  const xSushiBalance = useTokenBalance(account ?? undefined, XCRONA)
+  const { account, chainId } = useActiveWeb3React()
+  const balance = useTokenBalance(account ?? undefined, CRONA[chainId])
+  const { lockAmount, lockEnd, veCrona } = useLockedBalance()
+
+  // console.log(Number(lockAmount), Number(lockEnd), Number(veCrona))
+
+  const { createLockWithMc, increaseAmountWithMc, increaseUnlockTimeWithMc, withdrawWithMc } = useVotingEscrow()
+
+  const WEEK = 7 * 86400
 
   const walletConnected = !!account
+  const toggleWalletModal = useWalletModalToggle()
 
-  const [activeTab, setActiveTab] = useState(0)
-  const [cronaBalance, setCronaBalance] = useState<string>('')
+  const [activeTab, setActiveTab] = useState(90)
   const [input, setInput] = useState<string>('')
   const [usingBalance, setUsingBalance] = useState(false)
 
-  const balance = activeTab === 0 ? sushiBalance : xSushiBalance
-
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
-  const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.ETHEREUM])
+  const [approvalState, approve] = useApproveCallback(parsedAmount, VOTING_ESCROW_ADDRESS[chainId])
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -73,32 +78,112 @@ export default function Boost() {
     }
   }
 
-  const handleClickMax = () => {
-    setInput(parsedAmount ? parsedAmount.toSignificant(balance.currency.decimals).substring(0, INPUT_CHAR_LIMIT) : '')
-    setUsingBalance(true)
-  }
-
   const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount?.greaterThan(balance)
-
   const inputError = insufficientFunds
 
+  const newLockTime = Math.floor(getUnixTime(addDays(Date.now(), activeTab)) / WEEK) * WEEK
+
   const [pendingTx, setPendingTx] = useState(false)
-
   const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO))
+  const lockTimeBtnDisabled = pendingTx || newLockTime <= Number(lockEnd)
 
-  let cronaContract = useCronaContract()
+  // console.log(newLockTime / WEEK, Math.floor(newLockTime / WEEK) * WEEK, Number(lockEnd))
 
-  useEffect(() => {
-    const fetchInfo = async () => {
-      let tokenInfo = await cronaContract.balanceOf('0xf1f5cb17E17759A4fc1CD1C6EdC8aa1bFE6Cf8D0')
-      setCronaBalance(getBalanceAmount(tokenInfo._hex).toString())
+  const handleCreateLock = async () => {
+    if (buttonDisabled) return
+
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      if (approvalState === ApprovalState.NOT_APPROVED) {
+        const success = await sendTx(() => approve())
+        if (!success) {
+          setPendingTx(false)
+          return
+        }
+      }
+
+      const success = await sendTx(() => createLockWithMc(parsedAmount, getUnixTime(addDays(Date.now(), activeTab))))
+
+      if (!success) {
+        setPendingTx(false)
+        // setModalOpen(true)
+        return
+      }
+
+      handleInput('')
+      setPendingTx(false)
     }
+  }
 
-    fetchInfo()
-  }, [])
+  const handleIncreaseAmount = async () => {
+    if (buttonDisabled) return
 
-  const handleClickButton = async () => {
-    // todo
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      const success = await sendTx(() => increaseAmountWithMc(parsedAmount))
+
+      if (!success) {
+        setPendingTx(false)
+        // setModalOpen(true)
+        return
+      }
+
+      handleInput('')
+      setPendingTx(false)
+    }
+  }
+
+  // handleIncreaseUnlockTime
+  const handleIncreaseUnlockTime = async () => {
+    if (lockTimeBtnDisabled) return
+
+    // (_unlockTime / WEEK) * WEEK
+
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      const success = await sendTx(() => increaseUnlockTimeWithMc(newLockTime))
+
+      if (!success) {
+        setPendingTx(false)
+        // setModalOpen(true)
+        return
+      }
+
+      handleInput('')
+      setPendingTx(false)
+    }
+  }
+
+  const handleWithdrawWith = async () => {
+    if (getUnixTime(Date.now()) <= lockEnd) return
+
+    // (_unlockTime / WEEK) * WEEK
+
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      const success = await sendTx(() => withdrawWithMc())
+
+      if (!success) {
+        setPendingTx(false)
+        // setModalOpen(true)
+        return
+      }
+
+      handleInput('')
+      setPendingTx(false)
+    }
   }
 
   return (
@@ -206,7 +291,7 @@ export default function Boost() {
                     <div className="flex items-center justify-between w-full">
                       <p className="font-bold text-large md:text-2xl text-high-emphesis">{i18n._(t`Lock CRONA`)}</p>
                       <div className="text-high-emphesis text-xs font-medium md:text-base md:font-normal">
-                        Balance: {cronaBalance} CRONA
+                        Balance: {balance?.toSignificant(12)} CRONA
                       </div>
                     </div>
 
@@ -242,13 +327,17 @@ export default function Boost() {
                               input ? 'text-high-emphesis' : 'text-secondary'
                             }`}
                           >
-                            {`${input ? input : '0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
+                            {`${input ? input : '0'} CRONA`}
                           </p>
                         </div>
                         <div className="flex items-center text-sm text-secondary md:text-base">
                           <button
                             className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
-                            onClick={handleClickMax}
+                            onClick={() => {
+                              if (!balance.equalTo(ZERO)) {
+                                setInput(balance?.toSignificant(balance.currency.decimals))
+                              }
+                            }}
                           >
                             {i18n._(t`MAX`)}
                           </button>
@@ -257,63 +346,175 @@ export default function Boost() {
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 md:grid-cols-6 mt-8">
-                      <button className="rounded-lg p-3 bg-dark-700">1 Week</button>
-                      <button className="rounded-lg p-3 bg-dark-700">1 Month</button>
-                      <button className="rounded-lg p-3 bg-dark-700">3 Months</button>
-                      <button className="rounded-lg p-3 bg-dark-700">6 Months</button>
-                      <button className="rounded-lg p-3 bg-dark-700">1 Year</button>
-                      <button className="rounded-lg p-3 bg-dark-700">3 Years</button>
-                    </div>
-
-                    <div className="flex flex-col pb-4 px-4 mt-8 space-y-3">
-                      <div className="flex flex-row justify-between text-lg">
-                        <h1>My CRONA Locked</h1> <span>1223.998</span>
-                      </div>
-                      <div className="flex flex-row justify-between text-lg">
-                        <h1>My veCRONA balance</h1> <span>1223.998</span>
-                      </div>
-                      <div className="flex flex-row justify-between text-lg">
-                        <h1>Unlock time</h1> <span>Dec 30 2021 21:14:02</span>
-                      </div>
-                      <div className="flex flex-row justify-between text-lg">
-                        <h1>Boost multiplier</h1> <span>1.00x</span>
-                      </div>
-                    </div>
-
-                    {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
-                      <Button
-                        className={`${buttonStyle} text-high-emphesis bg-pink-red hover:bg-opacity-90`}
-                        disabled={approvalState === ApprovalState.PENDING}
-                        onClick={approve}
-                      >
-                        {approvalState === ApprovalState.PENDING ? (
-                          <Dots>{i18n._(t`Approving`)} </Dots>
-                        ) : (
-                          i18n._(t`Approve`)
-                        )}
-                      </Button>
-                    ) : (
                       <button
-                        className={
-                          buttonDisabled
-                            ? buttonStyleDisabled
-                            : !walletConnected
-                            ? buttonStyleConnectWallet
+                        className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(1)
+                        }}
+                      >
+                        1 Day
+                      </button>
+                      <button
+                        className={activeTab === 7 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(7)
+                        }}
+                      >
+                        1 Week
+                      </button>
+
+                      <button
+                        className={activeTab === 30 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(30)
+                        }}
+                      >
+                        1 Month
+                      </button>
+
+                      <button
+                        className={activeTab === 90 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(90)
+                        }}
+                      >
+                        3 Months
+                      </button>
+
+                      <button
+                        className={activeTab === 180 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(180)
+                        }}
+                      >
+                        6 Month
+                      </button>
+
+                      <button
+                        className={activeTab === 365 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(365)
+                        }}
+                      >
+                        1 Year
+                      </button>
+
+                      <button
+                        className={activeTab === 730 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(730)
+                        }}
+                      >
+                        2 Years
+                      </button>
+
+                      <button
+                        className={activeTab === 1095 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(1095)
+                        }}
+                      >
+                        3 Years
+                      </button>
+
+                      <button
+                        className={activeTab === 1460 ? activeTabStyle : inactiveTabStyle}
+                        onClick={() => {
+                          setActiveTab(1460)
+                        }}
+                      >
+                        4 Years
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col pb-4 mt-6 space-y-2">
+                      <div className="flex flex-row items-center justify-between text-base">
+                        <div className="text-sm">My CRONA Locked</div>
+                        <div className="text-sm">{formatNumber(lockAmount?.toFixed(18))}</div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between text-base">
+                        <div className="text-sm">My veCRONA balance</div>
+                        <div className="text-sm">{formatNumber(veCrona?.toFixed(18))}</div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between text-base">
+                        <div className="text-sm">Unlock Time</div>
+                        <div className="text-sm">{lockEnd > 0 ? format(lockEnd * 1000, 'iii, MMM dd, yyyy') : '-'}</div>
+                      </div>
+                    </div>
+
+                    {/* First create lock */}
+                    {Number(lockAmount) == 0 ? (
+                      approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
+                        <Button
+                          className={`${buttonStyle} w-full text-high-emphesis bg-gradient-to-r from-blue to-pink opacity-80 hover:opacity-100 disabled:bg-opacity-80`}
+                          disabled={approvalState === ApprovalState.PENDING}
+                          onClick={approve}
+                        >
+                          {approvalState === ApprovalState.PENDING ? (
+                            <Dots>{i18n._(t`Approving`)} </Dots>
+                          ) : (
+                            i18n._(t`Approve`)
+                          )}
+                        </Button>
+                      ) : (
+                        <Button
+                          color={
+                            buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'
+                          }
+                          onClick={handleCreateLock}
+                          disabled={buttonDisabled || inputError}
+                        >
+                          {!walletConnected
+                            ? i18n._(t`Connect Wallet`)
+                            : !input
+                            ? i18n._(t`Create Lock`)
                             : insufficientFunds
-                            ? buttonStyleInsufficientFunds
-                            : buttonStyleEnabled
-                        }
-                        onClick={handleClickButton}
-                        disabled={buttonDisabled || inputError}
+                            ? i18n._(t`Insufficient Balance`)
+                            : i18n._(t`Create Lock`)}
+                        </Button>
+                      )
+                    ) : (
+                      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 mt-2">
+                        {/* increacse amount or increacse time */}
+                        <Button
+                          color={
+                            buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'
+                          }
+                          onClick={handleIncreaseAmount}
+                          disabled={buttonDisabled || inputError}
+                        >
+                          {!walletConnected
+                            ? i18n._(t`Connect Wallet`)
+                            : !input
+                            ? i18n._(t`Increase Amount`)
+                            : insufficientFunds
+                            ? i18n._(t`Insufficient Balance`)
+                            : i18n._(t`Increase Amount`)}
+                        </Button>
+                        <Button
+                          color={lockTimeBtnDisabled ? 'gray' : 'blue'}
+                          disabled={lockTimeBtnDisabled}
+                          onClick={handleIncreaseUnlockTime}
+                        >
+                          Increase Locktime
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* lock end and withdraw */}
+                    {lockEnd != 0 && getUnixTime(Date.now()) >= lockEnd ? (
+                      <Button
+                        color="gradient"
+                        className="mt-2"
+                        onClick={handleWithdrawWith}
+                        disabled={getUnixTime(Date.now()) < lockEnd}
                       >
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
-                          : !input
-                          ? i18n._(t`Enter Amount`)
-                          : insufficientFunds
-                          ? i18n._(t`Insufficient Balance`)
-                          : i18n._(t`Confirm Lock`)}
-                      </button>
+                          : i18n._(t`Your lock ended, you can withdraw your CRONA`)}
+                      </Button>
+                    ) : (
+                      <></>
                     )}
                   </div>
                 </div>
