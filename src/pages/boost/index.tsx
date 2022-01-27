@@ -163,6 +163,29 @@ export default function Boost() {
     }
   }
 
+  const handleWithdrawWith = async () => {
+    if (getUnixTime(Date.now()) <= lockEnd) return
+
+    // (_unlockTime / WEEK) * WEEK
+
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      const success = await sendTx(() => withdrawWithMc())
+
+      if (!success) {
+        setPendingTx(false)
+        // setModalOpen(true)
+        return
+      }
+
+      handleInput('')
+      setPendingTx(false)
+    }
+  }
+
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
       <Head>
@@ -479,19 +502,15 @@ export default function Boost() {
                     )}
 
                     {/* lock end and withdraw */}
-                    {lockEnd != 0 && getUnixTime(Date.now()) > lockEnd ? (
+                    {lockEnd != 0 && getUnixTime(Date.now()) >= lockEnd ? (
                       <Button
                         color="gradient"
                         className="mt-2"
-                        onClick={handleCreateLock}
-                        disabled={buttonDisabled || inputError}
+                        onClick={handleWithdrawWith}
+                        disabled={getUnixTime(Date.now()) < lockEnd}
                       >
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
-                          : !input
-                          ? i18n._(t`Enter Amount`)
-                          : insufficientFunds
-                          ? i18n._(t`Insufficient Balance`)
                           : i18n._(t`Your lock ended, you can withdraw your CRONA`)}
                       </Button>
                     ) : (
