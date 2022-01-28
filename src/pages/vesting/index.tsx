@@ -36,7 +36,6 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 // import QuestionHelper from '../../components/QuestionHelper'
 // import { formatNumber } from '../../functions/format'
 // import { isAddress } from '@ethersproject/address'
-const addTransaction = useTransactionAdder()
 
 const Strategies = () => {
   const { i18n } = useLingui()
@@ -94,6 +93,7 @@ const Strategies = () => {
 
 const PrivateSaleAVesting = () => {
   const { i18n } = useLingui()
+  const addTransaction = useTransactionAdder()
 
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleClaimModal = useToggleSelfClaimModal()
@@ -211,6 +211,7 @@ const PrivateSaleBVesting = () => {
   const privateSaleBContract = usePrivateSaleBContract()
   const [pendingTx, setPendingTx] = useState(false)
   const { callWithGasPrice } = useCallWithGasPrice()
+  const addTransaction = useTransactionAdder()
   // const { toastError, toastSuccess } = useToast()
   const DEFAULT_GAS_LIMIT = 250000
 
@@ -305,6 +306,7 @@ const SeedSaleVesting = () => {
 
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleClaimModal = useToggleSelfClaimModal()
+  const addTransaction = useTransactionAdder()
 
   const { account } = useActiveWeb3React()
   const [attempting, setAttempting] = useState<boolean>(false)
@@ -420,6 +422,7 @@ const PublicSaleVesting = () => {
   const pubSaleContract = usePublicSaleContract()
   const [pendingTx, setPendingTx] = useState(false)
   const { callWithGasPrice } = useCallWithGasPrice()
+  const addTransaction = useTransactionAdder()
   // const { toastError, toastSuccess } = useToast()
   const DEFAULT_GAS_LIMIT = 250000
 
