@@ -32,6 +32,7 @@ import { formatBalance } from '../../functions/format'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getFullDisplayBalance } from 'functions/formatBalance'
+import { getManualAPY111 } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -205,12 +206,9 @@ export default function Stake() {
           addTransaction(tx, {
             summary: `${i18n._(t`Stake`)} CRONA`,
           })
-          const receipt = await tx.wait()
-          if (receipt.status) {
-            setPendingTxAuto(false)
-            // onDismiss()
-            // dispatch(fetchCronaVaultUserData({ account }))
-          }
+          setPendingTxAuto(false)
+          // onDismiss()
+          // dispatch(fetchCronaVaultUserData({ account }))
         } catch (error) {
           setPendingTxAuto(false)
         }
@@ -223,12 +221,9 @@ export default function Stake() {
           addTransaction(tx, {
             summary: `${i18n._(t`Unstake`)} CRONA`,
           })
-          const receipt = await tx.wait()
-          if (receipt.status) {
-            setPendingTxAuto(false)
-            // onDismiss()
-            // dispatch(fetchCronaVaultUserData({ account }))
-          }
+          setPendingTxAuto(false)
+          // onDismiss()
+          // dispatch(fetchCronaVaultUserData({ account }))
         } catch (error) {
           setPendingTxAuto(false)
         }
@@ -236,15 +231,7 @@ export default function Stake() {
     }
   }
 
-  const [manualAPY, setManualAPY] = useState(0)
-  // const [autoAPY, setAutoAPY] = useState(0);
-
-  const getManualAPY = async () => {
-    const apyofManual = await dashboardContract.apyOfPool(0)
-    const apyManual = getBalanceAmount(apyofManual._hex, 18)
-    setManualAPY(apyManual.toNumber() * 100)
-  }
-  getManualAPY()
+  const manualAPY = getManualAPY111()
 
   const aprToApy = (apr: number, compoundFrequency = 1, days = 365, performanceFee = 0) => {
     const daysAsDecimalOfYear = days / 365
