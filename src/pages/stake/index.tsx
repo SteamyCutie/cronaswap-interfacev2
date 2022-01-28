@@ -1,7 +1,6 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { MASTERCHEF_ADDRESS, BAR_ADDRESS, ZERO, NATIVE } from '@cronaswap/core-sdk'
-import React, { useEffect, useState } from 'react'
-import { ExternalLink } from 'react-feather'
+import React, { useState } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
 import { useCronaUsdcPrice } from '../../features/farms/hooks'
 import BigNumber from 'bignumber.js'
@@ -21,18 +20,16 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
-import { useBar, useBlock, useFactory, useNativePrice, useSushiPrice, useTokens } from '../../services/graph'
 import { useMasterChefContract, useDashboardV1Contract, useCronaVaultContract } from 'hooks/useContract'
 import { getBalanceAmount } from 'functions/formatBalance'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import DoubleLogo from '../../components/DoubleLogo'
-import NavLink from 'app/components/NavLink'
 import { useGasPrice } from 'state/user/hooks'
 import { formatBalance } from '../../functions/format'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getFullDisplayBalance } from 'functions/formatBalance'
-import { getManualAPY } from 'features/staking/useStaking'
+import { getAPY } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -231,23 +228,7 @@ export default function Stake() {
     }
   }
 
-  const manualAPY = getManualAPY()
-
-  const aprToApy = (apr: number, compoundFrequency = 1, days = 365, performanceFee = 0) => {
-    const daysAsDecimalOfYear = days / 365
-    const aprAsDecimal = apr / 100
-    const timesCompounded = 365 * compoundFrequency
-    let apyAsDecimal = (apr / 100) * daysAsDecimalOfYear
-    if (timesCompounded > 0) {
-      apyAsDecimal = (1 + aprAsDecimal / timesCompounded) ** (timesCompounded * daysAsDecimalOfYear) - 1
-    }
-    if (performanceFee) {
-      const performanceFeeAsDecimal = performanceFee / 100
-      const takenAsPerformanceFee = apyAsDecimal * performanceFeeAsDecimal
-      apyAsDecimal -= takenAsPerformanceFee
-    }
-    return apyAsDecimal * 100
-  }
+  const { manualAPY, autoAPY } = getAPY()
 
   const cronaPriceInBigNumber = useCronaUsdcPrice()
   const [results, setResults] = useState([0, 0, 0, 0, 0, 0])
@@ -547,7 +528,8 @@ export default function Stake() {
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">APY</p>
                 <p className="font-bold text-right text-high-emphesis">
-                  {`${aprToApy(manualAPY) ? aprToApy(manualAPY).toFixed(2) + '%' : i18n._(t`Loading...`)}`}
+                  {/* {`${aprToApy(manualAPY) ? aprToApy(manualAPY).toFixed(2) + '%' : i18n._(t`Loading...`)}`} */}
+                  {`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
                 </p>
               </div>
               <div className="flex justify-between text-base">
