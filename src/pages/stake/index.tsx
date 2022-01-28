@@ -32,7 +32,7 @@ import { formatBalance } from '../../functions/format'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getFullDisplayBalance } from 'functions/formatBalance'
-import { getManualAPY111 } from 'features/staking/useStaking'
+import { getManualAPY } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -231,7 +231,7 @@ export default function Stake() {
     }
   }
 
-  const manualAPY = getManualAPY111()
+  const manualAPY = getManualAPY()
 
   const aprToApy = (apr: number, compoundFrequency = 1, days = 365, performanceFee = 0) => {
     const daysAsDecimalOfYear = days / 365

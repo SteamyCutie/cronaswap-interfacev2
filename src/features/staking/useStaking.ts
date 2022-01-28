@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDashboardV1Contract } from 'app/hooks/useContract'
 import { getBalanceAmount } from 'functions/formatBalance'
 
-export function getManualAPY111() {
+export function getManualAPY() {
   const [apy, setAPY] = useState(0)
   const dashboardContract = useDashboardV1Contract()
   const getManualAPY = async () => {
