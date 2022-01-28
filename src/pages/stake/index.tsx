@@ -124,19 +124,19 @@ export default function Stake() {
     }
   }
 
-  const handleClickMax = () => {
-    setInput(parsedAmount ? parsedAmount.toSignificant(balance.currency.decimals).substring(0, INPUT_CHAR_LIMIT) : '')
-    setUsingBalance(true)
-  }
+  // const handleClickMax = () => {
+  //   setInput(parsedAmount ? parsedAmount.toSignificant(balance.currency.decimals).substring(0, INPUT_CHAR_LIMIT) : '')
+  //   setUsingBalance(true)
+  // }
 
-  const handleClickMaxAuto = () => {
-    setInputAuto(
-      parsedAmountAuto
-        ? parsedAmountAuto.toSignificant(balanceAuto.currency.decimals).substring(0, INPUT_CHAR_LIMIT)
-        : ''
-    )
-    setUsingBalanceAuto(true)
-  }
+  // const handleClickMaxAuto = () => {
+  //   setInputAuto(
+  //     parsedAmountAuto
+  //       ? parsedAmountAuto.toSignificant(balanceAuto.currency.decimals).substring(0, INPUT_CHAR_LIMIT)
+  //       : ''
+  //   )
+  //   setUsingBalanceAuto(true)
+  // }
 
   const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount?.greaterThan(balance)
   const insufficientFundsAuto = (balanceAuto && balanceAuto.equalTo(ZERO)) || parsedAmountAuto?.greaterThan(balanceAuto)
@@ -482,13 +482,19 @@ export default function Stake() {
                           inputAuto ? 'text-high-emphesis' : 'text-secondary'
                         }`}
                       >
-                        {`${inputAuto ? Number(inputAuto).toFixed(4) : '0.0'} ${activeTabAuto === 0 ? '' : 'x'}CRONA`}
+                        {/* {`${inputAuto ? Number(inputAuto).toFixed(4) : '0.0'} ${activeTabAuto === 0 ? '' : 'x'}CRONA`} */}
+                        {`${inputAuto ? inputAuto : '0'} ${activeTabAuto === 0 ? '' : 'x'}CRONA`}
                       </p>
                     </div>
                     <div className="flex items-center text-sm text-secondary md:text-base">
                       <button
                         className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
-                        onClick={handleClickMaxAuto}
+                        // onClick={handleClickMaxAuto}
+                        onClick={() => {
+                          if (!balanceAuto.equalTo(ZERO)) {
+                            setInputAuto(balanceAuto?.toSignificant(balanceAuto.currency.decimals))
+                          }
+                        }}
                       >
                         {i18n._(t`MAX`)}
                       </button>
@@ -497,11 +503,11 @@ export default function Stake() {
                 </div>
 
                 {/* Confirm Button */}
-                {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
+                {(approvalStateAuto === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
                 activeTabAuto === 0 ? (
                   <Button
                     className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
-                    disabled={approvalState === ApprovalState.PENDING}
+                    disabled={approvalStateAuto === ApprovalState.PENDING}
                     onClick={approveAuto}
                   >
                     {approvalStateAuto === ApprovalState.PENDING ? (
@@ -666,13 +672,19 @@ export default function Stake() {
                           input ? 'text-high-emphesis' : 'text-secondary'
                         }`}
                       >
-                        {`${input ? Number(input).toFixed(4) : '0.0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
+                        {/* {`${input ? Number(input).toFixed(4) : '0.0'} ${activeTab === 0 ? '' : 'x'}CRONA`} */}
+                        {`${input ? input : '0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
                       </p>
                     </div>
                     <div className="flex items-center text-sm text-secondary md:text-base">
                       <button
                         className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
-                        onClick={handleClickMax}
+                        // onClick={handleClickMax}
+                        onClick={() => {
+                          if (!balance.equalTo(ZERO)) {
+                            setInput(balance?.toSignificant(balance.currency.decimals))
+                          }
+                        }}
                       >
                         {i18n._(t`MAX`)}
                       </button>
