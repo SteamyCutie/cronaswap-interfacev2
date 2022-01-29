@@ -50,6 +50,6 @@
     "downlevelIteration": true,
     "incremental": true
   },
-  "include": ["next-env.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Modal/HeadlessUIModal.tsx.bak"],
   "exclude": ["node_modules"]
 }

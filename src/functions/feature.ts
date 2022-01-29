@@ -12,6 +12,7 @@ export enum Feature {
   BOOST = 'Boost',
   BRIDGE = 'Bridge',
   ZAP = 'Zap',
+  MISO = 'Miso',
 }
 
 const features = {
@@ -35,7 +36,7 @@ const features = {
     Feature.FARMV2,
     Feature.ZAP,
     // Feature.LENDING,
-    // Feature.LAUNCH,
+    Feature.MISO,
     Feature.STAKING,
     Feature.BOOST,
   ],

@@ -1,14 +1,14 @@
 import React from 'react'
 import { classNames } from '../../functions'
 
-export type TypographyWeight = 400 | 700
+export type TypographyWeight = 400 | 500 | 700
 
 const WEIGHTS = {
   400: 'font-medium',
   700: 'font-bold',
 }
 
-export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'lg' | 'base' | 'sm' | 'xs'
+export type TypographyVariant = 'hero' | 'h1' | 'h2' | 'h3' | 'lg' | 'base' | 'sm' | 'xs' | 'xxs'
 
 const VARIANTS = {
   hero: 'text-hero',
@@ -19,6 +19,7 @@ const VARIANTS = {
   base: 'text-base',
   sm: 'text-sm',
   xs: 'text-xs',
+  xxs: 'text-[0.625rem] leading-[1.2]',
 }
 
 export interface TypographyProps {

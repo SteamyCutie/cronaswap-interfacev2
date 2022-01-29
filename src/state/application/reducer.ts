@@ -7,6 +7,7 @@ import {
   setKashiApprovalPending,
   setOpenModal,
   updateBlockNumber,
+  updateBlockTimestamp,
 } from './actions'
 
 type PopupList = Array<{
@@ -18,6 +19,7 @@ type PopupList = Array<{
 
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
+  readonly blockTimestamp: { readonly [chainId: number]: number }
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
   kashiApprovalPending: string
@@ -25,6 +27,7 @@ export interface ApplicationState {
 
 const initialState: ApplicationState = {
   blockNumber: {},
+  blockTimestamp: {},
   popupList: [],
   openModal: null,
   kashiApprovalPending: '',
@@ -38,6 +41,14 @@ export default createReducer(initialState, (builder) =>
         state.blockNumber[chainId] = blockNumber
       } else {
         state.blockNumber[chainId] = Math.max(blockNumber, state.blockNumber[chainId])
+      }
+    })
+    .addCase(updateBlockTimestamp, (state, action) => {
+      const { chainId, blockTimestamp } = action.payload
+      if (typeof state.blockTimestamp[chainId] !== 'number') {
+        state.blockTimestamp[chainId] = blockTimestamp
+      } else {
+        state.blockTimestamp[chainId] = Math.max(blockTimestamp, state.blockTimestamp[chainId])
       }
     })
     .addCase(setOpenModal, (state, action) => {

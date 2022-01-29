@@ -4,6 +4,7 @@ import {
   BORING_HELPER_ADDRESS,
   CHAINLINK_ORACLE_ADDRESS,
   ChainId,
+  CHAIN_KEY,
   ENS_REGISTRAR_ADDRESS,
   FACTORY_ADDRESS,
   MAKER_ADDRESS,
@@ -18,6 +19,8 @@ import {
   WNATIVE_ADDRESS,
 } from '@cronaswap/core-sdk'
 import { STOP_LIMIT_ORDER_ADDRESS } from '@sushiswap/limit-order-sdk'
+import MISO from '@cronaswap/miso/exports/all.json'
+
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
@@ -61,6 +64,8 @@ import DASHBOARD_ABIV2 from '../constants/abis/dashboardv2.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
 import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
+import MISO_HELPER_ABI from 'app/constants/abis/miso-helper.json'
+
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
@@ -279,4 +284,11 @@ export function useAnyswapTokenContract(tokenAddress?: string, withSignerIfPossi
 export function useCronaVaultContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(CRONAVAULT_ADDRESS[chainId], CRONAVAULT_ABI, withSignerIfPossible)
+}
+
+export function useMisoHelperContract(withSignerIfPossible = true): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  // @ts-ignore TYPE NEEDS FIXING
+  const factory = MISO[chainId]?.[CHAIN_KEY[chainId]]?.contracts.MISOHelper
+  return useContract(factory?.address, MISO_HELPER_ABI, withSignerIfPossible)
 }
