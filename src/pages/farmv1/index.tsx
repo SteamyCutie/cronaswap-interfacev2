@@ -75,7 +75,7 @@ export default function Yield(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
-        <div className="flex-row space-y-2 md:flex justify-between items-center w-full p-4 rounded bg-opaque-blue">
+        <div className="flex-row items-center justify-between w-full p-4 space-y-2 rounded md:flex bg-opaque-blue">
           <div className="space-y-2 md:block">
             <Typography variant="h2" className="text-high-emphesis" weight={700}>
               {i18n._(t`Farming V1`)}
@@ -134,7 +134,7 @@ export default function Yield(): JSX.Element {
                   <li
                     className={sortOption === 'Hot' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('multiplier', 'desc')
+                      requestSort('hot', 'desc')
                       setSortOption('Hot')
                     }}
                   >
@@ -170,7 +170,7 @@ export default function Yield(): JSX.Element {
                   <li
                     className={sortOption === 'Liquidity' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('liquidity', 'desc')
+                      requestSort('tvl', 'desc')
                       setSortOption('Liquidity')
                     }}
                   >
