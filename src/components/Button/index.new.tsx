@@ -1,12 +1,25 @@
-import React from 'react'
-import { classNames } from '../../functions'
+import { classNames } from 'app/functions'
+import React, { FC, ReactNode } from 'react'
+
+import Dots from '../Dots'
+import Loader from '../Loader'
+
+export type ButtonColor = 'red' | 'blue' | 'pink' | 'purple' | 'gradient' | 'gray' | 'green'
+export type ButtonSize = 'xs' | 'sm' | 'lg' | 'default' | 'none'
+export type ButtonVariant = 'outlined' | 'filled' | 'empty' | 'link'
+
+const DIMENSIONS = {
+  xs: 'px-2 h-[28px] !border',
+  sm: 'px-3 h-[36px]',
+  md: 'px-4 h-[52px]',
+  lg: 'px-6 h-[60px]',
+}
 
 const SIZE = {
-  xs: 'px-2 py-1 text-xs',
-  sm: 'px-4 py-2 text-base',
-  default: 'px-4 py-3 text-base',
-  lg: 'px-6 py-4 text-base',
-  none: 'p-0 text-base',
+  xs: 'text-xs rounded',
+  sm: 'text-sm rounded',
+  md: 'rounded',
+  lg: 'text-lg rounded',
 }
 
 const FILLED = {
@@ -34,6 +47,13 @@ const OUTLINED = {
 const EMPTY = {
   default:
     'flex bg-transparent justify-center items-center disabled:opacity-50 disabled:cursor-auto bg-opacity-80 hover:bg-opacity-100',
+  // blue: 'text-blue',
+  // red: 'text-red',
+  // pink: 'text-pink',
+  // purple: 'text-purple',
+  // gray: 'text-higher-emphesis',
+  // gradient:
+  //   '!bg-gradient-to-r from-blue to-pink-600 hover:from-blue/80 hover:to-pink-600/80 focus:from-blue/80 focus:to-pink-600/80 active:from-blue/70 active:to-pink-600/70',
 }
 
 const LINK = {
@@ -48,44 +68,66 @@ const VARIANT = {
   link: LINK,
 }
 
-export type ButtonColor = 'blue' | 'pink' | 'gradient' | 'gray' | 'default' | 'red' | 'green'
-
-export type ButtonSize = 'xs' | 'sm' | 'lg' | 'default' | 'none'
-
-export type ButtonVariant = 'outlined' | 'filled' | 'empty' | 'link'
+type Button = React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>> & {
+  Dotted: FC<DottedButtonProps>
+}
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  startIcon?: ReactNode
+  endIcon?: ReactNode
   color?: ButtonColor
   size?: ButtonSize
   variant?: ButtonVariant
-  ref?: React.Ref<HTMLButtonElement>
+  fullWidth?: boolean
+  loading?: boolean
 }
 
-function Button({
-  children,
-  className = undefined,
-  color = 'default',
-  size = 'default',
-  variant = 'filled',
-  ...rest
-}: ButtonProps): JSX.Element {
-  return (
-    <button
-      className={classNames(
-        VARIANT[variant][color],
-        variant !== 'empty' && SIZE[size],
-        'rounded disabled:cursor-not-allowed focus:outline-none',
-        // 'rounded focus:outline-none focus:ring disabled:opacity-50 disabled:cursor-not-allowed font-medium',
-        className
-      )}
-      {...rest}
-    >
-      {children}
-    </button>
-  )
-}
-
-export default Button
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      className = '',
+      color = 'blue',
+      size = 'md',
+      variant = 'filled',
+      startIcon = undefined,
+      endIcon = undefined,
+      fullWidth = false,
+      loading,
+      ...rest
+    },
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        className={classNames(
+          VARIANT[variant]['default'],
+          // @ts-ignore TYPE NEEDS FIXING
+          VARIANT[variant][color],
+          // @ts-ignore TYPE NEEDS FIXING
+          SIZE[size],
+          // @ts-ignore TYPE NEEDS FIXING
+          variant !== 'empty' ? DIMENSIONS[size] : '',
+          fullWidth ? 'w-full' : '',
+          'font-bold flex items-center justify-center gap-1',
+          className
+        )}
+        {...rest}
+      >
+        {loading ? (
+          <Loader stroke="currentColor" />
+        ) : (
+          <>
+            {startIcon && startIcon}
+            {children}
+            {endIcon && endIcon}
+          </>
+        )}
+      </button>
+    )
+  }
+)
 
 export function ButtonConfirmed({
   confirmed,
@@ -117,8 +159,23 @@ export function ButtonError({
   disabled?: boolean
 } & ButtonProps) {
   if (error) {
-    return <Button color="red" size="lg" {...rest} />
+    return <Button color="red" size="lg" disabled={disabled} {...rest} />
   } else {
-    return <Button color={disabled ? 'gray' : 'blue'} disabled={disabled} size="lg" {...rest} />
+    return <Button color="gradient" disabled={disabled} size="lg" {...rest} />
   }
 }
+
+interface DottedButtonProps extends ButtonProps {
+  pending: boolean
+}
+
+export const ButtonDotted: FC<DottedButtonProps> = ({ pending, children, ...rest }) => {
+  const buttonText = pending ? <Dots>{children}</Dots> : children
+  return (
+    <Button {...rest} {...(pending && { disabled: true })}>
+      {buttonText}
+    </Button>
+  )
+}
+
+export default Button

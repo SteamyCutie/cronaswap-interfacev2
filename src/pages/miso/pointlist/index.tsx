@@ -23,7 +23,7 @@ const Pointlist = () => {
               variant="filled"
               size="sm"
               className="!rounded-full"
-              startIcon={<ChevronLeftIcon width={24} height={24} />}
+              // startIcon={<ChevronLeftIcon width={24} height={24} />}
             >
               <Link href={`/miso`}>{i18n._(t`All Auctions`)}</Link>
             </Button>

@@ -69,13 +69,13 @@ const WhitelistUploadField: FC<WhitelistUploadFieldProps> = ({ auction }) => {
         <div>
           <Button
             disabled={pending || wlAddresses.length === 0}
-            {...(pending && {
-              startIcon: (
-                <div className="w-5 h-5 mr-1">
-                  <Lottie animationData={loadingCircle} autoplay loop />
-                </div>
-              ),
-            })}
+            // {...(pending && {
+            //   startIcon: (
+            //     <div className="w-5 h-5 mr-1">
+            //       <Lottie animationData={loadingCircle} autoplay loop />
+            //     </div>
+            //   ),
+            // })}
             color="blue"
             onClick={handleUpdatePointList}
           >

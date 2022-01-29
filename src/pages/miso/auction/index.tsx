@@ -30,7 +30,7 @@ const Auction = () => {
               variant="outlined"
               size="sm"
               className="rounded-full !pl-2 !py-1.5"
-              startIcon={<ChevronLeftIcon width={24} height={24} />}
+              // startIcon={<ChevronLeftIcon width={24} height={24} />}
             >
               <Link href={`/miso`}>{i18n._(t`All Auctions`)}</Link>
             </Button>

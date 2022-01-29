@@ -28,7 +28,7 @@ const AuctionEditHeader: FC<AuctionEditHeaderProps> = ({ auction }) => {
               color="blue"
               variant="outlined"
               className="rounded-full !pl-2 !py-1.5"
-              startIcon={<ChevronLeftIcon width={24} height={24} />}
+              // startIcon={<ChevronLeftIcon width={24} height={24} />}
             >
               {i18n._(t`Back`)}
             </Button>

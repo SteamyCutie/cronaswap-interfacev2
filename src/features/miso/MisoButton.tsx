@@ -26,13 +26,13 @@ const MisoButton: FC<MisoButtonProps> = ({ auction, amount, children, error }) =
         size="lg"
         color="blue"
         onClick={approve}
-        {...(approvalState === ApprovalState.PENDING && {
-          startIcon: (
-            <div className="w-4 h-4 mr-1">
-              <Lottie animationData={LoadingCircle} autoplay loop />
-            </div>
-          ),
-        })}
+        // {...(approvalState === ApprovalState.PENDING && {
+        //   startIcon: (
+        //     <div className="w-4 h-4 mr-1">
+        //       <Lottie animationData={LoadingCircle} autoplay loop />
+        //     </div>
+        //   ),
+        // })}
       >
         {auction.status === AuctionStatus.FINISHED ? i18n._(t`Sale Finished`) : i18n._(t`Approve`)}
       </Button>

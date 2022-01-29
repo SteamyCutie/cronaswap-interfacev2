@@ -65,13 +65,13 @@ const AuctionClaimer: FC<AuctionClaimerProps> = ({ auction }) => {
           )}
         </div>
         <Button
-          {...(pending && {
-            startIcon: (
-              <div className="w-4 h-4 mr-1">
-                <Lottie animationData={loadingCircle} autoplay loop />
-              </div>
-            ),
-          })}
+          // {...(pending && {
+          //   startIcon: (
+          //     <div className="w-4 h-4 mr-1">
+          //       <Lottie animationData={loadingCircle} autoplay loop />
+          //     </div>
+          //   ),
+          // })}
           onClick={handleClick}
           disabled={(!auction.canWithdraw && !auction.canClaim) || pending}
           className={classNames(
