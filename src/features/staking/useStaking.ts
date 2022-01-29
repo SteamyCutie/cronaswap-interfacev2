@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useDashboardV1Contract } from 'app/hooks/useContract'
 import { getBalanceAmount } from 'functions/formatBalance'
-
+import { useCronaUsdcPrice } from '../farms/hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import { formatBalance } from 'app/functions'
 export function getAPY() {
   const aprToApy = (apr: number, compoundFrequency = 1, days = 365, performanceFee = 0) => {
     const daysAsDecimalOfYear = days / 365
@@ -29,4 +31,11 @@ export function getAPY() {
   getManualAPR()
   const apy = aprToApy(apr)
   return { manualAPY: apr, autoAPY: apy }
+}
+
+export function getCronaPrice() {
+  const cronaPriceInBigNumber = useCronaUsdcPrice()
+  console.log(formatBalance(cronaPriceInBigNumber ? cronaPriceInBigNumber : 0))
+  const cronaPrice = formatBalance(cronaPriceInBigNumber ? cronaPriceInBigNumber : 0)
+  return Number(cronaPrice)
 }

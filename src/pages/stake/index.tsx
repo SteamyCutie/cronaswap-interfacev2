@@ -29,7 +29,7 @@ import { formatBalance } from '../../functions/format'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getFullDisplayBalance } from 'functions/formatBalance'
-import { getAPY } from 'features/staking/useStaking'
+import { getAPY, getCronaPrice } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -229,9 +229,9 @@ export default function Stake() {
   }
 
   const { manualAPY, autoAPY } = getAPY()
+  const cronaPrice = getCronaPrice()
 
-  const cronaPriceInBigNumber = useCronaUsdcPrice()
-  const [results, setResults] = useState([0, 0, 0, 0, 0, 0])
+  const [results, setResults] = useState([0, 0, 0, 0, 0])
   const useCronaVault = async () => {
     const autocronaBounty = await cronavaultContract.calculateHarvestCronaRewards()
     const totalstaked = await cronavaultContract.balanceOf()
@@ -250,16 +250,8 @@ export default function Stake() {
     const autocronaBountyValue = getBalanceAmount(autocronaBounty._hex, 18).toNumber()
     const totalStakedValue = getBalanceAmount(totalstaked._hex, 18).toNumber()
     const tvlOfManualValue = getBalanceAmount(tvlOfManual.tvl._hex, 18).toNumber() - totalStakedValue
-    const cronaPrice = Number(formatBalance(cronaPriceInBigNumber))
     const withdrawFeePeriodValue = getBalanceAmount(withdrawFeePeriod._hex, 0).toNumber()
-    setResults([
-      autocronaBountyValue,
-      totalStakedValue,
-      cronaPrice,
-      withdrawFeePeriodValue,
-      recentProfit,
-      tvlOfManualValue,
-    ])
+    setResults([autocronaBountyValue, totalStakedValue, withdrawFeePeriodValue, recentProfit, tvlOfManualValue])
   }
   useCronaVault()
 
@@ -347,7 +339,7 @@ export default function Stake() {
             <div className="flex items-end justify-between">
               <div>
                 <div className="text-2xl text-white">{`${Number(results[0]).toFixed(3)}`}</div>
-                <div className="text-base text-light-blue">{`${Number(results[0] * results[2]).toFixed(3)}`} USD</div>
+                <div className="text-base text-light-blue">{`${Number(results[0] * cronaPrice).toFixed(3)}`} USD</div>
               </div>
               <div className="w-1/4">
                 <Button
@@ -513,13 +505,13 @@ export default function Stake() {
               <div className="grid grid-rows-2 px-3 gap-y-2 md:px-8">
                 <div className="flex justify-between text-base">
                   <p className="text-dark-650">Recent CRONA profit</p>
-                  <p className="font-bold text-right text-aqua-pearl">{`${Number(results[4].toFixed(2))}`}</p>
+                  <p className="font-bold text-right text-aqua-pearl">{`${Number(results[3].toFixed(2))}`}</p>
                 </div>
                 <div className="flex justify-between text-base">
                   <p className="text-dark-650">0.1% unstakng fee until</p>
                   <p className="font-bold text-right text-aqua-pearl">
-                    {`${Number(results[3]) / 86400}`}d: {`${(Number(results[3]) / 1440) % 60}`}h :{' '}
-                    {`${Number(results[3]) % 60}`}m
+                    {`${Number(results[2]) / 86400}`}d: {`${(Number(results[2]) / 1440) % 60}`}h :{' '}
+                    {`${Number(results[2]) % 60}`}m
                   </p>
                 </div>
               </div>
@@ -726,7 +718,7 @@ export default function Stake() {
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">Total staked</p>
-                <p className="font-bold text-right text-high-emphesis">{`${Number(results[5]).toFixed(0)}`} CRONA</p>
+                <p className="font-bold text-right text-high-emphesis">{`${Number(results[4]).toFixed(0)}`} CRONA</p>
               </div>
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">SEE Token Info</p>

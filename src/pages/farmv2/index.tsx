@@ -84,7 +84,7 @@ export default function FarmsV2(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
-        {/* <div className="flex-row space-y-2 md:flex justify-between items-center w-full p-4 rounded bg-cyan-blue bg-opacity-20">
+        {/* <div className="flex-row items-center justify-between w-full p-4 space-y-2 rounded md:flex bg-cyan-blue bg-opacity-20">
           <div className="space-y-2 md:block">
             <Typography variant="h2" className="text-high-emphesis" weight={700}>
               {i18n._(t`Farming V2`)}
@@ -106,9 +106,9 @@ export default function FarmsV2(): JSX.Element {
           </div>
         </div> */}
 
-        <div className="flex-row space-y-2 md:flex justify-between items-center w-full px-8 py-6 rounded bg-cyan-blue bg-opacity-20">
-          <div className="w-8/12 gap-y-10 space-y-2">
-            <Typography variant="h2" className="text-high-emphesis mb-2" weight={700}>
+        <div className="flex-row items-center justify-between w-full px-8 py-6 space-y-2 rounded md:flex bg-cyan-blue bg-opacity-20">
+          <div className="w-8/12 space-y-2 gap-y-10">
+            <Typography variant="h2" className="mb-2 text-high-emphesis" weight={700}>
               {i18n._(t`Farming V2`)}
             </Typography>
             <Typography variant="sm" weight={400}>
@@ -118,14 +118,14 @@ export default function FarmsV2(): JSX.Element {
               {i18n._(t`FarmsV2 - TVL: ${formatNumberScale(totalTvlInUSD, true)}`)}
             </Typography>
             <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
-              <div className="flex items-center mt-2 gap-2 text-sm font-bold font-Poppins">
+              <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply for Farm Listing`)}</div>
                 <ArrowRightIcon height={14} className="" />
               </div>
             </a>
           </div>
 
-          <div className="w-4/12 px-2 py-4 m-auto rounded-lg  md:px-6 bg-cyan-blue bg-opacity-30">
+          <div className="w-4/12 px-2 py-4 m-auto rounded-lg md:px-6 bg-cyan-blue bg-opacity-30">
             <div className="text-lg font-bold text-white">{i18n._(t`CRONA To Harvest`)}</div>
             <div className="flex items-center justify-between space-x-10">
               <div>
@@ -232,7 +232,7 @@ export default function FarmsV2(): JSX.Element {
                   <li
                     className={sortOption === 'Liquidity' ? 'hidden' : 'w-full'}
                     onClick={() => {
-                      requestSort('liquidity', 'desc')
+                      requestSort('tvl', 'desc')
                       setSortOption('Liquidity')
                     }}
                   >
