@@ -516,7 +516,7 @@ export default function Stake() {
                 </div>
               </div>
             </div>
-            <div className="grid grid-rows-4 px-3 mt-6 py-6 border-t-[1px] border-gray-500 gap-y-2 md:px-8">
+            <div className="grid grid-rows-4 px-3 mt-6 py-6 border-t-[1px] border-dark-800 gap-y-2 md:px-8">
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">APY</p>
                 <p className="font-bold text-right text-high-emphesis">
@@ -705,7 +705,7 @@ export default function Stake() {
                 </Button>
               </div>
             </div>
-            <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-gray-500 gap-y-2 md:px-8">
+            <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-dark-800 gap-y-2 md:px-8">
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">APY</p>
                 <p className="font-bold text-right text-high-emphesis">
