@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useDashboardV1Contract } from 'app/hooks/useContract'
-import { getBalanceAmount } from 'functions/formatBalance'
+import { getBalanceAmount, getBalanceNumber, getDecimalAmount, getFullDisplayBalance } from 'functions/formatBalance'
 import { useCronaUsdcPrice } from '../farms/hooks'
-import { BigNumber } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
 import { formatBalance } from 'app/functions'
+
 export function getAPY() {
   const aprToApy = (apr: number, compoundFrequency = 1, days = 365, performanceFee = 0) => {
     const daysAsDecimalOfYear = days / 365
@@ -38,4 +39,18 @@ export function getCronaPrice() {
   console.log(formatBalance(cronaPriceInBigNumber ? cronaPriceInBigNumber : 0))
   const cronaPrice = formatBalance(cronaPriceInBigNumber ? cronaPriceInBigNumber : 0)
   return Number(cronaPrice)
+}
+
+export function convertSharesToCrona(
+  shares: BigNumber,
+  cronaPerFullShare: BigNumber,
+  decimals = 18,
+  decimalsToRound = 3
+) {
+  const sharePriceNumber = getBalanceNumber(cronaPerFullShare, decimals)
+  const amountInCrona = new BigNumber(shares.multipliedBy(sharePriceNumber))
+  const cronaAsNumberBalance = getBalanceNumber(amountInCrona, decimals)
+  const cronaAsBigNumber = getDecimalAmount(new BigNumber(cronaAsNumberBalance), decimals)
+  const cronaAsDisplayBalance = getFullDisplayBalance(amountInCrona, decimals, decimalsToRound)
+  return { cronaAsNumberBalance, cronaAsBigNumber, cronaAsDisplayBalance }
 }

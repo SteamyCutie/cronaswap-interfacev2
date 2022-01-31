@@ -1,8 +1,7 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { MASTERCHEF_ADDRESS, BAR_ADDRESS, ZERO, NATIVE } from '@cronaswap/core-sdk'
+import { MASTERCHEF_ADDRESS, ZERO, NATIVE } from '@cronaswap/core-sdk'
 import React, { useState } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
-import { useCronaUsdcPrice } from '../../features/farms/hooks'
 import BigNumber from 'bignumber.js'
 import Button from '../../components/Button'
 import Container from '../../components/Container'
@@ -21,15 +20,13 @@ import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
 import { useMasterChefContract, useDashboardV1Contract, useCronaVaultContract } from 'hooks/useContract'
-import { getBalanceAmount } from 'functions/formatBalance'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import DoubleLogo from '../../components/DoubleLogo'
 import { useGasPrice } from 'state/user/hooks'
-import { formatBalance } from '../../functions/format'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { getDecimalAmount, getBalanceNumber, getFullDisplayBalance } from 'functions/formatBalance'
-import { getAPY, getCronaPrice } from 'features/staking/useStaking'
+import { getDecimalAmount, getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
+import { getAPY, getCronaPrice, convertSharesToCrona } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -59,15 +56,6 @@ const buttonStyleDisabled = `${buttonStyle} text-secondary bg-dark-700`
 const buttonStyleConnectWallet = `${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`
 
 const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matthewlilley/bar', query)
-
-const convertSharesToCrona = (shares: BigNumber, cronaPerFullShare: BigNumber, decimals = 18, decimalsToRound = 3) => {
-  const sharePriceNumber = getBalanceNumber(cronaPerFullShare, decimals)
-  const amountInCrona = new BigNumber(shares.multipliedBy(sharePriceNumber))
-  const cronaAsNumberBalance = getBalanceNumber(amountInCrona, decimals)
-  const cronaAsBigNumber = getDecimalAmount(new BigNumber(cronaAsNumberBalance), decimals)
-  const cronaAsDisplayBalance = getFullDisplayBalance(amountInCrona, decimals, decimalsToRound)
-  return { cronaAsNumberBalance, cronaAsBigNumber, cronaAsDisplayBalance }
-}
 
 export default function Stake() {
   const { i18n } = useLingui()
@@ -122,20 +110,6 @@ export default function Stake() {
     }
   }
 
-  // const handleClickMax = () => {
-  //   setInput(parsedAmount ? parsedAmount.toSignificant(balance.currency.decimals).substring(0, INPUT_CHAR_LIMIT) : '')
-  //   setUsingBalance(true)
-  // }
-
-  // const handleClickMaxAuto = () => {
-  //   setInputAuto(
-  //     parsedAmountAuto
-  //       ? parsedAmountAuto.toSignificant(balanceAuto.currency.decimals).substring(0, INPUT_CHAR_LIMIT)
-  //       : ''
-  //   )
-  //   setUsingBalanceAuto(true)
-  // }
-
   const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount?.greaterThan(balance)
   const insufficientFundsAuto = (balanceAuto && balanceAuto.equalTo(ZERO)) || parsedAmountAuto?.greaterThan(balanceAuto)
 
@@ -149,7 +123,6 @@ export default function Stake() {
   const buttonDisabledAuto = !inputAuto || pendingTxAuto || (parsedAmountAuto && parsedAmountAuto.equalTo(ZERO))
 
   const handleClickButton = async () => {
-    //todo
     if (buttonDisabled) return
 
     if (!walletConnected) {
@@ -162,21 +135,18 @@ export default function Stake() {
           const success = await sendTx(() => approve())
           if (!success) {
             setPendingTx(false)
-            // setModalOpen(true)
             return
           }
         }
         const success = await sendTx(() => enterStaking(parsedAmount))
         if (!success) {
           setPendingTx(false)
-          // setModalOpen(true)
           return
         }
       } else if (activeTab === 1) {
         const success = await sendTx(() => leaveStaking(parsedAmount))
         if (!success) {
           setPendingTx(false)
-          // setModalOpen(true)
           return
         }
       }
@@ -204,8 +174,6 @@ export default function Stake() {
             summary: `${i18n._(t`Stake`)} CRONA`,
           })
           setPendingTxAuto(false)
-          // onDismiss()
-          // dispatch(fetchCronaVaultUserData({ account }))
         } catch (error) {
           setPendingTxAuto(false)
         }
@@ -219,8 +187,6 @@ export default function Stake() {
             summary: `${i18n._(t`Unstake`)} CRONA`,
           })
           setPendingTxAuto(false)
-          // onDismiss()
-          // dispatch(fetchCronaVaultUserData({ account }))
         } catch (error) {
           setPendingTxAuto(false)
         }
@@ -449,7 +415,6 @@ export default function Stake() {
                     <div className="flex items-center text-sm text-secondary md:text-base">
                       <button
                         className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
-                        // onClick={handleClickMaxAuto}
                         onClick={() => {
                           if (!balanceAuto.equalTo(ZERO)) {
                             setInputAuto(balanceAuto?.toSignificant(balanceAuto.currency.decimals))
@@ -520,7 +485,6 @@ export default function Stake() {
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">APY</p>
                 <p className="font-bold text-right text-high-emphesis">
-                  {/* {`${aprToApy(manualAPY) ? aprToApy(manualAPY).toFixed(2) + '%' : i18n._(t`Loading...`)}`} */}
                   {`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
                 </p>
               </div>
@@ -633,14 +597,12 @@ export default function Stake() {
                           input ? 'text-high-emphesis' : 'text-secondary'
                         }`}
                       >
-                        {/* {`${input ? Number(input).toFixed(4) : '0.0'} ${activeTab === 0 ? '' : 'x'}CRONA`} */}
                         {`${input ? input : '0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
                       </p>
                     </div>
                     <div className="flex items-center text-sm text-secondary md:text-base">
                       <button
                         className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
-                        // onClick={handleClickMax}
                         onClick={() => {
                           if (!balance.equalTo(ZERO)) {
                             setInput(balance?.toSignificant(balance.currency.decimals))

@@ -131,11 +131,11 @@ export default function Ifo(): JSX.Element {
 
         {/* ifo body */}
         <div className="flex flex-row justify-between gap-4">
-          <div className="bg-dark-900 rounded w-full">
+          <div className="w-full rounded bg-dark-900">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {/* Base sale */}
-              <div className="md:mt-4 md:mb-4 md:ml-4 rounded-lg bg-dark-800 space-y-6">
-                <div className="flex flex-row item-center justify-between p-6 rounded-t bg-dark-600">
+              <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 md:ml-4 bg-dark-800">
+                <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
                   <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
                     Base Sale
                     <QuestionHelper text="Every person can only commit a limited amount, but may expect a higher return per token committed." />
@@ -150,12 +150,12 @@ export default function Ifo(): JSX.Element {
                     <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
                       750000 CROSS
                     </div>
-                    <div className="text-sm leading-5 font-bold text-secondary">30% of total sale</div>
+                    <div className="text-sm font-bold leading-5 text-secondary">30% of total sale</div>
                   </div>
                 </div>
 
                 {/* input */}
-                <div className="col-span-2 text-center md:col-span-1  px-4">
+                <div className="col-span-2 px-4 text-center md:col-span-1">
                   <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                     {i18n._(t`Wallet Balance`)}: 182.99
                   </div>
@@ -183,27 +183,27 @@ export default function Ifo(): JSX.Element {
                 {/* info */}
                 <div className="flex flex-col flex-grow px-4 pb-4 space-y-2">
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Your committed:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">$91.09</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Your committed:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">$91.09</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Total committed:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">~$261,951 (173.32%)</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Total committed:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">~$261,951 (173.32%)</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">$150,000</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Funds to raise:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">$150,000</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Price per CROSS:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">$0.2</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Price per CROSS:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">$0.2</div>
                   </div>
                 </div>
               </div>
 
               {/* Unlimited Sale */}
-              <div className="md:mt-4 md:mb-4 rounded-lg bg-dark-800 space-y-6">
-                <div className="flex flex-row item-center justify-between p-6 rounded-t bg-dark-600">
+              <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 bg-dark-800">
+                <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
                   <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
                     Unlimited Sale
                     <QuestionHelper text="Every person can only commit a limited amount, but may expect a higher return per token committed." />
@@ -218,12 +218,12 @@ export default function Ifo(): JSX.Element {
                     <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
                       750000 CROSS
                     </div>
-                    <div className="text-sm leading-5 font-bold text-secondary">30% of total sale</div>
+                    <div className="text-sm font-bold leading-5 text-secondary">30% of total sale</div>
                   </div>
                 </div>
 
                 {/* input */}
-                <div className="col-span-2 text-center md:col-span-1  px-4">
+                <div className="col-span-2 px-4 text-center md:col-span-1">
                   <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                     {i18n._(t`Wallet Balance`)}: 182.99
                   </div>
@@ -251,40 +251,41 @@ export default function Ifo(): JSX.Element {
                 {/* info */}
                 <div className="flex flex-col flex-grow px-4 pb-4 space-y-2">
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Your committed:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">$91.09</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Your committed:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">$91.09</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Additional fee:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">1%</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Additional fee:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">1%</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Total committed:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">~$261,951 (173.32%)</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Total committed:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">~$261,951 (173.32%)</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">$150,000</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Funds to raise:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">$150,000</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Price per CROSS:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">$0.2</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Price per CROSS:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">$0.2</div>
                   </div>
                   <div className="flex justify-between gap-0.5">
-                    <div className="text-xs leading-4 font-medium currentColor">Price per CROSS with fee:</div>
-                    <div className="text-xs leading-4 font-medium text-high-emphesis">~$0.21</div>
+                    <div className="text-xs font-medium leading-4 currentColor">Price per CROSS with fee:</div>
+                    <div className="text-xs font-medium leading-4 text-high-emphesis">~$0.21</div>
                   </div>
                 </div>
               </div>
 
-              <div className="relative flex flex-col px-4 pt-8 space-y-8 rounded-r  bg-dark-800">
+              {/* Introduction */}
+              <div className="relative flex flex-col px-4 pt-8 space-y-8 rounded-r bg-dark-800">
                 <div className="absolute inset-0 opacity-50 filter saturate-0 ">
-                  <Image src="/images/ifo/ifo-bg.png" className="w-full object-cover" layout="fill" />
+                  <Image src="/images/ifo/ifo-bg.png" className="object-cover w-full" layout="fill" />
                 </div>
                 <div className="mx-auto">
                   <Image src="/images/ifo/crona.png" alt="CronaSwap" width="285px" height="55px" />
                 </div>
-                <div className="flex mx-auto gap-1 text-high-emphesis mt-10">
+                <div className="flex gap-1 mx-auto mt-10 text-high-emphesis">
                   <div className="flex items-baseline gap-1">
                     <div className="text-[32px] leading-4 font-medium">00D</div>
                     <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
@@ -309,7 +310,7 @@ export default function Ifo(): JSX.Element {
                     transaction fees (0.25%). You can swap CRC-20 tokens easily on the Cronos Chain network that
                     guarantees superior speed and much lower network transaction costs.
                   </div>
-                  <div className="flex gap-4 items-center pb-4">
+                  <div className="flex items-center gap-4 pb-4">
                     <a href="https://twitter.com/cronaswap" target="_blank" rel="noreferrer">
                       <TwitterIcon width={16} className="text-low-emphesis" />
                     </a>
@@ -333,13 +334,13 @@ export default function Ifo(): JSX.Element {
         </div>
 
         {/* faq */}
-        <div className="mx-auto py-6 px-4 sm:py-8 sm:px-6 lg:px-8 bg-dark-900 rounded">
+        <div className="px-4 py-6 mx-auto rounded sm:py-8 sm:px-6 lg:px-8 bg-dark-900">
           {/* step */}
-          <h2 className="text-center text-3xl font-extrabold text-high-emphesis sm:text-4xl mb-8">How to take part</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-cols-max mb-8">
+          <h2 className="mb-8 text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">How to take part</h2>
+          <div className="grid grid-cols-1 gap-4 mb-8 md:grid-cols-3 auto-cols-max">
             <div className="p-4 rounded-lg bg-dark-800">
               <h1 className="text-lg">1. Get CRONA-CRO LP</h1>
-              <h2 className="text-sm flex flex-row items-center">
+              <h2 className="flex flex-row items-center text-sm">
                 Stake CRONA and CRO in the liquidity pool to get LP tokens. You’ll spend them to buy IFO sale tokens
               </h2>
               <Button className="mt-2" size="sm" color="gradient">
@@ -348,14 +349,14 @@ export default function Ifo(): JSX.Element {
             </div>
             <div className="p-4 rounded-lg bg-dark-800">
               <h1 className="text-lg">2. Commit LP Tokens</h1>
-              <h2 className="text-sm flex flex-row items-center">
+              <h2 className="flex flex-row items-center text-sm">
                 When the IFO sales are live, you can “commit” your LP tokens to buy the tokens being sold. We recommend
                 committing to the Basic Sale first, but you can do both if you like.
               </h2>
             </div>
             <div className="p-4 rounded-lg bg-dark-800">
               <h1 className="text-lg">3. Claim Your Tokens</h1>
-              <h2 className="text-sm flex flex-row items-center">
+              <h2 className="flex flex-row items-center text-sm">
                 After the IFO sales finish, you can claim any IFO tokens that you bought, and any unspent CRONA LP
                 tokens will be returned to your wallet.
               </h2>
@@ -363,7 +364,7 @@ export default function Ifo(): JSX.Element {
           </div>
 
           <div className="mx-auto divide-y-2 divide-dark-800">
-            <h2 className="text-center text-3xl font-extrabold text-high-emphesis sm:text-4xl">
+            <h2 className="text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">
               Frequently Asked Questions
             </h2>
             <dl className="mt-6 space-y-6 divide-y-2 divide-dark-800">
@@ -372,9 +373,9 @@ export default function Ifo(): JSX.Element {
                   {({ open }) => (
                     <>
                       <dt className="text-lg">
-                        <Disclosure.Button className="text-left w-full flex justify-between items-start text-gray-600">
+                        <Disclosure.Button className="flex items-start justify-between w-full text-left text-gray-600">
                           <span className="font-medium text-white">{faq.question}</span>
-                          <span className="ml-6 h-7 flex items-center">
+                          <span className="flex items-center ml-6 h-7">
                             <ChevronDownIcon
                               className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-6 w-6 transform')}
                               aria-hidden="true"
@@ -382,7 +383,7 @@ export default function Ifo(): JSX.Element {
                           </span>
                         </Disclosure.Button>
                       </dt>
-                      <Disclosure.Panel as="dd" className="mt-2 pr-12">
+                      <Disclosure.Panel as="dd" className="pr-12 mt-2">
                         <p className="text-base text-gray-400">{faq.answer}</p>
                       </Disclosure.Panel>
                     </>
