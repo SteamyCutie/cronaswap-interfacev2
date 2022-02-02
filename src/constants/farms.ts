@@ -24,6 +24,7 @@ type AddressMap = {
   }
 }
 
+// For MasterChefV1
 export const FARMS: AddressMap = {
   [ChainId.CRONOS]: {
     // '0xadbd1231fb360047525bedf962581f3eee7b49fe': {
@@ -360,6 +361,7 @@ export const FARMS: AddressMap = {
   },
 }
 
+// For MasterChefV2
 export const FARMSV2: AddressMap = {
   [ChainId.CRONOS]: {
     // '0xadbd1231fb360047525bedf962581f3eee7b49fe': {

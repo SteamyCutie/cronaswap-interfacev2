@@ -1,10 +1,11 @@
 import { CurrencyAmount, Token } from '@cronaswap/core-sdk'
-import { useVotingEscrowContract } from 'app/hooks/useContract'
+import { useRewardPoolContract, useVotingEscrowContract } from 'app/hooks/useContract'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { useCallback } from 'react'
 
 export default function useVotingEscrow() {
   const addTransaction = useTransactionAdder()
+  const reward = useRewardPoolContract()
   const contract = useVotingEscrowContract()
 
   // createLockWithMc
@@ -60,5 +61,31 @@ export default function useVotingEscrow() {
     [addTransaction, contract]
   )
 
-  return { createLockWithMc, increaseAmountWithMc, increaseUnlockTimeWithMc, withdrawWithMc }
+  // getReward
+  const claimRewards = useCallback(async () => {
+    try {
+      const tx = await reward?.getReward()
+      return addTransaction(tx, { summary: 'Claim CRONA Rewards' })
+    } catch (e) {
+      return e
+    }
+  }, [addTransaction, reward])
+
+  const claimHarvestRewards = useCallback(async () => {
+    try {
+      const tx = await reward?.harvest()
+      return addTransaction(tx, { summary: 'Auto Boost Rewards' })
+    } catch (e) {
+      return e
+    }
+  }, [addTransaction, reward])
+
+  return {
+    claimRewards,
+    claimHarvestRewards,
+    createLockWithMc,
+    increaseAmountWithMc,
+    increaseUnlockTimeWithMc,
+    withdrawWithMc,
+  }
 }

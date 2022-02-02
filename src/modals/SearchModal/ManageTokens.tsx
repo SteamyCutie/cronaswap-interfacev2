@@ -81,7 +81,7 @@ function ManageTokens({
           id="token-search-input"
           type="text"
           placeholder={'0x0000'}
-          className="w-full bg-dark-900 border border-dark-800 focus:border-transparent focus:border-gradient-r-blue-pink-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5 appearance-none"
+          className="w-full bg-dark-900 border border-dark-800 focus:border-transparent focus:border-gradient-r-blue-red-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5 appearance-none"
           value={searchQuery}
           autoComplete="off"
           onChange={handleInput}

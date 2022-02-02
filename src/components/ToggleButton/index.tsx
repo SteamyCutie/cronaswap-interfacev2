@@ -8,7 +8,7 @@ const FILLED = {
   group: 'border border-dark-800 rounded p-0.5 bg-dark-900',
   option: {
     // @ts-ignore TYPE NEEDS FIXING
-    checked: (checked) => (checked ? 'border-transparent border-gradient-r-blue-pink-dark-900' : 'border-transparent'),
+    checked: (checked) => (checked ? 'border-transparent border-gradient-r-blue-red-dark-900' : 'border-transparent'),
     default: 'py-1 rounded-lg border',
   },
 }

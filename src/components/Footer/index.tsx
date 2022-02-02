@@ -28,7 +28,6 @@ const Footer = () => {
     ],
     business: [
       { name: `${i18n._(t`Contact Us`)}`, href: 'mailto:chef@cronaswap.org' },
-      { name: `${i18n._(t`Contact Us`)}`, href: 'mailto:chef@cronaswap.org' },
       { name: `${i18n._(t`Token Listing`)}`, href: 'https://github.com/cronaswap/default-token-list' },
       { name: `${i18n._(t`Apply For Farm/IFO`)}`, href: 'https://forms.gle/6QpGGpFZhkFhGCqg8' },
     ],

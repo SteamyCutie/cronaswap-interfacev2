@@ -5,7 +5,7 @@ import { currencyId, unwrappedToken } from '../../functions/currency'
 import { AutoColumn } from '../Column'
 import { BIG_INT_ZERO } from '../../constants'
 import Button from '../Button'
-import { CurrencyLogo } from '../CurrencyLogo'
+import { CurrencyLogo, CurrencyLogoArray } from '../CurrencyLogo'
 import Dots from '../Dots'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { Transition } from '@headlessui/react'
@@ -162,7 +162,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         onClick={() => setShowMore(!showMore)}
       >
         <div className="flex items-center space-x-4">
-          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={40} />
+          {/* <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={40} /> */}
+          <CurrencyLogoArray currencies={[currency0, currency1]} dense size={40} />
+
           <div className="text-xl font-semibold">
             {!currency0 || !currency1 ? <Dots>{i18n._(t`Loading`)}</Dots> : `${currency0.symbol}/${currency1.symbol}`}
           </div>

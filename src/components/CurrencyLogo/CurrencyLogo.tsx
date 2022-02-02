@@ -28,8 +28,7 @@ export function getCurrencyLogoUrls(currency) {
   return urls
 }
 
-const CronosLogo =
-  'https://raw.githubusercontent.com/cronaswap/default-token-list/b0561b60b55a274d8cca9abd3388ac97136f8542/assets/icons/network/cronos.svg'
+const CronosLogo = 'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/icons/network/cronos.png'
 
 const LOGO: { readonly [chainId in ChainId]?: string } = {
   [ChainId.ETHEREUM]: CronosLogo,

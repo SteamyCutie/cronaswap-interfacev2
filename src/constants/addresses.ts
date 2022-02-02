@@ -2,9 +2,19 @@ import { ChainId } from '@cronaswap/core-sdk'
 
 type AddressMap = { [chainId: number]: string }
 
+export const MASTERCHEFV1_ADDRESS: AddressMap = {
+  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS_TESTNET]: '0x240eD990dCa86663e88a42d978C60cd21bF0c584',
+}
+
 export const MASTERCHEFV2_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '',
-  [ChainId.CRONOS_TESTNET]: '0x4E88d01e22437F99d9E9313C40306700b214132C',
+  [ChainId.CRONOS_TESTNET]: '0xc0DcE9B04f81110a59FDe09CAe2B59F17fe86B18',
+}
+
+export const REWARD_POOL_ADDRESS: AddressMap = {
+  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS_TESTNET]: '0x0794328a04b6301aD1D37aE504c0a26816539244',
 }
 
 export const DASHBOARDV1_ADDRESS: AddressMap = {
@@ -14,12 +24,12 @@ export const DASHBOARDV1_ADDRESS: AddressMap = {
 
 export const DASHBOARDV2_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '',
-  [ChainId.CRONOS_TESTNET]: '0x7333Ec605ef964b5cF521cB32177c93A53895b31',
+  [ChainId.CRONOS_TESTNET]: '0x5f9484170d0AB6d143123f394dCA64547CE5e6aA',
 }
 
 export const VOTING_ESCROW_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '',
-  [ChainId.CRONOS_TESTNET]: '0x6C7F30a34C744a9Effd94CDfFEE1E03569188a05',
+  [ChainId.CRONOS_TESTNET]: '0xBDa1Df2D716defA785789cb33399624E6A023ac1',
 }
 
 // Seed / Private / Public Sale

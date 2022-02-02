@@ -13,13 +13,12 @@ import Input from '../../components/Input'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { classNames, formatBalance, formatNumber, formatNumberScale, formatPercent } from '../../functions'
+import { classNames, formatBalance, formatNumber, formatPercent } from '../../functions'
 import { VOTING_ESCROW_ADDRESS } from '../../constants/addresses'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import useVotingEscrow from 'app/features/boost/useVotingEscrow'
 import { format, addDays, getUnixTime } from 'date-fns'
 import { useLockedBalance } from 'app/features/boost/hook'
-import { getFullDisplayBalance } from 'app/functions/formatBalance'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { useTokenInfo } from 'app/features/farms/hooks'
 import { useCronaContract } from 'app/hooks/useContract'
@@ -55,11 +54,18 @@ export default function Boost() {
 
   const cronaInfo = useTokenInfo(useCronaContract())
 
-  const { lockAmount, lockEnd, veCrona, cronaSupply, veCronaSupply } = useLockedBalance()
+  const { rewards, harvestRewards, lockAmount, lockEnd, veCrona, cronaSupply, veCronaSupply } = useLockedBalance()
 
   const { autoAPY } = getAPY()
 
-  const { createLockWithMc, increaseAmountWithMc, increaseUnlockTimeWithMc, withdrawWithMc } = useVotingEscrow()
+  const {
+    claimRewards,
+    claimHarvestRewards,
+    createLockWithMc,
+    increaseAmountWithMc,
+    increaseUnlockTimeWithMc,
+    withdrawWithMc,
+  } = useVotingEscrow()
 
   const WEEK = 7 * 86400
 
@@ -178,6 +184,26 @@ export default function Boost() {
       setPendingTx(true)
 
       const success = await sendTx(() => withdrawWithMc())
+
+      if (!success) {
+        setPendingTx(false)
+        // setModalOpen(true)
+        return
+      }
+
+      handleInput('')
+      setPendingTx(false)
+    }
+  }
+
+  // claim rewards
+  const handleClaimRewards = async (ctype: String) => {
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      const success = await sendTx(() => (ctype === 'claim' ? claimRewards() : claimHarvestRewards()))
 
       if (!success) {
         setPendingTx(false)
@@ -463,6 +489,29 @@ export default function Boost() {
                 ) : (
                   <></>
                 )}
+
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-2 mt-2">
+                  {/* rewards */}
+                  {Number(rewards) > 0 ? (
+                    <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('claim')}>
+                      {!walletConnected
+                        ? i18n._(t`Connect Wallet`)
+                        : i18n._(t`Claim Boost Rewards (${formatNumber(rewards?.toFixed(18))})`)}
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+
+                  {Number(harvestRewards) > 0 ? (
+                    <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('harvest')}>
+                      {!walletConnected
+                        ? i18n._(t`Connect Wallet`)
+                        : i18n._(t`Auto Boost Bounty (${formatNumber(harvestRewards?.toFixed(18))})`)}
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
           </div>

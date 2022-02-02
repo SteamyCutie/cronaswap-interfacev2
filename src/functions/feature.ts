@@ -37,7 +37,7 @@ const features = {
     Feature.FARMV2,
     Feature.ZAP,
     // Feature.LENDING,
-    Feature.IFO,
+    // Feature.IFO,
     Feature.MISO,
     Feature.STAKING,
     Feature.BOOST,

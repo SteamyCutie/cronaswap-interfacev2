@@ -61,6 +61,7 @@ import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
 import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
 import DASHBOARD_ABIV1 from '../constants/abis/dashboardv1.json'
 import DASHBOARD_ABIV2 from '../constants/abis/dashboardv2.json'
+import REWARD_POOL_ABI from '../constants/abis/rewardpool.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
 import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
@@ -81,6 +82,7 @@ import {
   SEED_SALE_ADDRESS,
   VOTING_ESCROW_ADDRESS,
   CRONAVAULT_ADDRESS,
+  REWARD_POOL_ADDRESS,
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -272,6 +274,11 @@ export function useDashboardV1Contract(withSignerIfPossible?: boolean): Contract
 export function useDashboardV2Contract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(DASHBOARDV2_ADDRESS[chainId], DASHBOARD_ABIV2, withSignerIfPossible)
+}
+
+export function useRewardPoolContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(REWARD_POOL_ADDRESS[chainId], REWARD_POOL_ABI, withSignerIfPossible)
 }
 
 export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
