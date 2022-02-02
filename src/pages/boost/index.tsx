@@ -23,6 +23,7 @@ import { getFullDisplayBalance } from 'app/functions/formatBalance'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { useTokenInfo } from 'app/features/farms/hooks'
 import { useCronaContract } from 'app/hooks/useContract'
+import { getAPY } from 'app/features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -55,6 +56,8 @@ export default function Boost() {
   const cronaInfo = useTokenInfo(useCronaContract())
 
   const { lockAmount, lockEnd, veCrona, cronaSupply, veCronaSupply } = useLockedBalance()
+
+  const { autoAPY } = getAPY()
 
   const { createLockWithMc, increaseAmountWithMc, increaseUnlockTimeWithMc, withdrawWithMc } = useVotingEscrow()
 
@@ -211,7 +214,7 @@ export default function Boost() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-cols-max">
               <div className="p-4 rounded-lg bg-dark-800">
-                <h1 className="text-lg">{formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)}%</h1>
+                <h1 className="text-lg">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
                 <h2 className="text-sm flex flex-row items-center">
                   veCRONA APY <QuestionHelper text="The reward apy of lock CRONA." />
                 </h2>
