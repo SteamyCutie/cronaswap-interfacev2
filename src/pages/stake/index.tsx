@@ -10,7 +10,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Input from '../../components/Input'
 import TransactionFailedModal from '../../modals/TransactionFailedModal'
-import { request } from 'graphql-request'
 import { t } from '@lingui/macro'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React } from '../../services/web3'
@@ -19,7 +18,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames } from '../../functions'
-import { useMasterChefContract, useDashboardV1Contract, useCronaVaultContract } from 'hooks/useContract'
+import { useCronaVaultContract, useDashboardV1Contract, useMasterChefContract } from 'hooks/useContract'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import DoubleLogo from '../../components/DoubleLogo'
 import { useGasPrice } from 'state/user/hooks'
@@ -54,8 +53,6 @@ const buttonStyleEnabled = `${buttonStyle} text-high-emphesis bg-cyan-blue hover
 const buttonStyleInsufficientFunds = `${buttonStyleEnabled} opacity-60`
 const buttonStyleDisabled = `${buttonStyle} text-secondary bg-dark-700`
 const buttonStyleConnectWallet = `${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`
-
-const fetcher = (query) => request('https://api.thegraph.com/subgraphs/name/matthewlilley/bar', query)
 
 export default function Stake() {
   const { i18n } = useLingui()
@@ -431,7 +428,8 @@ export default function Stake() {
                 {(approvalStateAuto === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
                 activeTabAuto === 0 ? (
                   <Button
-                    className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
+                    color="gradient"
+                    className={`${buttonStyle} text-high-emphesis`}
                     disabled={approvalStateAuto === ApprovalState.PENDING}
                     onClick={approveAuto}
                   >
@@ -619,7 +617,8 @@ export default function Stake() {
                 {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
                 activeTab === 0 ? (
                   <Button
-                    className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`}
+                    color="gradient"
+                    className={`${buttonStyle} text-high-emphesis`}
                     disabled={approvalState === ApprovalState.PENDING}
                     onClick={approve}
                   >
@@ -655,6 +654,7 @@ export default function Stake() {
                   </button>
                 )}
                 <Button
+                  color="gradient"
                   className={activeTab ? buttonStyleDisabled : buttonStyleEnabled}
                   onClick={handleHarvestFarm}
                   disabled={activeTab !== 0}

@@ -25,7 +25,6 @@ import { ethers } from 'ethers'
 import Loader from '../../components/Loader'
 import { useWeb3React } from '@web3-react/core'
 import { BridgeContextName } from '../../constants'
-import { bridgeInjected } from '../../connectors'
 import NavLink from '../../components/NavLink'
 import { useTransactionAdder } from '../../state/bridgeTransactions/hooks'
 import { useRouter } from 'next/router'
@@ -33,6 +32,7 @@ import Modal from '../../components/Modal'
 import ModalHeader from '../../components/ModalHeader'
 import { useActiveWeb3React } from '../../services/web3'
 import { useAnyswapTokenContract, useTokenContract } from '../../hooks/useContract'
+import { bridgeInjected } from 'app/config/wallets'
 
 type AnyswapTokenInfo = {
   ID: string

@@ -1,4 +1,4 @@
-import { NetworkConnector } from '../entities/NetworkConnector'
+import { NetworkConnector } from '../entities/connectors/NetworkConnector'
 import { Web3Provider } from '@ethersproject/providers'
 import { network } from '../config/wallets'
 

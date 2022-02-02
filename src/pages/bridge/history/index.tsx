@@ -13,7 +13,6 @@ import { BottomGrouping } from '../../../features/swap/styleds'
 import Web3Connect from '../../../components/Web3Connect'
 import { useWeb3React } from '@web3-react/core'
 import { BridgeContextName } from '../../../constants'
-import { bridgeInjected } from '../../../connectors'
 import { useAllTransactions } from '../../../state/bridgeTransactions/hooks'
 import { TransactionDetails } from '../../../state/transactions/reducer'
 import { useDispatch } from 'react-redux'
@@ -25,6 +24,7 @@ import { RefreshCw } from 'react-feather'
 import { NETWORK_LABEL } from '../../../config/networks'
 import moment from 'moment'
 import { useActiveWeb3React } from 'app/services/web3'
+import { bridgeInjected } from 'app/config/wallets'
 
 type AnyswapTokenInfo = {
   ID: string

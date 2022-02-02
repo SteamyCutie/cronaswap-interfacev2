@@ -1,18 +1,36 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ChainId } from '@cronaswap/core-sdk'
 import { InjectedConnector } from '@web3-react/injected-connector'
-import { NetworkConnector } from '../entities/NetworkConnector'
-import RPC from './rpc'
+import { NetworkConnector } from '../entities/connectors/NetworkConnector'
+
+export const RPC = {
+  // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
+  [ChainId.CRONOS]: 'https://rpc.cronaswap.org',
+  [ChainId.CRONOS_TESTNET]: 'https://devrpc.cronaswap.org',
+}
 
 export const network = new NetworkConnector({
   defaultChainId: 25,
   urls: RPC,
 })
 
-const supportedChainIds = Object.values(ChainId) as number[]
+// const supportedChainIds = Object.values(ChainId) as number[]
 
 export const injected = new InjectedConnector({
-  supportedChainIds,
+  supportedChainIds: [
+    // 1, // mainnet
+    // 3, // ropsten
+    25, // cronos
+    338, // cronos testnet
+  ],
+})
+
+export const bridgeInjected = new InjectedConnector({
+  supportedChainIds: [
+    1, // mainnet
+    56, // binance smart chain
+    25, // cronos
+  ],
 })
 
 export interface WalletInfo {

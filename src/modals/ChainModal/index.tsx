@@ -1,4 +1,3 @@
-import { bridgeInjected } from '../../connectors'
 import { BridgeContextName } from '../../constants'
 import { ChainId } from '@cronaswap/core-sdk'
 import { ExternalLinkIcon } from '@heroicons/react/solid'
@@ -10,6 +9,7 @@ import cookie from 'cookie-cutter'
 import { useWeb3React } from '@web3-react/core'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../config/networks'
 import { Chain } from '../../entities/Chain'
+import { bridgeInjected } from 'app/config/wallets'
 
 export const SUPPORTED_NETWORKS: {
   [chainId in ChainId]?: {

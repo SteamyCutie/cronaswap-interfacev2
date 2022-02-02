@@ -11,7 +11,7 @@ import { useMulticall2Contract } from '../../hooks/useContract'
 import { TokenBalancesMap } from './types'
 
 import Web3 from 'web3'
-import { RPC } from '../../connectors'
+import { RPC } from 'app/config/wallets'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
