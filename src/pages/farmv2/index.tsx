@@ -107,7 +107,7 @@ export default function FarmsV2(): JSX.Element {
         </div> */}
 
         <div className="flex-row items-center justify-between w-full px-8 py-6 space-y-2 rounded md:flex bg-cyan-blue bg-opacity-20">
-          <div className="w-8/12 space-y-2 gap-y-10">
+          <div className="w-8/12 mb-5 space-y-2 gap-y-10 md:mb-0">
             <Typography variant="h2" className="mb-2 text-high-emphesis" weight={700}>
               {i18n._(t`Farming V2`)}
             </Typography>
@@ -125,7 +125,7 @@ export default function FarmsV2(): JSX.Element {
             </a>
           </div>
 
-          <div className="w-4/12 px-2 py-4 m-auto rounded-lg md:px-6 bg-cyan-blue bg-opacity-30">
+          <div className="w-full px-4 py-4 m-auto rounded-lg md:w-4/12 md:px-6 bg-cyan-blue bg-opacity-30">
             <div className="text-lg font-bold text-white">{i18n._(t`CRONA To Harvest`)}</div>
             <div className="flex items-center justify-between space-x-10">
               <div>

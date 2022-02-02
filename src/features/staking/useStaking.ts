@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useDashboardV1Contract } from 'app/hooks/useContract'
+import { useState, useEffect } from 'react'
+import { useDashboardV1Contract, useCronaVaultContract } from 'hooks/useContract'
 import { getBalanceAmount, getBalanceNumber, getDecimalAmount, getFullDisplayBalance } from 'functions/formatBalance'
 import { useCronaUsdcPrice } from '../farms/hooks'
 import BigNumber from 'bignumber.js'
@@ -53,4 +53,18 @@ export function convertSharesToCrona(
   const cronaAsBigNumber = getDecimalAmount(new BigNumber(cronaAsNumberBalance), decimals)
   const cronaAsDisplayBalance = getFullDisplayBalance(amountInCrona, decimals, decimalsToRound)
   return { cronaAsNumberBalance, cronaAsBigNumber, cronaAsDisplayBalance }
+}
+
+export const convertCronaToShares = (
+  crona: BigNumber,
+  cronaPerFullShare: BigNumber,
+  decimals = 18,
+  decimalsToRound = 3
+) => {
+  const sharePriceNumber = getBalanceNumber(cronaPerFullShare, decimals)
+  const amountInShares = new BigNumber(crona.dividedBy(sharePriceNumber))
+  const sharesAsNumberBalance = getBalanceNumber(amountInShares, decimals)
+  const sharesAsBigNumber = getDecimalAmount(new BigNumber(sharesAsNumberBalance), decimals)
+  const sharesAsDisplayBalance = getFullDisplayBalance(amountInShares, decimals, decimalsToRound)
+  return { sharesAsNumberBalance, sharesAsBigNumber, sharesAsDisplayBalance }
 }
