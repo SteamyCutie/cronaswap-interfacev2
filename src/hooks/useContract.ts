@@ -65,6 +65,8 @@ import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
 import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
 import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
 import MISO_HELPER_ABI from 'app/constants/abis/miso-helper.json'
+import IFOV1_ABI from '../constants/abis/ifoV1.json'
+import IFOV2_ABI from '../constants/abis/ifoV2.json'
 
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
@@ -291,4 +293,12 @@ export function useMisoHelperContract(withSignerIfPossible = true): Contract | n
   // @ts-ignore TYPE NEEDS FIXING
   const factory = MISO[chainId]?.[CHAIN_KEY[chainId]]?.contracts.MISOHelper
   return useContract(factory?.address, MISO_HELPER_ABI, withSignerIfPossible)
+}
+
+export function useIfoV1Contract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, IFOV1_ABI, withSignerIfPossible)
+}
+
+export function useIfoV2Contract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, IFOV2_ABI, withSignerIfPossible)
 }

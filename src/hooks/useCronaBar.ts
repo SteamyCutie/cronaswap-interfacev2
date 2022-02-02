@@ -10,7 +10,6 @@ const useCronaBar = () => {
 
   const enterStaking = useCallback(
     async (amount: CurrencyAmount<Token> | undefined) => {
-      console.log('amount: ', amount)
       if (amount?.quotient) {
         try {
           const tx = await masterchefContract?.enterStaking(amount?.quotient.toString())

@@ -26,6 +26,7 @@ import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
 import { getAPY, getCronaPrice, convertSharesToCrona } from 'features/staking/useStaking'
+import { CRONAVAULT_ADDRESS } from 'app/constants/addresses'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -58,11 +59,12 @@ export default function Stake() {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
   const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
-  const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA)
+  const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA[chainId])
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
   const addTransaction = useTransactionAdder()
   const DEFAULT_GAS_LIMIT = 250000
+  const DEFAULT_GAS_LIMIT_AUTO = 380000
 
   const dashboardContract = useDashboardV1Contract()
   const cronavaultContract = useCronaVaultContract()
@@ -91,7 +93,7 @@ export default function Stake() {
   const parsedAmountAuto = usingBalanceAuto ? balanceAuto : tryParseAmount(inputAuto, balanceAuto?.currency)
 
   const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[chainId])
-  const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, MASTERCHEF_ADDRESS[chainId])
+  const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, CRONAVAULT_ADDRESS[chainId])
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -165,7 +167,7 @@ export default function Stake() {
         try {
           const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
           const tx = await callWithGasPrice(cronavaultContract, 'deposit', [convertedStakeAmount.toString()], {
-            gasLimit: DEFAULT_GAS_LIMIT,
+            gasLimit: DEFAULT_GAS_LIMIT_AUTO,
           })
           addTransaction(tx, {
             summary: `${i18n._(t`Stake`)} CRONA`,
@@ -178,7 +180,7 @@ export default function Stake() {
         try {
           const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
           const tx = await callWithGasPrice(cronavaultContract, 'withdraw', [convertedStakeAmount.toString()], {
-            gasLimit: DEFAULT_GAS_LIMIT,
+            gasLimit: DEFAULT_GAS_LIMIT_AUTO,
           })
           addTransaction(tx, {
             summary: `${i18n._(t`Unstake`)} CRONA`,
@@ -239,16 +241,20 @@ export default function Stake() {
   const masterChefContract = useMasterChefContract()
   const gasPrice = useGasPrice()
   const handleHarvestFarm = async () => {
-    setPendingHarvestTx(true)
-    try {
-      const tx = await masterChefContract.leaveStaking('0', { ...options, gasPrice })
-      addTransaction(tx, {
-        summary: `${i18n._(t`Harvest`)} CRONA`,
-      })
-    } catch (e) {
-      console.error(e)
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingHarvestTx(true)
+      try {
+        const tx = await masterChefContract.leaveStaking('0', { ...options, gasPrice })
+        addTransaction(tx, {
+          summary: `${i18n._(t`Harvest`)} CRONA`,
+        })
+      } catch (e) {
+        console.error(e)
+      }
+      setPendingHarvestTx(false)
     }
-    setPendingHarvestTx(false)
   }
 
   return (
@@ -318,21 +324,17 @@ export default function Stake() {
         </div>
         <div className="w-full gap-4 md:flex">
           {/* Auto Compounding Staking */}
-          <div className="w-1/2 grid-rows-2 mx-auto mb-4 rounded-2xl gird bg-dark-400 md:m-0">
-            <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl md:pl-5 md:pr-7 bg-gradient-to-r from-bunting to-blackberry bg-opacity-40">
+          <div className="w-full grid-rows-2 mx-auto mb-4 md:w-1/2 rounded-2xl gird bg-dark-400 md:m-0">
+            <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl pl-3 pr-3 md:pl-5 md:pr-7 bg-gradient-to-r from-bunting to-blackberry bg-opacity-40">
               <div className="ml-4">
-                <p className="mb-3 text-sm font-bold md:text-2xl md:leading-5 text-high-emphesis">
+                <p className="mb-3 text-xl font-bold md:text-2xl md:leading-5 text-high-emphesis">
                   {i18n._(t`Auto CRONA`)}
                 </p>
-                <p className="text-sm font-bold md:text-base md:leading-5 text-dark-650">
+                <p className="text-xs font-bold md:text-base md:leading-5 text-dark-650">
                   {i18n._(t`Automatic restaking`)}
                 </p>
               </div>
-              <DoubleLogo
-                currency0={CRONA[chainId]}
-                currency1={NATIVE[chainId]}
-                size={window.innerWidth > 768 ? 40 : 24}
-              />
+              <DoubleLogo currency0={CRONA[chainId]} currency1={NATIVE[chainId]} size={40} />
             </div>
             <div>
               <TransactionFailedModal isOpen={modalOpenAuto} onDismiss={() => setModalOpenAuto(false)} />
@@ -508,21 +510,17 @@ export default function Stake() {
             </div>
           </div>
           {/* Manual Staking */}
-          <div className="w-1/2 grid-rows-2 mx-auto mb-4 rounded-2xl gird bg-dark-400 md:m-0">
-            <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl md:pl-5 md:pr-7 bg-gradient-to-r from-Mardi-Gras to-Myrtle">
+          <div className="w-full grid-rows-2 mx-auto mb-4 md:w-1/2 rounded-2xl gird bg-dark-400 md:m-0">
+            <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl pl-3 pr-3 md:pl-5 md:pr-7 bg-gradient-to-r from-Mardi-Gras to-Myrtle">
               <div className="ml-4">
-                <p className="mb-3 text-sm font-bold md:text-2xl md:leading-5 text-high-emphesis">
+                <p className="mb-3 text-xl font-bold md:text-2xl md:leading-5 text-high-emphesis">
                   {i18n._(t`Manual CRONA`)}
                 </p>
-                <p className="text-sm font-bold md:text-base md:leading-5 text-dark-650">
+                <p className="text-xs font-bold md:text-base md:leading-5 text-dark-650">
                   {i18n._(t`Earn CRONA, Stake CRONA`)}
                 </p>
               </div>
-              <DoubleLogo
-                currency0={CRONA[chainId]}
-                currency1={NATIVE[chainId]}
-                size={window.innerWidth > 768 ? 40 : 24}
-              />
+              <DoubleLogo currency0={CRONA[chainId]} currency1={NATIVE[chainId]} size={40} />
             </div>
             <div>
               <TransactionFailedModal isOpen={modalOpen} onDismiss={() => setModalOpen(false)} />
@@ -657,7 +655,7 @@ export default function Stake() {
                   color="gradient"
                   className={activeTab ? buttonStyleDisabled : buttonStyleEnabled}
                   onClick={handleHarvestFarm}
-                  disabled={activeTab !== 0}
+                  disabled={activeTab !== 0 && walletConnected}
                 >
                   {!walletConnected
                     ? i18n._(t`Connect Wallet`)

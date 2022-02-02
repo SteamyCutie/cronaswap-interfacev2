@@ -278,32 +278,34 @@ export default function Ifo(): JSX.Element {
               </div>
 
               {/* Introduction */}
-              <div className="relative flex flex-col px-4 pt-8 space-y-8 rounded-r bg-dark-800">
-                <div className="absolute inset-0 opacity-50 filter saturate-0 ">
-                  <Image src="/images/ifo/ifo-bg.png" className="object-cover w-full" layout="fill" />
-                </div>
-                <div className="mx-auto">
-                  <Image src="/images/ifo/crona.png" alt="CronaSwap" width="285px" height="55px" />
-                </div>
-                <div className="flex gap-1 mx-auto mt-10 text-high-emphesis">
-                  <div className="flex items-baseline gap-1">
-                    <div className="text-[32px] leading-4 font-medium">00D</div>
-                    <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
+              <div className="relative flex flex-col justify-between px-4 pt-8 space-y-8 rounded-r bg-dark-800">
+                <div className="pt-12">
+                  <div className="absolute inset-0 opacity-50 filter saturate-0 ">
+                    <Image src="/images/ifo/ifo-bg.png" className="object-cover w-full" layout="fill" />
                   </div>
-                  <div className="flex items-baseline gap-2">
-                    <div className="text-[32px] leading-4 font-medium text-mono">00H</div>
-                    <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
+                  <div className="mx-auto">
+                    <Image src="/images/ifo/crona.png" alt="CronaSwap" width="285px" height="55px" />
                   </div>
-                  <div className="flex items-baseline gap-2">
-                    <div className="text-[32px] leading-4 font-medium text-mono">00M</div>
-                    <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <div className="text-[32px] leading-[1.2] font-medium text-mono">00S</div>
+                  <div className="flex gap-1 mx-auto mt-10 text-high-emphesis">
+                    <div className="flex items-baseline gap-1">
+                      <div className="text-[32px] leading-4 font-medium">00D</div>
+                      <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <div className="text-[32px] leading-4 font-medium text-mono">00H</div>
+                      <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <div className="text-[32px] leading-4 font-medium text-mono">00M</div>
+                      <div className="text-[32px] leading-[1.2] font-medium text-mono text-secondary">:</div>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <div className="text-[32px] leading-[1.2] font-medium text-mono">00S</div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="pb-16 space-y-2">
                   <div className="text-xl font-bold">Introduction</div>
                   <div className="text-[14px] text-high-emphesis">
                     CronaSwap is the first decentralized exchange platform on the Cronos Chain to offer the lowest
