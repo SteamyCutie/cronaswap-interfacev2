@@ -60,6 +60,7 @@ export default function Stake() {
   const { account, chainId } = useActiveWeb3React()
   const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
   const xCronaBalance = useTokenBalance(account ?? undefined, XCRONA[chainId])
+  const [xBalanceAuto, setXBalanceAuto] = useState(0)
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
   const addTransaction = useTransactionAdder()
@@ -205,10 +206,11 @@ export default function Stake() {
     const userInfo = await cronavaultContract.userInfo(account)
     const userShares = userInfo.shares
     const pricePerFullShare = await cronavaultContract.getPricePerFullShare()
-    const { cronaAsBigNumber } = convertSharesToCrona(
+    const { cronaAsBigNumber, cronaAsNumberBalance } = convertSharesToCrona(
       new BigNumber(userShares._hex),
       new BigNumber(pricePerFullShare._hex)
     )
+    setXBalanceAuto(cronaAsNumberBalance)
     const cronaAtLastUserAction = new BigNumber(userInfo.cronaAtLastUserAction._hex)
     const autoCronaProfit = cronaAsBigNumber.minus(cronaAtLastUserAction)
     const recentProfit = autoCronaProfit.gte(0) ? getBalanceNumber(autoCronaProfit, 18) : 0
@@ -370,7 +372,9 @@ export default function Stake() {
                   </p>
                   <div className={input ? 'hidden md:flex md:items-center' : 'flex items-center'}>
                     <p className="text-dark-650">{i18n._(t`Balance`)}:&nbsp;</p>
-                    <p className="text-base font-bold">{formattedBalanceAuto}</p>
+                    <p className="text-base font-bold">
+                      {activeTabAuto === 0 ? formattedBalanceAuto : xBalanceAuto.toFixed(2)}
+                    </p>
                   </div>
                 </div>
 
