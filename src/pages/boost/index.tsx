@@ -91,7 +91,6 @@ export default function Boost() {
   const inputError = insufficientFunds
 
   const newLockTime = Math.floor(getUnixTime(addDays(Date.now(), activeTab)) / WEEK) * WEEK
-
   const [pendingTx, setPendingTx] = useState(false)
   const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO))
   const lockTimeBtnDisabled = pendingTx || newLockTime <= Number(lockEnd)
@@ -490,7 +489,13 @@ export default function Boost() {
                   <></>
                 )}
 
-                <div className="grid grid-cols-1 gap-2 md:grid-cols-2 mt-2">
+                <div
+                  className={
+                    Number(rewards) > 0 && Number(harvestRewards) > 0
+                      ? 'grid grid-cols-1 gap-2 md:grid-cols-2 mt-2'
+                      : 'grid grid-cols-1 gap-2 md:grid-cols-1 mt-2'
+                  }
+                >
                   {/* rewards */}
                   {Number(rewards) > 0 ? (
                     <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('claim')}>

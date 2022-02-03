@@ -24,11 +24,12 @@ export const DAI = new Token(
 )
 export const USDC = new Token(ChainId.ETHEREUM, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin')
 export const USDT = new Token(ChainId.ETHEREUM, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+
 export const XCRONA: ChainTokenMap = {
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x25f0965F285F03d6F6B3B21c8EC3367412Fd0ef6', 18, 'xCRONA', 'CronaBar'),
   [ChainId.CRONOS_TESTNET]: new Token(
     ChainId.CRONOS_TESTNET,
-    '0x8b00A242Fd8CAb55F5FD2D9b89C78c94dC4654D7',
+    '0x369Fe974508fdca2FbdE32375Ea72D4B525f6566',
     18,
     'xCRONA',
     'CronaBar'

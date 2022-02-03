@@ -8,8 +8,6 @@ import {
   ENS_REGISTRAR_ADDRESS,
   FACTORY_ADDRESS,
   MAKER_ADDRESS,
-  MASTERCHEF_ADDRESS,
-  MASTERCHEF_V2_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MINICHEF_ADDRESS,
   MULTICALL2_ADDRESS,
@@ -83,6 +81,7 @@ import {
   VOTING_ESCROW_ADDRESS,
   CRONAVAULT_ADDRESS,
   REWARD_POOL_ADDRESS,
+  MASTERCHEFV1_ADDRESS,
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -167,7 +166,7 @@ export function useCronaContract(withSignerIfPossible = true): Contract | null {
 
 export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
+  return useContract(chainId && MASTERCHEFV1_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
 }
 
 // new masterchef for cronaswapv2

@@ -167,7 +167,7 @@ export function useMasterChefInfo() {
 // Has used for CronaSwapV2 //////////////////////////////////////////
 
 export const useCronaUsdcPrice = (): BigNumber | undefined => {
-  const dashboard = useDashboardV2Contract()
+  const dashboard = useDashboardV1Contract()
   return useSingleCallResult(dashboard, 'rewardPriceInUSD')?.result?.[0]
 }
 

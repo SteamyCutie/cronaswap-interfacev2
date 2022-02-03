@@ -1377,10 +1377,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.26.6.tgz#134ef1ea0675580c2cc7524589d09f3d42c678a7"
   integrity sha512-Zx60MMI1vffX8c2UbUMlszrGIug3TWa25bD7NF3blJ5k/MVCZFsPafEZ+jEi7kcqoxdhMhgJTI6AmUhnMfq9SQ==
 
-"@cronaswap/core-sdk@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.7.tgz#bed6871be7f2ee437c70e2b9a5dd10613c3e010c"
-  integrity sha512-dhgNyRye1XlWwJcRbMdnlTECsZJ7PqGx7RRwW7UQUBXXOcIxvWoJZE76kuHgxzkECYlyuIsVik5Dkct5bLcwPg==
+"@cronaswap/core-sdk@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@cronaswap/core-sdk/-/core-sdk-1.0.10.tgz#2bf770c6123c216f306fde769fda5d169eb561ad"
+  integrity sha512-0DFMvvwOi5HfZxIsIoK4muVnqkHlZjSo3Zpdg3Wv6qaLh/xBnVE28hfAKU1O8zacxMmMpSsasLGQaDf6QnoXJA==
   dependencies:
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.0"
@@ -1393,10 +1393,10 @@
     tiny-warning "^1.0.0"
     toformat "^2.0.0"
 
-"@cronaswap/default-token-list@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.9.tgz#3890c04631c2b165c502a79caf9eb8742389442e"
-  integrity sha512-77v1wq16RwjU6Vc6ULiZajDvq2r0sBXLarJYmgoFi9E7VWcm1Ak+8APk5OrhrApur/NYRGlyCDfBdzdh2cTVBA==
+"@cronaswap/default-token-list@1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.12.tgz#0543ca6f18d6c45881927b0d287fa9b9499af054"
+  integrity sha512-5gBFXJizkPQ3sLVrBqnYy04vmp7lkT4bPeILGye9pFyxweBllu9XaPaEna84tmvV/ylED/awSCl42B/vIZp/Kw==
 
 "@cronaswap/miso@1.0.1":
   version "1.0.1"

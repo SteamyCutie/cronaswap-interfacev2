@@ -332,12 +332,12 @@ export const FARMS: AddressMap = {
   },
 
   [ChainId.CRONOS_TESTNET]: {
-    '0xde0645ee26facaecebd5ea825035d6ef5fefcbd4': {
+    '0x306A80D1A90320869fC62F676cc3369DF059E6F8': {
       id: 0,
       pid: 1,
       symbol: 'CLP',
       name: 'CRONA-CRO',
-      token1: { id: '0x7Ac4564724c99e129F79dC000CA594B4631acA81', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+      token1: { id: '0x7B6D3ec86493F7930EdA24a33C1A316bfD405188', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token0: { id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
     },
 
@@ -669,12 +669,12 @@ export const FARMSV2: AddressMap = {
   },
 
   [ChainId.CRONOS_TESTNET]: {
-    '0xde0645ee26facaecebd5ea825035d6ef5fefcbd4': {
+    '0x306A80D1A90320869fC62F676cc3369DF059E6F8': {
       id: 0,
       pid: 0,
       symbol: 'CLP',
       name: 'CRONA-CRO',
-      token1: { id: '0x7Ac4564724c99e129F79dC000CA594B4631acA81', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+      token1: { id: '0x7B6D3ec86493F7930EdA24a33C1A316bfD405188', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token0: { id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
     },
 
