@@ -157,7 +157,10 @@ export default function Stake() {
   }
 
   const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount?.greaterThan(balance)
-  const insufficientFundsAuto = (balanceAuto && balanceAuto.equalTo(ZERO)) || Number(inputAuto) > xBalanceAuto
+  const insufficientFundsAuto =
+    (balanceAuto && balanceAuto.equalTo(ZERO)) ||
+    (activeTabAuto === 0 && parsedAmountAuto?.greaterThan(balanceAuto)) ||
+    (activeTabAuto !== 0 && Number(inputAuto) > xBalanceAuto)
 
   const inputError = insufficientFunds
   const inputErrorAuto = insufficientFundsAuto
