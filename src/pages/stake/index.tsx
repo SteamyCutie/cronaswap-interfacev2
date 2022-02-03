@@ -1,6 +1,6 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { MASTERCHEF_ADDRESS, ZERO, NATIVE } from '@cronaswap/core-sdk'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { CRONA, XCRONA } from '../../config/tokens'
 import BigNumber from 'bignumber.js'
 import Button from '../../components/Button'
@@ -17,7 +17,7 @@ import useCronaBar from '../../hooks/useCronaBar'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { classNames } from '../../functions'
+import { classNames, formatNumber } from '../../functions'
 import { useCronaVaultContract, useDashboardV1Contract, useMasterChefContract } from 'hooks/useContract'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import DoubleLogo from '../../components/DoubleLogo'
@@ -25,9 +25,16 @@ import { useGasPrice } from 'state/user/hooks'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
-import { getAPY, getCronaPrice, convertSharesToCrona, convertCronaToShares } from 'features/staking/useStaking'
+import {
+  getAPY,
+  getCronaPrice,
+  convertSharesToCrona,
+  convertCronaToShares,
+  useWithdrawalFeeTimer,
+} from 'features/staking/useStaking'
 import { CRONAVAULT_ADDRESS } from 'constants/addresses'
 import { BIG_ZERO } from 'app/functions/bigNumber'
+import QuestionHelper from 'app/components/QuestionHelper'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -98,15 +105,21 @@ export default function Stake() {
   const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, CRONAVAULT_ADDRESS[chainId])
 
   const fullShare = useRef(BIG_ZERO)
-  const results = useRef([0, 0, 0, 0, 0])
+  const results = useRef([0, 0, 0, 0])
+
+  // for countdown
+  const lastDepositedTime = useRef(0)
+  const userSharesValue = useRef(BIG_ZERO)
+
   const getCronaVault = async () => {
     const autocronaBounty = await cronavaultContract.calculateHarvestCronaRewards()
     const totalstaked = await cronavaultContract.balanceOf()
     const tvlOfManual = await dashboardContract.tvlOfPool(0)
-    const withdrawFeePeriod = await cronavaultContract.withdrawFeePeriod()
     const userInfo = await cronavaultContract.userInfo(account)
     const userShares = userInfo.shares
     const pricePerFullShare = await cronavaultContract.getPricePerFullShare()
+    lastDepositedTime.current = parseInt(userInfo.lastDepositedTime, 10)
+    userSharesValue.current = new BigNumber(userShares._hex)
     fullShare.current = new BigNumber(pricePerFullShare._hex)
     const { cronaAsBigNumber, cronaAsNumberBalance } = convertSharesToCrona(
       new BigNumber(userShares._hex),
@@ -119,10 +132,15 @@ export default function Stake() {
     const autocronaBountyValue = getBalanceAmount(autocronaBounty._hex, 18).toNumber()
     const totalStakedValue = getBalanceAmount(totalstaked._hex, 18).toNumber()
     const tvlOfManualValue = getBalanceAmount(tvlOfManual.tvl._hex, 18).toNumber() - totalStakedValue
-    const withdrawFeePeriodValue = getBalanceAmount(withdrawFeePeriod._hex, 0).toNumber()
-    results.current = [autocronaBountyValue, totalStakedValue, withdrawFeePeriodValue, recentProfit, tvlOfManualValue]
+    results.current = [autocronaBountyValue, totalStakedValue, recentProfit, tvlOfManualValue]
   }
   getCronaVault()
+
+  const { secondsRemaining } = useWithdrawalFeeTimer(lastDepositedTime.current, userSharesValue.current, 259200)
+  const withdrawalFeeTimer = parseInt(secondsRemaining)
+  const d = (withdrawalFeeTimer / 86400) | 0
+  const h = ((withdrawalFeeTimer % 86400) / 3600) | 0
+  const m = ((withdrawalFeeTimer - 86400 * d - h * 3600) / 60) | 0
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -255,6 +273,11 @@ export default function Stake() {
     gasLimit: DEFAULT_GAS_LIMIT,
   }
   const masterChefContract = useMasterChefContract()
+  const harvestAmount = useRef(0)
+  const getHarvestAmount = async () => {
+    harvestAmount.current = await masterChefContract.pendingCrona(0, account)
+  }
+  getHarvestAmount()
   const gasPrice = useGasPrice()
   const handleHarvestFarm = async () => {
     if (!walletConnected) {
@@ -272,6 +295,16 @@ export default function Stake() {
       setPendingHarvestTx(false)
     }
   }
+
+  const tooltip = (
+    <div>
+      <p className="text-base">Unstaking fee: 0.1%</p>
+      <p>
+        Only applies within 3 days of staking. Unstaking after 3 days will not include a fee. Timer resets every time
+        you stake a new CRONA in the pool.
+      </p>
+    </div>
+  )
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="7xl">
@@ -489,13 +522,15 @@ export default function Stake() {
               <div className="grid grid-rows-2 px-3 gap-y-2 md:px-8">
                 <div className="flex justify-between text-base">
                   <p className="text-dark-650">Recent CRONA profit</p>
-                  <p className="font-bold text-right text-aqua-pearl">{`${Number(results.current[3].toFixed(2))}`}</p>
+                  <p className="font-bold text-right text-aqua-pearl">{`${Number(results.current[2].toFixed(2))}`}</p>
                 </div>
                 <div className="flex justify-between text-base">
-                  <p className="text-dark-650">0.1% unstakng fee until</p>
+                  <p className="flex items-center text-dark-650">
+                    0.1% unstakng fee until
+                    <QuestionHelper text={tooltip} />
+                  </p>
                   <p className="font-bold text-right text-aqua-pearl">
-                    {`${Number(results.current[2]) / 86400}`}d: {`${(Number(results.current[2]) / 1440) % 60}`}h :{' '}
-                    {`${Number(results.current[2]) % 60}`}m
+                    {`${d}`}d: {`${h}`}h : {`${m}`}m
                   </p>
                 </div>
               </div>
@@ -682,7 +717,7 @@ export default function Stake() {
                     ? i18n._(t`Connect Wallet`)
                     : pendingHarvestTx
                     ? i18n._(t`Harvesting`)
-                    : i18n._(t`Harvest`)}
+                    : i18n._(t`Harvest (${formatNumber(harvestAmount.current?.toFixed(18))})`)}
                 </Button>
               </div>
             </div>
@@ -700,7 +735,7 @@ export default function Stake() {
               <div className="flex justify-between text-base">
                 <p className="text-dark-650">Total staked</p>
                 <p className="font-bold text-right text-high-emphesis">
-                  {`${Number(results.current[4]).toFixed(0)}`} CRONA
+                  {`${Number(results.current[3]).toFixed(0)}`} CRONA
                 </p>
               </div>
               <div className="flex justify-between text-base">
