@@ -36,7 +36,6 @@ export function getAPY() {
 
 export function getCronaPrice() {
   const cronaPriceInBigNumber = useCronaUsdcPrice()
-  // console.log(formatBalance(cronaPriceInBigNumber ? cronaPriceInBigNumber : 0))
   const cronaPrice = formatBalance(cronaPriceInBigNumber ? cronaPriceInBigNumber : 0)
   return Number(cronaPrice)
 }
