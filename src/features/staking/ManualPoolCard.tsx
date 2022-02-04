@@ -303,13 +303,15 @@ export default function ManualPoolCard() {
           )}
           {harvestAmount.current > 0 ? (
             <Button color="gradient" className={buttonStyleEnabled} onClick={handleHarvestFarm}>
-              {!walletConnected
-                ? i18n._(t`Connect Wallet`)
-                : pendingHarvestTx
-                ? i18n._(t`Harvesting`)
-                : i18n._(
-                    t`Harvest (${harvestAmount.current > 0 ? formatNumber(harvestAmount.current?.toFixed(18)) : ''})`
-                  )}
+              {!walletConnected ? (
+                i18n._(t`Connect Wallet`)
+              ) : pendingHarvestTx ? (
+                <Dots>{i18n._(t`Harvesting`)}</Dots>
+              ) : (
+                i18n._(
+                  t`Harvest (${harvestAmount.current > 0 ? formatNumber(harvestAmount.current?.toFixed(18)) : ''})`
+                )
+              )}
             </Button>
           ) : (
             <button className={buttonStyleDisabled} disabled={true}>

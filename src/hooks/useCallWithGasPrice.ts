@@ -28,7 +28,6 @@ export function useCallWithGasPrice() {
         ...methodArgs,
         hasManualGasPriceOverride ? { ...overrides } : { ...overrides, gasPrice }
       )
-      console.log('+++++::::::::')
       return tx
     },
     [gasPrice]

@@ -15,7 +15,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames, formatBalance } from '../../functions'
-import { useCronaVaultContract, useDashboardV1Contract } from 'hooks/useContract'
+import { useCronaVaultContract } from 'hooks/useContract'
 import DoubleLogo from '../../components/DoubleLogo'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -127,7 +127,7 @@ export default function AutoPoolCard() {
         if (approvalStateAuto !== ApprovalState.NOT_APPROVED) {
           try {
             const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
-            const tx = await callWithGasPrice(cronavaultContract, 'deposit', [convertedStakeAmount.toString()], {
+            const tx = await callWithGasPrice(cronavaultContract, 'deposit', [convertedStakeAmount.toFixed()], {
               gasLimit: DEFAULT_GAS_LIMIT_AUTO,
             })
             addTransaction(tx, {
@@ -145,7 +145,7 @@ export default function AutoPoolCard() {
           const tx = await callWithGasPrice(
             cronavaultContract,
             'withdraw',
-            [shareStakeToWithdraw.sharesAsBigNumber.toString()],
+            [shareStakeToWithdraw.sharesAsBigNumber.toFixed()],
             {
               gasLimit: DEFAULT_GAS_LIMIT_AUTO,
             }
