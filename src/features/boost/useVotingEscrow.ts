@@ -13,7 +13,7 @@ export default function useVotingEscrow() {
     async (amount: CurrencyAmount<Token> | undefined, unlockTime: number) => {
       if (amount?.quotient) {
         try {
-          const tx = await contract?.createLock(amount?.quotient.toString(), unlockTime)
+          const tx = await contract?.createLockWithMc(amount?.quotient.toString(), unlockTime)
           return addTransaction(tx, { summary: 'Create CRONA lock' })
         } catch (e) {
           return e
@@ -38,7 +38,7 @@ export default function useVotingEscrow() {
     async (amount: CurrencyAmount<Token> | undefined) => {
       if (amount?.quotient) {
         try {
-          const tx = await contract?.increaseAmount(amount?.quotient.toString())
+          const tx = await contract?.increaseAmountWithMc(amount?.quotient.toString())
           return addTransaction(tx, { summary: 'Increase Lock Amount' })
         } catch (e) {
           return e
@@ -52,7 +52,7 @@ export default function useVotingEscrow() {
   const increaseUnlockTimeWithMc = useCallback(
     async (unlockTime: number) => {
       try {
-        const tx = await contract?.increaseUnlockTime(unlockTime)
+        const tx = await contract?.increaseUnlockTimeWithMc(unlockTime)
         return addTransaction(tx, { summary: 'Increase Lock Time' })
       } catch (e) {
         return e

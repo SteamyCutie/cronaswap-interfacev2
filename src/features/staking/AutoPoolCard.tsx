@@ -14,7 +14,7 @@ import { useActiveWeb3React } from '../../services/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { classNames, formatBalance } from '../../functions'
+import { classNames, formatBalance, getExplorerLink } from '../../functions'
 import { useCronaVaultContract } from 'hooks/useContract'
 import DoubleLogo from '../../components/DoubleLogo'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
@@ -353,7 +353,7 @@ export default function AutoPoolCard() {
         <div className="flex justify-between text-base">
           <p className="text-dark-650">See Contract Info</p>
           <a
-            href="https://cronoscan.com/address/0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389"
+            href={chainId && getExplorerLink(chainId, CRONAVAULT_ADDRESS[chainId], 'address')}
             target="_blank"
             rel="noreferrer"
             className="font-bold"

@@ -3,7 +3,6 @@ import { Feature, featureEnabled } from '../../functions/feature'
 import React from 'react'
 
 import { ANALYTICS_URL } from '../../constants'
-import Buy from '../../features/on-ramp/ramp'
 import ExternalLink from '../ExternalLink'
 import Image from 'next/image'
 import LanguageSwitch from '../LanguageSwitch'

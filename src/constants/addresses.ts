@@ -14,18 +14,18 @@ export const MASTERCHEFV1_ADDRESS: AddressMap = {
 }
 
 export const MASTERCHEFV2_ADDRESS: AddressMap = {
-  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS]: '', //0x7B1982b896CF2034A0674Acf67DC7924444637E4
   [ChainId.CRONOS_TESTNET]: '0xc09fB2ef107A3c33B3523c85AA0a76D5484f8229',
 }
 
 // boost
 export const VOTING_ESCROW_ADDRESS: AddressMap = {
-  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS]: '', //0x1E9d7DD649A1714f424f178036dbb79FA702b37d
   [ChainId.CRONOS_TESTNET]: '0x57fc66Ec66Eb05E292A2ec5ba1728450C51dC3a1',
 }
 
 export const REWARD_POOL_ADDRESS: AddressMap = {
-  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS]: '', //0x79956c0ccC9906Ee24B96CCF02234da1FB456dD8
   [ChainId.CRONOS_TESTNET]: '0xb8cF67ECA3923daF019f767c0dbcbAe16dcAf548',
 }
 
@@ -35,7 +35,7 @@ export const DASHBOARDV1_ADDRESS: AddressMap = {
 }
 
 export const DASHBOARDV2_ADDRESS: AddressMap = {
-  [ChainId.CRONOS]: '',
+  [ChainId.CRONOS]: '0xcB9a81865d908eBF0F877fea6a45a60a9FE83c47',
   [ChainId.CRONOS_TESTNET]: '0x3c75d3D228c15D592f807553321E16DF234434EC',
 }
 

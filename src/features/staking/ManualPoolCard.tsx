@@ -14,7 +14,7 @@ import useCronaBar from '../../hooks/useCronaBar'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { classNames, formatNumber } from '../../functions'
+import { classNames, formatNumber, getExplorerLink } from '../../functions'
 import { useCronaVaultContract, useDashboardV1Contract, useMasterChefContract } from 'hooks/useContract'
 import DoubleLogo from '../../components/DoubleLogo'
 import { useGasPrice } from 'state/user/hooks'
@@ -340,7 +340,7 @@ export default function ManualPoolCard() {
         <div className="flex justify-between text-base">
           <p className="text-dark-650">See Contract Info</p>
           <a
-            href="https://cronoscan.com/address/0x77ea4a4cF9F77A034E4291E8f457Af7772c2B254"
+            href={chainId && getExplorerLink(chainId, MASTERCHEF_ADDRESS[chainId], 'address')}
             target="_blank"
             rel="noreferrer"
             className="font-bold"

@@ -421,11 +421,7 @@ export default function Boost() {
                 {/* First create lock */}
                 {Number(lockAmount) == 0 ? (
                   approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
-                    <Button
-                      className={`${buttonStyle} w-full text-high-emphesis bg-gradient-to-r from-blue to-pink opacity-80 hover:opacity-100 disabled:bg-opacity-80`}
-                      disabled={approvalState === ApprovalState.PENDING}
-                      onClick={approve}
-                    >
+                    <Button color="gradient" disabled={approvalState === ApprovalState.PENDING} onClick={approve}>
                       {approvalState === ApprovalState.PENDING ? (
                         <Dots>{i18n._(t`Approving`)} </Dots>
                       ) : (
