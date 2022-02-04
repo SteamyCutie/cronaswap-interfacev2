@@ -309,7 +309,9 @@ export default function ManualPoolCard() {
                 <Dots>{i18n._(t`Harvesting`)}</Dots>
               ) : (
                 i18n._(
-                  t`Harvest (${harvestAmount.current > 0 ? formatNumber(harvestAmount.current?.toFixed(18)) : ''})`
+                  t`Harvest (${
+                    harvestAmount.current > 0.000001 ? formatNumber(harvestAmount.current?.toFixed(18)) : ''
+                  })`
                 )
               )}
             </Button>
@@ -336,9 +338,9 @@ export default function ManualPoolCard() {
           <p className="font-bold text-right text-high-emphesis">{`${Number(results.current).toFixed(0)}`} CRONA</p>
         </div>
         <div className="flex justify-between text-base">
-          <p className="text-dark-650">See Token Info</p>
+          <p className="text-dark-650">See Contract Info</p>
           <a
-            href="https://app.cronaswap.org/info/token/0xadbd1231fb360047525BEdF962581F3eee7b49fe"
+            href="https://cronoscan.com/address/0x77ea4a4cF9F77A034E4291E8f457Af7772c2B254"
             target="_blank"
             rel="noreferrer"
             className="font-bold"

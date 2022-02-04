@@ -24,10 +24,21 @@ import Button from '../../components/Button'
 import NumericalInput from 'app/components/NumericalInput'
 import { DiscordIcon, MediumIcon, TwitterIcon } from 'app/components/Icon'
 import { Disclosure } from '@headlessui/react'
+import { useTokenBalance } from 'app/state/wallet/hooks'
+import { CRONA } from 'app/config/tokens'
+import { useActiveWeb3React } from 'app/services/web3'
+import ifos from 'app/constants/ifo'
+import { OnSaleInfo } from 'app/features/ifo/ifoInfo'
+import BasicSale from 'app/features/ifo/BasicSale'
+import UnlimitedSale from 'app/features/ifo/UnlimitedSale'
+
+const activeIfo = ifos.find((ifo) => ifo.isActive)
 
 export default function Ifo(): JSX.Element {
   const { i18n } = useLingui()
-
+  const { account, chainId } = useActiveWeb3React()
+  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
+  const formattedBalanceAuto = cronaBalance?.toSignificant(3)
   const [depositValue, setDepositValue] = useState('')
 
   const router = useRouter()
@@ -101,6 +112,12 @@ export default function Ifo(): JSX.Element {
     return classes.filter(Boolean).join(' ')
   }
 
+  const { saleAmount: basicAmount, distributionRatio: basicRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolBasic' })
+  const { saleAmount: unlimitedAmount, distributionRatio: unlimitedRatio } = OnSaleInfo({
+    ifo: activeIfo,
+    poolId: 'poolUnlimited',
+  })
+
   return (
     <Container id="farm-page" className="grid h-full px-2 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
       <Head>
@@ -133,149 +150,8 @@ export default function Ifo(): JSX.Element {
         <div className="flex flex-row justify-between gap-4">
           <div className="w-full rounded bg-dark-900">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {/* Base sale */}
-              <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 md:ml-4 bg-dark-800">
-                <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
-                  <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
-                    Base Sale
-                    <QuestionHelper text="Every person can only commit a limited amount, but may expect a higher return per token committed." />
-                  </div>
-                  <div className="bg-gray-700 text-pink h-[24px] pr-3 whitespace-nowrap inline-flex rounded-[12px] pl-3 font-bold text-xs items-center justify-center">
-                    Finished
-                  </div>
-                </div>
-                <div className="flex gap-3 px-4">
-                  <div className="relative min-w-[48px] h-[48px] shadow-md rounded-full bg-pink"></div>
-                  <div className="flex flex-col overflow-hidden">
-                    <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
-                      750000 CROSS
-                    </div>
-                    <div className="text-sm font-bold leading-5 text-secondary">30% of total sale</div>
-                  </div>
-                </div>
-
-                {/* input */}
-                <div className="col-span-2 px-4 text-center md:col-span-1">
-                  <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-                    {i18n._(t`Wallet Balance`)}: 182.99
-                  </div>
-
-                  <div className="relative flex items-center w-full mb-4">
-                    <NumericalInput
-                      className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-light-purple"
-                      value={depositValue}
-                      onUserInput={setDepositValue}
-                    />
-                    <Button
-                      variant="outlined"
-                      color="blue"
-                      size="xs"
-                      className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
-                    >
-                      {i18n._(t`MAX`)}
-                    </Button>
-                  </div>
-                  <Button className="w-full" color="blue">
-                    {i18n._(t`Commit`)}
-                  </Button>
-                </div>
-
-                {/* info */}
-                <div className="flex flex-col flex-grow px-4 pb-4 space-y-2">
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Your committed:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">$91.09</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Total committed:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">~$261,951 (173.32%)</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Funds to raise:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">$150,000</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Price per CROSS:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">$0.2</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Unlimited Sale */}
-              <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 bg-dark-800">
-                <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
-                  <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
-                    Unlimited Sale
-                    <QuestionHelper text="Every person can only commit a limited amount, but may expect a higher return per token committed." />
-                  </div>
-                  <div className="bg-gray-700 text-pink h-[24px] pr-3 whitespace-nowrap inline-flex rounded-[12px] pl-3 font-bold text-xs items-center justify-center">
-                    Finished
-                  </div>
-                </div>
-                <div className="flex gap-3 px-4">
-                  <div className="relative min-w-[48px] h-[48px] shadow-md rounded-full bg-pink"></div>
-                  <div className="flex flex-col overflow-hidden">
-                    <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
-                      750000 CROSS
-                    </div>
-                    <div className="text-sm font-bold leading-5 text-secondary">30% of total sale</div>
-                  </div>
-                </div>
-
-                {/* input */}
-                <div className="col-span-2 px-4 text-center md:col-span-1">
-                  <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-                    {i18n._(t`Wallet Balance`)}: 182.99
-                  </div>
-
-                  <div className="relative flex items-center w-full mb-4">
-                    <NumericalInput
-                      className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-light-purple"
-                      value={depositValue}
-                      onUserInput={setDepositValue}
-                    />
-                    <Button
-                      variant="outlined"
-                      color="blue"
-                      size="xs"
-                      className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
-                    >
-                      {i18n._(t`MAX`)}
-                    </Button>
-                  </div>
-                  <Button className="w-full" color="blue">
-                    {i18n._(t`Commit`)}
-                  </Button>
-                </div>
-
-                {/* info */}
-                <div className="flex flex-col flex-grow px-4 pb-4 space-y-2">
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Your committed:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">$91.09</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Additional fee:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">1%</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Total committed:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">~$261,951 (173.32%)</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Funds to raise:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">$150,000</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Price per CROSS:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">$0.2</div>
-                  </div>
-                  <div className="flex justify-between gap-0.5">
-                    <div className="text-xs font-medium leading-4 currentColor">Price per CROSS with fee:</div>
-                    <div className="text-xs font-medium leading-4 text-high-emphesis">~$0.21</div>
-                  </div>
-                </div>
-              </div>
+              <BasicSale />
+              <UnlimitedSale />
 
               {/* Introduction */}
               <div className="relative flex flex-col justify-between px-4 pt-8 space-y-8 rounded-r bg-dark-800">

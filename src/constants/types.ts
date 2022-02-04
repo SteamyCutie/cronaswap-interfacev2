@@ -21,8 +21,8 @@ export interface Ifo {
   isActive: boolean
   address: string
   name: string
-  currency: Token
-  token: Token
+  // currency: Token
+  // token: Token
   releaseBlockNumber: number
   articleUrl: string
   campaignId: string

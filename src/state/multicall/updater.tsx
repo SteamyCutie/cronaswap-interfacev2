@@ -206,7 +206,7 @@ export default function Updater(): null {
               dispatch(
                 updateMulticallResults({
                   chainId,
-                  results,
+                  results: results,
                   blockNumber: latestBlockNumber,
                 })
               )

@@ -351,9 +351,9 @@ export default function AutoPoolCard() {
           <p className="font-bold text-right text-high-emphesis">{`${Number(results.current[0]).toFixed(0)}`} CRONA</p>
         </div>
         <div className="flex justify-between text-base">
-          <p className="text-dark-650">See Token Info</p>
+          <p className="text-dark-650">See Contract Info</p>
           <a
-            href="https://app.cronaswap.org/info/token/0xadbd1231fb360047525BEdF962581F3eee7b49fe"
+            href="https://cronoscan.com/address/0xDf3EBc46F283eF9bdD149Bb24c9b201a70d59389"
             target="_blank"
             rel="noreferrer"
             className="font-bold"
