@@ -314,15 +314,15 @@ export default function AutoPoolCard() {
             <p className="text-dark-650">Recent CRONA profit</p>
             <p className="font-bold text-right text-aqua-pearl">{`${Number(results.current[1].toFixed(2))}`}</p>
           </div>
-          <div className="flex justify-between text-base">
-            <p className="flex items-center text-dark-650">
-              0.1% unstakng fee until
+          <div className="flex justify-between text-base ">
+            <div className="flex items-center ">
+              <p className="text-dark-650">0.1% unstakng fee until </p>
               <QuestionHelper
                 text={
                   'Only applies within 3 days of staking. Unstaking after 3 days will not include a fee. Timer resets every time you stake a new CRONA in the pool.'
                 }
               />
-            </p>
+            </div>
             <p className="font-bold text-right text-aqua-pearl">
               {`${d}`}d: {`${h}`}h : {`${m}`}m
             </p>
