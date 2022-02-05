@@ -1,3 +1,4 @@
+import { ethers } from 'ethers'
 import useFuse from '../../hooks/useFuse'
 import Container from '../../components/Container'
 import Head from 'next/head'
@@ -17,6 +18,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import QuestionHelper from '../../components/QuestionHelper'
 import Dots from '../../components/Dots'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import BigNumber from 'bignumber.js'
 import { useInfiniteScroll } from '../../features/farms/hooks'
 import FarmListItem from '../../features/farms/FarmListItem'
 import Typography from '../../components/Typography'
@@ -24,20 +26,31 @@ import Button from '../../components/Button'
 import NumericalInput from 'app/components/NumericalInput'
 import { DiscordIcon, MediumIcon, TwitterIcon } from 'app/components/Icon'
 import { Disclosure } from '@headlessui/react'
+
 import { useTokenBalance } from 'app/state/wallet/hooks'
 import { CRONA } from 'app/config/tokens'
+import { ZERO } from '@cronaswap/core-sdk'
+import { useWalletModalToggle } from 'app/state/application/hooks'
 import { useActiveWeb3React } from 'app/services/web3'
 import ifos from 'app/constants/ifo'
-import { OnSaleInfo } from 'app/features/ifo/ifoInfo'
+import { OnSaleInfo, DEFAULT_TOKEN_DECIMAL } from 'app/features/ifo/ifoInfo'
+import { useCallWithGasPrice } from 'app/hooks/useCallWithGasPrice'
+import { useTokenContract, useIfoV2Contract } from 'app/hooks'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
+import { parseUnits } from '@ethersproject/units'
 
 const activeIfo = ifos.find((ifo) => ifo.isActive)
 
 export default function BasicSale(): JSX.Element {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
+  const addTransaction = useTransactionAdder()
   const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
-  const formattedBalanceAuto = cronaBalance?.toSignificant(8)
+  const toggleWalletModal = useWalletModalToggle()
+  const balance = cronaBalance?.toSignificant(8)
+  const walletConnected = !!account
   const [depositValue, setDepositValue] = useState('')
+  const [approvalState, setApprovalState] = useState(false)
 
   const router = useRouter()
   const type = router.query.filter == null ? 'all' : (router.query.filter as string)
@@ -110,11 +123,59 @@ export default function BasicSale(): JSX.Element {
     return classes.filter(Boolean).join(' ')
   }
 
+  const gasPrice = parseUnits('5000', 'gwei').toString()
   const { saleAmount: basicAmount, distributionRatio: basicRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolBasic' })
-  const { saleAmount: unlimitedAmount, distributionRatio: unlimitedRatio } = OnSaleInfo({
-    ifo: activeIfo,
-    poolId: 'poolUnlimited',
-  })
+
+  const contractAddress = activeIfo['address']
+  const { callWithGasPrice } = useCallWithGasPrice()
+  const contract = useIfoV2Contract(contractAddress)
+  const raisingTokenContract = useTokenContract(CRONA[chainId].address)
+  const [pendingTx, setPendingTx] = useState(false)
+
+  // Approve
+  const handleApprove = async () => {
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      try {
+        setPendingTx(true)
+        const tx = await callWithGasPrice(
+          raisingTokenContract,
+          'approve',
+          [contractAddress, ethers.constants.MaxUint256],
+          {
+            gasPrice,
+          }
+        )
+        addTransaction(tx, {
+          summary: `${i18n._(t`Approve`)} CRONA`,
+        })
+        setApprovalState(true)
+        setPendingTx(false)
+      } catch (error) {
+        setPendingTx(false)
+      }
+    }
+  }
+
+  // Commit
+  const valueWithTokenDecimals = new BigNumber(depositValue).times(DEFAULT_TOKEN_DECIMAL)
+  const handleCommit = async () => {
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      try {
+        setPendingTx(true)
+        const tx = await callWithGasPrice(contract, 'depositPool', [valueWithTokenDecimals.toString(), 0], { gasPrice })
+        addTransaction(tx, {
+          summary: `${i18n._(t`Commit`)} CRONA`,
+        })
+        setPendingTx(false)
+      } catch (error) {
+        setPendingTx(false)
+      }
+    }
+  }
 
   return (
     <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 md:ml-4 bg-dark-800">
@@ -140,7 +201,7 @@ export default function BasicSale(): JSX.Element {
       {/* input */}
       <div className="col-span-2 px-4 text-center md:col-span-1">
         <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-          {i18n._(t`Wallet Balance`)}: {formattedBalanceAuto}
+          {i18n._(t`Wallet Balance`)}: {balance}
         </div>
 
         <div className="relative flex items-center w-full mb-4">
@@ -154,13 +215,24 @@ export default function BasicSale(): JSX.Element {
             color="blue"
             size="xs"
             className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
+            onClick={() => {
+              if (!cronaBalance.equalTo(ZERO)) {
+                setDepositValue(cronaBalance?.toSignificant(cronaBalance.currency.decimals))
+              }
+            }}
           >
             {i18n._(t`MAX`)}
           </Button>
         </div>
-        <Button className="w-full" color="blue">
-          {i18n._(t`Commit`)}
-        </Button>
+        {approvalState === false ? (
+          <Button className="w-full" color="blue" onClick={handleApprove}>
+            {i18n._(t`Approve`)}
+          </Button>
+        ) : (
+          <Button className="w-full" color="blue" onClick={handleCommit}>
+            {i18n._(t`Commit`)}
+          </Button>
+        )}
       </div>
 
       {/* info */}

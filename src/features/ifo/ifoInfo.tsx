@@ -1,5 +1,7 @@
+import { BIG_TEN } from 'app/functions/bigNumber'
+
 export const OnSaleInfo = ({ ifo, poolId }) => {
-  const saleAmount = ifo[poolId].saleAmount
-  const distributionRatio = ifo[poolId].distributionRatio * 100
-  return { saleAmount, distributionRatio }
+  return ifo[poolId]
 }
+
+export const DEFAULT_TOKEN_DECIMAL = BIG_TEN.pow(18)

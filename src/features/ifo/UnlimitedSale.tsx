@@ -110,7 +110,6 @@ export default function UnlimitedSale(): JSX.Element {
     return classes.filter(Boolean).join(' ')
   }
 
-  const { saleAmount: basicAmount, distributionRatio: basicRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolBasic' })
   const { saleAmount: unlimitedAmount, distributionRatio: unlimitedRatio } = OnSaleInfo({
     ifo: activeIfo,
     poolId: 'poolUnlimited',

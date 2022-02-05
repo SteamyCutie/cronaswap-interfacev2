@@ -24,21 +24,11 @@ import Button from '../../components/Button'
 import NumericalInput from 'app/components/NumericalInput'
 import { DiscordIcon, MediumIcon, TwitterIcon } from 'app/components/Icon'
 import { Disclosure } from '@headlessui/react'
-import { useTokenBalance } from 'app/state/wallet/hooks'
-import { CRONA } from 'app/config/tokens'
-import { useActiveWeb3React } from 'app/services/web3'
-import ifos from 'app/constants/ifo'
-import { OnSaleInfo } from 'app/features/ifo/ifoInfo'
 import BasicSale from 'app/features/ifo/BasicSale'
 import UnlimitedSale from 'app/features/ifo/UnlimitedSale'
 
-const activeIfo = ifos.find((ifo) => ifo.isActive)
-
 export default function Ifo(): JSX.Element {
   const { i18n } = useLingui()
-  const { account, chainId } = useActiveWeb3React()
-  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
-  const formattedBalanceAuto = cronaBalance?.toSignificant(3)
   const [depositValue, setDepositValue] = useState('')
 
   const router = useRouter()
@@ -111,12 +101,6 @@ export default function Ifo(): JSX.Element {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
-
-  const { saleAmount: basicAmount, distributionRatio: basicRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolBasic' })
-  const { saleAmount: unlimitedAmount, distributionRatio: unlimitedRatio } = OnSaleInfo({
-    ifo: activeIfo,
-    poolId: 'poolUnlimited',
-  })
 
   return (
     <Container id="farm-page" className="grid h-full px-2 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
