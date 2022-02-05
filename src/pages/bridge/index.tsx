@@ -125,17 +125,18 @@ export default function Bridge() {
   )
 
   const { data: anyswapInfo, error }: SWRResponse<AnyswapTokensMap, Error> = useSWR(
-    'https://bridgeapi.anyswap.exchange/v3/serverinfoV3?chainId=all',
+    'https://bridgeapi.anyswap.exchange/v3/serverinfoV3?chainId=all&version=NATIVE',
     (url) =>
       fetch(url)
         .then((result) => result.json())
         .then((data) => {
           let result: AnyswapTokensMap = {}
-
+          console.log(data)
           Object.keys(data || {}).map((key) => {
             const info: AnyswapResultPairInfo = data[key]
 
             let sourceContractAddress = info.SrcToken.ContractAddress
+
             if (!sourceContractAddress) {
               sourceContractAddress = WNATIVE[parseInt(info.srcChainID)].address
             }
@@ -417,7 +418,7 @@ export default function Bridge() {
       setPendingTx(false)
     }
   }
-  debugger
+
   const anyswapChains = [ChainId.CRONOS, ChainId.BSC, ChainId.ETHEREUM]
   const availableChains = Object.keys(anyswapInfo || {})
     .map((r) => parseInt(r))

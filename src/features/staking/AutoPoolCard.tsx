@@ -166,16 +166,6 @@ export default function AutoPoolCard() {
 
   const { autoAPY } = getAPY()
 
-  const tooltip = (
-    <div>
-      <p className="text-base">Unstaking fee: 0.1%</p>
-      <p>
-        Only applies within 3 days of staking. Unstaking after 3 days will not include a fee. Timer resets every time
-        you stake a new CRONA in the pool.
-      </p>
-    </div>
-  )
-
   return (
     <div className="w-full grid-rows-2 mx-auto mb-4 md:w-1/2 rounded-2xl gird bg-dark-400 md:m-0">
       <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl pl-3 pr-3 md:pl-5 md:pr-7 bg-gradient-to-r from-bunting to-blackberry bg-opacity-40">
@@ -327,7 +317,11 @@ export default function AutoPoolCard() {
           <div className="flex justify-between text-base">
             <p className="flex items-center text-dark-650">
               0.1% unstakng fee until
-              <QuestionHelper text={tooltip} />
+              <QuestionHelper
+                text={
+                  'Only applies within 3 days of staking. Unstaking after 3 days will not include a fee. Timer resets every time you stake a new CRONA in the pool.'
+                }
+              />
             </p>
             <p className="font-bold text-right text-aqua-pearl">
               {`${d}`}d: {`${h}`}h : {`${m}`}m
