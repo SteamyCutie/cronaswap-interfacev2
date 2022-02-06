@@ -136,17 +136,7 @@ function AppBar(): JSX.Element {
                         </NavLink>
                       )}
 
-                      {chainId && featureEnabled(Feature.BOOST, chainId) && (
-                        // <NavLink href={'http://www.google.com'} target="_blank" rel="noreferrer">
-                        // <a
-                        //   id={`boost-nav-link`}
-                        //   className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                        //   href={'http://appv1.cronaswap.org'} target="_blank" rel="noreferrer"
-                        // >
-                        //   {i18n._(t`CronaSwapV1`)}
-                        // </a>
-                        // </NavLink>
-
+                      {chainId && featureEnabled(Feature.AMMV1, chainId) && (
                         <ExternalLink endIcon={<LinkIcon size={16} />} href={'http://appv1.cronaswap.org'}>
                           <Typography variant="base">{i18n._(t`V1 (old)`)}</Typography>
                         </ExternalLink>

@@ -2,6 +2,7 @@ import { ChainId } from '@cronaswap/core-sdk'
 
 export enum Feature {
   AMM = 'AMM',
+  AMMV1 = 'AmmV1',
   FARMV1 = 'Farm V1',
   FARMV2 = 'Farm V2',
   LENDING = 'Lending',
@@ -21,11 +22,12 @@ const features = {
 
   [ChainId.CRONOS]: [
     Feature.AMM,
+    Feature.AMMV1,
     Feature.FARMV1,
     Feature.FARMV2,
     Feature.ZAP,
     // Feature.MIGRATE,
-    Feature.ANALYTICS,
+    // Feature.ANALYTICS,
     Feature.STAKING,
     Feature.BRIDGE,
     Feature.BOOST,
