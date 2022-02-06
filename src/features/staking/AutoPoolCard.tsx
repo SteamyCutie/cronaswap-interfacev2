@@ -75,6 +75,7 @@ export default function AutoPoolCard() {
 
   const getCronaVault = async () => {
     const totalstaked = await cronavaultContract.balanceOf()
+    if (!account) return
     const userInfo = await cronavaultContract.userInfo(account)
     const userShares = userInfo.shares
     const pricePerFullShare = await cronavaultContract.getPricePerFullShare()
