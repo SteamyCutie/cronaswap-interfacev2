@@ -20,7 +20,6 @@ export default function CommonBases({
   onSelect: (currency: Currency) => void
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
-  console.log(bases)
 
   return (
     <div className="flex flex-col space-y-2">

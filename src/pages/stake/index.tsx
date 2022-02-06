@@ -8,10 +8,13 @@ import { useCronaVaultContract } from 'hooks/useContract'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { getBalanceAmount } from 'functions/formatBalance'
+import { formatNumber, getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
 import AutoPoolCard from 'app/features/staking/AutoPoolCard'
 import ManualPoolCard from 'app/features/staking/ManualPoolCard'
+import Typography from 'app/components/Typography'
+import { formatNumberScale } from 'app/functions'
+import Button from 'app/components/Button'
 
 const buttonStyle =
   'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
@@ -54,47 +57,53 @@ export default function Stake() {
         <meta key="description" name="description" content="Stake CronaSwap" />
       </Head>
       <div className="w-11/12 m-auto">
-        <div className="items-center w-full py-10 mb-12 rounded md:flex bg-dark-400">
-          <div className="w-3/4 mx-auto md:w-7/12 gap-y-10">
-            <div className="text-2xl font-bold text-white mb-7">{i18n._(t`Crona Stake`)}</div>
-            <div className="mb-3 text-base font-hero">
+        {/* Hero */}
+        <div className="flex-row items-center justify-between w-full px-8 py-6 space-y-2 rounded md:flex bg-cyan-blue bg-opacity-20">
+          <div className="w-8/12 mb-5 space-y-2 gap-y-10 md:mb-0">
+            <Typography variant="h2" className="mb-2 text-high-emphesis" weight={700}>
+              {i18n._(t`Crona Stake`)}
+            </Typography>
+            <Typography variant="sm" weight={400}>
               {i18n._(t`Looking for a less resource-intensive alternative to mining?`)}
-              <br />
+            </Typography>
+            <Typography variant="sm" weight={400}>
               {i18n._(t`Use your CRONA tokens to earn more tokens,for Free.`)}
-            </div>
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfKgvVAO6VwiGkCkc9TzRUJFKPYqzg0siOV6T0oq0ELPz9KLw/viewform"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div className="flex items-center gap-2 text-sm font-bold font-Poppins">
+            </Typography>
+            <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+              <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply to Launch`)}</div>
                 <ArrowRightIcon height={14} className="" />
               </div>
             </a>
           </div>
-          <div className="w-3/4 px-4 py-4 m-auto mt-5 rounded-lg md:w-4/12 md:px-10 bg-dark-gray">
-            <div className="text-lg text-dark-650">{i18n._(t`Auto Crona Bounty`)}</div>
-            <div className="flex items-end justify-between">
+
+          <div className="w-full px-4 py-4 m-auto rounded-lg md:w-4/12 md:px-6 bg-cyan-blue bg-opacity-30">
+            <div className="text-lg font-bold text-white">{i18n._(t`Auto Crona Bounty`)}</div>
+            <div className="flex items-center justify-between space-x-10">
               <div>
-                <div className="text-2xl text-white">{`${Number(autocronaBountyValue.current).toFixed(3)}`}</div>
+                <div className="text-xl font-bold text-white">{Number(autocronaBountyValue.current).toFixed(3)}</div>
                 <div className="text-base text-light-blue">
-                  {`${Number(autocronaBountyValue.current * cronaPrice).toFixed(3)}`} USD
+                  {' '}
+                  {Number(autocronaBountyValue.current * cronaPrice).toFixed(3)} USD
                 </div>
               </div>
-              <div className="w-1/3 min-w-max">
-                <button
-                  className={`${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90 px-1 text-base md:text-lg`}
-                  disabled={!autocronaBountyValue.current}
+              <div>
+                <Button
+                  id="btn-create-new-pool"
+                  color="gradient"
+                  variant="outlined"
+                  size="sm"
+                  disabled={!autocronaBountyValue.current || pendingBountyTx}
                   onClick={handleBountyClaim}
                 >
                   {pendingBountyTx ? <Dots>{i18n._(t`Claiming`)} </Dots> : i18n._(t`Claim`)}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         </div>
-        <div className="w-full gap-4 md:flex">
+
+        <div className="w-full mt-6 gap-4 md:flex">
           <AutoPoolCard />
           <ManualPoolCard />
         </div>

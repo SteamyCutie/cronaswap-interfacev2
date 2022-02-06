@@ -18,6 +18,8 @@ import { useActiveWeb3React } from '../../services/web3'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
 import TokenStats from '../TokenStats'
+import { ExternalLink as LinkIcon } from 'react-feather'
+import Typography from '../Typography'
 
 // import { ExternalLink, NavLink } from "./Link";
 // import { ReactComponent as Burger } from "../assets/images/burger.svg";
@@ -132,6 +134,22 @@ function AppBar(): JSX.Element {
                             {i18n._(t`Boost`)}
                           </a>
                         </NavLink>
+                      )}
+
+                      {chainId && featureEnabled(Feature.BOOST, chainId) && (
+                        // <NavLink href={'http://www.google.com'} target="_blank" rel="noreferrer">
+                        // <a
+                        //   id={`boost-nav-link`}
+                        //   className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                        //   href={'http://appv1.cronaswap.org'} target="_blank" rel="noreferrer"
+                        // >
+                        //   {i18n._(t`CronaSwapV1`)}
+                        // </a>
+                        // </NavLink>
+
+                        <ExternalLink endIcon={<LinkIcon size={16} />} href={'http://appv1.cronaswap.org'}>
+                          <Typography variant="base">{i18n._(t`V1 (old)`)}</Typography>
+                        </ExternalLink>
                       )}
 
                       {/* {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
@@ -284,7 +302,7 @@ function AppBar(): JSX.Element {
                 {chainId && featureEnabled(Feature.ANALYTICS, chainId) && (
                   <ExternalLink
                     id={`analytics-nav-link`}
-                    href={ANALYTICS_URL[chainId] || 'https://analytics.sushi.com'}
+                    href={ANALYTICS_URL[chainId] || 'https://analytics.x.com'}
                     className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                   >
                     {i18n._(t`Analytics`)}

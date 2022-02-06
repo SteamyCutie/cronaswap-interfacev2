@@ -18,12 +18,20 @@ const Footer = () => {
       { name: `${i18n._(t`CoinMarketCap`)}`, href: 'https://coinmarketcap.com/currencies/cronaswap/' },
     ],
     exchanges: [
-      { name: `${i18n._(t`Mexc.com`)}`, href: 'https://www.mexc.com/exchange/CRONA_USDT' },
-      { name: `${i18n._(t`Hotbit.io`)}`, href: 'https://www.hotbit.io/exchange?symbol=CRONA_USDT' },
+      // { name: `${i18n._(t`Mexc.com`)}`, href: 'https://www.mexc.com/exchange/CRONA_USDT' },
+      { name: `${i18n._(t`MultiChain`)}`, href: 'https://app.multichain.org/#/router' },
+      { name: `${i18n._(t`Cronos Bridge`)}`, href: 'https://cronos.crypto.org/docs/bridge/cdcex.html' },
+      {
+        name: `${i18n._(t`EVOdefi Bridge`)}`,
+        href: 'https://bridge.evodefi.com?utm_source=cronaswap&utm_medium=link&utm_campaign=1',
+      },
     ],
+
     developers: [
       { name: `${i18n._(t`Vote`)}`, href: 'https://snapshot.org/#/cronachef.eth' },
-      { name: `${i18n._(t`Auditors`)}`, href: 'https://docs.cronaswap.org/security-audits' },
+      { name: `${i18n._(t`Chart`)}`, href: 'https://appv1.cronaswap.org/info' },
+      { name: `${i18n._(t`Audit`)}`, href: 'https://docs.cronaswap.org/security-audits' },
+      { name: `${i18n._(t`DexScreener`)}`, href: 'https://dexscreener.com/cronos/cronaswap' },
       { name: `${i18n._(t`Documentation`)}`, href: 'https://docs.cronaswap.org' },
     ],
     business: [
@@ -123,7 +131,7 @@ const Footer = () => {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{i18n._(t`About Us`)}</h3>
-                <ul role="list" className="mt-4 space-y-2">
+                <ul role="list" className="mt-4 space-y-1">
                   {navigation.aboutus.map((item) => (
                     <li key={item.name}>
                       <a
@@ -142,7 +150,7 @@ const Footer = () => {
                 <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
                   {i18n._(t`Developers`)}
                 </h3>
-                <ul role="list" className="mt-4 space-y-2">
+                <ul role="list" className="mt-4 space-y-1">
                   {navigation.developers.map((item) => (
                     <li key={item.name}>
                       <a
@@ -161,7 +169,7 @@ const Footer = () => {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{i18n._(t`Business`)}</h3>
-                <ul role="list" className="mt-4 space-y-2">
+                <ul role="list" className="mt-4 space-y-1">
                   {navigation.business.map((item) => (
                     <li key={item.name}>
                       <a
@@ -177,8 +185,8 @@ const Footer = () => {
                 </ul>
               </div>
               <div className="mt-12 md:mt-0">
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{i18n._(t`Exchanges`)}</h3>
-                <ul role="list" className="mt-4 space-y-2">
+                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{i18n._(t`Bridge`)}</h3>
+                <ul role="list" className="mt-4 space-y-1">
                   {navigation.exchanges.map((item) => (
                     <li key={item.name}>
                       <a

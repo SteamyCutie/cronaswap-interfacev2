@@ -93,8 +93,8 @@ const FarmListItem = ({ farm }) => {
                   color="blue"
                   size="xs"
                   onClick={() => {
-                    if (!balance.equalTo(ZERO)) {
-                      setDepositValue(balance.toFixed(liquidityToken?.decimals))
+                    if (!balance?.equalTo(ZERO)) {
+                      setDepositValue(balance?.toFixed(liquidityToken?.decimals))
                     }
                   }}
                   className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
@@ -116,7 +116,7 @@ const FarmListItem = ({ farm }) => {
               <Button
                 className="w-full"
                 color="blue"
-                disabled={pendingTx || !typedDepositValue || balance.lessThan(typedDepositValue)}
+                disabled={pendingTx || !typedDepositValue || balance?.lessThan(typedDepositValue)}
                 onClick={async () => {
                   setPendingTx(true)
                   try {
@@ -159,8 +159,8 @@ const FarmListItem = ({ farm }) => {
                   color="blue"
                   size="xs"
                   onClick={() => {
-                    if (!amount.equalTo(ZERO)) {
-                      setWithdrawValue(amount.toFixed(liquidityToken?.decimals))
+                    if (!amount?.equalTo(ZERO)) {
+                      setWithdrawValue(amount?.toFixed(liquidityToken?.decimals))
                     }
                   }}
                   className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
@@ -172,7 +172,7 @@ const FarmListItem = ({ farm }) => {
             <Button
               className="w-full"
               color="blue"
-              disabled={pendingTx || !typedWithdrawValue || amount.lessThan(typedWithdrawValue)}
+              disabled={pendingTx || !typedWithdrawValue || amount?.lessThan(typedWithdrawValue)}
               onClick={async () => {
                 setPendingTx(true)
                 try {
@@ -250,11 +250,12 @@ const FarmListItem = ({ farm }) => {
                   <ExternalLink
                     startIcon={<LinkIcon size={16} />}
                     href={`https://app.cronaswap.org/add/${farm?.token0?.symbol == 'CRO' ? 'CRO' : farm?.token0?.id}/${
-                      farm?.token1?.symbol == 'CRO' ? 'CRO' : farm?.token0?.id
+                      farm?.token1?.symbol == 'CRO' ? 'CRO' : farm?.token1?.id
                     }`}
                   >
                     <Typography variant="sm">
-                      {i18n._(t`Get ${farm?.token0?.symbol}-${farm?.token1?.symbol} LP`)}
+                      {/* {i18n._(t`Get ${farm?.token0?.symbol}-${farm?.token1?.symbol} LP`)} */}
+                      Get ${farm?.token0?.symbol}-${farm?.token1?.symbol} LP
                     </Typography>
                   </ExternalLink>
                 </div>

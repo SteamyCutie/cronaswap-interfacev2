@@ -44,7 +44,7 @@ export function useUserInfo(farm, token) {
     if (!account) {
       return
     }
-    return [String(farm.id), String(account)]
+    return [String(farm.pid), String(account)]
   }, [farm, account])
 
   const result = useSingleCallResult(args ? contract : null, 'userInfo', args)?.result

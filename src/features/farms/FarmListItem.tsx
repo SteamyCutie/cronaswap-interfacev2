@@ -12,6 +12,7 @@ import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import QuestionHelper from '../../components/QuestionHelper'
 import { CurrencyLogoArray } from '../../components/CurrencyLogo'
+import Dots from 'app/components/Dots'
 
 const FarmListItem = ({ farm, ...rest }) => {
   const { i18n } = useLingui()
@@ -43,6 +44,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                     {formatNumber(pendingCrona?.toFixed(18)) != '0' ? `FARMING` : ``}
                   </div>
                   <div className="text-xs font-bold md:text-base">{farm?.name}</div>
+                  {farm?.migrate ? <div className=" text-xs text-pink">{i18n._(t`Migrating`)}</div> : <></>}
                 </div>
               </div>
 

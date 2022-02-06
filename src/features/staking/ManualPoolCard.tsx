@@ -141,12 +141,10 @@ export default function ManualPoolCard() {
   }
   const masterChefContract = useMasterChefContract()
   const harvestAmount = useRef(0)
-  if (walletConnected) {
-    const getHarvestAmount = async () => {
-      harvestAmount.current = await masterChefContract.pendingCrona(0, account)
-    }
-    getHarvestAmount()
+  const getHarvestAmount = async () => {
+    harvestAmount.current = await masterChefContract.pendingCrona(0, account)
   }
+  getHarvestAmount()
   const gasPrice = useGasPrice()
   const handleHarvestFarm = async () => {
     if (!walletConnected) {
@@ -310,11 +308,7 @@ export default function ManualPoolCard() {
               ) : pendingHarvestTx ? (
                 <Dots>{i18n._(t`Harvesting`)}</Dots>
               ) : (
-                i18n._(
-                  t`Harvest (${
-                    harvestAmount.current > 0.000001 ? formatNumber(harvestAmount.current?.toFixed(18)) : ''
-                  })`
-                )
+                `Harvest (${formatNumber(harvestAmount.current?.toFixed(18))})`
               )}
             </Button>
           ) : (

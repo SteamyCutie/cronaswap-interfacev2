@@ -229,7 +229,7 @@ export default function Add() {
     ) : (
       <div className="pb-4">
         <div className="flex items-center justify-start gap-3">
-          <div className="text-xl font-bold md:text-3xl text-high-emphesis">{liquidityMinted?.toSignificant(6)}</div>
+          <div className="text-xl font-bold md:text-2xl text-high-emphesis">{liquidityMinted?.toSignificant(6)}</div>
           <div className="grid grid-flow-col gap-2">
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} size={48} />
           </div>
@@ -359,9 +359,7 @@ export default function Add() {
               <>
                 <b>{i18n._(t`Tip:`)}</b>{' '}
                 {i18n._(
-                  t`By adding liquidity you'll earn 0.25% of all trades on this pair
-                proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be
-                claimed by withdrawing your liquidity.`
+                  t`By adding liquidity you'll earn 0.25% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`
                 )}
               </>
             )

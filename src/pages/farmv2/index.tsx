@@ -84,28 +84,6 @@ export default function FarmsV2(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
-        {/* <div className="flex-row items-center justify-between w-full p-4 space-y-2 rounded md:flex bg-cyan-blue bg-opacity-20">
-          <div className="space-y-2 md:block">
-            <Typography variant="h2" className="text-high-emphesis" weight={700}>
-              {i18n._(t`Farming V2`)}
-            </Typography>
-            <Typography variant="sm" weight={400}>
-              {i18n._(t`Stake liquidity pool tokens to earn rewards in CronaSwap.`)}
-            </Typography>
-            <Typography variant="sm" weight={400}>
-              {i18n._(t`Farms V2 TVL: ${formatNumberScale(totalTvlInUSD, true)}`)}
-            </Typography>
-          </div>
-
-          <div className="flex gap-3">
-            <Button id="btn-create-new-pool" color="gradient" variant="outlined" size="sm">
-              <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
-                {i18n._(t`Apply for Farm Listing`)}
-              </a>
-            </Button>
-          </div>
-        </div> */}
-
         <div className="flex-row items-center justify-between w-full px-8 py-6 space-y-2 rounded md:flex bg-cyan-blue bg-opacity-20">
           <div className="w-8/12 mb-5 space-y-2 gap-y-10 md:mb-0">
             <Typography variant="h2" className="mb-2 text-high-emphesis" weight={700}>
@@ -115,7 +93,7 @@ export default function FarmsV2(): JSX.Element {
               {i18n._(t`Stake liquidity pool tokens to earn rewards in CronaSwap.`)}
             </Typography>
             <Typography variant="sm" weight={400}>
-              {i18n._(t`FarmsV2 - TVL: ${formatNumberScale(totalTvlInUSD, true)}`)}
+              {i18n._(t`FarmsV2 - TVL:`)} {formatNumberScale(totalTvlInUSD ?? 0, true)}
             </Typography>
             <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">

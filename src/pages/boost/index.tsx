@@ -495,9 +495,8 @@ export default function Boost() {
                   {/* rewards */}
                   {Number(rewards) > 0 ? (
                     <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('claim')}>
-                      {!walletConnected
-                        ? i18n._(t`Connect Wallet`)
-                        : i18n._(t`Claim Boost Rewards (${formatNumber(rewards?.toFixed(18))})`)}
+                      {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Claim Boost Rewards`)} (
+                      {formatNumber(rewards?.toFixed(18))})
                     </Button>
                   ) : (
                     <></>
@@ -505,9 +504,8 @@ export default function Boost() {
 
                   {Number(harvestRewards) > 0 ? (
                     <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('harvest')}>
-                      {!walletConnected
-                        ? i18n._(t`Connect Wallet`)
-                        : i18n._(t`Auto Boost Bounty (${formatNumber(harvestRewards?.toFixed(18))})`)}
+                      {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Auto Boost Bounty`)} (
+                      {formatNumber(harvestRewards?.toFixed(18))})
                     </Button>
                   ) : (
                     <></>

@@ -33,8 +33,8 @@ export default function Yield(): JSX.Element {
   let totalTvlInUSD = 0
 
   query?.farms.map((farm: any) => {
-    tokenPrice = farm.tokenPrice
-    totalTvlInUSD = farm.totalTvlInUSD
+    tokenPrice = farm?.tokenPrice
+    totalTvlInUSD = farm?.totalTvlInUSD
   })
 
   const FILTER = {
@@ -75,7 +75,7 @@ export default function Yield(): JSX.Element {
 
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
-        <div className="flex-row items-center justify-between w-full p-4 space-y-2 rounded md:flex bg-opaque-blue">
+        <div className="flex-row items-center justify-between w-full px-8 py-6 space-y-2 rounded md:flex bg-opaque-blue">
           <div className="space-y-2 md:block">
             <Typography variant="h2" className="text-high-emphesis" weight={700}>
               {i18n._(t`Farming V1`)}
@@ -84,7 +84,13 @@ export default function Yield(): JSX.Element {
               {i18n._(t`Stake liquidity pool tokens to earn rewards in CronaSwap.`)}
             </Typography>
             <Typography variant="sm" weight={400}>
-              {i18n._(t`Farms V1 TVL: ${formatNumberScale(totalTvlInUSD, true)}`)}
+              {i18n._(t`Farms V1 - TVL:`)} {formatNumberScale(totalTvlInUSD, true)}
+            </Typography>
+            <Typography variant="base" weight={700}>
+              {i18n._(t`Q1: How to migrate from Farmv1 to Farmv2?`)}
+            </Typography>
+            <Typography color="text-blue" variant="base" weight={700}>
+              {i18n._(t`A1: Unstake from FarmV1. Then stake into FarmV2 (Before stake need to Approve).`)}
             </Typography>
           </div>
 
