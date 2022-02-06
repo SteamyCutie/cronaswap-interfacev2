@@ -255,7 +255,7 @@ const FarmListItem = ({ farm }) => {
                   >
                     <Typography variant="sm">
                       {/* {i18n._(t`Get ${farm?.token0?.symbol}-${farm?.token1?.symbol} LP`)} */}
-                      Get ${farm?.token0?.symbol}-${farm?.token1?.symbol} LP
+                      Get {farm?.token0?.symbol}-{farm?.token1?.symbol} LP
                     </Typography>
                   </ExternalLink>
                 </div>
