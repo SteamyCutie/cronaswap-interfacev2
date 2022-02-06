@@ -179,7 +179,7 @@ export const FARMS: AddressMap = {
       pid: 14,
       symbol: 'CLP',
       name: 'CRONA-USDT',
-      migrate: false,
+      migrate: true,
       token0: {
         id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         name: 'CronaSwap Token',
