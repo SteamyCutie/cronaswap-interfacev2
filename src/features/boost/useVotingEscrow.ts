@@ -1,4 +1,5 @@
 import { CurrencyAmount, Token } from '@cronaswap/core-sdk'
+import { useCallWithGasPrice } from 'app/hooks/useCallWithGasPrice'
 import { useRewardPoolContract, useVotingEscrowContract } from 'app/hooks/useContract'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { useCallback } from 'react'
@@ -13,7 +14,15 @@ export default function useVotingEscrow() {
     async (amount: CurrencyAmount<Token> | undefined, unlockTime: number) => {
       if (amount?.quotient) {
         try {
-          const tx = await contract?.createLockWithMc(amount?.quotient.toString(), unlockTime)
+          // const tx = await contract?.createLockWithMc(amount?.quotient.toString(), unlockTime)
+
+          const args = [amount?.quotient.toString(), unlockTime]
+
+          const gasLimit = await contract.estimateGas.createLockWithMc(...args)
+          const tx = await contract.createLockWithMc(...args, {
+            gasLimit: gasLimit.mul(120).div(100),
+          })
+
           return addTransaction(tx, { summary: 'Create CRONA lock' })
         } catch (e) {
           return e
