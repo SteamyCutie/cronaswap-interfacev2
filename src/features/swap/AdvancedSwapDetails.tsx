@@ -84,7 +84,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
         </div>
       </RowBetween>
 
-      <RowBetween>
+      {/* <RowBetween>
         <RowFixed>
           <div className="text-sm text-secondary">{i18n._(t`xCRONA Fee`)}</div>
           <QuestionHelper
@@ -94,7 +94,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
         <div className="text-sm font-bold text-high-emphesis">
           {realizedLPFee ? `${realizedLPFee.divide(6).toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
         </div>
-      </RowBetween>
+      </RowBetween> */}
 
       <RowBetween>
         <RowFixed>

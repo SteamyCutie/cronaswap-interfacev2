@@ -4,7 +4,7 @@ import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import Button from '../../components/Button'
 import { COMMON_BASES } from '../../config/routing'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import { CurrencyLogo } from '../../components/CurrencyLogo'
 import QuestionHelper from '../../components/QuestionHelper'
 import React from 'react'
 import Typography from '../../components/Typography'
@@ -20,7 +20,6 @@ export default function CommonBases({
   onSelect: (currency: Currency) => void
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
-  console.log(bases)
 
   return (
     <div className="flex flex-col space-y-2">

@@ -4,11 +4,10 @@ import {
   BORING_HELPER_ADDRESS,
   CHAINLINK_ORACLE_ADDRESS,
   ChainId,
+  CHAIN_KEY,
   ENS_REGISTRAR_ADDRESS,
   FACTORY_ADDRESS,
   MAKER_ADDRESS,
-  MASTERCHEF_ADDRESS,
-  MASTERCHEF_V2_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MINICHEF_ADDRESS,
   MULTICALL2_ADDRESS,
@@ -18,6 +17,8 @@ import {
   WNATIVE_ADDRESS,
 } from '@cronaswap/core-sdk'
 import { STOP_LIMIT_ORDER_ADDRESS } from '@sushiswap/limit-order-sdk'
+import MISO from '@cronaswap/miso/exports/all.json'
+
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
@@ -56,11 +57,32 @@ import SEEDSALE_ABI from '../constants/abis/seedSale.json'
 import PRIVATESALEA_ABI from '../constants/abis/privateSaleA.json'
 import PRIVATESALEB_ABI from '../constants/abis/privateSaleB.json'
 import PUBLICSALE_ABI from '../constants/abis/publicSale.json'
-import DASHBOARD_ABI from '../constants/abis/dashboard.json'
+import DASHBOARD_ABIV1 from '../constants/abis/dashboardv1.json'
+import DASHBOARD_ABIV2 from '../constants/abis/dashboardv2.json'
+import REWARD_POOL_ABI from '../constants/abis/rewardpool.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
+import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
+import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
+import MISO_HELPER_ABI from 'app/constants/abis/miso-helper.json'
+import IFOV1_ABI from '../constants/abis/ifoV1.json'
+import IFOV2_ABI from '../constants/abis/ifoV2.json'
+
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
 import { useMemo } from 'react'
+import {
+  DASHBOARDV1_ADDRESS,
+  DASHBOARDV2_ADDRESS,
+  MASTERCHEFV2_ADDRESS,
+  PRIVATE_SALEA_ADDRESS,
+  PRIVATE_SALEB_ADDRESS,
+  PUBLIC_SALE_ADDRESS,
+  SEED_SALE_ADDRESS,
+  VOTING_ESCROW_ADDRESS,
+  CRONAVAULT_ADDRESS,
+  REWARD_POOL_ADDRESS,
+  MASTERCHEFV1_ADDRESS,
+} from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
 
@@ -144,13 +166,15 @@ export function useCronaContract(withSignerIfPossible = true): Contract | null {
 
 export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
+  return useContract(chainId && MASTERCHEFV1_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
 }
 
+// new masterchef for cronaswapv2
 export function useMasterChefV2Contract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MASTERCHEF_V2_ADDRESS[chainId], MASTERCHEF_V2_ABI, withSignerIfPossible)
+  return useContract(chainId && MASTERCHEFV2_ADDRESS[chainId], MASTERCHEF_V2_ABI, withSignerIfPossible)
 }
+
 export function useMiniChefContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && MINICHEF_ADDRESS[chainId], MINICHEF_ABI, withSignerIfPossible)
@@ -220,26 +244,67 @@ export function useZenkoContract(withSignerIfPossible?: boolean): Contract | nul
   return useContract('0xa8f676c49f91655ab3b7c3ea2b73bb3088b2bc1f', ZENKO_ABI, withSignerIfPossible)
 }
 
+// add new address for cronaswapv2
 export function useSeedSaleContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x94f3Dfc9E8AE00892984d8fA003BF09a46987DFd', SEEDSALE_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(SEED_SALE_ADDRESS[chainId], SEEDSALE_ABI, withSignerIfPossible)
 }
 
 export function usePrivateSaleAContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x1c41BE3D395494e636aE7Ec9b8B5AB32A9Ddd1Ce', PRIVATESALEA_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(PRIVATE_SALEA_ADDRESS[chainId], PRIVATESALEA_ABI, withSignerIfPossible)
 }
 
 export function usePrivateSaleBContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x309afba23f791B5c38Ab9057D11D6869755fAcaf', PRIVATESALEB_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(PRIVATE_SALEB_ADDRESS[chainId], PRIVATESALEB_ABI, withSignerIfPossible)
 }
 
 export function usePublicSaleContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x941a3703E106707668f38E779c7984383638173e', PUBLICSALE_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(PUBLIC_SALE_ADDRESS[chainId], PUBLICSALE_ABI, withSignerIfPossible)
 }
 
-export function useDashboardContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x3647f6A3Ef1Aa70697b09407FF092fe878e9CeBA', DASHBOARD_ABI, withSignerIfPossible)
+export function useDashboardV1Contract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(DASHBOARDV1_ADDRESS[chainId], DASHBOARD_ABIV1, withSignerIfPossible)
+}
+
+export function useDashboardV2Contract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(DASHBOARDV2_ADDRESS[chainId], DASHBOARD_ABIV2, withSignerIfPossible)
+}
+
+export function useRewardPoolContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(REWARD_POOL_ADDRESS[chainId], REWARD_POOL_ABI, withSignerIfPossible)
 }
 
 export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
-  return useContract('0x98aFeD5b527e9ae7456857D697b739eD840853B0', VOTING_ESCROW_ABI, withSignerIfPossible)
+  const { chainId } = useActiveWeb3React()
+  return useContract(VOTING_ESCROW_ADDRESS[chainId], VOTING_ESCROW_ABI, withSignerIfPossible)
+}
+
+export function useAnyswapTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, ANYSWAP_ERC20_ABI, withSignerIfPossible)
+}
+
+export function useCronaVaultContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(CRONAVAULT_ADDRESS[chainId], CRONAVAULT_ABI, withSignerIfPossible)
+}
+
+export function useMisoHelperContract(withSignerIfPossible = true): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  // @ts-ignore TYPE NEEDS FIXING
+  const factory = MISO[chainId]?.[CHAIN_KEY[chainId]]?.contracts.MISOHelper
+  return useContract(factory?.address, MISO_HELPER_ABI, withSignerIfPossible)
+}
+
+export function useIfoV1Contract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, IFOV1_ABI, withSignerIfPossible)
+}
+
+export function useIfoV2Contract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, IFOV2_ABI, withSignerIfPossible)
 }

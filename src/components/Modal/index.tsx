@@ -46,7 +46,7 @@ export default function Modal({
                   maxWidth: `${maxWidth}px`,
                 }}
               >
-                <div className="w-full p-px rounded bg-gradient-to-r from-blue to-pink">
+                <div className="w-full p-px rounded bg-gradient-to-r from-blue to-red">
                   <div className="flex flex-col w-full h-full p-6 overflow-y-hidden rounded bg-dark-900">
                     <div style={{ minHeight: `${minHeight}vh`, maxHeight: `${maxHeight}vh` }}>{children}</div>
                   </div>

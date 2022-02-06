@@ -6,9 +6,12 @@ import { Interface } from '@ethersproject/abi'
 import { isAddress } from '../../functions/validate'
 import { useActiveWeb3React } from '../../services/web3'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import { TokenBalancesMap } from './types'
+
+import Web3 from 'web3'
+import { RPC } from 'app/config/wallets'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -174,3 +177,48 @@ export function useAllTokenBalances(): TokenBalancesMap {
 //     )
 //   );
 // }
+
+//add for cronaswapv2
+export function useMultichainCurrencyBalance(
+  chainId?: number,
+  account?: string,
+  currency?: Currency
+): CurrencyAmount<Currency> | undefined {
+  const { chainId: cronosChainId } = useActiveWeb3React()
+  const cronosBalance = useCurrencyBalance(chainId == cronosChainId && account, chainId == cronosChainId && currency)
+  const [value, setValue] = useState(null)
+
+  const getBalance = useCallback(() => {
+    const web3 = new Web3(RPC[chainId])
+    if (currency.isNative) {
+      web3.eth.getBalance(account).then((response) => {
+        const amount = CurrencyAmount.fromRawAmount(currency, response || 0)
+        setValue(amount)
+      })
+    } else if (currency.isToken) {
+      let contract = new web3.eth.Contract(ERC20_ABI as any, currency.address)
+      contract.methods
+        .balanceOf(account)
+        .call()
+        .then((response) => {
+          const amount = CurrencyAmount.fromRawAmount(currency, response || 0)
+          setValue(amount)
+        })
+        .catch((ex) => {
+          console.error(ex)
+        })
+    }
+  }, [account, chainId, currency])
+
+  useEffect(() => {
+    if (account && chainId && currency && chainId != cronosChainId) {
+      getBalance()
+    } else {
+      setValue(null)
+    }
+  }, [account, chainId, currency, getBalance, cronosChainId])
+
+  return useMemo(() => {
+    return chainId == cronosChainId ? cronosBalance : value
+  }, [chainId, cronosBalance, cronosChainId, value])
+}

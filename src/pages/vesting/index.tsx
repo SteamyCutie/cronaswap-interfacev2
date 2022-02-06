@@ -19,8 +19,14 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { ApplicationModal } from 'state/application/actions'
 import { getBalanceNumber } from 'functions/formatBalance'
-import { usePublicSaleContract, useSeedSaleContract, usePrivateSaleAContract, usePrivateSaleBContract } from 'hooks/useContract'
+import {
+  usePublicSaleContract,
+  useSeedSaleContract,
+  usePrivateSaleAContract,
+  usePrivateSaleBContract,
+} from 'hooks/useContract'
 import { usePurchased, useClaimable, useClaimed } from 'hooks/useVestingInfo'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 // import Link from 'next/link'
 // import { useClaimCallback, useUserUnclaimedAmount } from '../../state/claim/weekly/hooks'
@@ -30,7 +36,6 @@ import { usePurchased, useClaimable, useClaimed } from 'hooks/useVestingInfo'
 // import QuestionHelper from '../../components/QuestionHelper'
 // import { formatNumber } from '../../functions/format'
 // import { isAddress } from '@ethersproject/address'
-
 
 const Strategies = () => {
   const { i18n } = useLingui()
@@ -88,6 +93,7 @@ const Strategies = () => {
 
 const PrivateSaleAVesting = () => {
   const { i18n } = useLingui()
+  const addTransaction = useTransactionAdder()
 
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleClaimModal = useToggleSelfClaimModal()
@@ -108,13 +114,13 @@ const PrivateSaleAVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(privateSaleAContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
-
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
-      // toastError(i18n._(t`Error`), i18n._(t`Please try again. Confirm the transaction and make sure you are paying enough gas!`))
-      setPendingTx(false)
     }
+    setPendingTx(false)
   }
 
   // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
@@ -162,11 +168,7 @@ const PrivateSaleAVesting = () => {
             </div>
           </div>
           <Button
-            color={
-              !claimableCrona
-                ? 'gray'
-                : 'gradient'
-            }
+            color={!claimableCrona ? 'gray' : 'gradient'}
             disabled={!claimableCrona}
             size="default"
             onClick={handleClaim}
@@ -209,6 +211,7 @@ const PrivateSaleBVesting = () => {
   const privateSaleBContract = usePrivateSaleBContract()
   const [pendingTx, setPendingTx] = useState(false)
   const { callWithGasPrice } = useCallWithGasPrice()
+  const addTransaction = useTransactionAdder()
   // const { toastError, toastSuccess } = useToast()
   const DEFAULT_GAS_LIMIT = 250000
 
@@ -216,21 +219,13 @@ const PrivateSaleBVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(privateSaleBContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
-      // if (receipt.status) {
-      //     toastSuccess(
-      //         i18n._(t`Private-sale B claimed!`,
-      //             <ToastDescriptionWithTx txHash={receipt.transactionHash}>
-      //                 {i18n._(t`CRONAs has been sent to your wallet.`)}
-      //             </ToastDescriptionWithTx>,
-      //         )),
-      //         setPendingTx(false)
-      // }
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
-      // toastError(i18n._(t`Error`), i18n._(t`Please try again. Confirm the transaction and make sure you are paying enough gas!`))
-      setPendingTx(false)
     }
+    setPendingTx(false)
   }
 
   // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
@@ -278,11 +273,7 @@ const PrivateSaleBVesting = () => {
             </div>
           </div>
           <Button
-            color={
-              !claimableCrona
-                ? 'gray'
-                : 'gradient'
-            }
+            color={!claimableCrona ? 'gray' : 'gradient'}
             disabled={!claimableCrona}
             size="default"
             onClick={handleClaim}
@@ -315,6 +306,7 @@ const SeedSaleVesting = () => {
 
   const isOpen = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleClaimModal = useToggleSelfClaimModal()
+  const addTransaction = useTransactionAdder()
 
   const { account } = useActiveWeb3React()
   const [attempting, setAttempting] = useState<boolean>(false)
@@ -332,21 +324,14 @@ const SeedSaleVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(seedSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
-      // if (receipt.status) {
-      //     toastSuccess(
-      //         i18n._(t`Seed-sale claimed!`,
-      //             <ToastDescriptionWithTx txHash={receipt.transactionHash}>
-      //                 {i18n._(t`CRONAs has been sent to your wallet.`)}
-      //             </ToastDescriptionWithTx>,
-      //         )),
-      //         setPendingTx(false)
-      // }
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
       // toastError(i18n._(t`Error`), i18n._(t`Please try again. Confirm the transaction and make sure you are paying enough gas!`))
-      setPendingTx(false)
     }
+    setPendingTx(false)
   }
 
   // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
@@ -394,11 +379,7 @@ const SeedSaleVesting = () => {
             </div>
           </div>
           <Button
-            color={
-              !claimableCrona
-                ? 'gray'
-                : 'gradient'
-            }
+            color={!claimableCrona ? 'gray' : 'gradient'}
             disabled={!claimableCrona}
             size="default"
             onClick={handleClaim}
@@ -441,9 +422,9 @@ const PublicSaleVesting = () => {
   const pubSaleContract = usePublicSaleContract()
   const [pendingTx, setPendingTx] = useState(false)
   const { callWithGasPrice } = useCallWithGasPrice()
+  const addTransaction = useTransactionAdder()
   // const { toastError, toastSuccess } = useToast()
   const DEFAULT_GAS_LIMIT = 250000
-
 
   // function onClaim() {
   //   setAttempting(true)
@@ -459,11 +440,13 @@ const PublicSaleVesting = () => {
     setPendingTx(true)
     try {
       const tx = await callWithGasPrice(pubSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
-      const receipt = await tx.wait()
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
     } catch (error) {
       console.error(error)
-      setPendingTx(false)
     }
+    setPendingTx(false)
   }
 
   // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
@@ -535,11 +518,7 @@ const PublicSaleVesting = () => {
             </div>
           </div>
           <Button
-            color={
-              !claimableCrona
-                ? 'gray'
-                : 'gradient'
-            }
+            color={!claimableCrona ? 'gray' : 'gradient'}
             disabled={!claimableCrona}
             size="default"
             onClick={handleClaim}

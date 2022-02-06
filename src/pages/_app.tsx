@@ -31,6 +31,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 const Web3ProviderNetwork = dynamic(() => import('../components/Web3ProviderNetwork'), { ssr: false })
+const Web3ProviderNetworkBridge = dynamic(() => import('../components/Web3ProviderBridge'), { ssr: false })
 
 // const Web3ReactManager = dynamic(() => import('../components/Web3ReactManager'), { ssr: false })
 
@@ -156,26 +157,28 @@ function MyApp({
       <I18nProvider i18n={i18n} forceRenderOnLocaleChange={false}>
         <Web3ReactProvider getLibrary={getLibrary}>
           <Web3ProviderNetwork getLibrary={getLibrary}>
-            <Web3ReactManager>
-              <ReduxProvider store={store}>
-                <PersistGate loading={<Dots>loading</Dots>} persistor={persistor}>
-                  <>
-                    <ListsUpdater />
-                    <UserUpdater />
-                    <ApplicationUpdater />
-                    <TransactionUpdater />
-                    <MulticallUpdater />
-                  </>
-                  <Provider>
-                    <Layout>
-                      <Guard>
-                        <Component {...pageProps} />
-                      </Guard>
-                    </Layout>
-                  </Provider>
-                </PersistGate>
-              </ReduxProvider>
-            </Web3ReactManager>
+            <Web3ProviderNetworkBridge getLibrary={getLibrary}>
+              <Web3ReactManager>
+                <ReduxProvider store={store}>
+                  <PersistGate loading={<Dots>loading</Dots>} persistor={persistor}>
+                    <>
+                      <ListsUpdater />
+                      <UserUpdater />
+                      <ApplicationUpdater />
+                      <TransactionUpdater />
+                      <MulticallUpdater />
+                    </>
+                    <Provider>
+                      <Layout>
+                        <Guard>
+                          <Component {...pageProps} />
+                        </Guard>
+                      </Layout>
+                    </Provider>
+                  </PersistGate>
+                </ReduxProvider>
+              </Web3ReactManager>
+            </Web3ProviderNetworkBridge>
           </Web3ProviderNetwork>
         </Web3ReactProvider>
       </I18nProvider>

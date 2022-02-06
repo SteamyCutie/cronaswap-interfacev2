@@ -36,6 +36,10 @@ export const updateBlockNumber = createAction<{
   chainId: number
   blockNumber: number
 }>('application/updateBlockNumber')
+export const updateBlockTimestamp = createAction<{
+  chainId: number
+  blockTimestamp: number
+}>('application/updateBlockTimestamp')
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
 export const addPopup = createAction<{
   key?: string

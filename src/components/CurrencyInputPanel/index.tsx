@@ -4,7 +4,7 @@ import { classNames, formatCurrencyAmount } from '../../functions'
 
 import Button from '../Button'
 import { ChevronDownIcon } from '@heroicons/react/outline'
-import CurrencyLogo from '../CurrencyLogo'
+import { CurrencyLogo } from '../CurrencyLogo'
 import CurrencySearchModal from '../../modals/SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { FiatValue } from './FiatValue'

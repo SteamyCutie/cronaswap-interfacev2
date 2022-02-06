@@ -3,7 +3,6 @@ import { Feature, featureEnabled } from '../../functions/feature'
 import React from 'react'
 
 import { ANALYTICS_URL } from '../../constants'
-import Buy from '../../features/on-ramp/ramp'
 import ExternalLink from '../ExternalLink'
 import Image from 'next/image'
 import LanguageSwitch from '../LanguageSwitch'
@@ -19,6 +18,8 @@ import { useActiveWeb3React } from '../../services/web3'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
 import TokenStats from '../TokenStats'
+import { ExternalLink as LinkIcon } from 'react-feather'
+import Typography from '../Typography'
 
 // import { ExternalLink, NavLink } from "./Link";
 // import { ReactComponent as Burger } from "../assets/images/burger.svg";
@@ -57,13 +58,23 @@ function AppBar(): JSX.Element {
                           {i18n._(t`Pool`)}
                         </a>
                       </NavLink>
-                      {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                        <NavLink href={'/farm'}>
+                      {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                        <NavLink href={'/farmv1'}>
                           <a
                             id={`yield-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Farm`)}
+                            {i18n._(t`Farm V1`)}
+                          </a>
+                        </NavLink>
+                      )}
+                      {chainId && featureEnabled(Feature.FARMV2, chainId) && (
+                        <NavLink href={'/farmv2'}>
+                          <a
+                            id={`yield-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Farm V2`)}
                           </a>
                         </NavLink>
                       )}
@@ -75,6 +86,18 @@ function AppBar(): JSX.Element {
                               className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                             >
                               {i18n._(t`Lending`)}
+                            </a>
+                          </NavLink>
+                        </>
+                      )}
+                      {chainId && featureEnabled(Feature.IFO, chainId) && (
+                        <>
+                          <NavLink href={'/ifo'}>
+                            <a
+                              id={`lend-nav-link`}
+                              className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                            >
+                              {i18n._(t`IFO`)}
                             </a>
                           </NavLink>
                         </>
@@ -112,13 +135,30 @@ function AppBar(): JSX.Element {
                           </a>
                         </NavLink>
                       )}
+
+                      {chainId && featureEnabled(Feature.AMMV1, chainId) && (
+                        <ExternalLink endIcon={<LinkIcon size={16} />} href={'http://appv1.cronaswap.org'}>
+                          <Typography variant="base">{i18n._(t`V1 (old)`)}</Typography>
+                        </ExternalLink>
+                      )}
+
+                      {/* {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
+                        <NavLink href={'/bridge'}>
+                          <a
+                            id={`bridge-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Bridge`)}
+                          </a>
+                        </NavLink>
+                      )} */}
                     </div>
                   </div>
                 </div>
 
                 <div className="fixed bottom-0 left-0 z-10 flex flex-row items-center justify-center w-full p-4 lg:w-auto bg-dark-1000 lg:relative lg:p-0 lg:bg-transparent">
                   <div className="flex items-center justify-between w-full space-x-2 sm:justify-end">
-                    <div className="w-auto flex items-center rounded mr-1 bg-dark-800 shadow-sm text-primary text-xs hover:bg-dark-700 whitespace-nowrap font-bold cursor-pointer select-none pointer-events-auto sm:block">
+                    <div className="flex items-center w-auto mr-1 text-xs font-bold rounded shadow-sm cursor-pointer pointer-events-auto select-none bg-dark-800 text-primary hover:bg-dark-700 whitespace-nowrap sm:block">
                       <TokenStats token="CRONA" />
                     </div>
                     {library && library.provider.isMetaMask && (
@@ -203,14 +243,26 @@ function AppBar(): JSX.Element {
                   </a>
                 </Link>
 
-                {chainId && featureEnabled(Feature.LIQUIDITY_MINING, chainId) && (
-                  <Link href={'/farm'}>
+                {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                  <Link href={'/farmv1'}>
                     <a
                       id={`farm-nav-link`}
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {' '}
-                      {i18n._(t`Farm`)}
+                      {i18n._(t`Farm V1`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.FARMV2, chainId) && (
+                  <Link href={'/farmv2'}>
+                    <a
+                      id={`farm-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {' '}
+                      {i18n._(t`Farm V2`)}
                     </a>
                   </Link>
                 )}
@@ -240,7 +292,7 @@ function AppBar(): JSX.Element {
                 {chainId && featureEnabled(Feature.ANALYTICS, chainId) && (
                   <ExternalLink
                     id={`analytics-nav-link`}
-                    href={ANALYTICS_URL[chainId] || 'https://analytics.sushi.com'}
+                    href={ANALYTICS_URL[chainId] || 'https://analytics.x.com'}
                     className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                   >
                     {i18n._(t`Analytics`)}

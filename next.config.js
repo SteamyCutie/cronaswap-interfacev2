@@ -43,8 +43,12 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/farm',
-        destination: '/yield',
+        source: '/farmv1',
+        destination: '/farmv1',
+      },
+      {
+        source: '/farmv2',
+        destination: '/farmv2',
       },
       {
         source: '/stake',

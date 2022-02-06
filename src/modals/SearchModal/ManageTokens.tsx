@@ -2,7 +2,7 @@ import React, { RefObject, useCallback, useMemo, useRef, useState } from 'react'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { useRemoveUserAddedToken, useUserAddedTokens } from '../../state/user/hooks'
 
-import CurrencyLogo from '../../components/CurrencyLogo'
+import { CurrencyLogo } from '../../components/CurrencyLogo'
 import CurrencyModalView from './CurrencyModalView'
 import ExternalLink from '../../components/ExternalLink'
 import { ExternalLinkIcon } from '../../components/ExternalLinkIcon'
@@ -81,7 +81,7 @@ function ManageTokens({
           id="token-search-input"
           type="text"
           placeholder={'0x0000'}
-          className="w-full bg-dark-900 border border-dark-800 focus:border-transparent focus:border-gradient-r-blue-pink-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5 appearance-none"
+          className="w-full bg-dark-900 border border-dark-800 focus:border-transparent focus:border-gradient-r-blue-red-dark-900 rounded placeholder-secondary focus:placeholder-primary font-bold text-base px-6 py-3.5 appearance-none"
           value={searchQuery}
           autoComplete="off"
           onChange={handleInput}
