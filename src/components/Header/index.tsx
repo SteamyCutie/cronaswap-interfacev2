@@ -292,7 +292,7 @@ function AppBar(): JSX.Element {
                 {chainId && featureEnabled(Feature.AMMV1, chainId) && (
                   <ExternalLink
                     id={`analytics-nav-link`}
-                    href={'http://appv1.cronaswap.org'}
+                    href={'https://appv1.cronaswap.org'}
                     className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                   >
                     {i18n._(t`V1 (old)`)}
