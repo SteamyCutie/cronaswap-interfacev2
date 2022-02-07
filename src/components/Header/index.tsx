@@ -137,7 +137,7 @@ function AppBar(): JSX.Element {
                       )}
 
                       {chainId && featureEnabled(Feature.AMMV1, chainId) && (
-                        <ExternalLink endIcon={<LinkIcon size={16} />} href={'http://appv1.cronaswap.org'}>
+                        <ExternalLink endIcon={<LinkIcon size={16} />} href={'https://appv1.cronaswap.org'}>
                           <Typography variant="base">{i18n._(t`V1 (old)`)}</Typography>
                         </ExternalLink>
                       )}
