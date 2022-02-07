@@ -109,10 +109,7 @@ const PrivateSaleAVesting = () => {
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const gasLimit = await privateSaleAContract.estimateGas.claim()
-      const tx = await privateSaleAContract.claim({
-        gasLimit: gasLimit.mul(120).div(100),
-      })
+      const tx = await privateSaleAContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
@@ -214,10 +211,7 @@ const PrivateSaleBVesting = () => {
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const gasLimit = await privateSaleBContract.estimateGas.claim()
-      const tx = await privateSaleBContract.claim({
-        gasLimit: gasLimit.mul(120).div(100),
-      })
+      const tx = await privateSaleBContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
@@ -319,10 +313,7 @@ const SeedSaleVesting = () => {
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const gasLimit = await seedSaleContract.estimateGas.claim()
-      const tx = await seedSaleContract.claim({
-        gasLimit: gasLimit.mul(120).div(100),
-      })
+      const tx = await seedSaleContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
@@ -434,10 +425,7 @@ const PublicSaleVesting = () => {
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const gasLimit = await pubSaleContract.estimateGas.claim()
-      const tx = await pubSaleContract.claim({
-        gasLimit: gasLimit.mul(120).div(100),
-      })
+      const tx = await pubSaleContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
