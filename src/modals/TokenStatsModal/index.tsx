@@ -32,7 +32,7 @@ export default function TokenStatsModal({ token, price }: { token: any; price: a
 
   function getSummaryLine(title, value) {
     return (
-      <div className="flex flex-col gap-2 bg-dark-800 rounded py-1 px-3 w-full">
+      <div className="flex flex-col w-full gap-2 px-3 py-1 rounded bg-dark-800">
         <div className="flex items-center justify-between">
           {title}
           <Typography variant="sm" className="flex items-center font-bold py-0.5">
@@ -59,24 +59,25 @@ export default function TokenStatsModal({ token, price }: { token: any; price: a
                 className="items-center"
               />
             )}
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-col flex-1">
               <div className="flex flex-row">
-                <div className="text-primary text-2xl">{token['symbol']}</div>
+                <div className="text-2xl text-primary">{token['symbol']}</div>
               </div>
-              <div className="flex items-center justify-between space-x-3 gap-2">
+              <div className="flex items-center justify-between gap-2 space-x-3">
                 {token?.address && (
                   <ExternalLink
                     color="blue"
                     startIcon={<LinkIcon size={16} />}
                     href={getExplorerLink(chainId, token['address'][chainId], 'address')}
+                    className="outline-none"
                   >
                     <Typography variant="sm">{i18n._(t`View Contract`)}</Typography>
                   </ExternalLink>
                 )}
               </div>
             </div>
-            <div className="flex items-center  text-primary text-bold">
-              <div className="ml-2 text-primary text-2xl">{`${cronaPrice}`}</div>
+            <div className="flex items-center text-primary text-bold">
+              <div className="ml-2 text-2xl text-primary">{`${cronaPrice}`}</div>
             </div>
           </div>
         </div>
@@ -84,7 +85,7 @@ export default function TokenStatsModal({ token, price }: { token: any; price: a
           <div className="flex items-center justify-between">
             <Typography weight={700}>{i18n._(t`Supply & Market Cap`)}</Typography>
           </div>
-          <div className="flex flex-col flex-nowrap gap-1 -m-1">
+          <div className="flex flex-col gap-1 -m-1 flex-nowrap">
             {getSummaryLine(
               <Typography variant="sm" className="flex items-center py-0.5">
                 {i18n._(t`Total Supply`)}

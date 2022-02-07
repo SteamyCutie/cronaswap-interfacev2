@@ -15,6 +15,7 @@ export enum Feature {
   ZAP = 'Zap',
   MISO = 'Miso',
   IFO = 'Ifo',
+  GAMEFI = 'GameFi',
 }
 
 const features = {
@@ -31,6 +32,7 @@ const features = {
     Feature.STAKING,
     Feature.BRIDGE,
     Feature.BOOST,
+    // Feature.GAMEFI,
   ],
 
   [ChainId.CRONOS_TESTNET]: [
@@ -43,6 +45,7 @@ const features = {
     Feature.MISO,
     Feature.STAKING,
     Feature.BOOST,
+    Feature.GAMEFI,
   ],
 }
 
