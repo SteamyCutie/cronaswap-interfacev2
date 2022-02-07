@@ -35,7 +35,14 @@ export default function useVotingEscrow() {
   // withdrawWithMc
   const withdrawWithMc = useCallback(async () => {
     try {
-      const tx = await contract?.withdraw()
+      // const tx = await contract?.withdraw()
+
+      const args = []
+      const gasLimit = await contract.estimateGas.withdraw(...args)
+      const tx = await contract.withdraw(...args, {
+        gasLimit: gasLimit.mul(120).div(100),
+      })
+
       return addTransaction(tx, { summary: 'Withdraw CRONA' })
     } catch (e) {
       return e
@@ -47,7 +54,15 @@ export default function useVotingEscrow() {
     async (amount: CurrencyAmount<Token> | undefined) => {
       if (amount?.quotient) {
         try {
-          const tx = await contract?.increaseAmountWithMc(amount?.quotient.toString())
+          // const tx = await contract?.increaseAmountWithMc(amount?.quotient.toString())
+
+          const args = [amount?.quotient.toString()]
+
+          const gasLimit = await contract.estimateGas.increaseAmountWithMc(...args)
+          const tx = await contract.increaseAmountWithMc(...args, {
+            gasLimit: gasLimit.mul(120).div(100),
+          })
+
           return addTransaction(tx, { summary: 'Increase Lock Amount' })
         } catch (e) {
           return e
@@ -61,7 +76,15 @@ export default function useVotingEscrow() {
   const increaseUnlockTimeWithMc = useCallback(
     async (unlockTime: number) => {
       try {
-        const tx = await contract?.increaseUnlockTimeWithMc(unlockTime)
+        // const tx = await contract?.increaseUnlockTimeWithMc(unlockTime)
+
+        const args = [unlockTime]
+
+        const gasLimit = await contract.estimateGas.increaseUnlockTimeWithMc(...args)
+        const tx = await contract.increaseUnlockTimeWithMc(...args, {
+          gasLimit: gasLimit.mul(120).div(100),
+        })
+
         return addTransaction(tx, { summary: 'Increase Lock Time' })
       } catch (e) {
         return e
@@ -80,6 +103,7 @@ export default function useVotingEscrow() {
     }
   }, [addTransaction, reward])
 
+  // harvest
   const claimHarvestRewards = useCallback(async () => {
     try {
       const tx = await reward?.harvest()
