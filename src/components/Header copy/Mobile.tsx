@@ -22,7 +22,7 @@ const Mobile: FC = () => {
 
   return (
     <>
-      <header className="w-full flex items-center justify-between min-h-[64px] h-[64px] px-4">
+      <header className="w-full flex items-center justify-between min-h-[64px] h-[64px] px-4 bg-dark-900">
         <div className="flex justify-between flex-grow">
           <div className="p-2 rounded-full hover:bg-white/10">
             <MenuIcon width={28} className="text-white cursor-pointer hover:text-white" onClick={() => setOpen(true)} />

@@ -22,10 +22,10 @@ const Desktop: FC = () => {
 
   return (
     <>
-      <header className="fixed z-20 hidden w-full lg:block" style={{ height: HEADER_HEIGHT }}>
-        <nav className={NAV_CLASS}>
+      <header className="z-20 hidden w-full lg:block">
+        <nav className="z-10 w-full bg-transparent header-border-b">
           <Container maxWidth="full" className="mx-auto">
-            <div className="flex items-center justify-between gap-4 px-6">
+            <div className="flex items-center justify-between gap-4 px-4 py-2">
               <div className="flex gap-4">
                 <div className="flex items-center mr-4">
                   <Image src="/logo.png" alt="CronaSwap" width="171px" height="32px" />
@@ -66,7 +66,6 @@ const Desktop: FC = () => {
           </Container>
         </nav>
       </header>
-      <div style={{ height: HEADER_HEIGHT, minHeight: HEADER_HEIGHT }} />
     </>
   )
 }

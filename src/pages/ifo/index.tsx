@@ -13,7 +13,7 @@ import { useLingui } from '@lingui/react'
 import useSortableData from '../../hooks/useSortableData'
 import useFarms from '../../features/farms/useFarms'
 import { formatNumberScale } from '../../functions'
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
+import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline'
 import QuestionHelper from '../../components/QuestionHelper'
 import Dots from '../../components/Dots'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -119,14 +119,37 @@ export default function Ifo(): JSX.Element {
             <Typography variant="sm" weight={400}>
               {i18n._(t`Buy new tokens launching on Cronos Chain.`)}
             </Typography>
+            <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+              <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
+                <div className="text-light-blue">{i18n._(t`Apply for IFO`)}</div>
+                <ArrowRightIcon height={14} className="" />
+              </div>
+            </a>
           </div>
 
-          <div className="flex gap-3">
+          {/* <div className="flex gap-3">
             <Button id="btn-create-new-pool" color="blue" variant="outlined" size="sm">
               <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
                 {i18n._(t`Apply for IFO`)}
               </a>
             </Button>
+          </div> */}
+
+          <div className="flex m-auto item-center mb-2 rounded md:m-0 md:w-3/12 h-14 bg-dark-800">
+            <div className="w-6/12 h-full p-1">
+              <NavLink href="/farmv2?filter=all">
+                <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>
+                  <p>Current</p>
+                </div>
+              </NavLink>
+            </div>
+            <div className="w-6/12 h-full p-1">
+              <NavLink href="/farmv2?filter=inactive">
+                <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>
+                  <p>Past</p>
+                </div>
+              </NavLink>
+            </div>
           </div>
         </div>
 

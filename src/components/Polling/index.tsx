@@ -29,7 +29,7 @@ export default function Polling() {
   return (
     <ExternalLink
       href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), 'block') : ''}
-      className={`${!isMounted ? 'text-high-emphesis' : 'text-low-emphesis'}`}
+      className={`${!isMounted ? 'text-green' : 'text-low-emphesis'}`}
     >
       <div className={`flex items-center space-x-2`}>
         <div>{blockNumber}</div>

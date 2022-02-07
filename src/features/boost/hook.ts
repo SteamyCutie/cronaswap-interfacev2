@@ -6,21 +6,17 @@ import { useMemo } from 'react'
 export function useLockedBalance() {
   const { account } = useActiveWeb3React()
 
-  // const cronaSupply = useSingleCallResult(useVotingEscrowContract(), 'supply', undefined)?.result?.[0]
-
-  // const veCronaSupply = useSingleCallResult(useVotingEscrowContract(), 'totalSupply', undefined)?.result?.[0]
-
-  // const veCrona = useSingleCallResult(useVotingEscrowContract(), 'balanceOf', account ? [account] : undefined)
-  //   ?.result?.[0]
-
-  // const result = useSingleCallResult(useVotingEscrowContract(), 'locked', account ? [account] : undefined)?.result
-  // const lockAmount = result?.amount
-  // const lockEnd = result?.end
-
-  // return useMemo(
-  //   () => ({ lockAmount, lockEnd, veCrona, cronaSupply, veCronaSupply }),
-  //   [result?.amount, result?.end, veCrona, cronaSupply, veCronaSupply]
-  // )
+  if (!account) {
+    return {
+      cronaSupply: undefined,
+      veCronaSupply: undefined,
+      veCrona: undefined,
+      lockEnd: undefined,
+      lockAmount: undefined,
+      rewards: undefined,
+      harvestRewards: undefined,
+    }
+  }
 
   const harvestRewards = useSingleCallResult(useRewardPoolContract(), 'calculateHarvestCronaRewards', undefined)?.result
   const rewards = useSingleCallResult(
