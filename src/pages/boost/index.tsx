@@ -340,6 +340,15 @@ export default function Boost() {
                   </button>
 
                   <button
+                    className={activeTab === 14 ? activeTabStyle : inactiveTabStyle}
+                    onClick={() => {
+                      setActiveTab(14)
+                    }}
+                  >
+                    2 Weeks
+                  </button>
+
+                  <button
                     className={activeTab === 30 ? activeTabStyle : inactiveTabStyle}
                     onClick={() => {
                       setActiveTab(30)
@@ -363,7 +372,7 @@ export default function Boost() {
                       setActiveTab(180)
                     }}
                   >
-                    6 Month
+                    6 Months
                   </button>
 
                   <button
@@ -384,14 +393,14 @@ export default function Boost() {
                     2 Years
                   </button>
 
-                  <button
+                  {/* <button
                     className={activeTab === 1095 ? activeTabStyle : inactiveTabStyle}
                     onClick={() => {
                       setActiveTab(1095)
                     }}
                   >
                     3 Years
-                  </button>
+                  </button> */}
 
                   <button
                     className={activeTab === 1460 ? activeTabStyle : inactiveTabStyle}
