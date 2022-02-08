@@ -47,7 +47,7 @@ export default function TokenStatsModal({ token, price }: { token: any; price: a
     return (
       <div className="space-y-6">
         <div className="space-y-2">
-          <ModalHeader title={i18n._(t`${token['name']}`)} onClose={toggleWalletModal} />
+          <ModalHeader title={token['name']} onClose={toggleWalletModal} />
           <div className="flex flex-row w-full py-4">
             {token.icon && (
               <Image
