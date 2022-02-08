@@ -34,7 +34,6 @@ import { useWalletModalToggle } from 'app/state/application/hooks'
 import { useActiveWeb3React } from 'app/services/web3'
 import ifos from 'app/constants/ifo'
 import { OnSaleInfo, DEFAULT_TOKEN_DECIMAL } from 'app/features/ifo/ifoInfo'
-import { useCallWithGasPrice } from 'app/hooks/useCallWithGasPrice'
 import { useTokenContract, useIfoV2Contract } from 'app/hooks'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { parseUnits } from '@ethersproject/units'
@@ -127,7 +126,6 @@ export default function BasicSale(): JSX.Element {
   const { saleAmount: basicAmount, distributionRatio: basicRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolBasic' })
 
   const contractAddress = activeIfo['address']
-  const { callWithGasPrice } = useCallWithGasPrice()
   const contract = useIfoV2Contract(contractAddress)
   const raisingTokenContract = useTokenContract(CRONA[chainId].address)
   const [pendingTx, setPendingTx] = useState(false)
@@ -139,14 +137,11 @@ export default function BasicSale(): JSX.Element {
     } else {
       try {
         setPendingTx(true)
-        const tx = await callWithGasPrice(
-          raisingTokenContract,
-          'approve',
-          [contractAddress, ethers.constants.MaxUint256],
-          {
-            gasPrice,
-          }
-        )
+        const args = [contractAddress, ethers.constants.MaxUint256]
+        const gasLimit = await contract.estimateGas.approve(...args)
+        const tx = await contract.approve(...args, {
+          gasLimit: gasLimit.mul(120).div(100),
+        })
         addTransaction(tx, {
           summary: `${i18n._(t`Approve`)} CRONA`,
         })
@@ -166,7 +161,11 @@ export default function BasicSale(): JSX.Element {
     } else {
       try {
         setPendingTx(true)
-        const tx = await callWithGasPrice(contract, 'depositPool', [valueWithTokenDecimals.toString(), 0], { gasPrice })
+        const args = [valueWithTokenDecimals.toString(), 0]
+        const gasLimit = await contract.estimateGas.depositPool(...args)
+        const tx = await contract.depositPool(...args, {
+          gasLimit: gasLimit.mul(120).div(100),
+        })
         addTransaction(tx, {
           summary: `${i18n._(t`Commit`)} CRONA`,
         })

@@ -6,7 +6,6 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useCronaVaultContract } from 'hooks/useContract'
 import { ArrowRightIcon } from '@heroicons/react/outline'
-import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { formatNumber, getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
@@ -15,6 +14,7 @@ import ManualPoolCard from 'app/features/staking/ManualPoolCard'
 import Typography from 'app/components/Typography'
 import { formatNumberScale } from 'app/functions'
 import Button from 'app/components/Button'
+import IncentivePool from 'app/features/staking/IncentivePool/IncentivePool'
 
 const buttonStyle =
   'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
@@ -24,7 +24,6 @@ export default function Stake() {
   const addTransaction = useTransactionAdder()
 
   const cronavaultContract = useCronaVaultContract()
-  const { callWithGasPrice } = useCallWithGasPrice()
 
   const autocronaBountyValue = useRef(0)
 
@@ -39,7 +38,8 @@ export default function Stake() {
   const handleBountyClaim = async () => {
     setPendingBountyTx(true)
     try {
-      const tx = await callWithGasPrice(cronavaultContract, 'harvest', undefined, { gasLimit: 380000 })
+      const gasLimit = await cronavaultContract.estimateGas.harvest()
+      const tx = await cronavaultContract.harvest({ gasLimit: gasLimit.mul(120).div(100) })
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
@@ -103,9 +103,16 @@ export default function Stake() {
           </div>
         </div>
 
-        <div className="w-full mt-6 gap-4 md:flex">
+        <div className="w-full gap-4 mt-6 md:flex">
           <AutoPoolCard />
           <ManualPoolCard />
+        </div>
+
+        {/* Incentive pool */}
+
+        <div className="w-full mt-6 md:flex">
+          {/* <div>Incentive pool</div> */}
+          <IncentivePool />
         </div>
       </div>
     </Container>

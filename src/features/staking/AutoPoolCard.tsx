@@ -17,7 +17,6 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { classNames, formatBalance, getExplorerLink } from '../../functions'
 import { useCronaVaultContract } from 'hooks/useContract'
 import DoubleLogo from '../../components/DoubleLogo'
-import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getDecimalAmount, getBalanceNumber, getBalanceAmount } from 'functions/formatBalance'
 import { getAPY, convertSharesToCrona, convertCronaToShares, useWithdrawalFeeTimer } from 'features/staking/useStaking'
@@ -47,10 +46,8 @@ export default function AutoPoolCard() {
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
   const addTransaction = useTransactionAdder()
-  const DEFAULT_GAS_LIMIT_AUTO = 400000
 
   const cronavaultContract = useCronaVaultContract()
-  const { callWithGasPrice } = useCallWithGasPrice()
 
   const [activeTabAuto, setActiveTabAuto] = useState(0)
   const [modalOpenAuto, setModalOpenAuto] = useState(false)
@@ -128,8 +125,10 @@ export default function AutoPoolCard() {
         if (approvalStateAuto !== ApprovalState.NOT_APPROVED) {
           try {
             const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
-            const tx = await callWithGasPrice(cronavaultContract, 'deposit', [convertedStakeAmount.toFixed()], {
-              gasLimit: DEFAULT_GAS_LIMIT_AUTO,
+            const args = [convertedStakeAmount.toFixed()]
+            const gasLimit = await cronavaultContract.estimateGas.deposit(...args)
+            const tx = await cronavaultContract.deposit(...args, {
+              gasLimit: gasLimit.mul(120).div(100),
             })
             addTransaction(tx, {
               summary: `${i18n._(t`Stake`)} CRONA`,
@@ -143,14 +142,11 @@ export default function AutoPoolCard() {
         try {
           const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
           const shareStakeToWithdraw = convertCronaToShares(convertedStakeAmount, fullShare.current)
-          const tx = await callWithGasPrice(
-            cronavaultContract,
-            'withdraw',
-            [shareStakeToWithdraw.sharesAsBigNumber.toFixed()],
-            {
-              gasLimit: DEFAULT_GAS_LIMIT_AUTO,
-            }
-          )
+          const args = [shareStakeToWithdraw.sharesAsBigNumber.toFixed()]
+          const gasLimit = await cronavaultContract.estimateGas.withdraw(...args)
+          const tx = await cronavaultContract.withdraw(...args, {
+            gasLimit: gasLimit.mul(120).div(100),
+          })
           addTransaction(tx, {
             summary: `${i18n._(t`Unstake`)} CRONA`,
           })

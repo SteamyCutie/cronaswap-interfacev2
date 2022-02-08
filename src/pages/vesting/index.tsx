@@ -16,7 +16,6 @@ import {
 } from 'state/claim/protocol/hooks'
 import { useModalOpen, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
-import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { ApplicationModal } from 'state/application/actions'
 import { getBalanceNumber } from 'functions/formatBalance'
 import {
@@ -106,14 +105,11 @@ const PrivateSaleAVesting = () => {
   const claimConfirmed = false
   const privateSaleAContract = usePrivateSaleAContract()
   const [pendingTx, setPendingTx] = useState(false)
-  const { callWithGasPrice } = useCallWithGasPrice()
-  // const { toastError, toastSuccess } = useToast()
-  const DEFAULT_GAS_LIMIT = 250000
 
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const tx = await callWithGasPrice(privateSaleAContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
+      const tx = await privateSaleAContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
@@ -210,15 +206,12 @@ const PrivateSaleBVesting = () => {
   const claimConfirmed = false
   const privateSaleBContract = usePrivateSaleBContract()
   const [pendingTx, setPendingTx] = useState(false)
-  const { callWithGasPrice } = useCallWithGasPrice()
   const addTransaction = useTransactionAdder()
-  // const { toastError, toastSuccess } = useToast()
-  const DEFAULT_GAS_LIMIT = 250000
 
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const tx = await callWithGasPrice(privateSaleBContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
+      const tx = await privateSaleBContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
@@ -316,20 +309,16 @@ const SeedSaleVesting = () => {
   const claimConfirmed = false
   const seedSaleContract = useSeedSaleContract()
   const [pendingTx, setPendingTx] = useState(false)
-  const { callWithGasPrice } = useCallWithGasPrice()
-  // const { toastError, toastSuccess } = useToast()
-  const DEFAULT_GAS_LIMIT = 250000
 
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const tx = await callWithGasPrice(seedSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
+      const tx = await seedSaleContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })
     } catch (error) {
       console.error(error)
-      // toastError(i18n._(t`Error`), i18n._(t`Please try again. Confirm the transaction and make sure you are paying enough gas!`))
     }
     setPendingTx(false)
   }
@@ -421,10 +410,7 @@ const PublicSaleVesting = () => {
   const claimConfirmed = false
   const pubSaleContract = usePublicSaleContract()
   const [pendingTx, setPendingTx] = useState(false)
-  const { callWithGasPrice } = useCallWithGasPrice()
   const addTransaction = useTransactionAdder()
-  // const { toastError, toastSuccess } = useToast()
-  const DEFAULT_GAS_LIMIT = 250000
 
   // function onClaim() {
   //   setAttempting(true)
@@ -439,7 +425,7 @@ const PublicSaleVesting = () => {
   const handleClaim = async () => {
     setPendingTx(true)
     try {
-      const tx = await callWithGasPrice(pubSaleContract, 'claim', undefined, { gasLimit: DEFAULT_GAS_LIMIT })
+      const tx = await pubSaleContract.claim()
       addTransaction(tx, {
         summary: `${i18n._(t`Claim`)} CRONA`,
       })

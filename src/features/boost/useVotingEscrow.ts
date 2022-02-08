@@ -1,5 +1,4 @@
 import { CurrencyAmount, Token } from '@cronaswap/core-sdk'
-import { useCallWithGasPrice } from 'app/hooks/useCallWithGasPrice'
 import { useRewardPoolContract, useVotingEscrowContract } from 'app/hooks/useContract'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { useCallback } from 'react'

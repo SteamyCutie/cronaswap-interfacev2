@@ -4,6 +4,7 @@ import { DiscordIcon, MediumIcon, TwitterIcon } from '../Icon'
 import Image from 'next/image'
 import React from 'react'
 import { useActiveWeb3React } from '../../services/web3'
+import Polling from '../Polling'
 
 const Footer = () => {
   const { chainId } = useActiveWeb3React()
@@ -125,6 +126,7 @@ const Footer = () => {
                   <item.icon className="h-6 w-6" aria-hidden="true" />
                 </a>
               ))}
+              <Polling />
             </div>
           </div>
           <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">

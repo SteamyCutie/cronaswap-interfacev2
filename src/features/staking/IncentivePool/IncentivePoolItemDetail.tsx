@@ -1,29 +1,33 @@
 import { Disclosure, Transition } from '@headlessui/react'
 import React, { useState } from 'react'
 
-import Button from '../../components/Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useLingui } from '@lingui/react'
-import { useActiveWeb3React } from '../../services/web3'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { MASTERCHEF_ADDRESS, Token, ZERO } from '@cronaswap/core-sdk'
+import { useActiveWeb3React } from 'app/services/web3'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
+import { CRONA, Token, ZERO } from '@cronaswap/core-sdk'
+import { formatNumber, formatNumberScale, getExplorerLink, tryParseAmount } from 'app/functions'
+import { ApprovalState, useApproveCallback } from 'app/hooks'
 import { getAddress } from '@ethersproject/address'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { usePendingCrona, useUserInfo } from './hooks'
-import { tryParseAmount } from '../../functions/parse'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import useMasterChef from './useMasterChef'
-import { formatNumber, formatNumberScale, getExplorerLink } from '../../functions'
+import { useTokenBalance } from 'app/state/wallet/hooks'
+import Button from 'app/components/Button'
+import Dots from 'app/components/Dots'
+import NumericalInput from 'app/components/NumericalInput'
 import { t } from '@lingui/macro'
-import Dots from '../../components/Dots'
-import NumericalInput from '../../components/NumericalInput'
-import ExternalLink from '../../components/ExternalLink'
-import Typography from '../../components/Typography'
-import { MASTERCHEFV2_ADDRESS } from '../../constants/addresses'
-import { FireIcon } from '@heroicons/react/outline'
-import NavLink from '../../components/NavLink'
+import ExternalLink from 'app/components/ExternalLink'
+import Typography from 'app/components/Typography'
+import { useUserInfo } from './hooks'
+import useSmartChef from './useSmartChef'
+import { ClockIcon } from '@heroicons/react/outline'
 
-const FarmListItemDetails = ({ farm }) => {
+const IncentivePoolItemDetail = ({
+  pool,
+  pendingReward,
+  stakingTokenPrice,
+  earningTokenPrice,
+  endInBlock,
+  bonusEndBlock,
+}) => {
   const { i18n } = useLingui()
 
   const { account, chainId } = useActiveWeb3React()
@@ -33,31 +37,37 @@ const FarmListItemDetails = ({ farm }) => {
 
   const addTransaction = useTransactionAdder()
 
-  const liquidityToken = new Token(
+  const stakingToken = new Token(
     chainId,
-    getAddress(farm.lpToken),
-    farm.token1 ? 18 : farm.token0 ? farm.token0.decimals : 18,
-    farm.token1 ? farm.symbol : farm.token0.symbol,
-    farm.token1 ? farm.name : farm.token0.name
+    getAddress(pool.stakingToken?.id),
+    pool.stakingToken.decimals,
+    pool.stakingToken.symbol,
+    pool.stakingToken.name
   )
 
-  // User liquidity token balance
-  const balance = useTokenBalance(account, liquidityToken)
+  const earningToken = new Token(
+    chainId,
+    getAddress(pool.earningToken?.id),
+    pool.earningToken.decimals,
+    pool.earningToken.symbol,
+    pool.earningToken.name
+  )
+
+  // CRONA balance
+  const balance = useTokenBalance(account, CRONA[chainId])
 
   // TODO: Replace these
-  const { amount } = useUserInfo(farm, liquidityToken)
+  const { amount } = useUserInfo(pool, earningToken)
 
-  const pendingCrona = usePendingCrona(farm)
+  // rewards
+  // const pendingRewards = usePendingReward(pool, earningToken)
 
-  const typedDepositValue = tryParseAmount(depositValue, liquidityToken)
-  const typedWithdrawValue = tryParseAmount(withdrawValue, liquidityToken)
+  const typedDepositValue = tryParseAmount(depositValue, stakingToken)
+  const typedWithdrawValue = tryParseAmount(withdrawValue, stakingToken)
 
-  const [approvalState, approve] = useApproveCallback(
-    typedDepositValue,
-    farm.chef === 0 ? MASTERCHEF_ADDRESS[chainId] : MASTERCHEFV2_ADDRESS[chainId]
-  )
+  const [approvalState, approve] = useApproveCallback(typedDepositValue, pool.smartChef)
 
-  const { deposit, withdraw, harvest } = useMasterChef(farm.chef)
+  const { deposit, withdraw, harvest } = useSmartChef(pool)
 
   return (
     <Transition
@@ -76,9 +86,6 @@ const FarmListItemDetails = ({ farm }) => {
             {account && (
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                 {i18n._(t`Wallet Balance`)}: {formatNumberScale(balance?.toSignificant(4, undefined, 2) ?? 0)}
-                {farm.lpPrice && balance
-                  ? ` (` + formatNumberScale(farm.lpPrice * Number(balance?.toFixed(18) ?? 0), true) + `)`
-                  : ``}
               </div>
             )}
             <div className="relative flex items-center w-full mb-4">
@@ -94,7 +101,7 @@ const FarmListItemDetails = ({ farm }) => {
                   size="xs"
                   onClick={() => {
                     if (!balance?.equalTo(ZERO)) {
-                      setDepositValue(balance?.toFixed(liquidityToken?.decimals))
+                      setDepositValue(balance?.toFixed(stakingToken?.decimals))
                     }
                   }}
                   className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
@@ -121,12 +128,10 @@ const FarmListItemDetails = ({ farm }) => {
                   setPendingTx(true)
                   try {
                     // KMP decimals depend on asset, SLP is always 18
-                    const tx = await deposit(farm?.pid, depositValue.toBigNumber(liquidityToken?.decimals))
+                    const tx = await deposit(depositValue.toBigNumber(stakingToken?.decimals))
 
                     addTransaction(tx, {
-                      summary: `${i18n._(t`Deposit`)} ${
-                        farm.token1 ? `${farm.token0.symbol}/${farm.token1.symbol}` : farm.token0.symbol
-                      }`,
+                      summary: `${i18n._(t`Deposit`)} ${stakingToken?.symbol}`,
                     })
                   } catch (error) {
                     console.error(error)
@@ -142,9 +147,9 @@ const FarmListItemDetails = ({ farm }) => {
             {account && (
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                 {i18n._(t`Your Staked`)}: {formatNumberScale(amount?.toSignificant(6)) ?? 0}
-                {farm.lpPrice && amount
+                {/* {farm.lpPrice && amount
                   ? ` (` + formatNumberScale(farm.lpPrice * Number(amount?.toSignificant(18) ?? 0), true) + `)`
-                  : ``}
+                  : ``} */}
               </div>
             )}
             <div className="relative flex items-center w-full mb-4">
@@ -160,7 +165,7 @@ const FarmListItemDetails = ({ farm }) => {
                   size="xs"
                   onClick={() => {
                     if (!amount?.equalTo(ZERO)) {
-                      setWithdrawValue(amount?.toFixed(liquidityToken?.decimals))
+                      setWithdrawValue(amount?.toFixed(stakingToken?.decimals))
                     }
                   }}
                   className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
@@ -176,11 +181,9 @@ const FarmListItemDetails = ({ farm }) => {
               onClick={async () => {
                 setPendingTx(true)
                 try {
-                  const tx = await withdraw(farm?.pid, withdrawValue.toBigNumber(liquidityToken?.decimals))
+                  const tx = await withdraw(withdrawValue.toBigNumber(stakingToken?.decimals))
                   addTransaction(tx, {
-                    summary: `${i18n._(t`Withdraw`)} ${
-                      farm.token1 ? `${farm.token0.symbol}/${farm.token1.symbol}` : farm.token0.symbol
-                    }`,
+                    summary: `${i18n._(t`Withdraw`)} ${stakingToken?.symbol}`,
                   })
                 } catch (error) {
                   console.error(error)
@@ -194,14 +197,17 @@ const FarmListItemDetails = ({ farm }) => {
           </div>
           <div className="col-span-2 md:col-span-1">
             <div className="flex justify-between">
-              <div className="mb-2 text-xs md:text-base text-secondary">CRONA Earned</div>
-              {farm.chef == '1' ? (
-                <NavLink key={`farm-${farm?.pid}`} href="/boost">
-                  <a className="flex items-center mb-2 text-xs md:text-base text-red">
-                    <FireIcon className="h-4" />
-                    Boost Reward
-                  </a>
-                </NavLink>
+              <div className="mb-2 text-xs md:text-base text-secondary">{earningToken?.symbol} Earned</div>
+              {endInBlock > 0 ? (
+                <a
+                  className="flex items-center mb-2 text-xs md:text-base text-blue"
+                  href={chainId && getExplorerLink(chainId, bonusEndBlock, 'block') + '/countdown'}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Ends in: {formatNumber(endInBlock)} blocks
+                  <ClockIcon className="h-4" />
+                </a>
               ) : (
                 <></>
               )}
@@ -209,24 +215,26 @@ const FarmListItemDetails = ({ farm }) => {
             <div className="flex flex-col justify-between gap-4 text-sm rounded-lg bg-dark-700">
               <div className="flex mt-4">
                 <div className="flex flex-col w-2/3 px-4 align-middle">
-                  <div className="text-2xl font-bold"> {formatNumber(pendingCrona?.toFixed(18))}</div>
-                  <div className="text-sm">~{Number(formatNumber(pendingCrona?.toFixed(18))) * farm.tokenPrice}</div>
+                  <div className="text-2xl font-bold"> {formatNumber(pendingReward?.toFixed(18))}</div>
+                  <div className="text-sm">
+                    ~
+                    {Number(formatNumber(pendingReward?.toFixed(18))) *
+                      earningTokenPrice?.toFixed(earningToken?.decimals)}
+                  </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle lg:w-1/3 gap-y-1">
                   <Button
-                    color={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0 ? 'blue' : 'gradient'}
+                    color={Number(formatNumber(pendingReward?.toFixed(18))) <= 0 ? 'blue' : 'gradient'}
                     size="sm"
                     className="w-full"
-                    variant={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0 ? 'outlined' : 'filled'}
-                    disabled={Number(formatNumber(pendingCrona?.toFixed(18))) <= 0}
+                    variant={Number(formatNumber(pendingReward?.toFixed(18))) <= 0 ? 'outlined' : 'filled'}
+                    disabled={Number(formatNumber(pendingReward?.toFixed(18))) <= 0}
                     onClick={async () => {
                       setPendingTx(true)
                       try {
-                        const tx = await harvest(farm.pid)
+                        const tx = await harvest()
                         addTransaction(tx, {
-                          summary: `${i18n._(t`Harvest`)} ${
-                            farm.token1 ? `${farm.token0.symbol}/${farm.token1.symbol}` : farm.token0.symbol
-                          }`,
+                          summary: `${i18n._(t`Harvest`)} ${earningToken?.symbol}`,
                         })
                       } catch (error) {
                         console.error(error)
@@ -243,20 +251,12 @@ const FarmListItemDetails = ({ farm }) => {
                 <div className="flex flex-row justify-between px-2 text-md">
                   <ExternalLink
                     startIcon={<LinkIcon size={16} />}
-                    href={chainId && getExplorerLink(chainId, farm.lpToken, 'address')}
+                    href={chainId && getExplorerLink(chainId, pool.smartChef, 'address')}
                   >
                     <Typography variant="sm">{i18n._(t`View Contract`)}</Typography>
                   </ExternalLink>
-                  <ExternalLink
-                    startIcon={<LinkIcon size={16} />}
-                    href={`https://app.cronaswap.org/add/${farm?.token0?.symbol == 'CRO' ? 'CRO' : farm?.token0?.id}/${
-                      farm?.token1?.symbol == 'CRO' ? 'CRO' : farm?.token1?.id
-                    }`}
-                  >
-                    <Typography variant="sm">
-                      {/* {i18n._(t`Get ${farm?.token0?.symbol}-${farm?.token1?.symbol} LP`)} */}
-                      Get {farm?.token0?.symbol}-{farm?.token1?.symbol} LP
-                    </Typography>
+                  <ExternalLink startIcon={<LinkIcon size={16} />} href={pool.projectLink}>
+                    <Typography variant="sm">View Project Site</Typography>
                   </ExternalLink>
                 </div>
               </div>
@@ -268,4 +268,4 @@ const FarmListItemDetails = ({ farm }) => {
   )
 }
 
-export default FarmListItemDetails
+export default IncentivePoolItemDetail

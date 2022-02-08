@@ -54,7 +54,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'CRO',
       decimals: 18,
     },
-    rpcUrls: ['https://rpcv2.cronaswap.org'],
+    rpcUrls: ['https://rpc.cronaswap.org'],
     blockExplorerUrls: ['https://cronoscan.com'],
   },
 }
