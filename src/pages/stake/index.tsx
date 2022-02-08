@@ -14,6 +14,7 @@ import ManualPoolCard from 'app/features/staking/ManualPoolCard'
 import Typography from 'app/components/Typography'
 import { formatNumberScale } from 'app/functions'
 import Button from 'app/components/Button'
+import IncentivePool from 'app/features/staking/IncentivePool/IncentivePool'
 
 const buttonStyle =
   'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
@@ -105,6 +106,13 @@ export default function Stake() {
         <div className="w-full gap-4 mt-6 md:flex">
           <AutoPoolCard />
           <ManualPoolCard />
+        </div>
+
+        {/* Incentive pool */}
+
+        <div className="w-full mt-6 md:flex">
+          {/* <div>Incentive pool</div> */}
+          <IncentivePool />
         </div>
       </div>
     </Container>
