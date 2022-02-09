@@ -22,33 +22,45 @@ import FarmListItem from '../../features/farms/FarmListItem'
 import Typography from '../../components/Typography'
 import Button from '../../components/Button'
 import NumericalInput from 'app/components/NumericalInput'
+import BigNumber from 'bignumber.js'
 import { DiscordIcon, MediumIcon, TwitterIcon } from 'app/components/Icon'
 import { Disclosure } from '@headlessui/react'
+import { useWalletModalToggle } from 'app/state/application/hooks'
+import { ZERO } from '@cronaswap/core-sdk'
 import { useTokenBalance } from 'app/state/wallet/hooks'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { tryParseAmount } from '../../functions/parse'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { CRONA } from 'app/config/tokens'
 import { useActiveWeb3React } from 'app/services/web3'
 import ifos from 'app/constants/ifo'
-import { OnSaleInfo } from 'app/features/ifo/ifoInfo'
+import { OnSaleInfo, DEFAULT_TOKEN_DECIMAL } from 'app/features/ifo/ifoInfo'
+import { useIfoV2Contract, useTokenContract } from 'app/hooks';
 
 const activeIfo = ifos.find((ifo) => ifo.isActive)
 
 export default function UnlimitedSale(): JSX.Element {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
-  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
-  const formattedBalanceAuto = cronaBalance?.toSignificant(8)
+  const addTransaction = useTransactionAdder()
+  const userCurrencyBalance = useTokenBalance(account ?? undefined, activeIfo.currency)
+  const formattedBalance = userCurrencyBalance ?.toSignificant(8)
+  const toggleWalletModal = useWalletModalToggle()
+  const balance = userCurrencyBalance
+  const walletConnected = !!account
   const [depositValue, setDepositValue] = useState('')
+  const parsedAmount = tryParseAmount(depositValue, balance ?.currency)
 
   const router = useRouter()
   const type = router.query.filter == null ? 'all' : (router.query.filter as string)
 
   const query = useFarms()
-  const farms = query?.farms
+  const farms = query ?.farms
 
   let tokenPrice = 0
   let totalTvlInUSD = 0
 
-  query?.farms.map((farm: any) => {
+  query ?.farms.map((farm: any) => {
     tokenPrice = farm.tokenPrice
     totalTvlInUSD = farm.totalTvlInUSD
   })
@@ -58,7 +70,7 @@ export default function UnlimitedSale(): JSX.Element {
     inactive: (farm) => farm.multiplier == 0,
   }
 
-  const datas = query?.farms.filter((farm) => {
+  const datas = query ?.farms.filter((farm) => {
     return type in FILTER ? FILTER[type](farm) : true
   })
 
@@ -110,10 +122,39 @@ export default function UnlimitedSale(): JSX.Element {
     return classes.filter(Boolean).join(' ')
   }
 
-  const { saleAmount: unlimitedAmount, distributionRatio: unlimitedRatio } = OnSaleInfo({
-    ifo: activeIfo,
-    poolId: 'poolUnlimited',
-  })
+  const { saleAmount: unlimitedAmount, distributionRatio: unlimitedRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolUnlimited' })
+
+  const contractAddress = activeIfo['address']
+  const contract = useIfoV2Contract(contractAddress)
+  console.log("+++++++", contract)
+  const raisingTokenContract = useTokenContract(CRONA[chainId].address)
+  const [approvalState, approve] = useApproveCallback(parsedAmount, contractAddress)
+  const [pendingTx, setPendingTx] = useState(false)
+
+  // Commit
+  const valueWithTokenDecimals = new BigNumber(depositValue).times(DEFAULT_TOKEN_DECIMAL)
+  console.log("value", valueWithTokenDecimals)
+
+  const handleCommit = async () => {
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      try {
+        setPendingTx(true)
+        const args = [valueWithTokenDecimals.toString(), 0]
+        const gasLimit = await contract.estimateGas.depositPool(...args)
+        const tx = await contract.depositPool(...args, {
+          gasLimit: gasLimit.mul(120).div(100),
+        })
+        addTransaction(tx, {
+          summary: `${i18n._(t`Commit`)} CRONA`,
+        })
+        setPendingTx(false)
+      } catch (error) {
+        setPendingTx(false)
+      }
+    }
+  }
 
   return (
     <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 bg-dark-800">
@@ -132,14 +173,14 @@ export default function UnlimitedSale(): JSX.Element {
           <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
             {unlimitedAmount}
           </div>
-          <div className="text-sm font-bold leading-5 text-secondary">{unlimitedRatio}% of total sale</div>
+          <div className="text-sm font-bold leading-5 text-secondary">{unlimitedRatio * 100}% of total sale</div>
         </div>
       </div>
 
       {/* input */}
       <div className="col-span-2 px-4 text-center md:col-span-1">
         <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-          {i18n._(t`Wallet Balance`)}: {formattedBalanceAuto}
+          {i18n._(t`Wallet Balance`)}: {formattedBalance}
         </div>
 
         <div className="relative flex items-center w-full mb-4">
@@ -153,13 +194,24 @@ export default function UnlimitedSale(): JSX.Element {
             color="blue"
             size="xs"
             className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
+            onClick={() => {
+              if (!userCurrencyBalance.equalTo(ZERO)) {
+                setDepositValue(userCurrencyBalance ?.toSignificant(userCurrencyBalance.currency.decimals))
+              }
+            }}
           >
             {i18n._(t`MAX`)}
           </Button>
         </div>
-        <Button className="w-full" color="blue">
-          {i18n._(t`Commit`)}
-        </Button>
+        {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) ? (
+          <Button className="w-full" color="blue" onClick={approve}>
+            {i18n._(t`Approve`)}
+          </Button>
+        ) : (
+            <Button className="w-full" color="blue" onClick={handleCommit}>
+              {i18n._(t`Commit`)}
+            </Button>
+          )}
       </div>
 
       {/* info */}
