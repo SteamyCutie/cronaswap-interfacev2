@@ -41,6 +41,7 @@ const useFarms = () => {
           flpBalance: tvl[pool.id] / 1e18,
           tvl: tvlInUSD[pool.id] / 1e18,
           apr: apy[pool.id] / 1e16,
+          lpPrice: tvlInUSD[pool.id] / tvl[pool.id],
           multiplier: Number(allocPoint[pool.id]),
         }
       })

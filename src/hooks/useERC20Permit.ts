@@ -31,7 +31,7 @@ const PERMITTABLE_TOKENS: {
   }
 } = {
   [1]: {
-    [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
+    [USDC[1].address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: {
       type: PermitType.ALLOWED,
       name: 'Dai Stablecoin',

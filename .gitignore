@@ -27,3 +27,6 @@ locale
 lokalise.yaml
 
 coverage
+
+src/pages/ifov2
+src/features/ifov2

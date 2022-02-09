@@ -26,6 +26,8 @@ import Button from '../../components/Button'
 import NumericalInput from 'app/components/NumericalInput'
 import { DiscordIcon, MediumIcon, TwitterIcon } from 'app/components/Icon'
 import { Disclosure } from '@headlessui/react'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { tryParseAmount } from '../../functions/parse'
 
 import { useTokenBalance } from 'app/state/wallet/hooks'
 import { CRONA } from 'app/config/tokens'
@@ -44,23 +46,24 @@ export default function BasicSale(): JSX.Element {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
-  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
+  const userCurrencyBalance = useTokenBalance(account ?? undefined, activeIfo.currency)
+  const formattedBalance = userCurrencyBalance ?.toSignificant(8)
   const toggleWalletModal = useWalletModalToggle()
-  const balance = cronaBalance?.toSignificant(8)
+  const balance = userCurrencyBalance
   const walletConnected = !!account
   const [depositValue, setDepositValue] = useState('')
-  const [approvalState, setApprovalState] = useState(false)
+  const parsedAmount = tryParseAmount(depositValue, balance ?.currency)
 
   const router = useRouter()
   const type = router.query.filter == null ? 'all' : (router.query.filter as string)
 
   const query = useFarms()
-  const farms = query?.farms
+  const farms = query ?.farms
 
   let tokenPrice = 0
   let totalTvlInUSD = 0
 
-  query?.farms.map((farm: any) => {
+  query ?.farms.map((farm: any) => {
     tokenPrice = farm.tokenPrice
     totalTvlInUSD = farm.totalTvlInUSD
   })
@@ -70,7 +73,7 @@ export default function BasicSale(): JSX.Element {
     inactive: (farm) => farm.multiplier == 0,
   }
 
-  const datas = query?.farms.filter((farm) => {
+  const datas = query ?.farms.filter((farm) => {
     return type in FILTER ? FILTER[type](farm) : true
   })
 
@@ -122,39 +125,19 @@ export default function BasicSale(): JSX.Element {
     return classes.filter(Boolean).join(' ')
   }
 
-  const gasPrice = parseUnits('5000', 'gwei').toString()
   const { saleAmount: basicAmount, distributionRatio: basicRatio } = OnSaleInfo({ ifo: activeIfo, poolId: 'poolBasic' })
 
   const contractAddress = activeIfo['address']
   const contract = useIfoV2Contract(contractAddress)
+  console.log("+++++++", contract)
   const raisingTokenContract = useTokenContract(CRONA[chainId].address)
+  const [approvalState, approve] = useApproveCallback(parsedAmount, contractAddress)
   const [pendingTx, setPendingTx] = useState(false)
-
-  // Approve
-  const handleApprove = async () => {
-    if (!walletConnected) {
-      toggleWalletModal()
-    } else {
-      try {
-        setPendingTx(true)
-        const args = [contractAddress, ethers.constants.MaxUint256]
-        const gasLimit = await contract.estimateGas.approve(...args)
-        const tx = await contract.approve(...args, {
-          gasLimit: gasLimit.mul(120).div(100),
-        })
-        addTransaction(tx, {
-          summary: `${i18n._(t`Approve`)} CRONA`,
-        })
-        setApprovalState(true)
-        setPendingTx(false)
-      } catch (error) {
-        setPendingTx(false)
-      }
-    }
-  }
 
   // Commit
   const valueWithTokenDecimals = new BigNumber(depositValue).times(DEFAULT_TOKEN_DECIMAL)
+  console.log("value", valueWithTokenDecimals)
+
   const handleCommit = async () => {
     if (!walletConnected) {
       toggleWalletModal()
@@ -193,14 +176,14 @@ export default function BasicSale(): JSX.Element {
           <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
             {basicAmount}
           </div>
-          <div className="text-sm font-bold leading-5 text-secondary">{basicRatio}% of total sale</div>
+          <div className="text-sm font-bold leading-5 text-secondary">{basicRatio * 100}% of total sale</div>
         </div>
       </div>
 
       {/* input */}
       <div className="col-span-2 px-4 text-center md:col-span-1">
         <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-          {i18n._(t`Wallet Balance`)}: {balance}
+          {i18n._(t`Wallet Balance`)}: {formattedBalance}
         </div>
 
         <div className="relative flex items-center w-full mb-4">
@@ -215,23 +198,23 @@ export default function BasicSale(): JSX.Element {
             size="xs"
             className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
             onClick={() => {
-              if (!cronaBalance.equalTo(ZERO)) {
-                setDepositValue(cronaBalance?.toSignificant(cronaBalance.currency.decimals))
+              if (!userCurrencyBalance.equalTo(ZERO)) {
+                setDepositValue(userCurrencyBalance ?.toSignificant(userCurrencyBalance.currency.decimals))
               }
             }}
           >
             {i18n._(t`MAX`)}
           </Button>
         </div>
-        {approvalState === false ? (
-          <Button className="w-full" color="blue" onClick={handleApprove}>
-            {i18n._(t`Approve`)}
+        {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) ? (
+          <Button className="w-full" color="blue" onClick={approve}>
+            {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
           </Button>
         ) : (
-          <Button className="w-full" color="blue" onClick={handleCommit}>
-            {i18n._(t`Commit`)}
-          </Button>
-        )}
+            <Button className="w-full" color="blue" onClick={handleCommit}>
+              {pendingTx ? <Dots>{i18n._(t`Commiting`)} </Dots> : i18n._(t`Commit`)}
+            </Button>
+          )}
       </div>
 
       {/* info */}
