@@ -17,7 +17,7 @@ import concat from 'lodash/concat'
 import { Chef } from './enum'
 import { CRONA } from '../../config/tokens'
 import { useToken } from '../../hooks/Tokens'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export function useChefContract(chef: Chef) {
   const masterChefV1Contract = useMasterChefContract()
@@ -47,9 +47,9 @@ export function useUserInfo(farm, token) {
     return [String(farm.pid), String(account)]
   }, [farm, account])
 
-  const result = useSingleCallResult(args ? contract : null, 'userInfo', args) ?.result
+  const result = useSingleCallResult(args ? contract : null, 'userInfo', args)?.result
 
-  const value = result ?.[0]
+  const value = result?.[0]
 
   const amount = value ? JSBI.BigInt(value.toString()) : undefined
 
@@ -70,9 +70,9 @@ export function usePendingCrona(farm) {
     return [String(farm.pid), String(account)]
   }, [farm, account])
 
-  const result = useSingleCallResult(args ? contract : null, 'pendingCrona', args) ?.result
+  const result = useSingleCallResult(args ? contract : null, 'pendingCrona', args)?.result
 
-  const value = result ?.[0]
+  const value = result?.[0]
 
   const amount = value ? JSBI.BigInt(value.toString()) : undefined
 
@@ -83,15 +83,15 @@ export function useChefPositions(contract?: Contract | null) {
   const { account } = useActiveWeb3React()
 
   const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
-    ?.result ?.[0]
+    ?.result?.[0]
 
   const args = useMemo(() => {
-      if (!account || !numberOfPools) {
-        return
-      }
+    if (!account || !numberOfPools) {
+      return
+    }
 
-      return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid), String(account)])
-    }, [numberOfPools, account])
+    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid), String(account)])
+  }, [numberOfPools, account])
 
   const pendingCrona = useSingleContractMultipleData(args ? contract : null, 'pendingCrona', args)
 
@@ -104,8 +104,8 @@ export function useChefPositions(contract?: Contract | null) {
     return zip(pendingCrona, userInfo)
       .map((data, i) => ({
         id: args[i][0],
-        pendingCrona: data[0].result ?.[0] || Zero,
-        amount: data[1].result ?.[0] || Zero,
+        pendingCrona: data[0].result?.[0] || Zero,
+        amount: data[1].result?.[0] || Zero,
       }))
       .filter(({ pendingCrona, amount }) => {
         return (pendingCrona && !pendingCrona.isZero()) || (amount && !amount.isZero())
@@ -119,16 +119,16 @@ export function usePositions() {
 
 export function useCronaFarms(contract?: Contract | null) {
   const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
-    ?.result ?.[0]
+    ?.result?.[0]
 
   const args = useMemo(() => {
-      if (!numberOfPools) {
-        return
-      }
+    if (!numberOfPools) {
+      return
+    }
 
-      //filter 0 pools
-      return [...Array(numberOfPools.toNumber()).keys()].filter((pid) => pid != 0).map((pid) => [String(pid)])
-    }, [numberOfPools])
+    //filter 0 pools
+    return [...Array(numberOfPools.toNumber()).keys()].filter((pid) => pid != 0).map((pid) => [String(pid)])
+  }, [numberOfPools])
 
   const poolInfo = useSingleContractMultipleData(args ? contract : null, 'poolInfo', args)
 
@@ -138,10 +138,10 @@ export function useCronaFarms(contract?: Contract | null) {
     }
     return zip(poolInfo).map((data, i) => ({
       id: args[i][0],
-      lpToken: data[0].result ?.['lpToken'] || '',
-      allocPoint: data[0].result ?.['allocPoint'] || '',
-      lastRewardTime: data[0].result ?.['lastRewardTime'] || '',
-      accCronaPerShare: data[0].result ?.['accCronaPerShare'] || '',
+      lpToken: data[0].result?.['lpToken'] || '',
+      allocPoint: data[0].result?.['allocPoint'] || '',
+      lastRewardTime: data[0].result?.['lastRewardTime'] || '',
+      accCronaPerShare: data[0].result?.['accCronaPerShare'] || '',
     }))
   }, [args, poolInfo])
 }
@@ -152,10 +152,10 @@ export function useFarms() {
 
 export function useCronaMasterChefInfo(contract) {
   const cronaPerSecond = useSingleCallResult(contract ? contract : null, 'cronaPerSecond', undefined, NEVER_RELOAD)
-    ?.result ?.[0]
+    ?.result?.[0]
 
   const totalAllocPoint = useSingleCallResult(contract ? contract : null, 'totalAllocPoint', undefined, NEVER_RELOAD)
-    ?.result ?.[0]
+    ?.result?.[0]
 
   return useMemo(() => ({ cronaPerSecond, totalAllocPoint }), [cronaPerSecond, totalAllocPoint])
 }
@@ -168,19 +168,19 @@ export function useMasterChefInfo() {
 
 export const useCronaUsdcPrice = (): BigNumber | undefined => {
   const dashboard = useDashboardV1Contract()
-  return useSingleCallResult(dashboard, 'rewardPriceInUSD') ?.result ?.[0]
+  return useSingleCallResult(dashboard, 'rewardPriceInUSD')?.result?.[0]
 }
 
 export function useTokenInfo(tokenContract?: Contract | null) {
   const _totalSupply = useSingleCallResult(tokenContract ? tokenContract : null, 'totalSupply', undefined, NEVER_RELOAD)
-    ?.result ?.[0]
+    ?.result?.[0]
 
   const _burnt = useSingleCallResult(
-      tokenContract ? tokenContract : null,
-      'balanceOf',
-      ['0x000000000000000000000000000000000000dEaD'],
-      NEVER_RELOAD
-    ) ?.result ?.[0]
+    tokenContract ? tokenContract : null,
+    'balanceOf',
+    ['0x000000000000000000000000000000000000dEaD'],
+    NEVER_RELOAD
+  )?.result?.[0]
 
   const totalSupply = _totalSupply ? JSBI.BigInt(_totalSupply.toString()) : JSBI.BigInt(0)
   const burnt = _burnt ? JSBI.BigInt(_burnt.toString()) : JSBI.BigInt(0)

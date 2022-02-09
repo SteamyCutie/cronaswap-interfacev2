@@ -86,6 +86,11 @@ const IncentivePoolItemDetail = ({
             {account && (
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                 {i18n._(t`Wallet Balance`)}: {formatNumberScale(balance?.toSignificant(4, undefined, 2) ?? 0)}
+                {stakingTokenPrice && balance
+                  ? ` (` +
+                    formatNumberScale(stakingTokenPrice.toFixed(18) * Number(balance?.toFixed(18) ?? 0), true) +
+                    `)`
+                  : ``}
               </div>
             )}
             <div className="relative flex items-center w-full mb-4">
@@ -147,9 +152,11 @@ const IncentivePoolItemDetail = ({
             {account && (
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                 {i18n._(t`Your Staked`)}: {formatNumberScale(amount?.toSignificant(6)) ?? 0}
-                {/* {farm.lpPrice && amount
-                  ? ` (` + formatNumberScale(farm.lpPrice * Number(amount?.toSignificant(18) ?? 0), true) + `)`
-                  : ``} */}
+                {stakingTokenPrice && amount
+                  ? ` (` +
+                    formatNumberScale(stakingTokenPrice.toFixed(18) * Number(amount?.toSignificant(18) ?? 0), true) +
+                    `)`
+                  : ``}
               </div>
             )}
             <div className="relative flex items-center w-full mb-4">

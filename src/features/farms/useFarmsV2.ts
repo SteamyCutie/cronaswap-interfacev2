@@ -47,6 +47,7 @@ const useFarmsV2 = () => {
           flpBalance: tvl[pool.id] / 1e18,
           tvl: tvlInUSD[pool.id] / 1e18,
           apr: apy[pool.id] / 1e16,
+          lpPrice: tvlInUSD[pool.id] / tvl[pool.id],
           boostApr: boostApy ? boostApy[pool.id] / 1e16 : (apy[pool.id] * 2.5) / 1e16, // max boost 2.5x
           multiplier: Number(allocPoint[pool.id]),
         }

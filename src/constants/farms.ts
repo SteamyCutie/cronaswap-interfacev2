@@ -577,7 +577,7 @@ export const FARMSV2: AddressMap = {
       pid: 17,
       symbol: 'CLP',
       name: 'ATOM-USDT',
-      token0: { id: '0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93', name: 'Fantom', symbol: 'FTM', decimals: 6 },
+      token0: { id: '0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93', name: 'ATOM', symbol: 'ATOM', decimals: 6 },
       token1: { id: '0x66e428c3f67a68878562e79a0234c1f83c208770', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
     },
 
@@ -594,7 +594,7 @@ export const FARMSV2: AddressMap = {
       id: 19,
       pid: 19,
       symbol: 'CLP',
-      name: 'DOT-CRONA',
+      name: 'CRONA-DOT',
       token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token1: { id: '0x994047FE66406CbD646cd85B990E11D7F5dB8fC7', name: 'DOT', symbol: 'DOT', decimals: 10 },
     },

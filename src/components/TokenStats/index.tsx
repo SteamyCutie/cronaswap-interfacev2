@@ -50,7 +50,7 @@ export default function TokenStats({ token, ...rest }: TokenStatsProps) {
 
   return (
     <>
-      <TokenStatusInner token={selectedToken} price={formatBalance(cronaPrice ? cronaPrice : 0)} />
+      <TokenStatusInner token={selectedToken} price={formatBalance(cronaPrice ? cronaPrice : '0')} />
       <TokenStatsModal token={selectedToken} price={formatBalance(cronaPrice ? cronaPrice : 0)} />
     </>
   )

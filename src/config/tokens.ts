@@ -23,9 +23,15 @@ export const DAI = new Token(
   'Dai Stablecoin'
 )
 export const USDC: ChainTokenMap = {
-  // [ChainId.ETHEREUM]: new Token(ChainId.ETHEREUM, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin'),
+  [ChainId.ETHEREUM]: new Token(ChainId.ETHEREUM, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin'),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
-  [ChainId.CRONOS_TESTNET]: new Token(ChainId.CRONOS_TESTNET, '0x71A26A5090fe4FeD65a8cdb11D761E6D07Ad7d36', 6, 'USDC', 'USD Coin'),
+  [ChainId.CRONOS_TESTNET]: new Token(
+    ChainId.CRONOS_TESTNET,
+    '0x71A26A5090fe4FeD65a8cdb11D761E6D07Ad7d36',
+    6,
+    'USDC',
+    'USD Coin'
+  ),
 }
 export const USDT = new Token(ChainId.ETHEREUM, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 

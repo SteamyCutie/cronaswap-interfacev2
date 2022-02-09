@@ -1,4 +1,5 @@
 import { Token } from '@cronaswap/core-sdk'
+import { Contract } from '@ethersproject/contracts'
 import BigNumber from 'bignumber.js'
 import ethers from 'ethers'
 
@@ -62,168 +63,34 @@ export interface PublicIfoData {
   [PoolIds.poolBasic]?: PoolCharacteristics
   [PoolIds.poolUnlimited]: PoolCharacteristics
 }
-// export enum PoolCategory {
-//   'COMMUNITY' = 'Community',
-//   'CORE' = 'Core',
-//   'BINANCE' = 'Binance', // Pools using native BNB behave differently than pools using a token
-//   'AUTO' = 'Auto',
-// }
 
-// interface FarmConfigBaseProps {
-//   pid: number
-//   lpSymbol: string
-//   lpAddresses: Address
-//   multiplier?: string
-//   isCommunity?: boolean
-//   dual?: {
-//     rewardPerBlock: number
-//     earnLabel: string
-//     endBlock: number
-//   }
-// }
+// User specific pool characteristics
+export interface UserPoolCharacteristics {
+  amountTokenCommittedInLP: BigNumber // @contract: amountPool
+  offeringAmountInToken: BigNumber // @contract: userOfferingAmountPool
+  refundingAmountInLP: BigNumber // @contract: userRefundingAmountPool
+  taxAmountInLP: BigNumber // @contract: userTaxAmountPool
+  hasClaimed: boolean // @contract: claimedPool
+  isPendingTx: boolean
+}
 
-// export interface SerializedFarmConfig extends FarmConfigBaseProps {
-//   token: SerializedToken
-//   quoteToken: SerializedToken
-// }
+// Use only inside the useGetWalletIfoData hook
+export interface WalletIfoState {
+  isInitialized: boolean
+  [PoolIds.poolBasic]?: UserPoolCharacteristics
+  [PoolIds.poolUnlimited]: UserPoolCharacteristics
+  // ifoVeCrona: {
+  //   veCrona: BigNumber
+  //   veCronaLeft: BigNumber // credit left is the ifo credit minus the amount of `amountTokenCommittedInLP` in pool basic and unlimited
+  // }
+}
 
-// export interface DeserializedFarmConfig extends FarmConfigBaseProps {
-//   token: Token
-//   quoteToken: Token
-// }
-
-// interface PoolConfigBaseProps {
-//   sousId: number
-//   contractAddress: Address
-//   poolCategory: PoolCategory
-//   tokenPerBlock: string
-//   sortOrder?: number
-//   harvest?: boolean
-//   isFinished?: boolean
-//   enableEmergencyWithdraw?: boolean
-// }
-
-// export interface SerializedPoolConfig extends PoolConfigBaseProps {
-//   earningToken: SerializedToken
-//   stakingToken: SerializedToken
-// }
-
-// export interface DeserializedPoolConfig extends PoolConfigBaseProps {
-//   earningToken: Token
-//   stakingToken: Token
-// }
-
-// export type Images = {
-//   lg: string
-//   md: string
-//   sm: string
-//   ipfs?: string
-// }
-
-// export type TeamImages = {
-//   alt: string
-// } & Images
-
-// export type Team = {
-//   id: number
-//   name: string
-//   description: string
-//   isJoinable?: boolean
-//   users: number
-//   points: number
-//   images: TeamImages
-//   background: string
-//   textColor: string
-// }
-
-// export type CampaignType = 'ifo' | 'teambattle' | 'participation'
-
-// export type Campaign = {
-//   id: string
-//   type: CampaignType
-//   title?: TranslatableText
-//   description?: TranslatableText
-//   badge?: string
-// }
-
-// export type PageMeta = {
-//   title: string
-//   description?: string
-//   image?: string
-// }
-
-// export enum LotteryStatus {
-//   PENDING = 'pending',
-//   OPEN = 'open',
-//   CLOSE = 'close',
-//   CLAIMABLE = 'claimable',
-// }
-
-// export interface LotteryTicket {
-//   id: string
-//   number: string
-//   status: boolean
-//   rewardBracket?: number
-//   roundId?: string
-//   cronaReward?: string
-// }
-
-// export interface LotteryTicketClaimData {
-//   ticketsWithUnclaimedRewards: LotteryTicket[]
-//   allWinningTickets: LotteryTicket[]
-//   cakeTotal: BigNumber
-//   roundId: string
-// }
-
-// // Farm Auction
-// export interface FarmAuctionBidderConfig {
-//   account: string
-//   farmName: string
-//   tokenAddress: string
-//   quoteToken: Token
-//   tokenName: string
-//   projectSite?: string
-//   lpAddress?: string
-// }
-
-// // Note: this status is slightly different compared to 'status' comfing
-// // from Farm Auction smart contract
-// export enum AuctionStatus {
-//   ToBeAnnounced, // No specific dates/blocks to display
-//   Pending, // Auction is scheduled but not live yet (i.e. waiting for startBlock)
-//   Open, // Auction is open for bids
-//   Finished, // Auction end block is reached, bidding is not possible
-//   Closed, // Auction was closed in smart contract
-// }
-
-// export interface Auction {
-//   id: number
-//   status: AuctionStatus
-//   startBlock: number
-//   startDate: Date
-//   endBlock: number
-//   endDate: Date
-//   auctionDuration: number
-//   initialBidAmount: number
-//   topLeaderboard: number
-//   leaderboardThreshold: BigNumber
-// }
-
-// export interface BidderAuction {
-//   id: number
-//   amount: BigNumber
-//   claimed: boolean
-// }
-
-// export interface Bidder extends FarmAuctionBidderConfig {
-//   position?: number
-//   isTopPosition: boolean
-//   samePositionAsAbove: boolean
-//   amount: BigNumber
-// }
-
-// export interface ConnectedBidder {
-//   account: string
-//   isWhitelisted: boolean
-//   bidderData?: Bidder
-// }
+// Returned by useGetWalletIfoData
+export interface WalletIfoData extends WalletIfoState {
+  allowance: BigNumber
+  contract: Contract
+  setPendingTx: (status: boolean, poolId: PoolIds) => void
+  setIsClaimed: (poolId: PoolIds) => void
+  fetchIfoData: () => void
+  resetIfoData: () => void
+}
