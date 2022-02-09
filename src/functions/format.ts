@@ -122,7 +122,7 @@ export const formatNumber = (number: any, usd = false, scale = true, decimals = 
   return parseFloat(String(num)).toPrecision(4)
 }
 
-export function formatNumberScale(number: any, usd = false) {
+export function formatNumberScale(number: any, usd = false, decimals = 2) {
   if (isNaN(number) || number === '' || number === undefined) {
     return usd ? '$0.00' : '0'
   }
@@ -138,7 +138,7 @@ export function formatNumberScale(number: any, usd = false) {
     return usd ? '< $0.0001' : '< 0.0001'
   }
 
-  return (usd ? '$' : '') + num.toFixed(2)
+  return (usd ? '$' : '') + num.toFixed(decimals)
 }
 
 export function escapeRegExp(string: string): string {
