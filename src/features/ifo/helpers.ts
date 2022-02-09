@@ -1,21 +1,21 @@
 import { IfoStatus } from 'constants/types'
 
-export const getStatus = (currentBlock: number, startBlock: number, endBlock: number): IfoStatus => {
-  // Add an extra check to currentBlock because it takes awhile to fetch so the initial value is 0
+export const getStatus = (currentTime: number, startTime: number, endTime: number): IfoStatus => {
+  // Add an extra check to currentTime because it takes awhile to fetch so the initial value is 0
   // making the UI change to an inaccurate status
-  if (currentBlock === 0) {
+  if (currentTime === 0) {
     return 'idle'
   }
 
-  if (currentBlock < startBlock) {
+  if (currentTime < startTime) {
     return 'coming_soon'
   }
 
-  if (currentBlock >= startBlock && currentBlock <= endBlock) {
+  if (currentTime >= startTime && currentTime <= endTime) {
     return 'live'
   }
 
-  if (currentBlock > endBlock) {
+  if (currentTime > endTime) {
     return 'finished'
   }
 

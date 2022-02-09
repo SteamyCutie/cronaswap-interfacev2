@@ -23,7 +23,7 @@ export interface Ifo {
   name: string
   currency: Token
   // token: Token
-  releaseBlockNumber: number
+  releaseTimestamp: number
   articleUrl: string
   campaignId: string
   tokenOfferingPrice: number
@@ -39,7 +39,7 @@ export interface Ifo {
 export interface PoolCharacteristics {
   raisingAmountPool: BigNumber
   offeringAmountPool: BigNumber
-  limitPerUserInLP: BigNumber
+  limitPerUserInRaisingToken: BigNumber
   taxRate: number
   totalAmountPool: BigNumber
   sumTaxesOverflow: BigNumber
@@ -49,16 +49,16 @@ export interface PoolCharacteristics {
 export interface PublicIfoData {
   isInitialized: boolean
   status: IfoStatus
-  blocksRemaining: number
+  timesRemaining: number
   secondsUntilStart: number
   progress: number
   secondsUntilEnd: number
-  startBlockNum: number
-  endBlockNum: number
+  startTimeNum: number
+  endTimeNum: number
   currencyPriceInUSD: BigNumber
   numberPoints: number
   thresholdPoints: ethers.BigNumber
-  fetchIfoData: (currentBlock: number) => void
+  fetchIfoData: (currentTime: number) => void
   [PoolIds.poolBasic]?: PoolCharacteristics
   [PoolIds.poolUnlimited]: PoolCharacteristics
 }

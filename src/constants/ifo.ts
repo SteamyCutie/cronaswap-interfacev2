@@ -3,12 +3,11 @@ import tokens from 'pages/tokens'
 import { useActiveWeb3React } from 'app/services/web3'
 import { FARMS } from './farms'
 import { Ifo } from './types'
-import { CRONA, USDC } from './../config/tokens';
+import { CRONA, USDC } from './../config/tokens'
 
 // export const cronaCroLpToken = process.env.REACT_APP_CHAIN_ID === ChainId.MAINNET.toString()
 //   ? new Token(ChainId.MAINNET, farms[1].lpAddresses[ChainId.MAINNET], 18, farms[1].lpSymbol)
 //   : new Token(ChainId.TESTNET, farms[1].lpAddresses[ChainId.TESTNET], 18, farms[1].lpSymbol)
-
 
 // Mainnet
 // export const usdcUsdtLpToken = new Token(chainId, Object.keys(FARMS[chainId])[10], 18, Object.values(FARMS[chainId])[10].name)
@@ -40,7 +39,7 @@ const ifos: Ifo[] = [
     },
     currency: USDC[ChainId.CRONOS_TESTNET],
     // token: tokens.cross,
-    releaseBlockNumber: 13491500,
+    releaseTimestamp: 13491500,
     campaignId: '511160000',
     twitterUrl: 'https://twitter.com/',
     telegramUrl: 'https://twitter.com/',
@@ -49,7 +48,7 @@ const ifos: Ifo[] = [
       'CronaSwap is the first decentralized exchange platform on the Cronos Chain to offer the lowest transaction fees (0.25%). You can swap CRC-20 tokens easily on the Cronos Chain network that guarantees superior speed and much lower network transaction costs. ',
     tokenOfferingPrice: 0.025,
     version: 2,
-  }
+  },
 ]
 
 export default ifos
