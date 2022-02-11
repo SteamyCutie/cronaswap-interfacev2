@@ -121,7 +121,7 @@ export const IfoCurrentCard = ({
             <div className="space-y-2">
               <div className="text-[14px]">Start: 12th Feb, 2:00pm UTC</div>
               <div className="text-[14px]">End: 13th Feb, 2:00pm UTC</div>
-              <div className="text-[14px]">Duration: 24H (Claim Time: 13th Feb, 4:00pm UTC)</div>
+              {/* <div className="text-[14px]">Duration: 24H (Claim Time: 13th Feb, 4:00pm UTC)</div> */}
 
               <div className="text-xl font-bold">Introduction</div>
               <div className="text-[14px] text-high-emphesis">{ifo.description}</div>

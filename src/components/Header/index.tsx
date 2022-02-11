@@ -92,7 +92,7 @@ function AppBar(): JSX.Element {
                       )}
                       {chainId && featureEnabled(Feature.IFO, chainId) && (
                         <>
-                          <NavLink href={'/ifo'}>
+                          <NavLink href={'/ifov2'}>
                             <a
                               id={`lend-nav-link`}
                               className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
@@ -124,7 +124,6 @@ function AppBar(): JSX.Element {
                           </a>
                         </NavLink>
                       )}
-
                       {chainId && featureEnabled(Feature.BOOST, chainId) && (
                         <NavLink href={'/boost'}>
                           <a

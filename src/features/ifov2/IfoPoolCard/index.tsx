@@ -231,7 +231,8 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
           )}
         </div>
 
-        <div className={`relative flex items-center w-full mb-4 ${inputError ? 'rounded border border-red' : ''}`}>
+        {/* <div className={`relative flex items-center w-full mb-4 ${inputError ? 'rounded border border-red' : ''}`}> */}
+        <div className="relative flex items-center w-full mb-4">
           <NumericalInput
             className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-dark-purple"
             value={input}
