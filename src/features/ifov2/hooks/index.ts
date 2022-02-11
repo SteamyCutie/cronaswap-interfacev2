@@ -84,10 +84,45 @@ export function useGetPublicIfoData(ifo: Ifo) {
 
 // wallet data
 export function useGetWalletIfoData(ifo: Ifo) {
-  const { account } = useWeb3React()
+  let { account } = useWeb3React()
   const { address, raiseToken } = ifo
   const ifoContract = useIfoV2Contract(address)
   const veCronaContract = useVotingEscrowAtContract()
+
+  if (!account) {
+    account = '0xE871fF8D355A351C21c5C4423874b141DA23ee43' // set default account
+  }
+
+  const callsData = useMemo(
+    () => [
+      { methodName: 'viewUserInfo', callInputs: [account, [0, 1]] }, // viewUserInfo
+      { methodName: 'viewUserOfferingAndRefundingAmountsForPools', callInputs: [account, [0, 1]] }, // viewUserOfferingAndRefundingAmountsForPools
+    ],
+    [account]
+  )
+
+  const results = useSingleContractMultipleMethods(ifoContract, callsData)
+  const [{ result: userInfo }, { result: amounts }] = results
+
+  // Calc VeCRONA
+  const args = useMemo(() => {
+    if (!account) {
+      return
+    }
+    return [String(account), ifo.veCronaCheckPoint]
+  }, [account, ifo])
+
+  const veCrona = useSingleCallResult(args ? veCronaContract : null, 'balanceOf', args) ?.result
+
+  // const creditLeftWithNegative = veCrona?.[0].minus(new BigNumber(userInfo?.[0][0].toString())).minus(new BigNumber(userInfo?.[0][1].toString()))
+  const creditLeftWithNegative = new BigNumber(veCrona ?.[0].toString()).minus(
+    new BigNumber(userInfo ?.[0][0].toString())
+  )
+
+  const ifoVeCrona = {
+    veCrona: veCrona ?.[0].toString(),
+    veCronaLeft: BigNumber.maximum(BIG_ZERO, creditLeftWithNegative),
+  }
 
   if (!account) {
     return {
@@ -110,53 +145,22 @@ export function useGetWalletIfoData(ifo: Ifo) {
     }
   }
 
-  const callsData = useMemo(
-    () => [
-      { methodName: 'viewUserInfo', callInputs: [account, [0, 1]] }, // viewUserInfo
-      { methodName: 'viewUserOfferingAndRefundingAmountsForPools', callInputs: [account, [0, 1]] }, // viewUserOfferingAndRefundingAmountsForPools
-    ],
-    [account]
-  )
-
-  const results = useSingleContractMultipleMethods(ifoContract, callsData)
-  const [{ result: userInfo }, { result: amounts }] = results
-
-  // Calc VeCRONA
-  const args = useMemo(() => {
-    if (!account) {
-      return
-    }
-    return [String(account), ifo.veCronaCheckPoint]
-  }, [account, ifo])
-
-  const veCrona = useSingleCallResult(args ? veCronaContract : null, 'balanceOf', args)?.result
-
-  // const creditLeftWithNegative = veCrona?.[0].minus(new BigNumber(userInfo?.[0][0].toString())).minus(new BigNumber(userInfo?.[0][1].toString()))
-  const creditLeftWithNegative = new BigNumber(veCrona?.[0].toString()).minus(
-    new BigNumber(userInfo?.[0][0].toString())
-  )
-
-  const ifoVeCrona = {
-    veCrona: veCrona?.[0].toString(),
-    veCronaLeft: BigNumber.maximum(BIG_ZERO, creditLeftWithNegative),
-  }
-
   return {
     isInitialized: true,
     contract: ifoContract,
     poolBasic: {
-      amountTokenCommittedInLP: new BigNumber(userInfo?.[0][0].toString()),
-      offeringAmountInToken: new BigNumber(amounts?.[0][0][0].toString()),
-      refundingAmountInLP: new BigNumber(amounts?.[0][0][1].toString()),
-      taxAmountInLP: new BigNumber(amounts?.[0][0][2].toString()),
-      hasClaimed: userInfo?.[1][0],
+      amountTokenCommittedInLP: new BigNumber(userInfo ?.[0][0].toString()),
+      offeringAmountInToken: new BigNumber(amounts ?.[0][0][0].toString()),
+      refundingAmountInLP: new BigNumber(amounts ?.[0][0][1].toString()),
+      taxAmountInLP: new BigNumber(amounts ?.[0][0][2].toString()),
+      hasClaimed: userInfo ?.[1][0],
     },
     poolUnlimited: {
-      amountTokenCommittedInLP: new BigNumber(userInfo?.[0][1].toString()),
-      offeringAmountInToken: new BigNumber(amounts?.[0][1][0].toString()),
-      refundingAmountInLP: new BigNumber(amounts?.[0][1][1].toString()),
-      taxAmountInLP: new BigNumber(amounts?.[0][1][2].toString()),
-      hasClaimed: userInfo?.[1][1],
+      amountTokenCommittedInLP: new BigNumber(userInfo ?.[0][1].toString()),
+      offeringAmountInToken: new BigNumber(amounts ?.[0][1][0].toString()),
+      refundingAmountInLP: new BigNumber(amounts ?.[0][1][1].toString()),
+      taxAmountInLP: new BigNumber(amounts ?.[0][1][2].toString()),
+      hasClaimed: userInfo ?.[1][1],
     },
     ifoVeCrona,
   }
