@@ -40,6 +40,7 @@ const ifos: Ifo[] = [
     raiseToken: USDC[ChainId.CRONOS_TESTNET],
     offerToken: USDC[ChainId.CRONOS_TESTNET],
     releaseTimestamp: 1644675300,
+    veCronaCheckPoint: 1644675300,
     campaignId: '511160000',
     twitterUrl: 'https://twitter.com/',
     telegramUrl: 'https://twitter.com/',

@@ -2,8 +2,8 @@ import BigNumber from 'bignumber.js'
 import { FixedNumber } from '@ethersproject/bignumber'
 import { Ifo } from 'app/constants/types'
 import { BIG_ONE, BIG_ZERO } from 'app/functions/bigNumber'
-import { useIfoV2Contract } from 'app/hooks'
-import { useSingleContractMultipleMethods } from 'app/state/multicall/hooks'
+import { useIfoV2Contract, useVotingEscrowAtContract } from 'app/hooks'
+import { useSingleCallResult, useSingleContractMultipleMethods } from 'app/state/multicall/hooks'
 import { useMemo } from 'react'
 import { getStatus } from './helpers'
 import { useWeb3React } from '@web3-react/core'
@@ -82,12 +82,13 @@ export function useGetPublicIfoData(ifo: Ifo) {
 export function useGetWalletIfoData(ifo: Ifo) {
   const { account } = useWeb3React()
   const { address, raiseToken } = ifo
-  const contract = useIfoV2Contract(address)
+  const ifoContract = useIfoV2Contract(address)
+  const veCronaContract = useVotingEscrowAtContract()
 
   if (!account) {
     return {
       isInitialized: false,
-      contract: contract,
+      contract: ifoContract,
       poolBasic: {
         amountTokenCommittedInLP: BIG_ZERO,
         offeringAmountInToken: BIG_ZERO,
@@ -113,24 +114,32 @@ export function useGetWalletIfoData(ifo: Ifo) {
     [account]
   )
 
-  const results = useSingleContractMultipleMethods(contract, callsData)
+  const results = useSingleContractMultipleMethods(ifoContract, callsData)
   const [{ result: userInfo }, { result: amounts }] = results
 
   // Calc VeCRONA
-  // const credit = useIfoPoolCredit()
-  const veCrona = new BigNumber(100)
-  const creditLeftWithNegative = veCrona
-    .minus(new BigNumber(userInfo?.[0][0].toString()))
-    .minus(new BigNumber(userInfo?.[0][1].toString()))
+  const args = useMemo(() => {
+    if (!account) {
+      return
+    }
+    return [String(account), ifo.veCronaCheckPoint]
+  }, [account, ifo])
+
+  const veCrona = useSingleCallResult(args ? veCronaContract : null, 'balanceOf', args)?.result
+
+  // const creditLeftWithNegative = veCrona?.[0].minus(new BigNumber(userInfo?.[0][0].toString())).minus(new BigNumber(userInfo?.[0][1].toString()))
+  const creditLeftWithNegative = new BigNumber(veCrona?.[0].toString()).minus(
+    new BigNumber(userInfo?.[0][0].toString())
+  )
 
   const ifoVeCrona = {
-    veCrona,
+    veCrona: veCrona?.[0].toString(),
     veCronaLeft: BigNumber.maximum(BIG_ZERO, creditLeftWithNegative),
   }
 
   return {
     isInitialized: true,
-    contract: contract,
+    contract: ifoContract,
     poolBasic: {
       amountTokenCommittedInLP: new BigNumber(userInfo?.[0][0].toString()),
       offeringAmountInToken: new BigNumber(amounts?.[0][0][0].toString()),

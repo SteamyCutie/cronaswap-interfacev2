@@ -20,6 +20,7 @@ export interface Ifo {
   raiseToken: Token
   offerToken: Token
   releaseTimestamp: number
+  veCronaCheckPoint: number
   articleUrl: string
   campaignId: string
   tokenOfferingPrice: number

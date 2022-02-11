@@ -7,12 +7,12 @@ import Dots from 'app/components/Dots'
 import NumericalInput from 'app/components/NumericalInput'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { Ifo, PoolIds } from 'app/constants/types'
-import { formatNumberScale, tryParseAmount } from 'app/functions'
+import { formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
 import { ApprovalState, useApproveCallback } from 'app/hooks'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useWalletModalToggle } from 'app/state/application/hooks'
 import { useTokenBalance } from 'app/state/wallet/hooks'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { PublicIfoData, WalletIfoData } from '../hooks/types'
 import useIfoPool from '../hooks/useIfoPool'
 import IfoCardDetails from './IfoCardDetails'
@@ -67,11 +67,13 @@ const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
 
 const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walletIfoData }) => {
   const config = cardConfig(poolId)
+  const { account } = useActiveWeb3React()
 
-  const { status, startTimeNum, raiseTokenPriceInUSD } = publicIfoData
+  const { status } = publicIfoData
+
+  const publicPoolCharacteristics = publicIfoData[poolId]
   const userPoolCharacteristics = walletIfoData[poolId]
 
-  const { account } = useActiveWeb3React()
   const rasieTokenBalance = useTokenBalance(account ?? undefined, ifo.raiseToken)
 
   const walletConnected = !!account
@@ -88,8 +90,6 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     (rasieTokenBalance && rasieTokenBalance.equalTo(ZERO)) || parsedAmount?.greaterThan(rasieTokenBalance)
   const inputError = insufficientFunds
 
-  const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO)) || status === 'finished'
-
   const [approvalState, approve] = useApproveCallback(parsedAmount, ifo.address)
 
   const handleInput = (v: string) => {
@@ -99,9 +99,34 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     }
   }
 
-  // const typedDepositValue = tryParseAmount(depositValue, ifo.currency)
+  // TODO:
+  const { limitPerUserInLP } = publicPoolCharacteristics
+  const { amountTokenCommittedInLP } = userPoolCharacteristics
 
-  // const [approvalState, approve] = useApproveCallback(typedDepositValue, ifo.address)
+  const veCronaLeft = walletIfoData.ifoVeCrona?.veCronaLeft
+  const maximumTokenEntry = useMemo(() => {
+    if (!veCronaLeft) {
+      return limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - ifo.raiseToken.decimals))
+    }
+    if (limitPerUserInLP.isGreaterThan(0)) {
+      if (limitPerUserInLP.isGreaterThan(0)) {
+        return limitPerUserInLP
+          .minus(amountTokenCommittedInLP)
+          .multipliedBy(10 ** (18 - ifo.raiseToken.decimals))
+          .isLessThanOrEqualTo(veCronaLeft)
+          ? limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - ifo.raiseToken.decimals))
+          : veCronaLeft
+      }
+    }
+    return veCronaLeft
+  }, [veCronaLeft, limitPerUserInLP, amountTokenCommittedInLP])
+
+  const buttonDisabled =
+    !input ||
+    pendingTx ||
+    (parsedAmount && parsedAmount.equalTo(ZERO)) ||
+    status === 'finished' ||
+    (poolId === PoolIds.poolBasic && Number(input) > Number(maximumTokenEntry) / 1e18)
 
   const { harvestPool, depositPool } = useIfoPool(walletIfoData.contract)
 
@@ -194,9 +219,14 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
       {/* input */}
       <div className="col-span-2 text-center md:col-span-1  px-4">
-        <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-          {ifo.offerToken.symbol} {i18n._(t`Balance`)}:{' '}
-          {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
+        <div className="flex justify-between items-center mb-2 text-left cursor-pointer text-secondary">
+          <div>
+            {ifo.offerToken.symbol} {i18n._(t`Balance`)}:{' '}
+            {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
+          </div>
+          {poolId === PoolIds.poolBasic && (
+            <div className="text-sm text-blue">maxiCommit: ${Number(maximumTokenEntry) / 1e18}</div>
+          )}
         </div>
 
         <div className={`relative flex items-center w-full mb-4 ${inputError ? 'rounded border border-red' : ''}`}>
@@ -212,7 +242,11 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
               size="xs"
               onClick={() => {
                 if (!rasieTokenBalance?.equalTo(ZERO)) {
-                  setInput(rasieTokenBalance?.toFixed(ifo.raiseToken?.decimals))
+                  setInput(
+                    poolId === PoolIds.poolBasic
+                      ? String(Number(maximumTokenEntry) / 1e18)
+                      : rasieTokenBalance?.toFixed(ifo.raiseToken?.decimals)
+                  )
                 }
               }}
               className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
@@ -232,9 +266,6 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
             {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)}</Dots> : i18n._(t`Approve`)}
           </Button>
         ) : (
-          // <Button className="w-full" color="blue" disabled={pendingTx || !typedDepositValue || rasieTokenBalance?.lessThan(typedDepositValue)}>
-          //     {i18n._(t`Commit`)}
-          // </Button>
           <Button
             color={buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'}
             onClick={handleDepositPool}

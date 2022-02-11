@@ -48,12 +48,12 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
       return (
         <>
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].raiseAmount}</div>
+            <div className="text-xs">Funds to raise:</div>
+            <div className="text-xs text-high-emphesis">{ifo[poolId].raiseAmount}</div>
           </div>
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].raiseAmount}</div>
+            <div className="text-xs text-pink-red">CRONA to burn:</div>
+            <div className="text-xs text-pink-red">{ifo[poolId].cronaToBurn}</div>
           </div>
         </>
       )
@@ -63,19 +63,19 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
       return (
         <>
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].raiseAmount}</div>
+            <div className="text-xs">Funds to raise:</div>
+            <div className="text-xs text-high-emphesis">{ifo[poolId].raiseAmount}</div>
           </div>
 
           {ifo[poolId].cronaToBurn !== '$0' && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs leading-4 font-medium currentColor">CRONA to burn:</div>
-              <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].cronaToBurn}</div>
+              <div className="text-xs text-pink-red">CRONA to burn:</div>
+              <div className="text-xs text-pink-red">{ifo[poolId].cronaToBurn}</div>
             </div>
           )}
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Price per {ifo.offerToken.symbol}:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">${ifo.tokenOfferingPrice}</div>
+            <div className="text-xs">Price per {ifo.offerToken.symbol}:</div>
+            <div className="text-xs text-high-emphesis">${ifo.tokenOfferingPrice}</div>
           </div>
         </>
       )
@@ -85,51 +85,45 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
       return (
         <>
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].raiseAmount}</div>
+            <div className="text-xs">Funds to raise:</div>
+            <div className="text-xs text-high-emphesis">{ifo[poolId].raiseAmount}</div>
           </div>
 
           {ifo[poolId].cronaToBurn !== '$0' && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs leading-4 font-medium currentColor">CRONA to burn:</div>
-              <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].cronaToBurn}</div>
+              <div className="text-xs text-pink-red">CRONA to burn:</div>
+              <div className="text-xs text-pink-red">{ifo[poolId].cronaToBurn}</div>
             </div>
           )}
 
           {poolId === PoolIds.poolBasic && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs leading-4 font-medium currentColor">Price per {ifo.offerToken.symbol}:</div>
-              <div className="text-xs leading-4 font-medium text-high-emphesis">${ifo.tokenOfferingPrice}</div>
+              <div className="text-xs">Price per {ifo.offerToken.symbol}:</div>
+              <div className="text-xs text-high-emphesis">${ifo.tokenOfferingPrice}</div>
             </div>
           )}
 
           {poolId === PoolIds.poolUnlimited && (
             <>
               <div className="flex justify-between gap-0.5">
-                <div className="text-xs leading-4 font-medium currentColor">Additional fee:</div>
-                <div className="text-xs leading-4 font-medium text-high-emphesis">{taxRate}</div>
+                <div className="text-xs">Additional fee:</div>
+                <div className="text-xs text-high-emphesis">{taxRate}</div>
               </div>
               <div className="flex justify-between gap-0.5">
-                <div className="text-xs leading-4 font-medium currentColor">
-                  Price per {ifo.offerToken.symbol} with fee:
-                </div>
-                <div className="text-xs leading-4 font-medium text-high-emphesis">{pricePerTokenWithFee}</div>
+                <div className="text-xs">Price per {ifo.offerToken.symbol} with fee:</div>
+                <div className="text-xs text-high-emphesis">{pricePerTokenWithFee}</div>
               </div>
             </>
           )}
 
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Your committed:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">
-              {raiseTokenPriceInUSD.gt(0) ? yourCommitted : null}
-            </div>
+            <div className="text-xs">Your committed:</div>
+            <div className="text-xs text-high-emphesis">{raiseTokenPriceInUSD.gt(0) ? yourCommitted : null}</div>
           </div>
 
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Total committed:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">
-              {raiseTokenPriceInUSD.gt(0) ? totalCommitted : null}
-            </div>
+            <div className="text-xs">Total committed:</div>
+            <div className="text-xs text-high-emphesis">{raiseTokenPriceInUSD.gt(0) ? totalCommitted : null}</div>
           </div>
         </>
       )
@@ -139,52 +133,46 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
       return (
         <>
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Your committed:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">
-              {raiseTokenPriceInUSD.gt(0) ? yourCommitted : null}
-            </div>
-          </div>
-
-          <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Total committed:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">
-              {raiseTokenPriceInUSD.gt(0) ? totalCommitted : null}
-            </div>
-          </div>
-
-          <div className="flex justify-between gap-0.5">
-            <div className="text-xs leading-4 font-medium currentColor">Funds to raise:</div>
-            <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].raiseAmount}</div>
+            <div className="text-xs">Funds to raise:</div>
+            <div className="text-xs text-high-emphesis">{ifo[poolId].raiseAmount}</div>
           </div>
 
           {ifo[poolId].cronaToBurn !== '$0' && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs leading-4 font-medium currentColor">CRONA to burn:</div>
-              <div className="text-xs leading-4 font-medium text-high-emphesis">{ifo[poolId].cronaToBurn}</div>
+              <div className="text-xs text-pink-red">CRONA to burn:</div>
+              <div className="text-xs text-pink-red">{ifo[poolId].cronaToBurn}</div>
             </div>
           )}
 
           {poolId === PoolIds.poolUnlimited && (
             <>
               <div className="flex justify-between gap-0.5">
-                <div className="text-xs leading-4 font-medium currentColor">Additional fee:</div>
-                <div className="text-xs leading-4 font-medium text-high-emphesis">{taxRate}</div>
+                <div className="text-xs">Additional fee:</div>
+                <div className="text-xs text-high-emphesis">{taxRate}</div>
               </div>
               <div className="flex justify-between gap-0.5">
-                <div className="text-xs leading-4 font-medium currentColor">
-                  Price per {ifo.offerToken.symbol} with fee:
-                </div>
-                <div className="text-xs leading-4 font-medium text-high-emphesis">{pricePerTokenWithFee}</div>
+                <div className="text-xs">Price per {ifo.offerToken.symbol} with fee:</div>
+                <div className="text-xs text-high-emphesis">{pricePerTokenWithFee}</div>
               </div>
             </>
           )}
 
           {poolId === PoolIds.poolBasic && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs leading-4 font-medium currentColor">Price per {ifo.offerToken.symbol}:</div>
-              <div className="text-xs leading-4 font-medium text-high-emphesis">${ifo.tokenOfferingPrice}</div>
+              <div className="text-xs">Price per {ifo.offerToken.symbol}:</div>
+              <div className="text-xs text-high-emphesis">${ifo.tokenOfferingPrice}</div>
             </div>
           )}
+
+          <div className="flex justify-between gap-0.5">
+            <div className="text-xs">Your committed:</div>
+            <div className="text-xs text-high-emphesis">{raiseTokenPriceInUSD.gt(0) ? yourCommitted : null}</div>
+          </div>
+
+          <div className="flex justify-between gap-0.5">
+            <div className="text-xs">Total committed:</div>
+            <div className="text-xs text-high-emphesis">{raiseTokenPriceInUSD.gt(0) ? totalCommitted : null}</div>
+          </div>
         </>
       )
     }
