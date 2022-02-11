@@ -33,8 +33,29 @@ type AddressMap = {
 
 export const POOLS: AddressMap = {
   [ChainId.CRONOS]: {
-    '0xc3f38745fD9374836B7D0919758ccE7c89a3Ab19': {
+    '0x8F48d6b7F18421664D6DFA4891A5204d099B1F1C': {
       pid: 0,
+      name: 'CRONA-CROISSANT',
+      tokenPerBlock: '1.25',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://croissant.games/',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0xa0c3c184493f2fae7d2f2bd83f195a1c300fa353',
+        name: 'Croissant games',
+        symbol: 'CROISSANT',
+        decimals: 18,
+      },
+    },
+
+    '0xc3f38745fD9374836B7D0919758ccE7c89a3Ab19': {
+      pid: 1,
       name: 'CRONA-AGL',
       tokenPerBlock: '1.5',
       isFinished: false,
@@ -50,7 +71,7 @@ export const POOLS: AddressMap = {
     },
 
     '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
-      pid: 0,
+      pid: 2,
       name: 'CRONA-CROSS',
       tokenPerBlock: '0.0575',
       isFinished: true,

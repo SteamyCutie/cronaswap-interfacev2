@@ -61,6 +61,7 @@ import DASHBOARD_ABIV1 from '../constants/abis/dashboardv1.json'
 import DASHBOARD_ABIV2 from '../constants/abis/dashboardv2.json'
 import REWARD_POOL_ABI from '../constants/abis/rewardpool.json'
 import VOTING_ESCROW_ABI from '../constants/abis/voting-escrow.json'
+import VOTING_ESCROW_AT_ABI from '../constants/abis/voting-escrow-at.json'
 import ANYSWAP_ERC20_ABI from '../constants/abis/anyswap_erc20.json'
 import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
 import MISO_HELPER_ABI from 'app/constants/abis/miso-helper.json'
@@ -283,6 +284,12 @@ export function useRewardPoolContract(withSignerIfPossible?: boolean): Contract 
 export function useVotingEscrowContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(VOTING_ESCROW_ADDRESS[chainId], VOTING_ESCROW_ABI, withSignerIfPossible)
+}
+
+// This is a specifically function for balanceOf(address, timestamp) etc
+export function useVotingEscrowAtContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(VOTING_ESCROW_ADDRESS[chainId], VOTING_ESCROW_AT_ABI, withSignerIfPossible)
 }
 
 export function useAnyswapTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {

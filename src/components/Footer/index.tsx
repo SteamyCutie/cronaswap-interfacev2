@@ -19,7 +19,7 @@ const Footer = () => {
       { name: `${i18n._(t`CoinMarketCap`)}`, href: 'https://coinmarketcap.com/currencies/cronaswap/' },
     ],
     exchanges: [
-      // { name: `${i18n._(t`Mexc.com`)}`, href: 'https://www.mexc.com/exchange/CRONA_USDT' },
+      { name: `${i18n._(t`Mexc.com`)}`, href: 'https://www.mexc.com/exchange/CRONA_USDT' },
       { name: `${i18n._(t`MultiChain`)}`, href: 'https://app.multichain.org/#/router' },
       { name: `${i18n._(t`Cronos Bridge`)}`, href: 'https://cronos.crypto.org/docs/bridge/cdcex.html' },
       {

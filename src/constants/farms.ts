@@ -598,6 +598,20 @@ export const FARMSV2: AddressMap = {
       token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token1: { id: '0x994047FE66406CbD646cd85B990E11D7F5dB8fC7', name: 'DOT', symbol: 'DOT', decimals: 10 },
     },
+
+    '0xf0359a37abdd3677DCd9de7B844501B695c8F97E': {
+      id: 20,
+      pid: 20,
+      symbol: 'CLP',
+      name: 'CROISSANT-CRO',
+      token0: {
+        id: '0xa0C3c184493f2Fae7d2f2Bd83F195a1c300FA353',
+        name: 'Croissant Games',
+        symbol: 'CROISSANT',
+        decimals: 18,
+      },
+      token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
   },
 
   [ChainId.CRONOS_TESTNET]: {
