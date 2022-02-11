@@ -46,7 +46,7 @@ export const XCRONA: ChainTokenMap = {
   ),
 }
 
-type ChainTokenMap = {
+export type ChainTokenMap = {
   readonly [chainId in ChainId]?: Token
 }
 
@@ -86,4 +86,16 @@ export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   //   'WFTM',
   //   'Wrapped Fantom'
   // ),
+}
+
+// ifo tokens list
+export const BETA: ChainTokenMap = {
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
+  [ChainId.CRONOS_TESTNET]: new Token(
+    ChainId.CRONOS_TESTNET,
+    '0xd63EAab556d1177F5C1a149E4aB0aD78fF627E1B',
+    18,
+    'BETA',
+    'IFO BETA MOCK'
+  ),
 }

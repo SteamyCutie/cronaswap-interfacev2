@@ -3,6 +3,7 @@ import { ChevronDownIcon } from '@heroicons/react/outline'
 import Button from 'app/components/Button'
 import NavLink from 'app/components/NavLink'
 import { Ifo } from 'app/constants/types'
+import { PublicIfoData } from './hooks/types'
 
 const faqs = [
   {
@@ -32,7 +33,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const IfoQuestions = ({ ifo }: { ifo: Ifo }) => {
+export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: PublicIfoData }) => {
+  const { raiseToken } = publicIfoData
+
   return (
     <div className="mx-auto py-6 px-4 sm:py-8 sm:px-6 lg:px-8 bg-dark-900 rounded">
       {/* step */}
@@ -54,17 +57,17 @@ export const IfoQuestions = ({ ifo }: { ifo: Ifo }) => {
           </Button>
         </div>
         <div className="p-4 rounded-lg bg-dark-800">
-          <h1 className="text-lg">2. Commit {ifo.raiseToken.symbol} Tokens</h1>
+          <h1 className="text-lg">2. Commit {raiseToken.symbol} Tokens</h1>
           <h2 className="text-sm flex flex-row items-center">
-            When the IFO sales are live, you can “commit” your {ifo.raiseToken.symbol} tokens to buy the tokens being
-            sold. We recommend committing to the Basic Sale first, but you can do both if you like.
+            When the IFO sales are live, you can “commit” your {raiseToken.symbol} tokens to buy the tokens being sold.
+            We recommend committing to the Basic Sale first, but you can do both if you like.
           </h2>
         </div>
         <div className="p-4 rounded-lg bg-dark-800">
           <h1 className="text-lg">3. Claim Your Tokens</h1>
           <h2 className="text-sm flex flex-row items-center">
             After the IFO sales finish, you can claim any IFO tokens that you bought, and any unspent{' '}
-            {ifo.raiseToken.symbol} tokens will be returned to your wallet.
+            {raiseToken.symbol} tokens will be returned to your wallet.
           </h2>
         </div>
       </div>

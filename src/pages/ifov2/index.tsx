@@ -83,7 +83,7 @@ export default function Ifo(): JSX.Element {
         <IfoCurrentCard ifo={activeIfo} publicIfoData={publicIfoData} walletIfoData={walletIfoData} />
 
         {/* faq */}
-        <IfoQuestions ifo={activeIfo} />
+        <IfoQuestions ifo={activeIfo} publicIfoData={publicIfoData} />
       </div>
     </Container>
   )

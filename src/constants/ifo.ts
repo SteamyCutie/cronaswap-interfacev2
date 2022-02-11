@@ -1,20 +1,6 @@
-import { Token, ChainId } from '@cronaswap/core-sdk'
-import tokens from 'pages/tokens'
-import { useActiveWeb3React } from 'app/services/web3'
+import { ChainId, Token } from '@cronaswap/core-sdk'
 import { Ifo } from './types'
-import { CRONA, USDC } from './../config/tokens'
-
-// export const cronaCroLpToken = process.env.REACT_APP_CHAIN_ID === ChainId.MAINNET.toString()
-//   ? new Token(ChainId.MAINNET, farms[1].lpAddresses[ChainId.MAINNET], 18, farms[1].lpSymbol)
-//   : new Token(ChainId.TESTNET, farms[1].lpAddresses[ChainId.TESTNET], 18, farms[1].lpSymbol)
-
-// Mainnet
-// export const usdcUsdtLpToken = new Token(chainId, Object.keys(FARMS[chainId])[10], 18, Object.values(FARMS[chainId])[10].name)
-// Testnet
-// export const usdcUsdtLpToken = {
-//   [ChainId.CRONOS]: new Token(ChainId.CRONOS, Object.keys(FARMS[ChainId.CRONOS])[10], 18, Object.values(FARMS[ChainId.CRONOS])[10].name),
-//   [ChainId.CRONOS_TESTNET]: new Token(ChainId.CRONOS_TESTNET, Object.keys(FARMS[ChainId.CRONOS_TESTNET])[2], 18, Object.values(FARMS[ChainId.CRONOS_TESTNET])[2].name)
-// }
+import { BETA, USDC } from './../config/tokens'
 
 // Upcoming 0x906054Ae307053f44767456b7f7e1edaFae5ab61
 // LIVE 0x0BF8431c80b3DE93e780ae13E6BB8ffEF78C8b91
@@ -37,8 +23,17 @@ const ifos: Ifo[] = [
       cronaToBurn: '$210,000',
       distributionRatio: 0.7,
     },
-    raiseToken: USDC[ChainId.CRONOS_TESTNET],
-    offerToken: USDC[ChainId.CRONOS_TESTNET],
+    raiseToken: USDC,
+    offerToken: {
+      [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
+      [ChainId.CRONOS_TESTNET]: new Token(
+        ChainId.CRONOS_TESTNET,
+        '0xd63EAab556d1177F5C1a149E4aB0aD78fF627E1B',
+        18,
+        'BETA',
+        'IFO BETA MOCK'
+      ),
+    },
     releaseTimestamp: 1644675300,
     veCronaCheckPoint: 1644675300,
     campaignId: '511160000',

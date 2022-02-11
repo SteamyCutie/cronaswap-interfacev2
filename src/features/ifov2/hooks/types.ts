@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { Contract } from '@ethersproject/contracts'
 import { IfoStatus, PoolIds } from 'app/constants/types'
+import { Token } from '@cronaswap/core-sdk'
 
 export enum EnableStatus {
   ENABLED = 'enabled',
@@ -28,6 +29,8 @@ export interface PublicIfoData {
   secondsUntilEnd: number
   startTimeNum: number
   endTimeNum: number
+  raiseToken: Token
+  offerToken: Token
   raiseTokenPriceInUSD: BigNumber
   [PoolIds.poolBasic]?: PoolCharacteristics
   [PoolIds.poolUnlimited]: PoolCharacteristics

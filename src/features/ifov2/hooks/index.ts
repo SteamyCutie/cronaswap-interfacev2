@@ -7,6 +7,7 @@ import { useSingleCallResult, useSingleContractMultipleMethods } from 'app/state
 import { useMemo } from 'react'
 import { getStatus } from './helpers'
 import { useWeb3React } from '@web3-react/core'
+import { ChainId } from '@cronaswap/core-sdk'
 
 const TAX_PRECISION = FixedNumber.from(10000000000)
 
@@ -21,6 +22,7 @@ const formatPool = (pool) => ({
 
 // Get ifo card infos
 export function useGetPublicIfoData(ifo: Ifo) {
+  const { chainId } = useWeb3React()
   const { address, releaseTimestamp } = ifo
   const raiseTokenPriceInUSD = BIG_ONE
   const currentTime = Date.parse(new Date().toString()) / 1000
@@ -65,6 +67,8 @@ export function useGetPublicIfoData(ifo: Ifo) {
 
   return {
     isInitialized: true,
+    raiseToken: ifo.raiseToken[chainId ? chainId : ChainId.CRONOS],
+    offerToken: ifo.offerToken[chainId ? chainId : ChainId.CRONOS],
     secondsUntilEnd: timesRemaining,
     secondsUntilStart: startTimeNum - currentTime,
     poolBasic: { ...poolBasicFormatted, taxRate: 0 },

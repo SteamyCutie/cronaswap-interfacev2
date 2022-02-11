@@ -7,7 +7,8 @@ import Dots from 'app/components/Dots'
 import NumericalInput from 'app/components/NumericalInput'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { Ifo, PoolIds } from 'app/constants/types'
-import { formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
+import { formatBalance, formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
+import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'app/functions/formatBalance'
 import { ApprovalState, useApproveCallback } from 'app/hooks'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useWalletModalToggle } from 'app/state/application/hooks'
@@ -69,12 +70,12 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const config = cardConfig(poolId)
   const { account } = useActiveWeb3React()
 
-  const { status } = publicIfoData
+  const { status, raiseToken, offerToken } = publicIfoData
 
   const publicPoolCharacteristics = publicIfoData[poolId]
   const userPoolCharacteristics = walletIfoData[poolId]
 
-  const rasieTokenBalance = useTokenBalance(account ?? undefined, ifo.raiseToken)
+  const rasieTokenBalance = useTokenBalance(account ?? undefined, raiseToken)
 
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
@@ -106,15 +107,15 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const veCronaLeft = walletIfoData.ifoVeCrona?.veCronaLeft
   const maximumTokenEntry = useMemo(() => {
     if (!veCronaLeft) {
-      return limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - ifo.raiseToken.decimals))
+      return limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
     }
     if (limitPerUserInLP.isGreaterThan(0)) {
       if (limitPerUserInLP.isGreaterThan(0)) {
         return limitPerUserInLP
           .minus(amountTokenCommittedInLP)
-          .multipliedBy(10 ** (18 - ifo.raiseToken.decimals))
+          .multipliedBy(10 ** (18 - raiseToken.decimals))
           .isLessThanOrEqualTo(veCronaLeft)
-          ? limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - ifo.raiseToken.decimals))
+          ? limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
           : veCronaLeft
       }
     }
@@ -126,7 +127,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     pendingTx ||
     (parsedAmount && parsedAmount.equalTo(ZERO)) ||
     status === 'finished' ||
-    (poolId === PoolIds.poolBasic && Number(input) > Number(maximumTokenEntry) / 1e18)
+    (poolId === PoolIds.poolBasic && Number(input) > getBalanceNumber(maximumTokenEntry))
 
   const { harvestPool, depositPool } = useIfoPool(walletIfoData.contract)
 
@@ -206,7 +207,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
         )}
       </div>
       <div className="flex gap-3 px-4">
-        <CurrencyLogo currency={ifo.offerToken} size={'48px'} />
+        <CurrencyLogo currency={offerToken} size={'48px'} />
         <div className="flex flex-col overflow-hidden">
           <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
             {ifo[poolId].saleAmount}
@@ -221,11 +222,11 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
       <div className="col-span-2 text-center md:col-span-1  px-4">
         <div className="flex justify-between items-center mb-2 text-left cursor-pointer text-secondary">
           <div>
-            {ifo.offerToken.symbol} {i18n._(t`Balance`)}:{' '}
+            {offerToken.symbol} {i18n._(t`Balance`)}:{' '}
             {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
           </div>
           {poolId === PoolIds.poolBasic && (
-            <div className="text-sm text-blue">maxiCommit: ${Number(maximumTokenEntry) / 1e18}</div>
+            <div className="text-sm text-blue">maxiCommit: {formatNumber(Number(maximumTokenEntry) / 1e18, true)}</div>
           )}
         </div>
 
@@ -244,8 +245,8 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
                 if (!rasieTokenBalance?.equalTo(ZERO)) {
                   setInput(
                     poolId === PoolIds.poolBasic
-                      ? String(Number(maximumTokenEntry) / 1e18)
-                      : rasieTokenBalance?.toFixed(ifo.raiseToken?.decimals)
+                      ? getBalanceNumber(maximumTokenEntry).toFixed(2)
+                      : rasieTokenBalance?.toFixed(raiseToken?.decimals)
                   )
                 }
               }}

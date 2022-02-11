@@ -11,7 +11,7 @@ export interface IfoCardDetailsProps {
 }
 
 const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoData, walletIfoData }) => {
-  const { status, raiseTokenPriceInUSD } = publicIfoData
+  const { status, raiseToken, offerToken, raiseTokenPriceInUSD } = publicIfoData
 
   const poolCharacteristic = publicIfoData[poolId]
   const walletCharacteristic = walletIfoData[poolId]
@@ -23,12 +23,12 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
     .toFixed(2)
 
   // totalCommited
-  const totalLPCommitted = getBalanceNumber(poolCharacteristic.totalAmountPool, ifo.raiseToken.decimals)
+  const totalLPCommitted = getBalanceNumber(poolCharacteristic.totalAmountPool, raiseToken.decimals)
   const totalLPCommittedInUSD = raiseTokenPriceInUSD.times(totalLPCommitted)
   const totalCommitted = `~$${formatNumber(totalLPCommittedInUSD.toNumber())} (${totalCommittedPercent}%)`
 
   // yourCommited
-  const yourLPCommitted = getBalanceNumber(walletCharacteristic.amountTokenCommittedInLP, ifo.raiseToken.decimals)
+  const yourLPCommitted = getBalanceNumber(walletCharacteristic.amountTokenCommittedInLP, raiseToken.decimals)
   const yourLPCommittedInUSD = raiseTokenPriceInUSD.times(yourLPCommitted)
   const yourCommitted = `~$${formatNumber(yourLPCommittedInUSD.toNumber())}`
 
@@ -74,7 +74,7 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
             </div>
           )}
           <div className="flex justify-between gap-0.5">
-            <div className="text-xs">Price per {ifo.offerToken.symbol}:</div>
+            <div className="text-xs">Price per {offerToken.symbol}:</div>
             <div className="text-xs text-high-emphesis">${ifo.tokenOfferingPrice}</div>
           </div>
         </>
@@ -98,7 +98,7 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
 
           {poolId === PoolIds.poolBasic && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs">Price per {ifo.offerToken.symbol}:</div>
+              <div className="text-xs">Price per {offerToken.symbol}:</div>
               <div className="text-xs text-high-emphesis">${ifo.tokenOfferingPrice}</div>
             </div>
           )}
@@ -110,7 +110,7 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
                 <div className="text-xs text-high-emphesis">{taxRate}</div>
               </div>
               <div className="flex justify-between gap-0.5">
-                <div className="text-xs">Price per {ifo.offerToken.symbol} with fee:</div>
+                <div className="text-xs">Price per {offerToken.symbol} with fee:</div>
                 <div className="text-xs text-high-emphesis">{pricePerTokenWithFee}</div>
               </div>
             </>
@@ -151,7 +151,7 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
                 <div className="text-xs text-high-emphesis">{taxRate}</div>
               </div>
               <div className="flex justify-between gap-0.5">
-                <div className="text-xs">Price per {ifo.offerToken.symbol} with fee:</div>
+                <div className="text-xs">Price per {offerToken.symbol} with fee:</div>
                 <div className="text-xs text-high-emphesis">{pricePerTokenWithFee}</div>
               </div>
             </>
@@ -159,7 +159,7 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
 
           {poolId === PoolIds.poolBasic && (
             <div className="flex justify-between gap-0.5">
-              <div className="text-xs">Price per {ifo.offerToken.symbol}:</div>
+              <div className="text-xs">Price per {offerToken.symbol}:</div>
               <div className="text-xs text-high-emphesis">${ifo.tokenOfferingPrice}</div>
             </div>
           )}
