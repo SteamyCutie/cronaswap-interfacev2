@@ -28,8 +28,8 @@ function IfoActivityTimer({ remainingTime }) {
   if (remaining) {
     return (
       <>
-        <div className="flex items-baseline gap-1">
-          <Typography variant="h2" className="text-mono">
+        <div className="flex items-baseline gap-1 text-pink">
+          <Typography variant="h2" className="text-yellow">
             {remaining.days}D
           </Typography>
           <Typography variant="h2" className="text-mono text-secondary">
@@ -37,7 +37,7 @@ function IfoActivityTimer({ remainingTime }) {
           </Typography>
         </div>
         <div className="flex items-baseline gap-2">
-          <Typography variant="h2" className="text-mono">
+          <Typography variant="h2" className="text-yellow">
             {remaining.hours}H
           </Typography>
           <Typography variant="h2" className="text-mono text-secondary">
@@ -45,7 +45,7 @@ function IfoActivityTimer({ remainingTime }) {
           </Typography>
         </div>
         <div className="flex items-baseline gap-2">
-          <Typography variant="h2" className="text-mono">
+          <Typography variant="h2" className="text-yellow">
             {remaining.minutes}M
           </Typography>
           <Typography variant="h2" className="text-mono text-secondary">
@@ -53,7 +53,7 @@ function IfoActivityTimer({ remainingTime }) {
           </Typography>
         </div>
         <div className="flex items-baseline gap-2">
-          <Typography variant="h2" className="text-mono">
+          <Typography variant="h2" className="text-yellow">
             {remaining.seconds}S
           </Typography>
         </div>

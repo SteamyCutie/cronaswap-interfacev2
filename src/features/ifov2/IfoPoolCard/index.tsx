@@ -1,4 +1,4 @@
-import { ZERO } from '@cronaswap/core-sdk'
+import { ChainId, ZERO } from '@cronaswap/core-sdk'
 import { i18n } from '@lingui/core'
 import { t } from '@lingui/macro'
 import Button from 'app/components/Button'
@@ -68,7 +68,8 @@ const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
 
 const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walletIfoData }) => {
   const config = cardConfig(poolId)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const now = Date.parse(new Date().toString()) / 1000
 
   const { status, raiseToken, offerToken } = publicIfoData
 
@@ -91,7 +92,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     (rasieTokenBalance && rasieTokenBalance.equalTo(ZERO)) || parsedAmount?.greaterThan(rasieTokenBalance)
   const inputError = insufficientFunds
 
-  const [approvalState, approve] = useApproveCallback(parsedAmount, ifo.address)
+  const [approvalState, approve] = useApproveCallback(parsedAmount, ifo.address[chainId ? chainId : ChainId.CRONOS])
 
   const handleInput = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
@@ -210,7 +211,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
         <CurrencyLogo currency={offerToken} size={'48px'} />
         <div className="flex flex-col overflow-hidden">
           <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
-            {ifo[poolId].saleAmount}
+            {ifo[poolId].saleAmount} {offerToken.symbol}
           </div>
           <div className="text-sm leading-5 font-bold text-secondary">
             {ifo[poolId].distributionRatio * 100}% of total sale
@@ -222,11 +223,11 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
       <div className="col-span-2 text-center md:col-span-1  px-4">
         <div className="flex justify-between items-center mb-2 text-left cursor-pointer text-secondary">
           <div>
-            {offerToken.symbol} {i18n._(t`Balance`)}:{' '}
+            {raiseToken.symbol} {i18n._(t`Balance`)}:{' '}
             {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
           </div>
           {poolId === PoolIds.poolBasic && (
-            <div className="text-sm text-blue">maxiCommit: {formatNumber(Number(maximumTokenEntry) / 1e18, true)}</div>
+            <div className="text-sm text-blue">maxCommit: {formatNumber(Number(maximumTokenEntry) / 1e18, true)}</div>
           )}
         </div>
 
@@ -286,6 +287,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
         {status === 'finished' &&
           !userPoolCharacteristics.hasClaimed &&
           (userPoolCharacteristics.offeringAmountInToken.isGreaterThan(0) ||
+            now > ifo.releaseTimestamp + ifo.claimDelayTime ||
             userPoolCharacteristics.refundingAmountInLP.isGreaterThan(0)) && (
             <Button className="w-full mt-2" color="gradient" disabled={claimPendingTx} onClick={handleHarvestPool}>
               {claimPendingTx ? <Dots>{i18n._(t`Claiming`)}</Dots> : i18n._(t`Claim`)}

@@ -7,25 +7,28 @@ import { BETA, USDC } from './../config/tokens'
 // FINISH 0xE7Ac192A39DAE08B0D8936f5C27B908b8C8e6781
 const ifos: Ifo[] = [
   {
-    id: 'beta',
-    address: '0x0BF8431c80b3DE93e780ae13E6BB8ffEF78C8b91',
+    id: 'kron',
+    address: {
+      [ChainId.CRONOS]: '0x09AdEDA0496eDe941B3bE4B81E124202D5E8aB08', //MAINNET KRON
+      [ChainId.CRONOS_TESTNET]: '0x0BF8431c80b3DE93e780ae13E6BB8ffEF78C8b91',
+    },
     isActive: true,
-    name: 'Beta Protocol (BETA)',
+    name: 'Krypton Protocol',
     poolBasic: {
-      saleAmount: '30,000 BETA',
+      saleAmount: '30,000',
       raiseAmount: '$300,000',
       cronaToBurn: '$90,000',
       distributionRatio: 0.3,
     },
     poolUnlimited: {
-      saleAmount: '70,000 BETA',
+      saleAmount: '70,000',
       raiseAmount: '$700,000',
       cronaToBurn: '$210,000',
       distributionRatio: 0.7,
     },
     raiseToken: USDC,
     offerToken: {
-      [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
+      [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x1771949CCe723e5707639134baE661A868e38198', 9, 'KRON', 'Krypton'),
       [ChainId.CRONOS_TESTNET]: new Token(
         ChainId.CRONOS_TESTNET,
         '0xd63EAab556d1177F5C1a149E4aB0aD78fF627E1B',
@@ -34,14 +37,16 @@ const ifos: Ifo[] = [
         'IFO BETA MOCK'
       ),
     },
-    releaseTimestamp: 1644675300,
-    veCronaCheckPoint: 1644675300,
+    releaseTimestamp: 1644588900,
+    claimDelayTime: 7200, //delay 2 hour 1644760800
+    veCronaCheckPoint: 1644588900,
     campaignId: '511160000',
-    twitterUrl: 'https://twitter.com/',
-    telegramUrl: 'https://twitter.com/',
-    articleUrl: 'https://pancakeswap.finance/voting/proposal/QmQqpknHvuQwshVP259qFxfQsxiWbQ9SLMebohDeRwRzKg',
+    twitterUrl: 'https://twitter.com/KryptonProt',
+    telegramUrl: 'https://t.me/KryptonProtocol',
+    discordUrl: 'https://discord.gg/7cQyTcBbqf',
+    articleUrl: 'https://kryptonprotocol.gitbook.io/krypton-protocol',
     description:
-      'CronaSwap is the first decentralized exchange platform on the Cronos Chain to offer the lowest transaction fees (0.25%). You can swap CRC-20 tokens easily on the Cronos Chain network that guarantees superior speed and much lower network transaction costs. ',
+      "Krypton Protocol is a decentralized reserve currency platform on Cronos. Unlike DAI or USDT, which are pegged to the value of the U.S. dollar, KRON's reserves are crypto assets held by the Krypton Protocol Treasury.",
     tokenOfferingPrice: 10.0,
     version: 2,
   },

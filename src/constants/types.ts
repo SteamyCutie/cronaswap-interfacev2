@@ -1,4 +1,4 @@
-import { Token } from '@cronaswap/core-sdk'
+import { AddressMap } from '@cronaswap/core-sdk'
 import { ChainTokenMap } from 'app/config/tokens'
 
 export enum PoolIds {
@@ -16,11 +16,12 @@ interface IfoPoolInfo {
 export interface Ifo {
   id: string
   isActive: boolean
-  address: string
+  address: AddressMap
   name: string
   raiseToken: ChainTokenMap
   offerToken: ChainTokenMap
   releaseTimestamp: number
+  claimDelayTime: number
   veCronaCheckPoint: number
   articleUrl: string
   campaignId: string
@@ -28,6 +29,7 @@ export interface Ifo {
   description?: string
   twitterUrl?: string
   telegramUrl?: string
+  discordUrl?: string
   version: number
   [PoolIds.poolBasic]?: IfoPoolInfo
   [PoolIds.poolUnlimited]: IfoPoolInfo
