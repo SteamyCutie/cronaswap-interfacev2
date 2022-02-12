@@ -7,7 +7,7 @@ import Dots from 'app/components/Dots'
 import NumericalInput from 'app/components/NumericalInput'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { Ifo, PoolIds } from 'app/constants/types'
-import { formatBalance, formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
+import { formatBalance, formatCurrencyAmount, formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
 import { BIG_ONE, BIG_TEN, BIG_ZERO } from 'app/functions/bigNumber'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'app/functions/formatBalance'
 import { ApprovalState, useApproveCallback } from 'app/hooks'
@@ -18,6 +18,7 @@ import { useMemo, useState } from 'react'
 import { PublicIfoData, WalletIfoData } from '../hooks/types'
 import useIfoPool from '../hooks/useIfoPool'
 import IfoCardDetails from './IfoCardDetails'
+import BigNumber from 'bignumber.js'
 
 interface IfoCardProps {
   poolId: PoolIds
@@ -122,15 +123,20 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
         // console.log('amountTokenCommittedInLP', Number(veCronaLeft.multipliedBy(10).minus(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))))/1e18)
         // console.log('ab1', Number(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))) /1e18)
         // console.log('ab2', Number(veCronaLeft.multipliedBy(10))/1e18)
-        // console.log('ax', Number(BIG_TEN.multipliedBy(101).minus(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)))) / 1e18)
+        // console.log('true', veCronaLeft.multipliedBy(10).isGreaterThan(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))))
 
-        // console.log('ve', Number(BIG_TEN.multipliedBy(100)), Number(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))) / 1e18)
+        // console.log('ve', Number(veCronaLeft.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))))
 
-        // console.log('sssss', amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)).isLessThan(BIG_TEN.multipliedBy(100)))
+        // console.log('sssss', Number(limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))))
 
-        return amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)).isGreaterThan(limitPerUserInLP)
-          ? BIG_ZERO
-          : veCronaLeft.multipliedBy(10).minus(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)))
+        // return amountTokenCommittedInLP.isLessThan(limitPerUserInLP)
+        //   ? limitPerUserInLP.minus(amountTokenCommittedInLP)
+        //   : BIG_ZERO
+        return veCronaLeft
+          .multipliedBy(10)
+          .isGreaterThan(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)))
+          ? limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
+          : veCronaLeft.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
       }
 
       if (limitPerUserInLP.isGreaterThan(0)) {
@@ -147,6 +153,16 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
     return veCronaLeft.multipliedBy(10)
   }, [veCronaLeft, limitPerUserInLP, amountTokenCommittedInLP])
+
+  // include user balance for input
+  // const maximumTokenCommittable = useMemo(() => {
+
+  //   return maximumTokenEntry.isLessThanOrEqualTo(new BigNumber(rasieTokenBalance?.toSignificant(4))) ? maximumTokenEntry : new BigNumber(rasieTokenBalance?.toSignificant(4))
+  // }, [poolId, maximumTokenEntry, rasieTokenBalance])
+
+  // console.log('maximumTokenCommittable', Number(maximumTokenEntry)/1e18, Number(maximumTokenCommittable), rasieTokenBalance?.toSignificant(4).toBigNumber(18))
+
+  // console.log('abcd', getBalanceAmount(maximumTokenCommittable).toFixed(7).slice(0, -1))
 
   const buttonDisabled =
     !input ||
