@@ -122,37 +122,6 @@ function MyApp({
           name="description"
           content="The most popular AMM on Cronos! Earn CRONA through yield farming, then stake it in xCrona Pools to earn more tokens! Initial Farm Offerings (new token launch model pioneered by CronaSwap), NFTs, and more, on a platform you can trust."
         />
-
-        <meta name="application-name" content="CRONA App" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="CRONA App" />
-
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#F338C3" />
-
-        <meta key="twitter:card" name="twitter:card" content="app" />
-        <meta key="twitter:title" name="twitter:title" content="CRONA App" />
-        <meta key="twitter:url" name="twitter:url" content="https://app.cronaswap.org" />
-        <meta
-          key="twitter:description"
-          name="twitter:description"
-          content="The most popular AMM on Cronos! Earn CRONA through yield farming, then stake it in xCrona Pools to earn more tokens! Initial Farm Offerings (new token launch model pioneered by CronaSwap), NFTs, and more, on a platform you can trust."
-        />
-        <meta key="twitter:image" name="twitter:image" content="https://app.cronaswap.org/icons/icon-192x192.png" />
-        <meta key="twitter:creator" name="twitter:creator" content="@CronaSwap" />
-        <meta key="og:type" property="og:type" content="website" />
-        <meta key="og:site_name" property="og:site_name" content="CRONA App" />
-        <meta key="og:url" property="og:url" content="https://app.cronaswap.org" />
-        <meta key="og:image" property="og:image" content="https://app.cronaswap.org/apple-touch-icon.png" />
-        <meta
-          key="og:description"
-          property="og:description"
-          content="The most popular AMM on Cronos! Earn CRONA through yield farming, then stake it in xCrona Pools to earn more tokens! Initial Farm Offerings (new token launch model pioneered by CronaSwap), NFTs, and more, on a platform you can trust."
-        />
       </Head>
       <I18nProvider i18n={i18n} forceRenderOnLocaleChange={false}>
         <Web3ReactProvider getLibrary={getLibrary}>
