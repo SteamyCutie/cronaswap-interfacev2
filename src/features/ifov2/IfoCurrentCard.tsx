@@ -7,6 +7,8 @@ import IfoPoolCard from './IfoPoolCard'
 import { getExplorerLink } from 'app/functions'
 import IfoActivityTimer from './IfoActivityTimer'
 import Typography from 'app/components/Typography'
+import { ClockIcon } from '@heroicons/react/outline'
+import { GiftIcon } from '@heroicons/react/solid'
 
 // Calac remainingTimes
 export function remainingTime(
@@ -94,15 +96,21 @@ export const IfoCurrentCard = ({
               <Image src={`/images/ifo/${ifo.id}.png`} alt={ifo.name} width="285px" height="55px" />
             </div>
 
-            <div className="flex mx-auto gap-1 text-high-emphesis rounded-md bg-dark-700 p-4">
+            <div className="flex mx-auto gap-1 text-high-emphesis rounded-md bg-dark-700 p-4 items-center">
               {publicIfoData.status === 'finished' && (
-                <Typography variant="h2" className="opacity-80 text-yellow">
-                  IFO HAS FINISHED
-                </Typography>
+                <>
+                  <GiftIcon className="h-8 text-green " />
+                  <Typography variant="h2" className="opacity-80 text-green">
+                    IFO HAS FINISHED
+                  </Typography>
+                </>
               )}
 
               {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
-                <IfoActivityTimer remainingTime={remainingTime(ifo, publicIfoData)} />
+                <>
+                  <ClockIcon className="h-8 text-yellow " />
+                  <IfoActivityTimer remainingTime={remainingTime(ifo, publicIfoData)} />
+                </>
               )}
             </div>
 
