@@ -32,7 +32,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en" dir="ltr">
         <Head>
-          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          {/* <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
           <link rel="manifest" href="/site.webmanifest" />
 
@@ -71,9 +71,9 @@ export default class MyDocument extends Document {
           <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon-152x152-precomposed.png" />
 
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
-          <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon-180x180-precomposed.png" />
+          <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon-180x180-precomposed.png" /> */}
 
-          <link
+          {/* <link
             href="/iphone5_splash.png"
             media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
             rel="apple-touch-startup-image"
@@ -122,13 +122,13 @@ export default class MyDocument extends Document {
             href="/ipadpro2_splash.png"
             media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
             rel="apple-touch-startup-image"
-          />
+          /> */}
 
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
           <link rel="shortcut icon" href="/favicon.ico" />
 
-          <link rel="manifest" href="/manifest.json" />
+          {/* <link rel="manifest" href="/manifest.json" /> */}
         </Head>
         <body>
           <Main />
