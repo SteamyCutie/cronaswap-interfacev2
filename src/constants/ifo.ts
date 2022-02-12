@@ -10,7 +10,7 @@ const ifos: Ifo[] = [
     id: 'kron',
     address: {
       [ChainId.CRONOS]: '0x75be9f539eaEA62B356EaCc080991286E7ed08f2', //MAINNET KRON
-      [ChainId.CRONOS_TESTNET]: '0x16D1eE3e2278155CC6a9D90DA6d721e6444ABBe5',
+      [ChainId.CRONOS_TESTNET]: '0x6C9f36Bb1FE41906788Dff53a552f203F4a2bb07',
     },
     isActive: true,
     name: 'Krypton Protocol',
@@ -37,9 +37,16 @@ const ifos: Ifo[] = [
         'IFO BETA MOCK'
       ),
     },
+    // MAINNET
     releaseTimestamp: 1644760800,
     claimDelayTime: 10800, //delay 3 hours 1644760800
     veCronaCheckPoint: 1644674400, //start time
+
+    // TESTNET
+    // releaseTimestamp: 1644667500,
+    // claimDelayTime: 900, //delay 3 hours 1644760800
+    // veCronaCheckPoint: 1644665700, //start time
+
     campaignId: '511160000',
     twitterUrl: 'https://twitter.com/KryptonProt',
     telegramUrl: 'https://t.me/KryptonProtocol',
