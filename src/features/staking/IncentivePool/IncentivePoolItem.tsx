@@ -74,7 +74,7 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
               {/* Ends in */}
               <div className="flex-col justify-center hidden lg:w-2/12 lg:block space-y-1">
                 <div className="flex items-center text-xs md:text-[14px] text-secondary">{i18n._(t`Ends in`)}</div>
-                <div className="text-xs font-bold md:text-base">{formatNumber(bonusEndBlock)} blocks</div>
+                <div className="text-xs font-bold md:text-base">{formatNumber(endInBlock)} blocks</div>
               </div>
 
               <div className="flex flex-col items-center justify-center lg:w-1/12">
