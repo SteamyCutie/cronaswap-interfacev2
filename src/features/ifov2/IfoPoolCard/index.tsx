@@ -8,6 +8,7 @@ import NumericalInput from 'app/components/NumericalInput'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { Ifo, PoolIds } from 'app/constants/types'
 import { formatBalance, formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
+import { BIG_ONE, BIG_TEN, BIG_ZERO } from 'app/functions/bigNumber'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'app/functions/formatBalance'
 import { ApprovalState, useApproveCallback } from 'app/hooks'
 import { useActiveWeb3React } from 'app/services/web3'
@@ -108,19 +109,43 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const veCronaLeft = walletIfoData.ifoVeCrona?.veCronaLeft
   const maximumTokenEntry = useMemo(() => {
     if (!veCronaLeft) {
-      return limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
+      return BIG_ZERO
+      // return limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
     }
+
     if (limitPerUserInLP.isGreaterThan(0)) {
+      // console.log(Number(limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))))
+      // console.log(Number(veCronaLeft.multipliedBy(10)))
+
+      //compare vecrona left
+      if (amountTokenCommittedInLP.isGreaterThan(0)) {
+        // console.log('amountTokenCommittedInLP', Number(veCronaLeft.multipliedBy(10).minus(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))))/1e18)
+        // console.log('ab1', Number(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))) /1e18)
+        // console.log('ab2', Number(veCronaLeft.multipliedBy(10))/1e18)
+        // console.log('ax', Number(BIG_TEN.multipliedBy(101).minus(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)))) / 1e18)
+
+        // console.log('ve', Number(BIG_TEN.multipliedBy(100)), Number(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals))) / 1e18)
+
+        // console.log('sssss', amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)).isLessThan(BIG_TEN.multipliedBy(100)))
+
+        return amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)).isGreaterThan(limitPerUserInLP)
+          ? BIG_ZERO
+          : veCronaLeft.multipliedBy(10).minus(amountTokenCommittedInLP.multipliedBy(10 ** (18 - raiseToken.decimals)))
+      }
+
       if (limitPerUserInLP.isGreaterThan(0)) {
+        // console.log('amountTokenCommittedInLP2', Number(amountTokenCommittedInLP))
+
         return limitPerUserInLP
           .minus(amountTokenCommittedInLP)
-          .multipliedBy(10 ** (18 - raiseToken.decimals))
-          .isLessThanOrEqualTo(veCronaLeft)
-          ? limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals))
-          : veCronaLeft
+          .multipliedBy(10 ** (18 - raiseToken.decimals)) //$983.78
+          .isLessThanOrEqualTo(veCronaLeft.multipliedBy(10)) //$16.22
+          ? limitPerUserInLP.minus(amountTokenCommittedInLP).multipliedBy(10 ** (18 - raiseToken.decimals)) //$983.78
+          : veCronaLeft.multipliedBy(10) // x $10 $16.22
       }
     }
-    return veCronaLeft
+
+    return veCronaLeft.multipliedBy(10)
   }, [veCronaLeft, limitPerUserInLP, amountTokenCommittedInLP])
 
   const buttonDisabled =
@@ -247,7 +272,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
                 if (!rasieTokenBalance?.equalTo(ZERO)) {
                   setInput(
                     poolId === PoolIds.poolBasic
-                      ? getBalanceNumber(maximumTokenEntry).toFixed(2)
+                      ? getBalanceAmount(maximumTokenEntry).toFixed(7).slice(0, -1)
                       : rasieTokenBalance?.toFixed(raiseToken?.decimals)
                   )
                 }
@@ -287,8 +312,8 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
         {/* claim */}
         {status === 'finished' &&
           !userPoolCharacteristics.hasClaimed &&
+          now > publicIfoData.endTimeNum + ifo.claimDelayTime &&
           (userPoolCharacteristics.offeringAmountInToken.isGreaterThan(0) ||
-            now > ifo.releaseTimestamp + ifo.claimDelayTime ||
             userPoolCharacteristics.refundingAmountInLP.isGreaterThan(0)) && (
             <Button className="w-full mt-2" color="gradient" disabled={claimPendingTx} onClick={handleHarvestPool}>
               {claimPendingTx ? <Dots>{i18n._(t`Claiming`)}</Dots> : i18n._(t`Claim`)}

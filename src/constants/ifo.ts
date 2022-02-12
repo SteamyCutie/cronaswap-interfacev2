@@ -9,8 +9,8 @@ const ifos: Ifo[] = [
   {
     id: 'kron',
     address: {
-      [ChainId.CRONOS]: '0x09AdEDA0496eDe941B3bE4B81E124202D5E8aB08', //MAINNET KRON
-      [ChainId.CRONOS_TESTNET]: '0x0BF8431c80b3DE93e780ae13E6BB8ffEF78C8b91',
+      [ChainId.CRONOS]: '0x75be9f539eaEA62B356EaCc080991286E7ed08f2', //MAINNET KRON
+      [ChainId.CRONOS_TESTNET]: '0x16D1eE3e2278155CC6a9D90DA6d721e6444ABBe5',
     },
     isActive: true,
     name: 'Krypton Protocol',
@@ -31,15 +31,15 @@ const ifos: Ifo[] = [
       [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x1771949CCe723e5707639134baE661A868e38198', 9, 'KRON', 'Krypton'),
       [ChainId.CRONOS_TESTNET]: new Token(
         ChainId.CRONOS_TESTNET,
-        '0xd63EAab556d1177F5C1a149E4aB0aD78fF627E1B',
-        18,
-        'BETA',
+        '0xa139ecb5a81B783048c0aECf3d738a7861Ee09af',
+        9,
+        'BETA9',
         'IFO BETA MOCK'
       ),
     },
-    releaseTimestamp: 1644588900,
-    claimDelayTime: 7200, //delay 2 hour 1644760800
-    veCronaCheckPoint: 1644588900,
+    releaseTimestamp: 1644760800,
+    claimDelayTime: 10800, //delay 3 hours 1644760800
+    veCronaCheckPoint: 1644674400, //start time
     campaignId: '511160000',
     twitterUrl: 'https://twitter.com/KryptonProt',
     telegramUrl: 'https://t.me/KryptonProtocol',
