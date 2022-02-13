@@ -1,28 +1,7 @@
 import React, { useState } from 'react'
 import { useLingui } from '@lingui/react'
-import { ZERO } from '@cronaswap/core-sdk'
 import Head from 'next/head'
-import Image from 'next/image'
-import { t } from '@lingui/macro'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { CRONA, XCRONA } from '../../config/tokens'
-import Button from '../../components/Button'
 import Container from '../../components/Container'
-import Dots from '../../components/Dots'
-import Input from '../../components/Input'
-import { tryParseAmount } from '../../functions/parse'
-import { useActiveWeb3React } from '../../services/web3'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { classNames, formatBalance, formatNumber, formatPercent } from '../../functions'
-import { VOTING_ESCROW_ADDRESS } from '../../constants/addresses'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import useVotingEscrow from 'app/features/boost/useVotingEscrow'
-import { format, addDays, getUnixTime } from 'date-fns'
-import { useLockedBalance } from 'app/features/boost/hook'
-import QuestionHelper from 'app/components/QuestionHelper'
-import { useTokenInfo } from 'app/features/farms/hooks'
-import { useCronaContract } from 'app/hooks/useContract'
-import { getAPY } from 'app/features/staking/useStaking'
 
 const people = [
   {
@@ -73,10 +52,15 @@ export default function GameFi() {
                 <div className="space-y-6 xl:space-y-10">
                   <img className="mx-auto h-20 w-20 xl:w-56 xl:h-56" src={person.imageUrl} alt="" />
                   <div className="space-y-2 xl:flex xl:items-center xl:justify-between">
-                    <div className="font-medium text-lg leading-6 space-y-1">
+                    <a
+                      href={person.gameFiUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-medium text-lg leading-6 space-y-1"
+                    >
                       <h3 className="text-white">{person.name}</h3>
                       <p className="text-indigo-400">{person.role}</p>
-                    </div>
+                    </a>
                   </div>
                 </div>
               </li>

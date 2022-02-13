@@ -135,6 +135,17 @@ function AppBar(): JSX.Element {
                         </NavLink>
                       )}
 
+                      {chainId && featureEnabled(Feature.GAMEFI, chainId) && (
+                        <NavLink href={'/gamefi'}>
+                          <a
+                            id={`boost-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`GameFi`)}
+                          </a>
+                        </NavLink>
+                      )}
+
                       {chainId && featureEnabled(Feature.AMMV1, chainId) && (
                         <ExternalLink endIcon={<LinkIcon size={16} />} href={'https://appv1.cronaswap.org'}>
                           <Typography variant="base">{i18n._(t`V1 (old)`)}</Typography>
@@ -296,6 +307,17 @@ function AppBar(): JSX.Element {
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`Boost`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.GAMEFI, chainId) && (
+                  <Link href={'/gamefi'}>
+                    <a
+                      id={`gamefi-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`GameFi`)}
                     </a>
                   </Link>
                 )}

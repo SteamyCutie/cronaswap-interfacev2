@@ -33,7 +33,7 @@ const features = {
     Feature.STAKING,
     Feature.BRIDGE,
     Feature.BOOST,
-    // Feature.GAMEFI,
+    Feature.GAMEFI,
   ],
 
   [ChainId.CRONOS_TESTNET]: [
