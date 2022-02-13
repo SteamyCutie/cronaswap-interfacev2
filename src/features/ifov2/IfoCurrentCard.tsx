@@ -9,6 +9,7 @@ import IfoActivityTimer from './IfoActivityTimer'
 import Typography from 'app/components/Typography'
 import { ClockIcon } from '@heroicons/react/outline'
 import { GiftIcon } from '@heroicons/react/solid'
+import CloseIcon from 'app/components/CloseIcon'
 
 // Calac remainingTimes
 export function remainingTime(
@@ -97,21 +98,21 @@ export const IfoCurrentCard = ({
             </div>
 
             <div className="flex mx-auto gap-1 text-high-emphesis rounded-md bg-dark-700 p-4 items-center">
-              {publicIfoData.status === 'finished' && (
+              {(publicIfoData.status === 'live' || publicIfoData.status === 'finished') && (
                 <>
-                  <GiftIcon className="h-8 text-green " />
-                  <Typography variant="h2" className="opacity-80 text-green">
-                    IFO HAS FINISHED
+                  <CloseIcon className="h-8 text-red " />
+                  <Typography variant="h2" className="opacity-80 text-red">
+                    IFO CANCELLED
                   </Typography>
                 </>
               )}
 
-              {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
+              {/* {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
                 <>
                   <ClockIcon className="h-8 text-yellow " />
                   <IfoActivityTimer remainingTime={remainingTime(ifo, publicIfoData)} />
                 </>
-              )}
+              )} */}
             </div>
 
             {publicIfoData.status === 'live' && (
@@ -130,7 +131,10 @@ export const IfoCurrentCard = ({
             <div className="space-y-2">
               <div className="text-[14px]">Start: 12th Feb, 2:00pm UTC</div>
               <div className="text-[14px]">End: 13th Feb, 2:00pm UTC</div>
-              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 13th Feb, 5:00pm UTC)</div>
+              {/* <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 13th Feb, 5:00pm UTC)</div> */}
+              <div className="text-[14px] text-pink-red">
+                IFO has been cancelled. We will arrange for refunds in the next 48 hours.
+              </div>
 
               <div className="text-xl font-bold">Introduction</div>
               <div className="text-[14px] text-high-emphesis">{ifo.description}</div>
