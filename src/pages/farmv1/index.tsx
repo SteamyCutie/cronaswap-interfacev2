@@ -92,11 +92,17 @@ export default function Yield(): JSX.Element {
             <Typography color="text-blue" variant="base" weight={700}>
               {i18n._(t`A1: Unstake from FarmV1. Then stake into FarmV2 (Before stake need to Approve).`)}
             </Typography>
+            <Typography variant="base" weight={700}>
+              {i18n._(t`Q2: When will the FarmV1 reward emissions end?`)}
+            </Typography>
+            <Typography color="text-pink" variant="base" weight={700}>
+              {i18n._(t`A2: We will end the V1 reward emission at 2pm UTC on Feb 19.`)}
+            </Typography>
           </div>
 
           <div className="flex gap-3">
             <Button id="btn-create-new-pool" color="gradient" variant="outlined" size="sm">
-              <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+              <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
                 {i18n._(t`Apply for Farm Listing`)}
               </a>
             </Button>
