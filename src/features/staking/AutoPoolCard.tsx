@@ -63,6 +63,7 @@ export default function AutoPoolCard() {
 
   const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, CRONAVAULT_ADDRESS[chainId])
 
+  const [isWithdrawAll, setIsWithdrawAll] = useState(0)
   const fullShare = useRef(BIG_ZERO)
   const results = useRef([0, 0])
 
@@ -140,16 +141,24 @@ export default function AutoPoolCard() {
         }
       } else if (activeTabAuto === 1) {
         try {
-          const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
-          const shareStakeToWithdraw = convertCronaToShares(convertedStakeAmount, fullShare.current)
-          const args = [shareStakeToWithdraw.sharesAsBigNumber.toFixed()]
-          const gasLimit = await cronavaultContract.estimateGas.withdraw(...args)
-          const tx = await cronavaultContract.withdraw(...args, {
-            gasLimit: gasLimit.mul(120).div(100),
-          })
-          addTransaction(tx, {
-            summary: `${i18n._(t`Unstake`)} CRONA`,
-          })
+          if (isWithdrawAll === 0) {
+            const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
+            const shareStakeToWithdraw = convertCronaToShares(convertedStakeAmount, fullShare.current)
+            const args = [shareStakeToWithdraw.sharesAsBigNumber.toFixed()]
+            const gasLimit = await cronavaultContract.estimateGas.withdraw(...args)
+            const tx = await cronavaultContract.withdraw(...args, {
+              gasLimit: gasLimit.mul(120).div(100),
+            })
+            addTransaction(tx, {
+              summary: `${i18n._(t`Unstake`)} CRONA`,
+            })
+          } else {
+            const gasLimit = await cronavaultContract.estimateGas.withdrawAll()
+            const tx = await cronavaultContract.withdrawAll({ gasLimit: gasLimit.mul(120).div(100) })
+            addTransaction(tx, {
+              summary: `${i18n._(t`Unstake`)} CRONA`,
+            })
+          }
           setPendingTxAuto(false)
         } catch (error) {
           setPendingTxAuto(false)
@@ -259,6 +268,7 @@ export default function AutoPoolCard() {
                     } else {
                       if (xBalanceAuto) {
                         setInputAuto(xBalanceAuto.toString())
+                        setIsWithdrawAll(1)
                       }
                     }
                   }}
