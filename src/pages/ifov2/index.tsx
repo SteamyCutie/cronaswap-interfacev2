@@ -44,7 +44,7 @@ export default function Ifo(): JSX.Element {
             <Typography variant="sm" weight={400}>
               {i18n._(t`Buy new tokens launching on Cronos Chain.`)}
             </Typography>
-            {/* <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+            {/* <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply for IFO`)}</div>
                 <ArrowRightIcon height={14} className="" />
@@ -54,7 +54,7 @@ export default function Ifo(): JSX.Element {
 
           <div className="flex gap-3">
             <Button id="btn-create-new-pool" color="blue" variant="outlined" size="sm">
-              <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+              <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
                 {i18n._(t`Apply for IFO`)}
               </a>
             </Button>
