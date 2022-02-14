@@ -15,6 +15,7 @@ import Typography from 'app/components/Typography'
 import { formatNumberScale } from 'app/functions'
 import Button from 'app/components/Button'
 import IncentivePool from 'app/features/staking/IncentivePool/IncentivePool'
+import QuestionHelper from 'app/components/QuestionHelper'
 
 const buttonStyle =
   'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
@@ -69,7 +70,7 @@ export default function Stake() {
             <Typography variant="sm" weight={400}>
               {i18n._(t`Use your CRONA tokens to earn more tokens,for Free.`)}
             </Typography>
-            <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+            <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply to Launch`)}</div>
                 <ArrowRightIcon height={14} className="" />
@@ -78,7 +79,10 @@ export default function Stake() {
           </div>
 
           <div className="w-full px-4 py-4 m-auto rounded-lg md:w-4/12 md:px-6 bg-cyan-blue bg-opacity-30">
-            <div className="text-lg font-bold text-white">{i18n._(t`Auto Crona Bounty`)}</div>
+            <div className="text-lg font-bold text-white flex flex-row items-center">
+              {i18n._(t`Auto Crona Bounty`)}
+              <QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" />
+            </div>
             <div className="flex items-center justify-between space-x-10">
               <div>
                 <div className="text-xl font-bold text-white">{Number(autocronaBountyValue.current).toFixed(3)}</div>

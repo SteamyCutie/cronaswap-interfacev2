@@ -90,7 +90,7 @@ function AppBar(): JSX.Element {
                           </NavLink>
                         </>
                       )}
-                      {chainId && featureEnabled(Feature.IFO, chainId) && (
+                      {/* {chainId && featureEnabled(Feature.IFO, chainId) && (
                         <>
                           <NavLink href={'/ifov2'}>
                             <a
@@ -101,19 +101,7 @@ function AppBar(): JSX.Element {
                             </a>
                           </NavLink>
                         </>
-                      )}
-                      {chainId && featureEnabled(Feature.LAUNCH, chainId) && (
-                        <>
-                          <NavLink href={'/launchpad'}>
-                            <a
-                              id={`lend-nav-link`}
-                              className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                            >
-                              {i18n._(t`LaunchPad`)}
-                            </a>
-                          </NavLink>
-                        </>
-                      )}
+                      )} */}
                       {chainId && featureEnabled(Feature.STAKING, chainId) && (
                         <NavLink href={'/stake'}>
                           <a
@@ -131,6 +119,17 @@ function AppBar(): JSX.Element {
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
                             {i18n._(t`Boost`)}
+                          </a>
+                        </NavLink>
+                      )}
+
+                      {chainId && featureEnabled(Feature.GAMEFI, chainId) && (
+                        <NavLink href={'/gamefi'}>
+                          <a
+                            id={`boost-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`GameFi`)}
                           </a>
                         </NavLink>
                       )}
@@ -266,6 +265,18 @@ function AppBar(): JSX.Element {
                   </Link>
                 )}
 
+                {/* {chainId && featureEnabled(Feature.IFO, chainId) && (
+                  <Link href={'/ifov2'}>
+                    <a
+                      id={`farm-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {' '}
+                      {i18n._(t`IFO`)}
+                    </a>
+                  </Link>
+                )} */}
+
                 {chainId && featureEnabled(Feature.STAKING, chainId) && (
                   <Link href={'/stake'}>
                     <a
@@ -284,6 +295,17 @@ function AppBar(): JSX.Element {
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`Boost`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.GAMEFI, chainId) && (
+                  <Link href={'/gamefi'}>
+                    <a
+                      id={`gamefi-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`GameFi`)}
                     </a>
                   </Link>
                 )}

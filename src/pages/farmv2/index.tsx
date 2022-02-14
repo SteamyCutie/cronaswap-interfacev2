@@ -95,7 +95,7 @@ export default function FarmsV2(): JSX.Element {
             <Typography variant="sm" weight={400}>
               {i18n._(t`FarmsV2 - TVL:`)} {formatNumberScale(totalTvlInUSD ?? 0, true)}
             </Typography>
-            <a href="https://forms.gle/Y9mpAJGVisxU3JyG8" target="_blank" rel="noreferrer">
+            <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply for Farm Listing`)}</div>
                 <ArrowRightIcon height={14} className="" />
