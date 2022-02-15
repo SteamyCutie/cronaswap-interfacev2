@@ -57,12 +57,13 @@ export default function AutoPoolCard() {
 
   const balanceAuto = activeTabAuto === 0 ? cronaBalance : xCronaBalance
 
-  const formattedBalanceAuto = balanceAuto?.toSignificant(8)
+  const formattedBalanceAuto = balanceAuto ?.toSignificant(8)
 
-  const parsedAmountAuto = usingBalanceAuto ? balanceAuto : tryParseAmount(inputAuto, balanceAuto?.currency)
+  const parsedAmountAuto = usingBalanceAuto ? balanceAuto : tryParseAmount(inputAuto, balanceAuto ?.currency)
 
   const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, CRONAVAULT_ADDRESS[chainId])
 
+  const [isWithdrawAll, setIsWithdrawAll] = useState(0)
   const fullShare = useRef(BIG_ZERO)
   const results = useRef([0, 0])
 
@@ -108,7 +109,7 @@ export default function AutoPoolCard() {
   const insufficientFundsAuto =
     (activeTabAuto === 0 && balanceAuto && balanceAuto.equalTo(ZERO)) ||
     (activeTabAuto !== 0 && xBalanceAuto && xBalanceAuto === 0) ||
-    (activeTabAuto === 0 && parsedAmountAuto?.greaterThan(balanceAuto)) ||
+    (activeTabAuto === 0 && parsedAmountAuto ?.greaterThan(balanceAuto)) ||
     (activeTabAuto !== 0 && Number(inputAuto) > xBalanceAuto)
   const inputErrorAuto = insufficientFundsAuto
 
@@ -140,16 +141,24 @@ export default function AutoPoolCard() {
         }
       } else if (activeTabAuto === 1) {
         try {
-          const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
-          const shareStakeToWithdraw = convertCronaToShares(convertedStakeAmount, fullShare.current)
-          const args = [shareStakeToWithdraw.sharesAsBigNumber.toFixed()]
-          const gasLimit = await cronavaultContract.estimateGas.withdraw(...args)
-          const tx = await cronavaultContract.withdraw(...args, {
-            gasLimit: gasLimit.mul(120).div(100),
-          })
-          addTransaction(tx, {
-            summary: `${i18n._(t`Unstake`)} CRONA`,
-          })
+          if (isWithdrawAll === 0) {
+            const convertedStakeAmount = getDecimalAmount(new BigNumber(inputAuto), 18)
+            const shareStakeToWithdraw = convertCronaToShares(convertedStakeAmount, fullShare.current)
+            const args = [shareStakeToWithdraw.sharesAsBigNumber.toFixed()]
+            const gasLimit = await cronavaultContract.estimateGas.withdraw(...args)
+            const tx = await cronavaultContract.withdraw(...args, {
+              gasLimit: gasLimit.mul(120).div(100),
+            })
+            addTransaction(tx, {
+              summary: `${i18n._(t`Unstake`)} CRONA`,
+            })
+          } else {
+            const gasLimit = await cronavaultContract.estimateGas.withdrawAll()
+            const tx = await cronavaultContract.withdrawAll({ gasLimit: gasLimit.mul(120).div(100) })
+            addTransaction(tx, {
+              summary: `${i18n._(t`Unstake`)} CRONA`,
+            })
+          }
           setPendingTxAuto(false)
         } catch (error) {
           setPendingTxAuto(false)
@@ -207,7 +216,7 @@ export default function AutoPoolCard() {
             <div className={inputAuto ? 'hidden md:flex md:items-center' : 'flex items-center'}>
               <p className="text-dark-650">{i18n._(t`Balance`)}:&nbsp;</p>
               <p className="text-base font-bold">
-                {activeTabAuto === 0 ? formattedBalanceAuto : xBalanceAuto ? xBalanceAuto.toFixed(2) : 0}
+                {activeTabAuto === 0 ? formattedBalanceAuto : xBalanceAuto ? xBalanceAuto.toFixed(2) : walletConnected ? 0 : ''}
               </p>
             </div>
           </div>
@@ -228,7 +237,7 @@ export default function AutoPoolCard() {
             <div
               className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
                 inputErrorAuto ? ' border border-red' : ''
-              }`}
+                }`}
             >
               <div className="flex space-x-2 ">
                 {inputErrorAuto && (
@@ -243,7 +252,7 @@ export default function AutoPoolCard() {
                 <p
                   className={`text-sm md:text-lg font-bold whitespace-nowrap ${
                     inputAuto ? 'text-high-emphesis' : 'text-secondary'
-                  }`}
+                    }`}
                 >
                   {`${inputAuto ? inputAuto : '0'} ${activeTabAuto === 0 ? '' : 'x'}CRONA`}
                 </p>
@@ -254,11 +263,12 @@ export default function AutoPoolCard() {
                   onClick={() => {
                     if (activeTabAuto === 0) {
                       if (!balanceAuto.equalTo(ZERO)) {
-                        setInputAuto(balanceAuto?.toSignificant(balanceAuto.currency.decimals))
+                        setInputAuto(balanceAuto ?.toSignificant(balanceAuto.currency.decimals))
                       }
                     } else {
                       if (xBalanceAuto) {
                         setInputAuto(xBalanceAuto.toString())
+                        setIsWithdrawAll(1)
                       }
                     }
                   }}
@@ -271,40 +281,40 @@ export default function AutoPoolCard() {
 
           {/* Confirm Button */}
           {(approvalStateAuto === ApprovalState.NOT_APPROVED || approvalStateAuto === ApprovalState.PENDING) &&
-          activeTabAuto === 0 ? (
-            <Button
-              color="gradient"
-              className={`${buttonStyle} text-high-emphesis`}
-              disabled={approvalStateAuto === ApprovalState.PENDING}
-              onClick={approveAuto}
-            >
-              {approvalStateAuto === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
-            </Button>
-          ) : (
-            <button
-              className={
-                buttonDisabledAuto
-                  ? buttonStyleDisabled
-                  : !walletConnected
-                  ? buttonStyleConnectWallet
-                  : insufficientFundsAuto
-                  ? buttonStyleInsufficientFunds
-                  : buttonStyleEnabled
-              }
-              onClick={handleClickButtonAuto}
-              disabled={buttonDisabledAuto || inputErrorAuto}
-            >
-              {!walletConnected
-                ? i18n._(t`Connect Wallet`)
-                : !inputAuto
-                ? i18n._(t`Enter Amount`)
-                : insufficientFundsAuto
-                ? i18n._(t`Insufficient Balance`)
-                : activeTabAuto === 0
-                ? i18n._(t`Confirm Staking`)
-                : i18n._(t`Confirm Withdrawal`)}
-            </button>
-          )}
+            activeTabAuto === 0 ? (
+              <Button
+                color="gradient"
+                className={`${buttonStyle} text-high-emphesis`}
+                disabled={approvalStateAuto === ApprovalState.PENDING}
+                onClick={approveAuto}
+              >
+                {approvalStateAuto === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
+              </Button>
+            ) : (
+              <button
+                className={
+                  buttonDisabledAuto
+                    ? buttonStyleDisabled
+                    : !walletConnected
+                      ? buttonStyleConnectWallet
+                      : insufficientFundsAuto
+                        ? buttonStyleInsufficientFunds
+                        : buttonStyleEnabled
+                }
+                onClick={handleClickButtonAuto}
+                disabled={buttonDisabledAuto || inputErrorAuto}
+              >
+                {!walletConnected
+                  ? i18n._(t`Connect Wallet`)
+                  : !inputAuto
+                    ? i18n._(t`Enter Amount`)
+                    : insufficientFundsAuto
+                      ? i18n._(t`Insufficient Balance`)
+                      : activeTabAuto === 0
+                        ? i18n._(t`Confirm Staking`)
+                        : i18n._(t`Confirm Withdrawal`)}
+              </button>
+            )}
         </div>
         <div className="grid grid-rows-2 px-3 gap-y-2 md:px-8">
           <div className="flex justify-between text-base">
