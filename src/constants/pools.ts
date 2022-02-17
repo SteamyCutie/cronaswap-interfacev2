@@ -75,8 +75,29 @@ export const POOLS: AddressMap = {
       },
     },
 
-    '0xc3f38745fD9374836B7D0919758ccE7c89a3Ab19': {
+    '0x70763d1283fEbEE6B3A6DD2Ff66884Ad79D5bB8b': {
       pid: 2,
+      name: 'CRONA-DARK',
+      tokenPerBlock: '1.5',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://darkcrypto.finance/',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0x83b2AC8642aE46FC2823Bc959fFEB3c1742c48B5',
+        name: 'DarkCrypto',
+        symbol: 'DARK',
+        decimals: 18,
+      },
+    },
+
+    '0xc3f38745fD9374836B7D0919758ccE7c89a3Ab19': {
+      pid: 3,
       name: 'CRONA-AGL',
       tokenPerBlock: '1.5',
       isFinished: false,
@@ -92,7 +113,7 @@ export const POOLS: AddressMap = {
     },
 
     '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
-      pid: 3,
+      pid: 4,
       name: 'CRONA-CROSS',
       tokenPerBlock: '0.0575',
       isFinished: true,
