@@ -629,6 +629,15 @@ export const FARMSV2: AddressMap = {
       },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
     },
+
+    '0x026646B0c48c351b1EF82BB14a96F646350e2279': {
+      id: 22,
+      pid: 22,
+      symbol: 'CLP',
+      name: 'CRONA-ADA',
+      token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+      token1: { id: '0x0e517979C2c1c1522ddB0c73905e0D39b3F990c0', name: 'ADA Token', symbol: 'ADA', decimals: 6 },
+    },
   },
 
   [ChainId.CRONOS_TESTNET]: {
