@@ -16,6 +16,7 @@ type PairInfo = {
   name?: string
   symbol?: string
   pair?: string
+  isCommunity?: boolean
   migrate?: boolean
 }
 
@@ -604,10 +605,26 @@ export const FARMSV2: AddressMap = {
       pid: 20,
       symbol: 'CLP',
       name: 'CROISSANT-CRO',
+      isCommunity: true,
       token0: {
         id: '0xa0C3c184493f2Fae7d2f2Bd83F195a1c300FA353',
         name: 'Croissant Games',
         symbol: 'CROISSANT',
+        decimals: 18,
+      },
+      token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
+
+    '0xCB63a755E4A99D27362603A12B0813Db469157ac': {
+      id: 21,
+      pid: 21,
+      symbol: 'CLP',
+      name: 'CGS-CRO',
+      isCommunity: true,
+      token0: {
+        id: '0x4e57e27e4166275Eb7f4966b42A201d76e481B03',
+        name: 'Cougar Token',
+        symbol: 'CGS',
         decimals: 18,
       },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },

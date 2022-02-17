@@ -1393,10 +1393,10 @@
     tiny-warning "^1.0.0"
     toformat "^2.0.0"
 
-"@cronaswap/default-token-list@1.0.20":
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.20.tgz#df9feb2bee763fc2946172fc4bc4db9779d473f5"
-  integrity sha512-6WKsAVUcqt7Gm+DyIAah9/uQfb78DlMy8n1Z5NNdOQMIbw/vTCSLmRxCKT4sPb7274lFgd/FbZMIe7E/3JY9+g==
+"@cronaswap/default-token-list@1.0.21":
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/@cronaswap/default-token-list/-/default-token-list-1.0.21.tgz#5592caec29dec6c9f2741210a3d4c521e8866f99"
+  integrity sha512-yZ/mPXL7mtRGdVm6IlAQFo7OcFtE68Tne9Xm2H0P/J2J5LY24YiP057b130DtoF6cwwnY7FvmgEYjwkdq47LkA==
 
 "@cronaswap/miso@1.0.1":
   version "1.0.1"
