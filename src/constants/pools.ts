@@ -78,7 +78,7 @@ export const POOLS: AddressMap = {
     '0x70763d1283fEbEE6B3A6DD2Ff66884Ad79D5bB8b': {
       pid: 2,
       name: 'CRONA-DARK',
-      tokenPerBlock: '1.5',
+      tokenPerBlock: '0.045',
       isFinished: false,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://darkcrypto.finance/',
