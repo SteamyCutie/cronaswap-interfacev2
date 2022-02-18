@@ -16,6 +16,7 @@ type PairInfo = {
   name?: string
   symbol?: string
   pair?: string
+  isCommunity?: boolean
   migrate?: boolean
 }
 
@@ -604,6 +605,7 @@ export const FARMSV2: AddressMap = {
       pid: 20,
       symbol: 'CLP',
       name: 'CROISSANT-CRO',
+      isCommunity: true,
       token0: {
         id: '0xa0C3c184493f2Fae7d2f2Bd83F195a1c300FA353',
         name: 'Croissant Games',
@@ -611,6 +613,30 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
+
+    '0xCB63a755E4A99D27362603A12B0813Db469157ac': {
+      id: 21,
+      pid: 21,
+      symbol: 'CLP',
+      name: 'CGS-CRO',
+      isCommunity: true,
+      token0: {
+        id: '0x4e57e27e4166275Eb7f4966b42A201d76e481B03',
+        name: 'Cougar Token',
+        symbol: 'CGS',
+        decimals: 18,
+      },
+      token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
+
+    '0x026646B0c48c351b1EF82BB14a96F646350e2279': {
+      id: 22,
+      pid: 22,
+      symbol: 'CLP',
+      name: 'CRONA-ADA',
+      token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+      token1: { id: '0x0e517979C2c1c1522ddB0c73905e0D39b3F990c0', name: 'ADA Token', symbol: 'ADA', decimals: 6 },
     },
   },
 
