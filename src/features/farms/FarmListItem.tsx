@@ -122,7 +122,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                   <div className="text-xs font-bold md:text-base">{farm?.name}</div>
                   {farm?.migrate ? <div className="text-xs text-pink">{i18n._(t`Migrating`)}</div> : <></>}
                   {farm?.isCommunity && (
-                    <span className="inline-flex ml-0 mr-auto items-center px-2 rounded-full text-xs bg-dark-800 text-gray">
+                    <span className="inline-flex items-center px-2 ml-0 mr-auto text-xs rounded-full bg-dark-800 text-gray">
                       <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-gray" fill="currentColor" viewBox="0 0 8 8">
                         <circle cx={4} cy={4} r={3} />
                       </svg>
