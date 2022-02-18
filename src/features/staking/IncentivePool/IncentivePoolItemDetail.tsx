@@ -57,10 +57,7 @@ const IncentivePoolItemDetail = ({
   const balance = useTokenBalance(account, CRONA[chainId])
 
   // TODO: Replace these
-  const { amount } = useUserInfo(pool, earningToken)
-
-  // rewards
-  // const pendingRewards = usePendingReward(pool, earningToken)
+  const { amount } = useUserInfo(pool, stakingToken)
 
   const typedDepositValue = tryParseAmount(depositValue, stakingToken)
   const typedWithdrawValue = tryParseAmount(withdrawValue, stakingToken)
@@ -68,6 +65,10 @@ const IncentivePoolItemDetail = ({
   const [approvalState, approve] = useApproveCallback(typedDepositValue, pool.smartChef)
 
   const { deposit, withdraw, harvest } = useSmartChef(pool)
+
+  const userMaxStake = tryParseAmount('30000', stakingToken).subtract(
+    tryParseAmount(amount && amount?.greaterThan(0) ? amount.toFixed(stakingToken?.decimals) : '0.000001', stakingToken)
+  )
 
   return (
     <Transition
@@ -84,16 +85,19 @@ const IncentivePoolItemDetail = ({
         <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-3">
           <div className="col-span-2 text-center md:col-span-1">
             {account && (
-              <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-                {i18n._(t`Wallet Balance`)}: {formatNumberScale(balance?.toSignificant(6, undefined, 2) ?? 0, false, 4)}
-                {stakingTokenPrice && balance
-                  ? ` (` +
-                    formatNumberScale(stakingTokenPrice.toFixed(18) * Number(balance?.toFixed(18) ?? 0), true) +
-                    `)`
-                  : ``}
+              <div className="flex flex-row justify-between">
+                <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
+                  {i18n._(t`Balance`)}: {formatNumberScale(balance?.toSignificant(6, undefined, 2) ?? 0, false, 4)}
+                  {stakingTokenPrice && balance
+                    ? ` (` +
+                      formatNumberScale(stakingTokenPrice.toFixed(18) * Number(balance?.toFixed(18) ?? 0), true) +
+                      `)`
+                    : ``}
+                </div>
               </div>
             )}
-            <div className="relative flex items-center w-full mb-4">
+
+            <div className="relative flex items-center mb-4 w-full">
               <NumericalInput
                 className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-dark-purple"
                 value={depositValue}
@@ -106,7 +110,11 @@ const IncentivePoolItemDetail = ({
                   size="xs"
                   onClick={() => {
                     if (!balance?.equalTo(ZERO)) {
-                      setDepositValue(balance?.toFixed(stakingToken?.decimals))
+                      setDepositValue(
+                        pool.pid === 0
+                          ? userMaxStake?.toFixed(stakingToken?.decimals)
+                          : balance?.toFixed(stakingToken?.decimals)
+                      )
                     }
                   }}
                   className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
@@ -115,6 +123,7 @@ const IncentivePoolItemDetail = ({
                 </Button>
               )}
             </div>
+
             {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
               <Button
                 className="w-full"
@@ -128,7 +137,12 @@ const IncentivePoolItemDetail = ({
               <Button
                 className="w-full"
                 color="blue"
-                disabled={pendingTx || !typedDepositValue || balance?.lessThan(typedDepositValue)}
+                disabled={
+                  pendingTx ||
+                  !typedDepositValue ||
+                  (pool.pid === 0 && Number(depositValue) > 30000) ||
+                  balance?.lessThan(typedDepositValue)
+                }
                 onClick={async () => {
                   setPendingTx(true)
                   try {
@@ -146,6 +160,11 @@ const IncentivePoolItemDetail = ({
               >
                 {i18n._(t`Stake`)}
               </Button>
+            )}
+            {pool.pid === 0 && (
+              <div className="pl-1 pt-2 text-xs text-left text-red">
+                Max stake per user: {userMaxStake?.toFixed(2)} CRONAs
+              </div>
             )}
           </div>
           <div className="col-span-2 text-center md:col-span-1">
@@ -181,6 +200,7 @@ const IncentivePoolItemDetail = ({
                 </Button>
               )}
             </div>
+
             <Button
               className="w-full"
               color="blue"
@@ -219,7 +239,7 @@ const IncentivePoolItemDetail = ({
                 <></>
               )}
             </div>
-            <div className="flex flex-col justify-between gap-4 text-sm rounded-lg bg-dark-700">
+            <div className="flex flex-col justify-between text-sm gap-4 rounded-lg bg-dark-700">
               <div className="flex mt-4">
                 <div className="flex flex-col w-2/3 px-4 align-middle">
                   <div className="text-2xl font-bold"> {formatNumber(pendingReward?.toFixed(18))}</div>
@@ -253,7 +273,6 @@ const IncentivePoolItemDetail = ({
                   </Button>
                 </div>
               </div>
-
               <div className="flex flex-col p-2 space-y-2">
                 <div className="flex flex-row justify-between px-2 text-md">
                   <ExternalLink

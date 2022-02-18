@@ -33,8 +33,29 @@ type AddressMap = {
 
 export const POOLS: AddressMap = {
   [ChainId.CRONOS]: {
-    '0x8F48d6b7F18421664D6DFA4891A5204d099B1F1C': {
+    '0x2BbA6Aae8c0274D3205a75e47FA03204CE5F0b01': {
       pid: 0,
+      name: 'CRONA-WCRO',
+      tokenPerBlock: '0.05',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://app.cronaswap.org',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
+        name: 'Wrapped CRO',
+        symbol: 'WCRO',
+        decimals: 18,
+      },
+    },
+
+    '0x8F48d6b7F18421664D6DFA4891A5204d099B1F1C': {
+      pid: 1,
       name: 'CRONA-CROISSANT',
       tokenPerBlock: '1.25',
       isFinished: false,
@@ -54,8 +75,29 @@ export const POOLS: AddressMap = {
       },
     },
 
+    '0x70763d1283fEbEE6B3A6DD2Ff66884Ad79D5bB8b': {
+      pid: 2,
+      name: 'CRONA-DARK',
+      tokenPerBlock: '0.045',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://darkcrypto.finance/',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0x83b2AC8642aE46FC2823Bc959fFEB3c1742c48B5',
+        name: 'DarkCrypto',
+        symbol: 'DARK',
+        decimals: 18,
+      },
+    },
+
     '0xc3f38745fD9374836B7D0919758ccE7c89a3Ab19': {
-      pid: 1,
+      pid: 3,
       name: 'CRONA-AGL',
       tokenPerBlock: '1.5',
       isFinished: false,
@@ -71,7 +113,7 @@ export const POOLS: AddressMap = {
     },
 
     '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
-      pid: 2,
+      pid: 4,
       name: 'CRONA-CROSS',
       tokenPerBlock: '0.0575',
       isFinished: true,
