@@ -23,6 +23,8 @@ import QuestionHelper from 'app/components/QuestionHelper'
 import { useTokenInfo } from 'app/features/farms/hooks'
 import { useCronaContract } from 'app/hooks/useContract'
 import { getAPY } from 'app/features/staking/useStaking'
+import { CalculatorIcon } from '@heroicons/react/solid'
+import ROICalculatorModal from 'app/components/ROICalculatorModal'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -56,7 +58,7 @@ export default function Boost() {
 
   const { rewards, harvestRewards, lockAmount, lockEnd, veCrona, cronaSupply, veCronaSupply } = useLockedBalance()
 
-  const { autoAPY } = getAPY()
+  const { manualAPY, autoAPY } = getAPY()
 
   const {
     claimRewards,
@@ -215,6 +217,11 @@ export default function Boost() {
     }
   }
 
+  const [showCalc, setShowCalc] = useState(false)
+
+  const a = Number(formatNumber(veCrona?.toFixed(18)))
+  const b = veCrona
+
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
       <Head>
@@ -222,11 +229,11 @@ export default function Boost() {
         <meta key="description" name="description" content="Boost CronaSwap" />
       </Head>
       <div className="flex flex-col items-center justify-start flex-grow w-full h-full">
-        <div className="items-center px-4 py-4  max-w-5xl w-full">
+        <div className="items-center w-full max-w-5xl px-4 py-4">
           <div className="flex flex-col space-y-4">
             <div className="p-8 pb-4 rounded-lg bg-dark-900">
-              <h1 className="text-lg mb-4">What’s CRONA Boost?</h1>
-              <p className="text-sm mb-8 text-dm-text-secondary">
+              <h1 className="mb-4 text-lg">What’s CRONA Boost?</h1>
+              <p className="mb-8 text-sm text-dm-text-secondary">
                 CRONA Boost is your opportunity to increase the power and rewards of your CRONA. The longer you lock
                 your CRONA the greater your voting power (CRONA Power) and weekly reward share will be. You can boost up
                 to 4x by locking CRONA for 4 years. Your boosts slowly reduces over your locking period, eventually
@@ -237,10 +244,23 @@ export default function Boost() {
               The rewards include swap fee (buyback CRONA-CRO LP) and auto restaking rewards.
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-cols-max">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 auto-cols-max">
               <div className="p-4 rounded-lg bg-dark-800">
-                <h1 className="text-lg">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
-                <h2 className="text-sm flex flex-row items-center">
+                <div className="flex items-center">
+                  <h1 className="text-lg">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
+                  <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+                </div>
+                <ROICalculatorModal
+                  isfarm={false}
+                  isOpen={showCalc}
+                  onDismiss={() => setShowCalc(false)}
+                  showBoost={false}
+                  showCompound={true}
+                  Lpbalance={Number((lockAmount / 1e18).toFixed(2))}
+                  name={'CRONA'}
+                  apr={manualAPY}
+                />
+                <h2 className="flex flex-row items-center text-sm">
                   veCRONA APY <QuestionHelper text="The reward apy of lock CRONA." />
                 </h2>
               </div>
@@ -253,14 +273,14 @@ export default function Boost() {
                     )
                   )}
                 </h1>
-                <h2 className="text-sm flex flex-row items-center">
+                <h2 className="flex flex-row items-center text-sm">
                   % of CRONA locked
                   <QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." />
                 </h2>
               </div>
               <div className="p-4 rounded-lg bg-dark-800">
                 <h1 className="text-lg">{formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years</h1>
-                <h2 className="text-sm flex flex-row items-center">
+                <h2 className="flex flex-row items-center text-sm">
                   Average CRONA lock time <QuestionHelper text="Average CRONA lock time in veCRONA." />
                 </h2>
               </div>
@@ -274,7 +294,7 @@ export default function Boost() {
               <div className="p-8">
                 <div className="flex items-center justify-between w-full">
                   <p className="font-bold text-large md:text-2xl text-high-emphesis">{i18n._(t`Lock CRONA`)}</p>
-                  <div className="text-high-emphesis text-xs font-medium md:text-base md:font-normal">
+                  <div className="text-xs font-medium text-high-emphesis md:text-base md:font-normal">
                     Balance: {balance?.toSignificant(12)} CRONA
                   </div>
                 </div>
@@ -329,7 +349,7 @@ export default function Boost() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-6 lg:grid-cols-8 mt-8">
+                <div className="grid grid-cols-2 gap-4 mt-8 md:grid-cols-6 lg:grid-cols-8">
                   <button
                     className={activeTab === 7 ? activeTabStyle : inactiveTabStyle}
                     onClick={() => {
@@ -453,7 +473,7 @@ export default function Boost() {
                     </Button>
                   )
                 ) : (
-                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2 mt-2">
+                  <div className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-2">
                     {/* increacse amount or increacse time */}
                     <Button
                       color={buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'}

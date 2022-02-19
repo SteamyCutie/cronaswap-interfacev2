@@ -23,6 +23,8 @@ import { getAPY, convertSharesToCrona, convertCronaToShares, useWithdrawalFeeTim
 import { CRONAVAULT_ADDRESS } from 'constants/addresses'
 import { BIG_ZERO } from 'app/functions/bigNumber'
 import QuestionHelper from 'app/components/QuestionHelper'
+import { CalculatorIcon } from '@heroicons/react/solid'
+import ROICalculatorModal from 'app/components/ROICalculatorModal'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -57,9 +59,9 @@ export default function AutoPoolCard() {
 
   const balanceAuto = activeTabAuto === 0 ? cronaBalance : xCronaBalance
 
-  const formattedBalanceAuto = balanceAuto ?.toSignificant(8)
+  const formattedBalanceAuto = balanceAuto?.toSignificant(8)
 
-  const parsedAmountAuto = usingBalanceAuto ? balanceAuto : tryParseAmount(inputAuto, balanceAuto ?.currency)
+  const parsedAmountAuto = usingBalanceAuto ? balanceAuto : tryParseAmount(inputAuto, balanceAuto?.currency)
 
   const [approvalStateAuto, approveAuto] = useApproveCallback(parsedAmountAuto, CRONAVAULT_ADDRESS[chainId])
 
@@ -109,7 +111,7 @@ export default function AutoPoolCard() {
   const insufficientFundsAuto =
     (activeTabAuto === 0 && balanceAuto && balanceAuto.equalTo(ZERO)) ||
     (activeTabAuto !== 0 && xBalanceAuto && xBalanceAuto === 0) ||
-    (activeTabAuto === 0 && parsedAmountAuto ?.greaterThan(balanceAuto)) ||
+    (activeTabAuto === 0 && parsedAmountAuto?.greaterThan(balanceAuto)) ||
     (activeTabAuto !== 0 && Number(inputAuto) > xBalanceAuto)
   const inputErrorAuto = insufficientFundsAuto
 
@@ -170,7 +172,8 @@ export default function AutoPoolCard() {
     }
   }
 
-  const { autoAPY } = getAPY()
+  const { manualAPY, autoAPY } = getAPY()
+  const [showCalc, setShowCalc] = useState(false)
 
   return (
     <div className="w-full grid-rows-2 mx-auto mb-4 md:w-1/2 rounded-2xl gird bg-dark-400 md:m-0">
@@ -216,7 +219,13 @@ export default function AutoPoolCard() {
             <div className={inputAuto ? 'hidden md:flex md:items-center' : 'flex items-center'}>
               <p className="text-dark-650">{i18n._(t`Balance`)}:&nbsp;</p>
               <p className="text-base font-bold">
-                {activeTabAuto === 0 ? formattedBalanceAuto : xBalanceAuto ? xBalanceAuto.toFixed(2) : walletConnected ? 0 : ''}
+                {activeTabAuto === 0
+                  ? formattedBalanceAuto
+                  : xBalanceAuto
+                  ? xBalanceAuto.toFixed(2)
+                  : walletConnected
+                  ? 0
+                  : ''}
               </p>
             </div>
           </div>
@@ -237,7 +246,7 @@ export default function AutoPoolCard() {
             <div
               className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
                 inputErrorAuto ? ' border border-red' : ''
-                }`}
+              }`}
             >
               <div className="flex space-x-2 ">
                 {inputErrorAuto && (
@@ -252,7 +261,7 @@ export default function AutoPoolCard() {
                 <p
                   className={`text-sm md:text-lg font-bold whitespace-nowrap ${
                     inputAuto ? 'text-high-emphesis' : 'text-secondary'
-                    }`}
+                  }`}
                 >
                   {`${inputAuto ? inputAuto : '0'} ${activeTabAuto === 0 ? '' : 'x'}CRONA`}
                 </p>
@@ -263,7 +272,7 @@ export default function AutoPoolCard() {
                   onClick={() => {
                     if (activeTabAuto === 0) {
                       if (!balanceAuto.equalTo(ZERO)) {
-                        setInputAuto(balanceAuto ?.toSignificant(balanceAuto.currency.decimals))
+                        setInputAuto(balanceAuto?.toSignificant(balanceAuto.currency.decimals))
                       }
                     } else {
                       if (xBalanceAuto) {
@@ -281,40 +290,40 @@ export default function AutoPoolCard() {
 
           {/* Confirm Button */}
           {(approvalStateAuto === ApprovalState.NOT_APPROVED || approvalStateAuto === ApprovalState.PENDING) &&
-            activeTabAuto === 0 ? (
-              <Button
-                color="gradient"
-                className={`${buttonStyle} text-high-emphesis`}
-                disabled={approvalStateAuto === ApprovalState.PENDING}
-                onClick={approveAuto}
-              >
-                {approvalStateAuto === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
-              </Button>
-            ) : (
-              <button
-                className={
-                  buttonDisabledAuto
-                    ? buttonStyleDisabled
-                    : !walletConnected
-                      ? buttonStyleConnectWallet
-                      : insufficientFundsAuto
-                        ? buttonStyleInsufficientFunds
-                        : buttonStyleEnabled
-                }
-                onClick={handleClickButtonAuto}
-                disabled={buttonDisabledAuto || inputErrorAuto}
-              >
-                {!walletConnected
-                  ? i18n._(t`Connect Wallet`)
-                  : !inputAuto
-                    ? i18n._(t`Enter Amount`)
-                    : insufficientFundsAuto
-                      ? i18n._(t`Insufficient Balance`)
-                      : activeTabAuto === 0
-                        ? i18n._(t`Confirm Staking`)
-                        : i18n._(t`Confirm Withdrawal`)}
-              </button>
-            )}
+          activeTabAuto === 0 ? (
+            <Button
+              color="gradient"
+              className={`${buttonStyle} text-high-emphesis`}
+              disabled={approvalStateAuto === ApprovalState.PENDING}
+              onClick={approveAuto}
+            >
+              {approvalStateAuto === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
+            </Button>
+          ) : (
+            <button
+              className={
+                buttonDisabledAuto
+                  ? buttonStyleDisabled
+                  : !walletConnected
+                  ? buttonStyleConnectWallet
+                  : insufficientFundsAuto
+                  ? buttonStyleInsufficientFunds
+                  : buttonStyleEnabled
+              }
+              onClick={handleClickButtonAuto}
+              disabled={buttonDisabledAuto || inputErrorAuto}
+            >
+              {!walletConnected
+                ? i18n._(t`Connect Wallet`)
+                : !inputAuto
+                ? i18n._(t`Enter Amount`)
+                : insufficientFundsAuto
+                ? i18n._(t`Insufficient Balance`)
+                : activeTabAuto === 0
+                ? i18n._(t`Confirm Staking`)
+                : i18n._(t`Confirm Withdrawal`)}
+            </button>
+          )}
         </div>
         <div className="grid grid-rows-2 px-3 gap-y-2 md:px-8">
           <div className="flex justify-between text-base">
@@ -339,9 +348,22 @@ export default function AutoPoolCard() {
       <div className="grid grid-rows-4 px-3 mt-6 py-6 border-t-[1px] border-dark-800 gap-y-2 md:px-8">
         <div className="flex justify-between text-base">
           <p className="text-dark-650">APY</p>
-          <p className="font-bold text-right text-high-emphesis">
-            {`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
-          </p>
+          <div className="flex items-center">
+            <p className="font-bold text-right text-high-emphesis">
+              {`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
+            </p>
+            <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+          </div>
+          <ROICalculatorModal
+            isfarm={false}
+            isOpen={showCalc}
+            onDismiss={() => setShowCalc(false)}
+            showBoost={false}
+            showCompound={false}
+            name={'CRONA'}
+            apr={manualAPY}
+            Lpbalance={xBalanceAuto}
+          />
         </div>
         <div className="flex justify-between text-base">
           <p className="text-dark-650">Perfomance fee</p>

@@ -1,17 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useActiveWeb3React } from 'app/services/web3'
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import { useCurrency } from 'app/hooks/Tokens'
-import { classNames, formatNumber, formatPercent } from 'app/functions'
+import { classNames, formatNumber, formatPercent, formatNumberScale } from 'app/functions'
 import { CurrencyLogoArray } from 'app/components/CurrencyLogo'
 import IncentivePoolItemDetail from './IncentivePoolItemDetail'
 import { usePendingReward, usePoolsInfo } from './hooks'
+import { CalculatorIcon } from '@heroicons/react/solid'
+import ROICalculatorModal from 'app/components/ROICalculatorModal'
+import { Token } from '@cronaswap/core-sdk'
+import { getAddress } from '@ethersproject/address'
+import { useTokenBalance } from 'state/wallet/hooks'
 
 const IncentivePoolItem = ({ pool, ...rest }) => {
   const { i18n } = useLingui()
+  const { account, chainId } = useActiveWeb3React()
 
   let stakingToken = useCurrency(pool.stakingToken?.id)
   let earningToken = useCurrency(pool.earningToken?.id)
@@ -19,6 +26,7 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
   const { apr, endInBlock, bonusEndBlock, totalStaked, stakingTokenPrice, earningTokenPrice } = usePoolsInfo(pool)
 
   const pendingReward = usePendingReward(pool, earningToken)
+  const [showCalc, setShowCalc] = useState(false)
 
   return (
     <Disclosure>
@@ -32,7 +40,7 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
           >
             <div className="flex gap-x-2">
               {/* Token logo */}
-              <div className="flex w-1/2 col-span-2 space-x-4 lg:gap-5 lg:w-3/12 lg:col-span-1 items-center">
+              <div className="flex items-center w-1/2 col-span-2 space-x-4 lg:gap-5 lg:w-3/12 lg:col-span-1">
                 {/* <DoubleLogo currency0={token0} currency1={token1} size={window.innerWidth > 768 ? 40 : 24} /> */}
                 {stakingToken && earningToken && (
                   <CurrencyLogoArray
@@ -44,9 +52,9 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
                 <div className="flex flex-col justify-center">
                   <div className="text-xs font-bold md:text-base">Earn {earningToken?.symbol}</div>
                   {formatNumber(pendingReward?.toFixed(18)) != '0' ? (
-                    <div className=" text-xs text-blue">{i18n._(t`STAKING CRONA`)}</div>
+                    <div className="text-xs text-blue">{i18n._(t`STAKING CRONA`)}</div>
                   ) : (
-                    <div className=" text-xs text-gray">{i18n._(t`Stake CRONA`)}</div>
+                    <div className="text-xs text-gray">{i18n._(t`Stake CRONA`)}</div>
                   )}
                 </div>
               </div>
@@ -58,7 +66,7 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
               </div>
 
               {/* Total staked */}
-              <div className="flex-col justify-center hidden lg:w-2/12 lg:block space-y-1">
+              <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Total staked`)}</div>
                 <div className="text-xs font-bold md:text-base">
                   {formatNumber(totalStaked?.toFixed(stakingToken?.decimals))} {stakingToken?.symbol}
@@ -66,13 +74,25 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
               </div>
 
               {/* APR */}
-              <div className="flex flex-col justify-center w-3/12 lg:w-2/12 space-y-1">
+              <div className="flex flex-col justify-center w-3/12 space-y-1 lg:w-2/12">
                 <div className="text-xs md:text-[14px] text-secondary">APR</div>
-                <div className="text-xs font-bold md:text-base">{formatPercent(apr)} </div>
+                <div className="flex items-center">
+                  <div className="text-xs font-bold md:text-base">{formatPercent(apr)} </div>
+                  <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+                </div>
+                <ROICalculatorModal
+                  isfarm={false}
+                  isOpen={showCalc}
+                  onDismiss={() => setShowCalc(false)}
+                  showBoost={false}
+                  showCompound={true}
+                  name={'CRONA'}
+                  apr={apr}
+                />
               </div>
 
               {/* Ends in */}
-              <div className="flex-col justify-center hidden lg:w-2/12 lg:block space-y-1">
+              <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
                 <div className="flex items-center text-xs md:text-[14px] text-secondary">{i18n._(t`Ends in`)}</div>
                 <div className="text-xs font-bold md:text-base">{formatNumber(endInBlock)} blocks</div>
               </div>

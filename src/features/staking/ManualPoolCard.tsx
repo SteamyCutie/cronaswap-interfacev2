@@ -21,7 +21,9 @@ import { useGasPrice } from 'state/user/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { getBalanceAmount } from 'functions/formatBalance'
 import { getAPY } from 'features/staking/useStaking'
-import { BigNumber } from 'bignumber.js';
+import { BigNumber } from 'bignumber.js'
+import { CalculatorIcon } from '@heroicons/react/solid'
+import ROICalculatorModal from 'app/components/ROICalculatorModal'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -29,7 +31,7 @@ const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
   let success = true
   try {
     const ret = await txFunc()
-    if (ret ?.error) {
+    if (ret?.error) {
       success = false
     }
   } catch (e) {
@@ -72,9 +74,9 @@ export default function ManualPoolCard() {
 
   const balance = activeTab === 0 ? cronaBalance : xCronaBalance
 
-  const formattedBalance = balance ?.toSignificant(8)
+  const formattedBalance = balance?.toSignificant(8)
 
-  const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance ?.currency)
+  const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
   const [approvalState, approve] = useApproveCallback(parsedAmount, MASTERCHEF_ADDRESS[chainId])
 
   const results = useRef(0)
@@ -94,7 +96,7 @@ export default function ManualPoolCard() {
     }
   }
 
-  const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount ?.greaterThan(balance)
+  const insufficientFunds = (balance && balance.equalTo(ZERO)) || parsedAmount?.greaterThan(balance)
   const inputError = insufficientFunds
 
   const [pendingTx, setPendingTx] = useState(false)
@@ -184,6 +186,10 @@ export default function ManualPoolCard() {
     }
   }
 
+  const [showCalc, setShowCalc] = useState(false)
+  const stakedAmount = Number(xCronaBalance?.toSignificant(8))
+  const lpBalnce = !stakedAmount ? 0 : stakedAmount
+
   return (
     <div className="w-full grid-rows-2 mx-auto mb-4 md:w-1/2 rounded-2xl gird bg-dark-400 md:m-0">
       <div className="flex items-center justify-between w-full h-[134px] rounded-t-2xl pl-3 pr-3 md:pl-5 md:pr-7 bg-gradient-to-r from-Mardi-Gras to-Myrtle">
@@ -251,7 +257,7 @@ export default function ManualPoolCard() {
             <div
               className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
                 inputError ? ' border border-red' : ''
-                }`}
+              }`}
             >
               <div className="flex space-x-2 ">
                 {inputError && (
@@ -266,7 +272,7 @@ export default function ManualPoolCard() {
                 <p
                   className={`text-sm md:text-lg font-bold whitespace-nowrap ${
                     input ? 'text-high-emphesis' : 'text-secondary'
-                    }`}
+                  }`}
                 >
                   {`${input ? input : '0'} ${activeTab === 0 ? '' : 'x'}CRONA`}
                 </p>
@@ -276,7 +282,7 @@ export default function ManualPoolCard() {
                   className="px-2 py-1 ml-3 text-xs font-bold border pointer-events-auto focus:outline-none focus:ring hover:bg-opacity-40 md:bg-cyan-blue md:bg-opacity-30 border-secondary md:border-cyan-blue rounded-2xl md:py-1 md:px-3 md:ml-4 md:text-sm md:font-normal md:text-cyan-blue"
                   onClick={() => {
                     if (!balance.equalTo(ZERO)) {
-                      setInput(balance ?.toSignificant(balance.currency.decimals))
+                      setInput(balance?.toSignificant(balance.currency.decimals))
                     }
                   }}
                 >
@@ -288,40 +294,40 @@ export default function ManualPoolCard() {
 
           {/* Confirm Button */}
           {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) &&
-            activeTab === 0 ? (
-              <Button
-                color="gradient"
-                className={`${buttonStyle} text-high-emphesis`}
-                disabled={approvalState === ApprovalState.PENDING}
-                onClick={approve}
-              >
-                {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
-              </Button>
-            ) : (
-              <button
-                className={
-                  buttonDisabled
-                    ? buttonStyleDisabled
-                    : !walletConnected
-                      ? buttonStyleConnectWallet
-                      : insufficientFunds
-                        ? buttonStyleInsufficientFunds
-                        : buttonStyleEnabled
-                }
-                onClick={handleClickButton}
-                disabled={buttonDisabled || inputError}
-              >
-                {!walletConnected
-                  ? i18n._(t`Connect Wallet`)
-                  : !input
-                    ? i18n._(t`Enter Amount`)
-                    : insufficientFunds
-                      ? i18n._(t`Insufficient Balance`)
-                      : activeTab === 0
-                        ? i18n._(t`Confirm Staking`)
-                        : i18n._(t`Confirm Withdrawal`)}
-              </button>
-            )}
+          activeTab === 0 ? (
+            <Button
+              color="gradient"
+              className={`${buttonStyle} text-high-emphesis`}
+              disabled={approvalState === ApprovalState.PENDING}
+              onClick={approve}
+            >
+              {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)} </Dots> : i18n._(t`Approve`)}
+            </Button>
+          ) : (
+            <button
+              className={
+                buttonDisabled
+                  ? buttonStyleDisabled
+                  : !walletConnected
+                  ? buttonStyleConnectWallet
+                  : insufficientFunds
+                  ? buttonStyleInsufficientFunds
+                  : buttonStyleEnabled
+              }
+              onClick={handleClickButton}
+              disabled={buttonDisabled || inputError}
+            >
+              {!walletConnected
+                ? i18n._(t`Connect Wallet`)
+                : !input
+                ? i18n._(t`Enter Amount`)
+                : insufficientFunds
+                ? i18n._(t`Insufficient Balance`)
+                : activeTab === 0
+                ? i18n._(t`Confirm Staking`)
+                : i18n._(t`Confirm Withdrawal`)}
+            </button>
+          )}
           {harvestAmount.current > 0 ? (
             <div className="flex gap-2">
               <Button color="gradient" className={`${buttonStyleEnabled} w-1/2`} onClick={handleCompoundFarm}>
@@ -330,8 +336,8 @@ export default function ManualPoolCard() {
                 ) : pendingCompundTx ? (
                   <Dots>{i18n._(t`Compounding`)}</Dots>
                 ) : (
-                      `Compound (${formatNumber(harvestAmount.current ?.toFixed(18))})`
-                    )}
+                  `Compound (${formatNumber(harvestAmount.current?.toFixed(18))})`
+                )}
               </Button>
               <Button color="gradient" className={`${buttonStyleEnabled} w-1/2`} onClick={handleHarvestFarm}>
                 {!walletConnected ? (
@@ -339,28 +345,41 @@ export default function ManualPoolCard() {
                 ) : pendingHarvestTx ? (
                   <Dots>{i18n._(t`Harvesting`)}</Dots>
                 ) : (
-                      `Harvest (${formatNumber(harvestAmount.current ?.toFixed(18))})`
-                    )}
+                  `Harvest (${formatNumber(harvestAmount.current?.toFixed(18))})`
+                )}
               </Button>
             </div>
           ) : (
-              <div className="flex gap-2">
-                <button className={`${buttonStyleDisabled} w-1/2`} disabled={true}>
-                  {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Compound`)}
-                </button>
-                <button className={`${buttonStyleDisabled} w-1/2`} disabled={true}>
-                  {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Harvest`)}
-                </button>
-              </div>
-            )}
+            <div className="flex gap-2">
+              <button className={`${buttonStyleDisabled} w-1/2`} disabled={true}>
+                {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Compound`)}
+              </button>
+              <button className={`${buttonStyleDisabled} w-1/2`} disabled={true}>
+                {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Harvest`)}
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-dark-800 gap-y-2 md:px-8">
         <div className="flex justify-between text-base">
           <p className="text-dark-650">APY</p>
-          <p className="font-bold text-right text-high-emphesis">
-            {`${manualAPY ? manualAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
-          </p>
+          <div className="flex items-center">
+            <p className="font-bold text-right text-high-emphesis">
+              {`${manualAPY ? manualAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
+            </p>
+            <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+          </div>
+          <ROICalculatorModal
+            isfarm={false}
+            isOpen={showCalc}
+            onDismiss={() => setShowCalc(false)}
+            showBoost={false}
+            showCompound={true}
+            name={'CRONA'}
+            apr={manualAPY}
+            Lpbalance={lpBalnce}
+          />
         </div>
         <div className="flex justify-between text-base">
           <p className="text-dark-650">Perfomance fee</p>
