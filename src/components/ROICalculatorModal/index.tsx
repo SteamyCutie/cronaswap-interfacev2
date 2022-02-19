@@ -82,7 +82,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
   }
 
   return (
-    <Modal isOpen={isOpen} maxWidth={600} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen} maxWidth={500} onDismiss={onDismiss}>
       <div className="pr-2 space-y-2 overflow-y-auto max-h-96 md:max-h-[480px] lg:max-h-[540px]">
         <ModalHeader title={i18n._(t`ROI Calculator`)} onClose={() => {}} />
         <div className="py-2">

@@ -42,7 +42,7 @@ export default function Modal({
               <div
                 className="transition-all transform"
                 style={{
-                  width: isMobile ? `100%` : '65vw',
+                  width: isMobile ? `100%` : '90vw',
                   maxWidth: `${maxWidth}px`,
                 }}
               >
