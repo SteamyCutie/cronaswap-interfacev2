@@ -246,9 +246,9 @@ export default function Boost() {
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3 auto-cols-max">
               <div className="p-4 rounded-lg bg-dark-800">
-                <div className="flex items-center">
+                <div className="flex items-center hover:cursor-pointer" onClick={() => setShowCalc(true)}>
                   <h1 className="text-lg">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
-                  <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+                  <CalculatorIcon className="w-5 h-5" />
                 </div>
                 <ROICalculatorModal
                   isfarm={false}

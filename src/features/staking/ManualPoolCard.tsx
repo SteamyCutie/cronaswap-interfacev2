@@ -364,11 +364,11 @@ export default function ManualPoolCard() {
       <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-dark-800 gap-y-2 md:px-8">
         <div className="flex justify-between text-base">
           <p className="text-dark-650">APY</p>
-          <div className="flex items-center">
+          <div className="flex items-center hover:cursor-pointer" onClick={() => setShowCalc(true)}>
             <p className="font-bold text-right text-high-emphesis">
               {`${manualAPY ? manualAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
             </p>
-            <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+            <CalculatorIcon className="w-5 h-5" />
           </div>
           <ROICalculatorModal
             isfarm={false}

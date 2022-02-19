@@ -76,9 +76,9 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
               {/* APR */}
               <div className="flex flex-col justify-center w-3/12 space-y-1 lg:w-2/12">
                 <div className="text-xs md:text-[14px] text-secondary">APR</div>
-                <div className="flex items-center">
+                <div className="flex items-center" onClick={() => setShowCalc(true)}>
                   <div className="text-xs font-bold md:text-base">{formatPercent(apr)} </div>
-                  <CalculatorIcon className="w-5 h-5" onClick={() => setShowCalc(true)} />
+                  <CalculatorIcon className="w-5 h-5" />
                 </div>
                 <ROICalculatorModal
                   isfarm={false}

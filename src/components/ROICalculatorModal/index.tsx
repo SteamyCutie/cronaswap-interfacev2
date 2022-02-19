@@ -51,8 +51,8 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
 }) => {
   const { i18n } = useLingui()
 
-  const [usdvalue, setUsdValue] = useState(0)
-  const [lpvalue, setLpValue] = useState(0)
+  const [usdValue, setUsdValue] = useState('')
+  const [lpValue, setLpValue] = useState('')
   const [editingCurrency, setEditingCurrency] = useState('usd')
   const [stakedPeriod, setStakedPeriod] = useState(365)
   const [isCompounding, setIsCompounding] = useState(showCompound)
@@ -71,20 +71,20 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
       const ROI = principal * aprAsDecimal * daysAsDecimalOfYear
       const cronaPriceInUSD = getCronaPrice()
       const ROIInTokens = ROI.toFixed(3)
-      const ROIPercentage = usdvalue === 0 ? '0' : ((ROI / usdvalue) * 100).toFixed(2)
+      const ROIPercentage = Number(usdValue) === 0 ? '0' : ((ROI / Number(usdValue)) * 100).toFixed(2)
       return { ROI, ROIInTokens, ROIPercentage }
     }
     const ROI = principal * (1 + aprAsDecimal / timesCompounded) ** (timesCompounded * daysAsDecimalOfYear) - principal
     const cronaPriceInUSD = getCronaPrice()
     const ROIInTokens = (ROI / cronaPriceInUSD).toFixed(3)
-    const ROIPercentage = usdvalue === 0 ? '0' : ((ROI / usdvalue) * 100).toFixed(2)
+    const ROIPercentage = Number(usdValue) === 0 ? '0' : ((ROI / Number(usdValue)) * 100).toFixed(2)
     return { ROI, ROIInTokens, ROIPercentage }
   }
 
   return (
     <Modal isOpen={isOpen} maxWidth={500} onDismiss={onDismiss}>
-      <div className="pr-2 space-y-2 overflow-y-auto max-h-96 md:max-h-[480px] lg:max-h-[540px]">
-        <ModalHeader title={i18n._(t`ROI Calculator`)} onClose={() => {}} />
+      <div className="max-h-screen pb-10 pr-2 space-y-2 overflow-y-auto">
+        <ModalHeader title={i18n._(t`ROI Calculator`)} onClose={onDismiss} />
         <div className="py-2">
           <div className="flex items-center justify-between text-sm">
             <Typography variant="sm">
@@ -102,18 +102,18 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
               <div className="flex items-end w-full p-3 space-x-3 focus:bg-dark-700">
                 <Input.Numeric
                   id="token-amount-input"
-                  value={editingCurrency === 'usd' ? usdvalue : lpvalue}
+                  value={editingCurrency === 'usd' ? usdValue : lpValue}
                   className="h-6 bg-dark-800 text-blue"
                   onUserInput={(val) => {
                     editingCurrency === 'usd'
-                      ? (setUsdValue(Number(val)), setLpValue(Number(val) / lpPrice))
-                      : (setLpValue(Number(val)), setUsdValue(Number(val) * lpPrice))
+                      ? (setUsdValue(val), setLpValue((Number(val) / lpPrice).toString()))
+                      : (setLpValue(val), setUsdValue((Number(val) * lpPrice).toString()))
                   }}
                 />
                 <div className="text-sm text-right md:text-base">{editingCurrency === 'lp' ? name + ' ' : 'USD'}</div>
               </div>
               <div className="flex items-end justify-between w-full p-3 space-x-3 text-sm focus:bg-dark-700">
-                <div className="h-5 ">{editingCurrency === 'lp' ? usdvalue.toFixed(2) : lpvalue.toFixed(2)}</div>
+                <div className="h-5 ">{editingCurrency === 'lp' ? Number(usdValue) : Number(lpValue)}</div>
                 <div className="text-xs text-right md:text-sm">{editingCurrency === 'usd' ? name + ' ' : 'USD'}</div>
               </div>
             </div>
@@ -128,7 +128,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
             <button
               className={`${buttonStyle} bg-dark-500 w-10 md:w-20`}
               onClick={() => {
-                setUsdValue(100), setLpValue(100 / lpPrice)
+                setUsdValue('100'), setLpValue((100 / Number(lpPrice)).toString())
               }}
             >
               $100
@@ -136,7 +136,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
             <button
               className={`${buttonStyle} bg-dark-500 w-10 md:w-20`}
               onClick={() => {
-                setUsdValue(1000), setLpValue(1000 / lpPrice)
+                setUsdValue('1000'), setLpValue((1000 / Number(lpPrice)).toString())
               }}
             >
               $1000
@@ -146,7 +146,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
                 className={`${Lpbalance === 0 ? buttonStyleDisabled : buttonStyle} bg-dark-500 w-20 md:w-24`}
                 disabled={Lpbalance === 0}
                 onClick={() => {
-                  setLpValue(Lpbalance), setUsdValue(Lpbalance * lpPrice)
+                  setLpValue(Lpbalance.toString()), setUsdValue((Lpbalance * lpPrice).toString())
                 }}
               >
                 My balance
@@ -260,11 +260,11 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
               {i18n._(t`ROI AT CURRENT RATES`)}
             </Typography>
             <div className="h-6 max-w-full text-lg font-bold text-blue md:text-xl">
-              $ {ROIcalculator(usdvalue, apr).ROI.toFixed(2)}
+              $ {ROIcalculator(Number(usdValue), apr).ROI.toFixed(3)}
             </div>
             <div className="md:flex">
-              <div className="text-sm">~ {ROIcalculator(usdvalue, apr).ROIInTokens} CRONA </div>
-              <div className="text-sm">({ROIcalculator(usdvalue, apr).ROIPercentage}%)</div>
+              <div className="text-sm">~ {ROIcalculator(Number(usdValue), apr).ROIInTokens} CRONA </div>
+              <div className="text-sm">({ROIcalculator(Number(usdValue), apr).ROIPercentage}%)</div>
             </div>
           </div>
         </div>
