@@ -82,7 +82,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
   }
 
   return (
-    <Modal isOpen={isOpen} maxWidth={500} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen} maxWidth={600} onDismiss={onDismiss}>
       <div className="pr-2 space-y-2 overflow-y-auto max-h-96 md:max-h-[480px] lg:max-h-[540px]">
         <ModalHeader title={i18n._(t`ROI Calculator`)} onClose={() => {}} />
         <div className="py-2">
@@ -113,7 +113,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
                 <div className="text-sm text-right md:text-base">{editingCurrency === 'lp' ? name + ' ' : 'USD'}</div>
               </div>
               <div className="flex items-end justify-between w-full p-3 space-x-3 text-sm focus:bg-dark-700">
-                <div className="h-5 ">{editingCurrency === 'lp' ? usdvalue : lpvalue}</div>
+                <div className="h-5 ">{editingCurrency === 'lp' ? usdvalue.toFixed(2) : lpvalue.toFixed(2)}</div>
                 <div className="text-xs text-right md:text-sm">{editingCurrency === 'usd' ? name + ' ' : 'USD'}</div>
               </div>
             </div>
@@ -255,15 +255,16 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
             </>
           )}
           <ArrowDownIcon className="h-6 mx-auto mb-3" />
-          <div className="p-2 space-y-1 rounded-lg bg-dark-800">
+          <div className="p-4 space-y-1 rounded-lg bg-dark-800">
             <Typography variant="sm" className="text-cyan-blue">
               {i18n._(t`ROI AT CURRENT RATES`)}
             </Typography>
             <div className="h-6 max-w-full text-lg font-bold text-blue md:text-xl">
               $ {ROIcalculator(usdvalue, apr).ROI.toFixed(2)}
             </div>
-            <div className="text-sm">
-              ~ {ROIcalculator(usdvalue, apr).ROIInTokens} CRONA ({ROIcalculator(usdvalue, apr).ROIPercentage}%)
+            <div className="md:flex">
+              <div className="text-sm">~ {ROIcalculator(usdvalue, apr).ROIInTokens} CRONA </div>
+              <div className="text-sm">({ROIcalculator(usdvalue, apr).ROIPercentage}%)</div>
             </div>
           </div>
         </div>
@@ -281,7 +282,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
           </div>
 
           {isExpand && (
-            <div className="p-2 text-sm h-fit md:text-base">
+            <div className="p-2 text-sm md:p-4 h-fit md:text-base">
               {isfarm && (
                 <div className="flex justify-between">
                   <Typography>{i18n._(t`APR(incl. LP rewards)`)}</Typography>
