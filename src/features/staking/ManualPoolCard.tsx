@@ -363,7 +363,7 @@ export default function ManualPoolCard() {
       </div>
       <div className="grid grid-rows-4 px-3 mt-[5px] py-6 border-t-[1px] border-dark-800 gap-y-2 md:px-8">
         <div className="flex justify-between text-base">
-          <p className="text-dark-650">APY</p>
+          <p className="text-dark-650">APR</p>
           <div className="flex items-center hover:cursor-pointer" onClick={() => setShowCalc(true)}>
             <p className="font-bold text-right text-high-emphesis">
               {`${manualAPY ? manualAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}
@@ -375,7 +375,7 @@ export default function ManualPoolCard() {
             isOpen={showCalc}
             onDismiss={() => setShowCalc(false)}
             showBoost={false}
-            showCompound={true}
+            showCompound={false}
             name={'CRONA'}
             apr={manualAPY}
             Lpbalance={lpBalnce}

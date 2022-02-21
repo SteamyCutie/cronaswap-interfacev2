@@ -5,7 +5,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon, LockClosedIcon, CalculatorIcon } from '@heroicons/react/solid'
 import FarmListItemDetails from './FarmListItemDetails'
-import { usePendingCrona } from './hooks'
+import { usePendingCrona, useUserInfo } from './hooks'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 
@@ -35,8 +35,9 @@ const FarmListItem = ({ farm, ...rest }) => {
       farm.token1 ? farm.name : farm.token0.name
     )
 
-    const balance = useTokenBalance(account, liquidityToken)
-    return Number(formatNumberScale(balance?.toSignificant(6, undefined, 4) ?? 0, false, 4))
+    // const balance = useTokenBalance(account, liquidityToken)
+    const { amount } = useUserInfo(farm, liquidityToken)
+    return Number(amount?.toFixed(liquidityToken?.decimals))
   }
   const Lpbalance = { account } ? MyLpBalance(farm) : 0
 
@@ -126,7 +127,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                       isOpen={showCalc}
                       onDismiss={() => setShowCalc(false)}
                       showBoost={true}
-                      showCompound={true}
+                      showCompound={false}
                       name={farm.name + ' LP'}
                       apr={farm.apr}
                       Lpbalance={Lpbalance}

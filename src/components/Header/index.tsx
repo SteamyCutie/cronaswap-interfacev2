@@ -58,16 +58,7 @@ function AppBar(): JSX.Element {
                           {i18n._(t`Pool`)}
                         </a>
                       </NavLink>
-                      {chainId && featureEnabled(Feature.FARMV1, chainId) && (
-                        <NavLink href={'/farmv1'}>
-                          <a
-                            id={`yield-nav-link`}
-                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                          >
-                            {i18n._(t`Farm V1`)}
-                          </a>
-                        </NavLink>
-                      )}
+
                       {chainId && featureEnabled(Feature.FARMV2, chainId) && (
                         <NavLink href={'/farmv2'}>
                           <a
@@ -75,6 +66,16 @@ function AppBar(): JSX.Element {
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
                             {i18n._(t`Farm V2`)}
+                          </a>
+                        </NavLink>
+                      )}
+                      {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                        <NavLink href={'/farmv1'}>
+                          <a
+                            id={`yield-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Farm V1`)}
                           </a>
                         </NavLink>
                       )}

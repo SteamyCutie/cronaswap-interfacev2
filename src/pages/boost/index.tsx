@@ -255,7 +255,7 @@ export default function Boost() {
                   isOpen={showCalc}
                   onDismiss={() => setShowCalc(false)}
                   showBoost={false}
-                  showCompound={true}
+                  showCompound={false}
                   Lpbalance={Number((lockAmount / 1e18).toFixed(2))}
                   name={'CRONA'}
                   apr={manualAPY}

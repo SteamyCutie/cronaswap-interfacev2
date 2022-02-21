@@ -638,6 +638,16 @@ export const FARMSV2: AddressMap = {
       token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token1: { id: '0x0e517979C2c1c1522ddB0c73905e0D39b3F990c0', name: 'ADA Token', symbol: 'ADA', decimals: 6 },
     },
+
+    '0xe6278a9425fc3ECc3514cD782598493043B6CDF4': {
+      id: 23,
+      pid: 23,
+      symbol: 'CLP',
+      name: 'CRO-BANK',
+      isCommunity: true,
+      token0: { id: '0x55210C2a69b4c52a9d9289A257D54d35C4a2d2eC', name: 'CroBank', symbol: 'BANK', decimals: 9 },
+      token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
   },
 
   [ChainId.CRONOS_TESTNET]: {

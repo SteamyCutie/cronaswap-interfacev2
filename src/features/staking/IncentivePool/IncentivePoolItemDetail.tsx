@@ -242,20 +242,27 @@ const IncentivePoolItemDetail = ({
             <div className="flex flex-col justify-between text-sm gap-4 rounded-lg bg-dark-700">
               <div className="flex mt-4">
                 <div className="flex flex-col w-2/3 px-4 align-middle">
-                  <div className="text-2xl font-bold"> {formatNumber(pendingReward?.toFixed(18))}</div>
+                  <div className="text-2xl font-bold">
+                    {' '}
+                    {formatNumber(pendingReward?.toFixed(earningToken?.decimals))}
+                  </div>
                   <div className="text-sm">
                     ~
-                    {Number(formatNumber(pendingReward?.toFixed(18))) *
+                    {Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) *
                       earningTokenPrice?.toFixed(earningToken?.decimals)}
                   </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle lg:w-1/3 gap-y-1">
                   <Button
-                    color={Number(formatNumber(pendingReward?.toFixed(18))) <= 0 ? 'blue' : 'gradient'}
+                    color={
+                      Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) <= 0 ? 'blue' : 'gradient'
+                    }
                     size="sm"
                     className="w-full"
-                    variant={Number(formatNumber(pendingReward?.toFixed(18))) <= 0 ? 'outlined' : 'filled'}
-                    disabled={Number(formatNumber(pendingReward?.toFixed(18))) <= 0}
+                    variant={
+                      Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) <= 0 ? 'outlined' : 'filled'
+                    }
+                    disabled={Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) <= 0}
                     onClick={async () => {
                       setPendingTx(true)
                       try {

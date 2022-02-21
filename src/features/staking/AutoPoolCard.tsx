@@ -361,7 +361,7 @@ export default function AutoPoolCard() {
             showBoost={false}
             showCompound={false}
             name={'CRONA'}
-            apr={manualAPY}
+            apr={autoAPY}
             Lpbalance={xBalanceAuto}
           />
         </div>
