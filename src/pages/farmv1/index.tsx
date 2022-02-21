@@ -38,7 +38,7 @@ export default function Yield(): JSX.Element {
   })
 
   const FILTER = {
-    all: (farm) => farm.multiplier !== 0,
+    all: (farm) => farm.multiplier < 1000,
     inactive: (farm) => farm.multiplier == 0,
   }
 
@@ -96,7 +96,7 @@ export default function Yield(): JSX.Element {
               {i18n._(t`Q2: When will the FarmV1 reward emissions end?`)}
             </Typography>
             <Typography color="text-pink" variant="base" weight={700}>
-              {i18n._(t`A2: We will end the V1 reward emission at 2pm UTC on Feb 19.`)}
+              {i18n._(t`A2: Farm V1 reward emission has been end at 2pm UTC on Feb 19.`)}
             </Typography>
           </div>
 

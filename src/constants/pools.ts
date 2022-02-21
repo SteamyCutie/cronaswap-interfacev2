@@ -112,8 +112,29 @@ export const POOLS: AddressMap = {
       earningToken: { id: '0xa4434afeae0decb9820d906bf01b13291d00651a', name: 'Agile', symbol: 'AGL', decimals: 18 },
     },
 
-    '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
+    '0x0ab39e3981b48E41Bc584AFc67EbA4301094450B': {
       pid: 4,
+      name: 'CRONA-BANK',
+      tokenPerBlock: '0.01',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://www.crobank.xyz/',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0x55210C2a69b4c52a9d9289A257D54d35C4a2d2eC',
+        name: 'CroBank',
+        symbol: 'BANK',
+        decimals: 9,
+      },
+    },
+
+    '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
+      pid: 5,
       name: 'CRONA-CROSS',
       tokenPerBlock: '0.0575',
       isFinished: true,
