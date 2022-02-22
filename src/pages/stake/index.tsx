@@ -9,8 +9,8 @@ import { ArrowRightIcon } from '@heroicons/react/outline'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { formatNumber, getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
-import AutoPoolCard from 'app/features/staking/AutoPoolCard'
-import ManualPoolCard from 'app/features/staking/ManualPoolCard'
+import AutoPoolCard from 'app/features/staking/AutoPoolCard/AutoPoolCard'
+import ManualPoolCard from 'app/features/staking/ManualPoolCard/ManualPoolCard'
 import Typography from 'app/components/Typography'
 import { formatNumberScale } from 'app/functions'
 import Button from 'app/components/Button'
@@ -79,7 +79,7 @@ export default function Stake() {
           </div>
 
           <div className="w-full px-4 py-4 m-auto rounded-lg md:w-4/12 md:px-6 bg-cyan-blue bg-opacity-30">
-            <div className="text-lg font-bold text-white flex flex-row items-center">
+            <div className="flex flex-row items-center text-lg font-bold text-white">
               {i18n._(t`Auto Crona Bounty`)}
               <QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" />
             </div>
@@ -107,7 +107,8 @@ export default function Stake() {
           </div>
         </div>
 
-        <div className="w-full gap-4 mt-6 md:flex">
+        <div className="mt-5 text-2xl font-bold text-high-emphesis">Staking Pools</div>
+        <div className="w-full mt-6 space-y-4">
           <AutoPoolCard />
           <ManualPoolCard />
         </div>
