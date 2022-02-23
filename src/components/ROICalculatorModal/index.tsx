@@ -66,14 +66,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
   const ROIcalculator = (principal: number, apr: number) => {
     const aprAsDecimal = isBoost ? apr / 40 : apr / 100
     const daysAsDecimalOfYear = stakedPeriod / 365
-    const timesCompounded = 365 / compoundingPeriod
-    if (isCompounding === false) {
-      const ROI = principal * aprAsDecimal * daysAsDecimalOfYear
-      const cronaPriceInUSD = getCronaPrice()
-      const ROIInTokens = ROI.toFixed(3)
-      const ROIPercentage = Number(usdValue) === 0 ? '0' : ((ROI / Number(usdValue)) * 100).toFixed(2)
-      return { ROI, ROIInTokens, ROIPercentage }
-    }
+    const timesCompounded = isCompounding ? 365 / compoundingPeriod : 365
     const ROI = principal * (1 + aprAsDecimal / timesCompounded) ** (timesCompounded * daysAsDecimalOfYear) - principal
     const cronaPriceInUSD = getCronaPrice()
     const ROIInTokens = (ROI / cronaPriceInUSD).toFixed(3)

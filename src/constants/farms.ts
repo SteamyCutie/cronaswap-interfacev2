@@ -18,6 +18,7 @@ type PairInfo = {
   pair?: string
   isCommunity?: boolean
   migrate?: boolean
+  isVote?: boolean
 }
 
 type AddressMap = {

@@ -127,7 +127,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                       isOpen={showCalc}
                       onDismiss={() => setShowCalc(false)}
                       showBoost={true}
-                      showCompound={false}
+                      showCompound={true}
                       name={farm.name + ' LP'}
                       apr={farm.apr}
                       Lpbalance={Lpbalance}

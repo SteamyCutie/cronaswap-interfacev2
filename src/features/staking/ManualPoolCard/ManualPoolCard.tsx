@@ -52,8 +52,9 @@ export default function ManualPoolCard() {
   }
   getHarvestAmount()
   const [showCalc, setShowCalc] = useState(false)
+  const balance = Number(cronaBalance?.toSignificant(8))
   const stakedAmount = Number(xCronaBalance?.toSignificant(8))
-  const lpBalnce = !stakedAmount ? 0 : stakedAmount
+  const myBalance = !stakedAmount ? balance : balance + stakedAmount
 
   return (
     <Disclosure>
@@ -75,7 +76,7 @@ export default function ManualPoolCard() {
                 />
                 <div className="flex flex-col justify-center">
                   <div className="text-xs font-bold md:text-2xl">Manual CRONA</div>
-                  <div className="hidden md:block text-xs text-gray">{i18n._(t`Earn CRONA, Stake CRONA`)}</div>
+                  <div className="hidden text-xs md:block text-gray">{i18n._(t`Earn CRONA, Stake CRONA`)}</div>
                 </div>
               </div>
 
@@ -107,10 +108,10 @@ export default function ManualPoolCard() {
                   isOpen={showCalc}
                   onDismiss={() => setShowCalc(false)}
                   showBoost={false}
-                  showCompound={false}
+                  showCompound={true}
                   name={'CRONA'}
                   apr={manualAPY}
-                  Lpbalance={lpBalnce}
+                  Lpbalance={myBalance}
                 />
               </div>
 
