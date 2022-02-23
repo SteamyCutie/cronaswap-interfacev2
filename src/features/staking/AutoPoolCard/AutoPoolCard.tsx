@@ -84,13 +84,13 @@ export default function AutoPoolCard() {
                 />
                 <div className="flex flex-col justify-center">
                   <div className="text-xs font-bold md:text-2xl">Auto CRONA</div>
-                  <div className="mx-auto text-xs text-gray">{i18n._(t`Automatic restaking`)}</div>
+                  <div className="hidden md:block text-xs text-gray">{i18n._(t`Automatic restaking`)}</div>
                 </div>
               </div>
 
               {/* Earned */}
               <div className="flex flex-col justify-center w-2/12 space-y-1">
-                <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Earned`)}</div>
+                <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Recent CRONA Profit`)}</div>
                 <div className="text-xs font-bold md:text-base">
                   {formatNumber(results.current[1]?.toFixed(CRONA[chainId]?.decimals))}
                 </div>

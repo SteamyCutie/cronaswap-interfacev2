@@ -75,13 +75,13 @@ export default function ManualPoolCard() {
                 />
                 <div className="flex flex-col justify-center">
                   <div className="text-xs font-bold md:text-2xl">Manual CRONA</div>
-                  <div className="mx-auto text-xs text-gray">{i18n._(t`Earn CRONA, Stake CRONA`)}</div>
+                  <div className="hidden md:block text-xs text-gray">{i18n._(t`Earn CRONA, Stake CRONA`)}</div>
                 </div>
               </div>
 
               {/* Earned */}
               <div className="flex flex-col justify-center w-2/12 space-y-1">
-                <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Earned`)}</div>
+                <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`CRONA Earned`)}</div>
                 <div className="text-xs font-bold md:text-base">
                   {formatNumber(harvestAmount.current?.toFixed(CRONA[chainId]?.decimals))}
                 </div>
