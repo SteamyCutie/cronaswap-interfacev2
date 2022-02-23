@@ -219,9 +219,6 @@ export default function Boost() {
 
   const [showCalc, setShowCalc] = useState(false)
 
-  const a = Number(formatNumber(veCrona?.toFixed(18)))
-  const b = veCrona
-
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
       <Head>

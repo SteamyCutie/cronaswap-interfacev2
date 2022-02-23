@@ -170,7 +170,7 @@ export default function AutoPoolCardDetails() {
   }
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4 p-4 rounded-b-lg rounded-tr-lg sm:grid-cols-2 bg-dark-800">
+    <div className="grid w-full grid-cols-1 gap-4 p-4 rounded-b-lg rounded-tr-lg sm:grid-cols-3 bg-dark-800">
       <div className="col-span-2 text-center md:col-span-1">
         {account && (
           <div className="flex flex-row justify-between">
@@ -265,6 +265,27 @@ export default function AutoPoolCardDetails() {
         >
           {i18n._(t`Unstake`)}
         </Button>
+      </div>
+      <div className="col-span-2 md:col-span-1">
+        <div className="flex justify-between">
+          <div className="mb-2 text-xs md:text-base text-secondary">CRONA Earned</div>
+        </div>
+        <div className="w-full p-4 text-base rounded-lg md:gap-4 bg-dark-700">
+          <div className="flex justify-between">
+            <div className="mb-2 text-xs md:text-base">Recent CRONA Profit</div>
+            <div>{results.current[1]}</div>
+          </div>
+          <div className="flex justify-between">
+            <div className="mb-2 text-xs md:text-base">0.1% unstaking fee until</div>
+            <div>
+              {d}d: {h}h: {m}m
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="text-xs md:text-base">Perfomance fee</div>
+            <div>2.99%</div>
+          </div>
+        </div>
       </div>
     </div>
   )

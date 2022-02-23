@@ -273,23 +273,6 @@ export default function ManualPoolCardDetails() {
           {i18n._(t`Unstake`)}
         </Button>
       </div>
-      {/* <div className="col-span-2 md:col-span-1">
-          <div className="flex justify-between">
-            <div className="mb-2 text-xs md:text-base text-secondary">{earningToken?.symbol} Earned</div>
-            {endInBlock > 0 ? (
-              <a
-                className="flex items-center mb-2 text-xs md:text-base text-blue"
-                href={chainId && getExplorerLink(chainId, bonusEndBlock, 'block') + '/countdown'}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Ends in: {formatNumber(endInBlock)} blocks
-                <ClockIcon className="h-4" />
-              </a>
-            ) : (
-              <></>
-            )}
-          </div> */}
       <div className="col-span-2 md:col-span-1">
         <div className="flex justify-between">
           <div className="mb-2 text-xs md:text-base text-secondary">CRONA Earned</div>
@@ -299,7 +282,7 @@ export default function ManualPoolCardDetails() {
             <div className="flex flex-col">
               <div className="text-xl font-bold"> {formatNumber(harvestAmount.current?.toFixed(18))}</div>
               <div className="text-sm">
-                ~{(Number(harvestAmount.current?.toFixed(18)) * Number(cronaPrice?.toFixed(18))).toFixed(10)}
+                ~${(Number(harvestAmount.current?.toFixed(18)) * Number(cronaPrice?.toFixed(18))).toFixed(10)}
               </div>
             </div>
             <div className="mb-3">

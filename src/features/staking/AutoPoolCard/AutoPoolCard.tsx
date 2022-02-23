@@ -106,7 +106,7 @@ export default function AutoPoolCard() {
 
               {/* APR */}
               <div className="flex flex-col justify-center w-3/12 space-y-1 lg:w-2/12">
-                <div className="text-xs md:text-[14px] text-secondary">APR</div>
+                <div className="text-xs md:text-[14px] text-secondary">APY</div>
                 <div className="flex items-center" onClick={() => setShowCalc(true)}>
                   <div className="text-xs font-bold md:text-base">{formatPercent(autoAPY)} </div>
                   <CalculatorIcon className="w-5 h-5" />
