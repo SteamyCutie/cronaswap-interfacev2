@@ -6,6 +6,7 @@ import { useBlockNumber } from 'app/state/application/hooks'
 import { useSingleCallResult, useSingleContractMultipleMethods } from 'app/state/multicall/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import SMART_CHEF_ABI from 'app/constants/abis/smartChef.json'
+import { parseUnits } from '@ethersproject/units'
 
 export function useUserInfo(pool, token) {
   const { account } = useActiveWeb3React()
@@ -61,11 +62,11 @@ export function usePoolsInfo(pool) {
   ])?.result
   const stakingTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [
     pool.stakingToken.id,
-    String(1e18),
+    parseUnits('1', pool.stakingToken.decimals),
   ])?.result
   const earningTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [
     pool.earningToken.id,
-    String(1e18),
+    parseUnits('1', pool.earningToken.decimals),
   ])?.result
 
   // block info
@@ -81,10 +82,11 @@ export function usePoolsInfo(pool) {
 
   if (results && Array.isArray(results) && results.length === callsData.length) {
     const [{ result: startBlock }, { result: bonusEndBlock }] = results
+
     const aprVaule = getPoolApr(
-      Number(stakingTokenPrice?.valueInUSD?.toFixed(pool.earningToken?.decimals)),
-      Number(earningTokenPrice?.valueInUSD?.toFixed(pool.earningToken?.decimals)),
-      Number(totalStaked?.[0]?.toFixed(pool.earningToken?.decimals)),
+      Number(stakingTokenPrice?.valueInUSD?.toFixed(18)), //FIXED 18 decimal
+      Number(earningTokenPrice?.valueInUSD?.toFixed(18)), //FIXED 18 decimal
+      Number(totalStaked?.[0]?.toFixed(18)), //FIXED 18 decimal
       Number(pool.tokenPerBlock)
     )
 

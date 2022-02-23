@@ -248,8 +248,10 @@ const IncentivePoolItemDetail = ({
                   </div>
                   <div className="text-sm">
                     ~
-                    {Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) *
-                      earningTokenPrice?.toFixed(earningToken?.decimals)}
+                    {formatNumber(
+                      Number(pendingReward?.toFixed(earningToken?.decimals)) * Number(earningTokenPrice?.toFixed(18)),
+                      true
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle lg:w-1/3 gap-y-1">
