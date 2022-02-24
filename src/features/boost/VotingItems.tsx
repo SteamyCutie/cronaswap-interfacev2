@@ -1,5 +1,7 @@
 import { CurrencyLogoArray } from '../../components/CurrencyLogo'
 import Checkbox from 'app/components/Checkbox'
+import Input from 'app/components/Input'
+import { useState } from 'react'
 
 export const SelectItem = ({ name }) => {
   return (
@@ -10,15 +12,25 @@ export const SelectItem = ({ name }) => {
   )
 }
 
-export const VoteDistributionItem = ({ token0, token1, percentage }) => {
+export const VoteInputItem = ({ token0, token1, percentage }) => {
+  const [voteValue, setVoteValue] = useState('')
+  const handleChange = (event) => {
+    setVoteValue(event.target.value)
+  }
+
   return (
-    <div className="flex h-12">
-      <div>
-        {token0 && token1 && (
-          <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 40 : 28} />
-        )}
+    <div className="flex items-center h-12 p-1 border-2 rounded-md w-36 lg:w-44 border-dark-650">
+      <div className="flex items-center gap-2">
+        {token0 && token1 && <CurrencyLogoArray currencies={[token0, token1]} dense size={20} />}
+        <div>%</div>
       </div>
-      <div>% {percentage > 0 ? <div>percentage</div> : token0.name + '-' + token1.name + 'LP'}</div>
+      <input
+        type={'string'}
+        value={voteValue}
+        placeholder={`${token0.symbol}-${token1.symbol} LP`}
+        className="w-full px-1 text-sm bg-transparent "
+        onChange={handleChange}
+      />
     </div>
   )
 }

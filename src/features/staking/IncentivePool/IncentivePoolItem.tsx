@@ -87,7 +87,7 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
                   isOpen={showCalc}
                   onDismiss={() => setShowCalc(false)}
                   showBoost={false}
-                  showCompound={true}
+                  showCompound={false}
                   name={'CRONA'}
                   apr={apr}
                 />

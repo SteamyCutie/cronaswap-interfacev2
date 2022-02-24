@@ -108,7 +108,7 @@ export default function ManualPoolCard() {
                   isOpen={showCalc}
                   onDismiss={() => setShowCalc(false)}
                   showBoost={false}
-                  showCompound={true}
+                  showCompound={false}
                   name={'CRONA'}
                   apr={manualAPY}
                   Lpbalance={myBalance}
