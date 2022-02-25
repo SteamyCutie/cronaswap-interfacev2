@@ -54,8 +54,19 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'TCRO',
       decimals: 18,
     },
-    rpcUrls: ['https://cronos-testnet-3.crypto.org:8545'],
-    blockExplorerUrls: ['https://cronos.crypto.org/explorer/testnet3'],
+    rpcUrls: ['https://evm-t3.cronos.org'],
+    blockExplorerUrls: ['https://cronos.org/explorer/testnet3'],
+  },
+  [ChainId.BSC_TESTNET]: {
+    chainId: '0x61',
+    chainName: 'BSC Testnet',
+    nativeCurrency: {
+      name: 'tBNB',
+      symbol: 'TBNB',
+      decimals: 18,
+    },
+    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545'],
+    blockExplorerUrls: ['https://testnet.bscscan.com'],
   },
 }
 

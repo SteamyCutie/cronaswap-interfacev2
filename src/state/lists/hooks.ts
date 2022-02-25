@@ -81,6 +81,7 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     // 40: { ...map1[40], ...map2[40] }, // telos
 
     25: { ...map1[25], ...map2[25] }, // cronos mainnet
+    97: { ...map1[97], ...map2[97] }, // bsc mainnet
     338: { ...map1[338], ...map2[338] }, // cronos testnet
   }
 }

@@ -5,10 +5,10 @@ import { NetworkConnector } from '../entities/connectors/NetworkConnector'
 
 export const RPC = {
   // https://evm-cronos.crypto.org
-  // https://rpcv3.cronaswap.org
   // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
   [ChainId.CRONOS]: 'https://rpc.cronaswap.org',
   [ChainId.CRONOS_TESTNET]: 'https://evm-t3.cronos.org',
+  [ChainId.BSC_TESTNET]: 'https://data-seed-prebsc-1-s1.binance.org:8545',
 }
 
 export const network = new NetworkConnector({
@@ -22,6 +22,7 @@ export const injected = new InjectedConnector({
   supportedChainIds: [
     // 1, // mainnet
     // 3, // ropsten
+    97, // bsc testnet
     25, // cronos
     338, // cronos testnet
   ],

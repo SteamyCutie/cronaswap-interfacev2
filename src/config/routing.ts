@@ -10,6 +10,8 @@ type ChainTokenList = {
 // TODO: SDK should have two maps, WETH map and WNATIVE map.
 const WRAPPED_NATIVE_ONLY: ChainTokenList = {
   [ChainId.ETHEREUM]: [WNATIVE[ChainId.ETHEREUM]],
+  [ChainId.BSC_TESTNET]: [WNATIVE[ChainId.BSC_TESTNET]],
+
   [ChainId.CRONOS]: [WNATIVE[ChainId.CRONOS]],
   [ChainId.CRONOS_TESTNET]: [WNATIVE[ChainId.CRONOS_TESTNET]],
 }

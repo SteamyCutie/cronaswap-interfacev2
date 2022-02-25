@@ -37,8 +37,12 @@ const chains: ChainObject = {
     builder: explorers.cronos,
   },
   [ChainId.CRONOS_TESTNET]: {
-    link: 'https://cronos.crypto.org/explorer/testnet3',
+    link: 'https://cronos.org/explorer/testnet3',
     builder: explorers.cronos,
+  },
+  [ChainId.BSC_TESTNET]: {
+    link: 'https://testnet.bscscan.com',
+    builder: explorers.etherscan,
   },
 }
 

@@ -76,7 +76,7 @@ export default function FarmsV2(): JSX.Element {
   const [sortOption, setSortOption] = useState('Hot')
 
   return (
-    <Container id="farm-page" className="grid h-full px-2 py-4 max-w-6xl md:py-8 lg:py-12 gap-9" maxWidth="7xl">
+    <Container id="farm-page" className="grid h-full px-2 py-4 max-w-7xl md:py-8 lg:py-12 gap-9" maxWidth="7xl">
       <Head>
         <title>Farm V2 | CronaSwap</title>
         <meta key="description" name="description" content="Farm CronaSwap" />
