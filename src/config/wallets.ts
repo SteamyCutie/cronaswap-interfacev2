@@ -8,7 +8,7 @@ export const RPC = {
   // https://rpcv3.cronaswap.org
   // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
   [ChainId.CRONOS]: 'https://rpc.cronaswap.org',
-  [ChainId.CRONOS_TESTNET]: 'https://devrpc.cronaswap.org',
+  [ChainId.CRONOS_TESTNET]: 'https://evm-t3.cronos.org',
 }
 
 export const network = new NetworkConnector({
