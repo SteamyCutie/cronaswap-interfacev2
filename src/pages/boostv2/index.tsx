@@ -25,7 +25,7 @@ import { useCronaContract } from 'app/hooks/useContract'
 import { getAPY } from 'app/features/staking/useStaking'
 import { CalculatorIcon } from '@heroicons/react/solid'
 import ROICalculatorModal from 'app/components/ROICalculatorModal'
-import VotingItems, { SelectItem, VoteDistributionItem } from 'app/features/boost/VotingItems'
+import VotingItems, { SelectItem, VoteInputItem } from 'app/features/boost/VotingItems'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -48,7 +48,7 @@ const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-blue`
 const inactiveTabStyle = `${tabStyle} bg-dark-700 text-secondary`
 
 const buttonStyle =
-  'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
+  'flex justify-center items-center w-full h-12 rounded font-bold md:font-medium md:text-lg text-sm focus:outline-none focus:ring bg-blue'
 
 export default function Boost() {
   const { i18n } = useLingui()
@@ -574,10 +574,10 @@ export default function Boost() {
                 <h1 className="text-2xl font-bold">{i18n._(t`Vote to boost your farm`)}</h1>
                 <QuestionHelper />
               </div>
-              <div className="flex p-8 bg-dark-900">
-                <div className="w-1/4">
+              <div className="p-8 space-y-2 md:space-y-0 md:flex bg-dark-900">
+                <div className="md:w-1/4">
                   <div className="mb-4 font-Poppins">{i18n._(t`Select boosted farms`)}</div>
-                  <div className="h-64 p-6 overflow-y-auto border-4 rounded-xl border-dark-650">
+                  <div className="p-6 overflow-y-auto border-4 h-80 rounded-xl border-dark-650">
                     <SelectItem name="CRONA-CRO LP" />
                     <SelectItem name="CRONA-CRO LP" />
                     <SelectItem name="CRONA-CRO LP" />
@@ -592,16 +592,30 @@ export default function Boost() {
                     <SelectItem name="CRONA-CRO LP" />
                   </div>
                 </div>
-                <div className="w-2/4 px-4">
-                  <div className="flex items-center justify-between">
+                <div className="md:px-4 md:w-2/4">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="text-base font-Poppins">{i18n._(t`Vote percentage`)}</div>
                     <SelectItem name="Distribution Helper" />
                   </div>
-                  <div className="h-52 p-6 overflow-y-auto border-4 rounded-xl border-dark-650">
-                    {/* <VoteDistributionItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} /> */}
+                  <div className="grid grid-cols-2 px-2 py-2 overflow-y-auto border-4 h-60 gap-y-1 lg:px-4 rounded-xl border-dark-650">
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                  </div>
+                  <div>
+                    <div className="mt-1 mb-1">New vote weighting: 0%</div>
+                    <button className={buttonStyle}>Vote (weights must total 100%)</button>
                   </div>
                 </div>
-                <div className="w-1/4"></div>
+                <div className="w-1/4">
+                  <div className="w-40 h-40 mx-auto mt-20 bg-gray-100 rounded-full"></div>
+                  <div className="items-end mx-auto mt-16 text-center">Your current proposed vote weighting</div>
+                </div>
               </div>
             </div>
           </div>

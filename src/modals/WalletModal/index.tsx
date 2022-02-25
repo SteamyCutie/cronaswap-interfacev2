@@ -98,7 +98,7 @@ export default function WalletModal({
     setWalletView(WALLET_VIEWS.PENDING)
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    if (conn instanceof WalletConnectConnector && conn.walletConnectProvider ?.wc ?.uri) {
+    if (conn instanceof WalletConnectConnector && conn.walletConnectProvider?.wc?.uri) {
       conn.walletConnectProvider = undefined
     }
 
@@ -114,7 +114,7 @@ export default function WalletModal({
 
   // close wallet modal if fortmatic modal is active
   useEffect(() => {
-    if (connector ?.constructor ?.name === 'FormaticConnector') {
+    if (connector?.constructor?.name === 'FormaticConnector') {
       connector.on(OVERLAY_READY, () => {
         toggleWalletModal()
       })
@@ -220,8 +220,8 @@ export default function WalletModal({
             {error instanceof UnsupportedChainIdError ? (
               <h5>{i18n._(t`Please connect to the appropriate Cronos network.`)}</h5>
             ) : (
-                i18n._(t`Error connecting. Try refreshing the page.`)
-              )}
+              i18n._(t`Error connecting. Try refreshing the page.`)
+            )}
             <div style={{ marginTop: '1rem' }} />
             <ButtonError error={true} size="sm" onClick={deactivate}>
               {i18n._(t`Disconnect`)}
@@ -253,11 +253,11 @@ export default function WalletModal({
               tryActivation={tryActivation}
             />
           ) : (
-              <div className="flex flex-col space-y-5 overflow-y-auto">{getOptions()}</div>
-            )}
+            <div className="flex flex-col space-y-5 overflow-y-auto">{getOptions()}</div>
+          )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <div className="flex flex-col text-center">
-              <div className="text-secondary">{i18n._(t`New to Ethereum?`)}</div>
+              <div className="text-secondary">{i18n._(t`New to CRONOS?`)}</div>
               <ExternalLink href="https://ethereum.org/wallets/" color="blue">
                 {i18n._(t`Learn more about wallets`)}
               </ExternalLink>

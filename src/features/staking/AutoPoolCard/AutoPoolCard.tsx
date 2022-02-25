@@ -63,6 +63,7 @@ export default function AutoPoolCard() {
 
   const { manualAPY, autoAPY } = getAPY()
   const [showCalc, setShowCalc] = useState(false)
+  const myBalance = Number(cronaBalance?.toSignificant(8)) + xBalanceAuto
 
   return (
     <Disclosure>
@@ -84,7 +85,7 @@ export default function AutoPoolCard() {
                 />
                 <div className="flex flex-col justify-center">
                   <div className="text-xs font-bold md:text-2xl">Auto CRONA</div>
-                  <div className="hidden md:block text-xs text-gray">{i18n._(t`Automatic restaking`)}</div>
+                  <div className="hidden text-xs md:block text-gray">{i18n._(t`Automatic restaking`)}</div>
                 </div>
               </div>
 
@@ -118,8 +119,8 @@ export default function AutoPoolCard() {
                   showBoost={false}
                   showCompound={false}
                   name={'CRONA'}
-                  apr={autoAPY}
-                  Lpbalance={xBalanceAuto}
+                  apr={manualAPY}
+                  Lpbalance={myBalance}
                 />
               </div>
 
