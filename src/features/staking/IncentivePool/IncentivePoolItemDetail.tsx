@@ -112,7 +112,9 @@ const IncentivePoolItemDetail = ({
                     if (!balance?.equalTo(ZERO)) {
                       setDepositValue(
                         pool.pid === 0
-                          ? userMaxStake?.toFixed(stakingToken?.decimals)
+                          ? Number(balance?.toFixed(stakingToken?.decimals) ?? 0) < 30000
+                            ? balance?.toFixed(stakingToken?.decimals)
+                            : userMaxStake?.toFixed(stakingToken?.decimals)
                           : balance?.toFixed(stakingToken?.decimals)
                       )
                     }
