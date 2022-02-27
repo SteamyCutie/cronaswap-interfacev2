@@ -64,7 +64,7 @@ const Footer = () => {
       },
       {
         name: 'Discord',
-        href: 'https://discord.com/invite/YXxega5vJG',
+        href: 'https://discord.gg/QBEmcuamwp',
         icon: (props) => (
           <svg
             viewBox="0 0 256 199"
