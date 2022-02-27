@@ -37,7 +37,7 @@ const Footer = () => {
               <a href="https://cronaswap.medium.com/" target="_blank" rel="noreferrer">
                 <MediumIcon width={16} className="text-low-emphesis" />
               </a>
-              <a href="https://discord.com/invite/YXxega5vJG" target="_blank" rel="noreferrer">
+              <a href="https://discord.gg/QBEmcuamwp" target="_blank" rel="noreferrer">
                 <DiscordIcon width={16} className="text-low-emphesis" />
               </a>
             </div>
