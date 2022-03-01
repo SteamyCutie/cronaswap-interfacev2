@@ -39,20 +39,6 @@ type AnyswapTokenInfo = {
   name: string
   symbol: string
   decimals: number
-  // Description: string
-  // BaseFeePercent: number
-  // BigValueThreshold: number
-  // DepositAddress: string
-  // ContractAddress: string
-  // DcrmAddress: string
-  // DisableSwap: boolean
-  // IsDelegateContract: boolean
-  // MaximumSwap: number
-  // MaximumSwapFee: number
-  // MinimumSwap: number
-  // MinimumSwapFee: number
-  // PlusGasPricePercentage: number
-  // SwapFeeRate: number
 }
 
 type AnyswapDestTokenInfo = {
@@ -140,76 +126,6 @@ export default function Bridge() {
       fetch(url)
         .then((result) => result.json())
         .then((data) => {
-          // let result: AnyswapTokensMap = {}
-          // Object.keys(data || {}).map((key) => {
-          //   const info: AnyswapResultPairInfo = data[key]
-
-          //   let sourceContractAddress = info.SrcToken.ContractAddress
-
-          //   if (!sourceContractAddress) {
-          //     sourceContractAddress = WNATIVE[parseInt(info.srcChainID)].address
-          //   }
-
-          //   sourceContractAddress = sourceContractAddress.toLowerCase()
-
-          //   let existingSource = result[parseInt(info.srcChainID)]
-          //   if (!existingSource) {
-          //     result[parseInt(info.srcChainID)] = {
-          //       [sourceContractAddress]: {
-          //         destChainID: info.destChainID,
-          //         id: info.PairID,
-          //         logoUrl: info.logoUrl,
-          //         name: info.name,
-          //         symbol: info.symbol,
-          //         token: info.DestToken,
-          //         other: info.SrcToken,
-          //       },
-          //     }
-          //   } else {
-          //     result[parseInt(info.srcChainID)][sourceContractAddress] = {
-          //       destChainID: info.destChainID,
-          //       id: info.PairID,
-          //       logoUrl: info.logoUrl,
-          //       name: info.name,
-          //       symbol: info.symbol,
-          //       token: info.DestToken,
-          //       other: info.SrcToken,
-          //     }
-          //   }
-
-          //   let destContractAddress = info.DestToken.ContractAddress
-          //   if (!destContractAddress) {
-          //     destContractAddress = WNATIVE[parseInt(info.destChainID)].address
-          //   }
-
-          //   destContractAddress = destContractAddress.toLowerCase()
-
-          //   let existingDestination = result[parseInt(info.destChainID)]
-          //   if (!existingDestination) {
-          //     result[parseInt(info.destChainID)] = {
-          //       [destContractAddress]: {
-          //         destChainID: info.srcChainID,
-          //         id: info.PairID,
-          //         logoUrl: info.logoUrl,
-          //         name: info.name,
-          //         symbol: info.symbol,
-          //         token: info.SrcToken,
-          //         other: info.DestToken,
-          //       },
-          //     }
-          //   } else {
-          //     result[parseInt(info.destChainID)][destContractAddress] = {
-          //       destChainID: info.srcChainID,
-          //       id: info.PairID,
-          //       logoUrl: info.logoUrl,
-          //       name: info.name,
-          //       symbol: info.symbol,
-          //       token: info.SrcToken,
-          //       other: info.DestToken,
-          //     }
-          //   }
-          // })
-
           return data
         })
   )
@@ -232,7 +148,6 @@ export default function Bridge() {
         }
         return new Token(chainFrom.id, getAddress(r), info.anyToken.decimals, info.anyToken.symbol, info.anyToken.name)
       })
-    console.log('+++++', tokens)
 
     setTokenList(tokens)
     setCurrency0(null)
@@ -618,7 +533,7 @@ export default function Bridge() {
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Fee: {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].SwapFeeRatePerMillion * 100)} %
+                    Fee: {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].SwapFeeRatePerMillion)} %
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
