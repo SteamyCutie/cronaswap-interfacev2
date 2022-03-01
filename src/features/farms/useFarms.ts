@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
-import { FARMS } from '../../constants/farms'
+import { FARMS } from '../../constants/farmsv1'
 import { useDashboardV1Contract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../services/web3'
 

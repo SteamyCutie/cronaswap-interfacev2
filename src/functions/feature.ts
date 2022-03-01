@@ -48,6 +48,19 @@ const features = {
     Feature.BOOST,
     Feature.GAMEFI,
   ],
+
+  [ChainId.BSC_TESTNET]: [
+    Feature.AMM,
+    Feature.FARMV1,
+    Feature.FARMV2,
+    // Feature.ZAP,
+    // // Feature.LENDING,
+    // Feature.IFO,
+    // Feature.MISO,
+    Feature.STAKING,
+    Feature.BOOST,
+    // Feature.GAMEFI,
+  ],
 }
 
 export function featureEnabled(feature: Feature, chainId: ChainId): boolean {
