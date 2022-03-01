@@ -17,6 +17,7 @@ export const FARMSV2: AddressMap = {
       name: 'CRONA-CRO',
       token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+      isVote: true,
     },
 
     '0x482E0eEb877091cfca439D131321bDE23ddf9bB5': {
@@ -35,6 +36,7 @@ export const FARMSV2: AddressMap = {
       name: 'CRONA-USDT',
       token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token1: { id: '0x66e428c3f67a68878562e79a0234c1f83c208770', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+      isVote: true,
     },
 
     '0x0625A68D25d304aed698c806267a4e369e8Eb12a': {
@@ -44,6 +46,7 @@ export const FARMSV2: AddressMap = {
       name: 'CRO-USDC',
       token0: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
       token1: { id: '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+      isVote: true,
     },
 
     '0x19Dd1683e8c5F6Cc338C1438f2D25EBb4e0b0b08': {
@@ -53,6 +56,7 @@ export const FARMSV2: AddressMap = {
       name: 'USDT-CRO',
       token0: { id: '0x66e428c3f67a68878562e79a0234c1f83c208770', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+      isVote: true,
     },
 
     '0x8232aA9C3EFf79cd845FcDa109B461849Bf1Be83': {
