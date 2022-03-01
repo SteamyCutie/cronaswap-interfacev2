@@ -70,13 +70,13 @@ export default function DualChainCurrencyInputPanel({
 
     let contractAddr
     if (currency.isNative) {
-      const anyInfo = chainList[chainFrom.id][currency.wrapped.address.toLowerCase()]
-      if (!anyInfo || !anyInfo.token) return
-      contractAddr = chainList[chainFrom.id][currency.wrapped.address.toLowerCase()].token.ContractAddress
+      // const anyInfo = chainList[chainFrom.id][currency.wrapped.address.toLowerCase()]
+      // if (!anyInfo || !anyInfo.token) return
+      // contractAddr = chainList[chainFrom.id][currency.wrapped.address.toLowerCase()].token.ContractAddress
     } else if (currency.isToken) {
       const anyInfo = chainList[chainFrom.id][currency.address.toLowerCase()]
-      if (!anyInfo || !anyInfo.token) return
-      contractAddr = chainList[chainFrom.id][currency.address.toLowerCase()].token.ContractAddress
+      if (!anyInfo || !anyInfo.anyToken) return
+      contractAddr = chainList[chainFrom.id][currency.address.toLowerCase()].anyToken.address
       if (!contractAddr) {
         if (chainTo.id == ChainId.BSC && currency.symbol == 'BNB') {
           setToCurrency(Binance.onChain(chainTo.id))
@@ -85,10 +85,11 @@ export default function DualChainCurrencyInputPanel({
         }
       }
     }
+
     if (!contractAddr) return
     const info = chainList[chainTo.id][contractAddr.toLowerCase()]
-    if (!info || !info.token) return
-    setToCurrency(new Token(chainTo.id, contractAddr, info.token.Decimals, info.token.Symbol, info.token.Name))
+    if (!info || !info.anyToken) return
+    setToCurrency(new Token(chainTo.id, contractAddr, info.anyToken.decimals, info.anyToken.symbol, info.anyToken.name))
   }, [chainFrom, chainList, chainTo, currency])
 
   const handleDismissSearch = useCallback(() => {
@@ -152,7 +153,7 @@ export default function DualChainCurrencyInputPanel({
                     onMax(selectedCurrencyBalance?.toSignificant(4))
                   }}
                   size="xs"
-                  className="hidden sm:block text-xxs font-medium bg-transparent border rounded-full hover:bg-primary border-low-emphesis text-secondary whitespace-nowrap"
+                  className="hidden font-medium bg-transparent border rounded-full sm:block text-xxs hover:bg-primary border-low-emphesis text-secondary whitespace-nowrap"
                 >
                   {i18n._(t`Max`)}
                 </Button>
@@ -170,7 +171,7 @@ export default function DualChainCurrencyInputPanel({
                     onClick={() => {
                       onMax(selectedCurrencyBalance?.toSignificant(4))
                     }}
-                    className="text-xxs font-medium text-right cursor-pointer text-low-emphesis"
+                    className="font-medium text-right cursor-pointer text-xxs text-low-emphesis"
                   >
                     <>
                       {i18n._(t`Balance:`)} {formatNumberScale(selectedCurrencyBalance.toSignificant(4))}{' '}

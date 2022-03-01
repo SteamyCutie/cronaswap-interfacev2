@@ -35,45 +35,55 @@ import { useAnyswapTokenContract, useTokenContract } from '../../hooks/useContra
 import { bridgeInjected } from 'app/config/wallets'
 
 type AnyswapTokenInfo = {
-  ID: string
-  Name: string
-  Symbol: string
-  Decimals: number
-  Description: string
-  BaseFeePercent: number
-  BigValueThreshold: number
-  DepositAddress: string
-  ContractAddress: string
-  DcrmAddress: string
-  DisableSwap: boolean
-  IsDelegateContract: boolean
-  MaximumSwap: number
-  MaximumSwapFee: number
-  MinimumSwap: number
-  MinimumSwapFee: number
-  PlusGasPricePercentage: number
-  SwapFeeRate: number
+  address: string
+  name: string
+  symbol: string
+  decimals: number
+  // Description: string
+  // BaseFeePercent: number
+  // BigValueThreshold: number
+  // DepositAddress: string
+  // ContractAddress: string
+  // DcrmAddress: string
+  // DisableSwap: boolean
+  // IsDelegateContract: boolean
+  // MaximumSwap: number
+  // MaximumSwapFee: number
+  // MinimumSwap: number
+  // MinimumSwapFee: number
+  // PlusGasPricePercentage: number
+  // SwapFeeRate: number
 }
 
-type AnyswapResultPairInfo = {
-  DestToken: AnyswapTokenInfo
-  PairID: string
-  SrcToken: AnyswapTokenInfo
-  destChainID: string
-  logoUrl: string
-  name: string
-  srcChainID: string
-  symbol: string
+type AnyswapDestTokenInfo = {
+  address: string
+  underlying: AnyswapTokenInfo
+  swapfeeon: number
+  MaximumSwap: string
+  MinimumSwap: string
+  BigValueThreshold: string
+  SwapFeeRatePerMillion: number
+  MaximumSwapFee: string
+  MinimumSwapFee: string
+  anyToken: AnyswapTokenInfo
+}
+
+type AnyswapDestChainsInfo = {
+  [chainId: number]: AnyswapDestTokenInfo
 }
 
 type AvailableChainsInfo = {
-  id: string
-  token: AnyswapTokenInfo
-  other: AnyswapTokenInfo
+  address: string
+  anyToken: AnyswapTokenInfo
+  underlying: AnyswapTokenInfo
+  destChains: AnyswapDestChainsInfo
+  price: number
   logoUrl: string
-  name: string
-  symbol: string
-  destChainID: string
+  chainId: string
+  tokenId: string
+  version: string
+  router: string
+  routerABI: string
 }
 
 export type AnyswapTokensMap = { [chainId: number]: { [contract: string]: AvailableChainsInfo } }
@@ -112,7 +122,7 @@ export default function Bridge() {
   const [tokenToBridge, setTokenToBridge] = useState<AvailableChainsInfo | null>(null)
   const currencyContract = useTokenContract(currency0?.isToken && currency0?.address, true)
   const anyswapCurrencyContract = useAnyswapTokenContract(
-    currency0 && currency0.chainId == ChainId.CRONOS && tokenToBridge.other.ContractAddress,
+    currency0 && currency0.chainId == ChainId.CRONOS && tokenToBridge.destChains[chainTo.id.toString()].address,
     true
   )
   const [pendingTx, setPendingTx] = useState(false)
@@ -130,84 +140,83 @@ export default function Bridge() {
       fetch(url)
         .then((result) => result.json())
         .then((data) => {
-          let result: AnyswapTokensMap = {}
-          console.log(data)
-          Object.keys(data || {}).map((key) => {
-            const info: AnyswapResultPairInfo = data[key]
+          // let result: AnyswapTokensMap = {}
+          // Object.keys(data || {}).map((key) => {
+          //   const info: AnyswapResultPairInfo = data[key]
 
-            let sourceContractAddress = info.SrcToken.ContractAddress
+          //   let sourceContractAddress = info.SrcToken.ContractAddress
 
-            if (!sourceContractAddress) {
-              sourceContractAddress = WNATIVE[parseInt(info.srcChainID)].address
-            }
+          //   if (!sourceContractAddress) {
+          //     sourceContractAddress = WNATIVE[parseInt(info.srcChainID)].address
+          //   }
 
-            sourceContractAddress = sourceContractAddress.toLowerCase()
+          //   sourceContractAddress = sourceContractAddress.toLowerCase()
 
-            let existingSource = result[parseInt(info.srcChainID)]
-            if (!existingSource) {
-              result[parseInt(info.srcChainID)] = {
-                [sourceContractAddress]: {
-                  destChainID: info.destChainID,
-                  id: info.PairID,
-                  logoUrl: info.logoUrl,
-                  name: info.name,
-                  symbol: info.symbol,
-                  token: info.DestToken,
-                  other: info.SrcToken,
-                },
-              }
-            } else {
-              result[parseInt(info.srcChainID)][sourceContractAddress] = {
-                destChainID: info.destChainID,
-                id: info.PairID,
-                logoUrl: info.logoUrl,
-                name: info.name,
-                symbol: info.symbol,
-                token: info.DestToken,
-                other: info.SrcToken,
-              }
-            }
+          //   let existingSource = result[parseInt(info.srcChainID)]
+          //   if (!existingSource) {
+          //     result[parseInt(info.srcChainID)] = {
+          //       [sourceContractAddress]: {
+          //         destChainID: info.destChainID,
+          //         id: info.PairID,
+          //         logoUrl: info.logoUrl,
+          //         name: info.name,
+          //         symbol: info.symbol,
+          //         token: info.DestToken,
+          //         other: info.SrcToken,
+          //       },
+          //     }
+          //   } else {
+          //     result[parseInt(info.srcChainID)][sourceContractAddress] = {
+          //       destChainID: info.destChainID,
+          //       id: info.PairID,
+          //       logoUrl: info.logoUrl,
+          //       name: info.name,
+          //       symbol: info.symbol,
+          //       token: info.DestToken,
+          //       other: info.SrcToken,
+          //     }
+          //   }
 
-            let destContractAddress = info.DestToken.ContractAddress
-            if (!destContractAddress) {
-              destContractAddress = WNATIVE[parseInt(info.destChainID)].address
-            }
+          //   let destContractAddress = info.DestToken.ContractAddress
+          //   if (!destContractAddress) {
+          //     destContractAddress = WNATIVE[parseInt(info.destChainID)].address
+          //   }
 
-            destContractAddress = destContractAddress.toLowerCase()
+          //   destContractAddress = destContractAddress.toLowerCase()
 
-            let existingDestination = result[parseInt(info.destChainID)]
-            if (!existingDestination) {
-              result[parseInt(info.destChainID)] = {
-                [destContractAddress]: {
-                  destChainID: info.srcChainID,
-                  id: info.PairID,
-                  logoUrl: info.logoUrl,
-                  name: info.name,
-                  symbol: info.symbol,
-                  token: info.SrcToken,
-                  other: info.DestToken,
-                },
-              }
-            } else {
-              result[parseInt(info.destChainID)][destContractAddress] = {
-                destChainID: info.srcChainID,
-                id: info.PairID,
-                logoUrl: info.logoUrl,
-                name: info.name,
-                symbol: info.symbol,
-                token: info.SrcToken,
-                other: info.DestToken,
-              }
-            }
-          })
+          //   let existingDestination = result[parseInt(info.destChainID)]
+          //   if (!existingDestination) {
+          //     result[parseInt(info.destChainID)] = {
+          //       [destContractAddress]: {
+          //         destChainID: info.srcChainID,
+          //         id: info.PairID,
+          //         logoUrl: info.logoUrl,
+          //         name: info.name,
+          //         symbol: info.symbol,
+          //         token: info.SrcToken,
+          //         other: info.DestToken,
+          //       },
+          //     }
+          //   } else {
+          //     result[parseInt(info.destChainID)][destContractAddress] = {
+          //       destChainID: info.srcChainID,
+          //       id: info.PairID,
+          //       logoUrl: info.logoUrl,
+          //       name: info.name,
+          //       symbol: info.symbol,
+          //       token: info.SrcToken,
+          //       other: info.DestToken,
+          //     }
+          //   }
+          // })
 
-          return result
+          return data
         })
   )
 
   useEffect(() => {
     let tokens: Currency[] = Object.keys((anyswapInfo && anyswapInfo[chainFrom.id]) || {})
-      .filter((r) => anyswapInfo[chainFrom.id][r].destChainID == chainTo.id.toString())
+      .filter((r) => Object.keys(anyswapInfo[chainFrom.id][r].destChains).includes(chainTo.id.toString()))
       .map((r) => {
         const info: AvailableChainsInfo = anyswapInfo[chainFrom.id][r]
         if (r.toLowerCase() == WNATIVE[chainFrom.id].address.toLowerCase()) {
@@ -221,8 +230,9 @@ export default function Bridge() {
             return Ether.onChain(chainFrom.id)
           }
         }
-        return new Token(chainFrom.id, getAddress(r), info.token.Decimals, info.token.Symbol, info.name)
+        return new Token(chainFrom.id, getAddress(r), info.anyToken.decimals, info.anyToken.symbol, info.anyToken.name)
       })
+    console.log('+++++', tokens)
 
     setTokenList(tokens)
     setCurrency0(null)
@@ -299,7 +309,7 @@ export default function Bridge() {
   const aboveMin = () => {
     if (currencyAmount && tokenToBridge) {
       const amount = parseFloat(currencyAmount)
-      const minAmount = parseFloat(tokenToBridge?.other?.MinimumSwap.toString())
+      const minAmount = parseFloat(tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwap.toString())
       return amount >= minAmount
     }
     return false
@@ -308,7 +318,7 @@ export default function Bridge() {
   const belowMax = () => {
     if (currencyAmount && tokenToBridge) {
       const amount = parseFloat(currencyAmount)
-      const maxAmount = parseFloat(tokenToBridge?.other?.MaximumSwap.toString())
+      const maxAmount = parseFloat(tokenToBridge?.destChains[chainTo.id.toString()].MaximumSwap.toString())
       return amount <= maxAmount
     }
     return false
@@ -317,11 +327,11 @@ export default function Bridge() {
   const getAmountToReceive = () => {
     if (!tokenToBridge) return 0
 
-    let fee = parseFloat(currencyAmount) * tokenToBridge?.other?.SwapFeeRate
-    if (fee < tokenToBridge?.other?.MinimumSwapFee) {
-      fee = tokenToBridge?.other?.MinimumSwapFee
-    } else if (fee > tokenToBridge?.other?.MaximumSwapFee) {
-      fee = tokenToBridge?.other?.MinimumSwapFee
+    let fee = parseFloat(currencyAmount) * tokenToBridge?.destChains[chainTo.id.toString()].SwapFeeRatePerMillion
+    if (fee < tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwapFee) {
+      fee = tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwapFee
+    } else if (fee > tokenToBridge?.destChains[chainTo.id.toString()].MaximumSwapFee) {
+      fee = tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwapFee
     }
 
     return (parseFloat(currencyAmount) - fee).toFixed(6)
@@ -355,10 +365,10 @@ export default function Bridge() {
       : `Bridge ${currency0?.symbol}`
 
   const bridgeToken = async () => {
-    const token = tokenToBridge.other
-    const depositAddress = currency0.chainId == ChainId.CRONOS ? token.ContractAddress : token.DepositAddress
+    const token = tokenToBridge.destChains[chainTo.id.toString()]
+    const depositAddress = currency0.chainId == ChainId.CRONOS ? token.address : token.address
 
-    const amountToBridge = ethers.utils.parseUnits(currencyAmount, token.Decimals)
+    const amountToBridge = ethers.utils.parseUnits(currencyAmount, token.anyToken.decimals)
     setPendingTx(true)
 
     try {
@@ -374,10 +384,10 @@ export default function Bridge() {
             data,
           })
           addTransaction(tx, {
-            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
+            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.destChains[chainTo.id.toString()].symbol}`,
             destChainId: chainTo.id.toString(),
             srcChaindId: chainFrom.id.toString(),
-            pairId: tokenToBridge.id,
+            // pairId: tokenToBridge.id,
           })
           push('/bridge/history')
         }
@@ -389,10 +399,10 @@ export default function Bridge() {
             value: amountToBridge,
           })
           addTransaction(tx, {
-            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
+            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.destChains[chainTo.id.toString()].symbol}`,
             destChainId: chainTo.id.toString(),
             srcChaindId: chainFrom.id.toString(),
-            pairId: tokenToBridge.id,
+            // pairId: tokenToBridge.id,
           })
           push('/bridge/history')
         } else if (currency0.isToken) {
@@ -405,10 +415,10 @@ export default function Bridge() {
             data,
           })
           addTransaction(tx, {
-            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
+            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.destChains[chainTo.id.toString()].symbol}`,
             destChainId: chainTo.id.toString(),
             srcChaindId: chainFrom.id.toString(),
-            pairId: tokenToBridge.id,
+            // pairId: tokenToBridge.id,
           })
           push('/bridge/history')
         }
@@ -459,7 +469,7 @@ export default function Bridge() {
 
       {/* <SolarbeamLogo /> */}
 
-      <Container className="space-y-6 sm:pt-20 sm:pb-6 max-w-2xl w-full">
+      <Container className="w-full max-w-2xl space-y-6 sm:pt-20 sm:pb-6">
         <DoubleGlowShadow>
           <div className="p-4 space-y-4 rounded bg-dark-900" style={{ zIndex: 1 }}>
             <div className="flex items-center justify-center mb-4 space-x-3">
@@ -507,14 +517,14 @@ export default function Bridge() {
             </div>
 
             <div className="p-4 text-center">
-              <div className="justify-between space-x-3 items-center">
+              <div className="items-center justify-between space-x-3">
                 <Typography component="h3" variant="base">
                   {i18n._(t`Bridge tokens to and from the Cronos Network`)}
                 </Typography>
               </div>
             </div>
 
-            <div className="flex flex-row justify-between items-center text-center">
+            <div className="flex flex-row items-center justify-between text-center">
               <ChainSelect
                 availableChains={availableChains}
                 label="From"
@@ -576,43 +586,46 @@ export default function Bridge() {
 
             {currency0 && (
               <div className={'p-2 sm:p-5 rounded bg-dark-800'}>
-                {tokenToBridge?.other?.MinimumSwapFee > 0 && (
+                {tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwapFee > 0 && (
                   <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                     <div className="text-sm font-medium text-secondary">
-                      Minimum Bridge Fee: {formatNumber(tokenToBridge?.other?.MinimumSwapFee)}{' '}
-                      {tokenToBridge?.other?.Symbol}
+                      Minimum Bridge Fee:{' '}
+                      {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwapFee)}{' '}
+                      {tokenToBridge?.destChains[chainTo.id.toString()].anyToken.symbol}
                     </div>
                   </div>
                 )}
-                {tokenToBridge?.other?.MaximumSwapFee > 0 && (
+                {tokenToBridge?.destChains[chainTo.id.toString()].MaximumSwapFee > 0 && (
                   <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                     <div className="text-sm font-medium text-secondary">
-                      Maximum Bridge Fee: {formatNumber(tokenToBridge?.other?.MaximumSwapFee)}{' '}
-                      {tokenToBridge?.other?.Symbol}
+                      Maximum Bridge Fee:{' '}
+                      {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].MaximumSwapFee)}{' '}
+                      {tokenToBridge?.destChains[chainTo.id.toString()].anyToken.symbol}
                     </div>
                   </div>
                 )}
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Minimum Bridge Amount: {formatNumber(tokenToBridge?.other?.MinimumSwap)}{' '}
-                    {tokenToBridge?.other?.Symbol}
+                    Minimum Bridge Amount: {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].MinimumSwap)}{' '}
+                    {tokenToBridge?.destChains[chainTo.id.toString()].Symbol}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Maximum Bridge Amount: {formatNumber(tokenToBridge?.other?.MaximumSwap)}{' '}
-                    {tokenToBridge?.other?.Symbol}
+                    Maximum Bridge Amount: {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].MaximumSwap)}{' '}
+                    {tokenToBridge?.destChains[chainTo.id.toString()].anyToken.symbol}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Fee: {formatNumber(tokenToBridge?.other?.SwapFeeRate * 100)} %
+                    Fee: {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].SwapFeeRatePerMillion * 100)} %
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Amounts greater than {formatNumber(tokenToBridge?.other?.BigValueThreshold)}{' '}
-                    {tokenToBridge?.other?.Symbol} could take up to 12 hours.
+                    Amounts greater than{' '}
+                    {formatNumber(tokenToBridge?.destChains[chainTo.id.toString()].BigValueThreshold)}{' '}
+                    {tokenToBridge?.destChains[chainTo.id.toString()].anyToken.symbol} could take up to 12 hours.
                   </div>
                 </div>
               </div>
