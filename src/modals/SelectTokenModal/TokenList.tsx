@@ -13,7 +13,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useToggle from '../../hooks/useToggle'
 
 const ContentWrapper = styled(Column)`
-  height: 100%;
+  height: 80vh;
   width: 100%;
   flex: 1 1;
   position: relative;

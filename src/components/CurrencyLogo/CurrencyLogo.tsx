@@ -29,11 +29,13 @@ export function getCurrencyLogoUrls(currency) {
 }
 
 const CronosLogo = 'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/icons/network/cronos.png'
+const BinanceLogo = 'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/icons/network/bsc.svg'
 
 const LOGO: { readonly [chainId in ChainId]?: string } = {
   [ChainId.ETHEREUM]: CronosLogo,
   [ChainId.CRONOS]: CronosLogo,
   [ChainId.CRONOS_TESTNET]: CronosLogo,
+  [ChainId.BSC_TESTNET]: BinanceLogo,
 }
 
 export interface CurrencyLogoProps {

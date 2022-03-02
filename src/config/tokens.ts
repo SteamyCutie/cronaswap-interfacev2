@@ -61,6 +61,7 @@ export const CRONA: ChainTokenMap = {
     'CRONA',
     'CronaSwap'
   ),
+  [ChainId.BSC_TESTNET]: new Token(ChainId.BSC_TESTNET, CRONA_ADDRESS[ChainId.BSC_TESTNET], 18, 'CRONA', 'CronaSwap'),
 }
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {

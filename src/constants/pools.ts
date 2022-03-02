@@ -177,4 +177,27 @@ export const POOLS: AddressMap = {
       },
     },
   },
+
+  [ChainId.BSC_TESTNET]: {
+    '0x0896c6e6e1C637667C6F6222B219f85712d110Ec': {
+      pid: 0,
+      name: 'CRONA-USDC',
+      tokenPerBlock: '0.05',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://www.cronaswap.org',
+      stakingToken: {
+        id: '0x50FbdED2063577995389fd5fa0eB349cCbc7cA67',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A',
+        name: 'USDC Token',
+        symbol: 'USDC',
+        decimals: 6,
+      },
+    },
+  },
 }
