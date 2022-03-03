@@ -100,7 +100,7 @@ export const POOLS: AddressMap = {
       pid: 3,
       name: 'CRONA-AGL',
       tokenPerBlock: '1.5',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://www.agilefi.org',
       stakingToken: {
