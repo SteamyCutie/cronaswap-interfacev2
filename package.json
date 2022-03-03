@@ -36,7 +36,7 @@
     "@commitlint/cli": "^13.0.0",
     "@commitlint/config-conventional": "^13.0.0",
     "@cronaswap/core-sdk": "1.0.15",
-    "@cronaswap/default-token-list": "1.0.28",
+    "@cronaswap/default-token-list": "1.0.29",
     "@cronaswap/miso": "1.0.1",
     "@ethereumjs/common": "^2.4.0",
     "@ethereumjs/tx": "^3.3.0",
