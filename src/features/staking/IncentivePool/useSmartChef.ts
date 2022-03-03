@@ -33,6 +33,16 @@ export default function useSmartChef(pool) {
     [contract]
   )
 
+  // Withdraw
+  const emergencyWithdraw = useCallback(async () => {
+    try {
+      return await contract?.emergencyWithdraw()
+    } catch (e) {
+      console.error(e)
+      return e
+    }
+  }, [contract])
+
   const harvest = useCallback(async () => {
     try {
       return await contract?.deposit(Zero)
@@ -42,5 +52,5 @@ export default function useSmartChef(pool) {
     }
   }, [contract])
 
-  return { deposit, withdraw, harvest }
+  return { deposit, withdraw, emergencyWithdraw, harvest }
 }
