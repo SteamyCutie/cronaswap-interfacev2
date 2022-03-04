@@ -16,7 +16,7 @@ import { Token } from '@cronaswap/core-sdk'
 import { getAddress } from '@ethersproject/address'
 import { useTokenBalance } from '../../state/wallet/hooks'
 
-const SimulatorItem = ({ farm, ...rest }) => {
+const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
 
@@ -136,10 +136,6 @@ const SimulatorItem = ({ farm, ...rest }) => {
                       token0={farm.token0}
                       token1={farm.token1}
                     />
-                    {/* <div className="flex items-center">
-                      <LockClosedIcon className="h-4 text-yellow" />
-                      <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr*1.01)} → {formatPercent(farm.boostApr)}</div>
-                    </div> */}
                   </div>
                 </div>
               )}
@@ -175,7 +171,7 @@ const SimulatorItem = ({ farm, ...rest }) => {
             </div>
           </Disclosure.Button>
 
-          {open && <SimulatorItemDetails farm={farm} />}
+          {open && <SimulatorItemDetails farm={farm} veCrona={veCrona} handleBoost={handleBoost} />}
         </div>
       )}
     </Disclosure>

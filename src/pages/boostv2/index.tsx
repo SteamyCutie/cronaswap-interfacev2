@@ -630,8 +630,8 @@ export default function Boostv2() {
                 <div className="md:w-1/4">
                   <div className="mb-4 font-Poppins">{i18n._(t`Select boosted farms`)}</div>
                   <div className="p-6 overflow-y-auto border-4 h-80 rounded-xl border-dark-650">
-                    {voteFarms.map((item) => (
-                      <SelectItem item={item} triggerBoost={handleBoost} />
+                    {voteFarms.map((item, index) => (
+                      <SelectItem key={index} item={item} triggerBoost={handleBoost} />
                     ))}
                   </div>
                 </div>
@@ -641,8 +641,13 @@ export default function Boostv2() {
                     {/* <SelectItem name="Distribution Helper" triggerBoost={handleBoost} /> */}
                   </div>
                   <div className="grid grid-cols-2 px-2 py-2 overflow-y-auto border-4 h-60 gap-y-1 lg:px-4 rounded-xl border-dark-650">
-                    {boostedFarms.map((item) => (
-                      <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={handlePercentage} />
+                    {boostedFarms.map((item, index) => (
+                      <VoteInputItem
+                        key={index}
+                        token0={CRONA[chainId]}
+                        token1={NATIVE[chainId]}
+                        percentage={handlePercentage}
+                      />
                     ))}
 
                     {/* <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
