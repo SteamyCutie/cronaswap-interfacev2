@@ -1,37 +1,26 @@
 import { Disclosure, Transition } from '@headlessui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import Button from '../../components/Button'
-import { ExternalLink as LinkIcon } from 'react-feather'
 import { useLingui } from '@lingui/react'
 import { useActiveWeb3React } from '../../services/web3'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { MASTERCHEF_ADDRESS, Token, ZERO } from '@cronaswap/core-sdk'
+import { Token } from '@cronaswap/core-sdk'
 import { getAddress } from '@ethersproject/address'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { usePendingCrona, useUserInfo } from '../farms/hooks'
 import { tryParseAmount } from '../../functions/parse'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import useMasterChef from '../farms/useMasterChef'
-import { formatNumber, formatNumberScale, getExplorerLink } from '../../functions'
+import { formatNumberScale } from '../../functions'
 import { t } from '@lingui/macro'
-import Dots from '../../components/Dots'
 import NumericalInput from '../../components/NumericalInput'
-import ExternalLink from '../../components/ExternalLink'
-import Typography from '../../components/Typography'
-import { MASTERCHEFV2_ADDRESS } from '../../constants/addresses'
 import { ArrowRightIcon, FireIcon, PlusIcon } from '@heroicons/react/outline'
-import NavLink from '../../components/NavLink'
+import { aprToApy } from '../staking/useStaking'
+import { useLockedBalance } from '../boost/hook'
+import Boost from 'pages/boost'
 
-const SimulatorItemDetails = ({ farm }) => {
+const SimulatorItemDetails = ({ farm, veCrona, handleBoost }) => {
   const { i18n } = useLingui()
 
-  const { account, chainId } = useActiveWeb3React()
-  const [pendingTx, setPendingTx] = useState(false)
+  const { chainId } = useActiveWeb3React()
   const [depositValue, setDepositValue] = useState('')
-  const [withdrawValue, setWithdrawValue] = useState('')
-
-  const addTransaction = useTransactionAdder()
 
   const liquidityToken = new Token(
     chainId,
@@ -41,23 +30,29 @@ const SimulatorItemDetails = ({ farm }) => {
     farm.token1 ? farm.name : farm.token0.name
   )
 
-  // User liquidity token balance
-  const balance = useTokenBalance(account, liquidityToken)
-
-  // TODO: Replace these
   const { amount } = useUserInfo(farm, liquidityToken)
+  const { veCronaSupply } = useLockedBalance()
+  const totalVeCrona = Number(veCronaSupply) / 1e18
+  // Caculate BoostFactor
+  const userBalanceInFarm = (Number(amount?.toSignificant(6, undefined, 4)) + Number(depositValue)) * farm.lpPrice
+  const totalDepositedInFarm = farm.tvl * farm.lpPrice
+  const derivedBalance = userBalanceInFarm * 0.4
+  const adjustedBalance = (totalDepositedInFarm * veCrona) / totalVeCrona
+  const BoostFactor =
+    derivedBalance + adjustedBalance < userBalanceInFarm
+      ? (derivedBalance + adjustedBalance) / derivedBalance
+      : userBalanceInFarm / derivedBalance
 
-  const pendingCrona = usePendingCrona(farm)
+  BoostFactor && handleBoost(BoostFactor)
 
-  const typedDepositValue = tryParseAmount(depositValue, liquidityToken)
-  const typedWithdrawValue = tryParseAmount(withdrawValue, liquidityToken)
-
-  const [approvalState, approve] = useApproveCallback(
-    typedDepositValue,
-    farm.chef === 0 ? MASTERCHEF_ADDRESS[chainId] : MASTERCHEFV2_ADDRESS[chainId]
-  )
-
-  const { deposit, withdraw, harvest } = useMasterChef(farm.chef)
+  const apy = aprToApy(farm.apr * BoostFactor)
+  const [share, setShare] = useState(Number(amount?.toSignificant(6, undefined, 4)) / farm.tvl)
+  const [earning, setEarning] = useState((Number(amount?.toSignificant(6, undefined, 4)) * (apy / 100)) / 365)
+  useEffect(() => {
+    const value = Number(amount?.toSignificant(6, undefined, 4)) + Number(depositValue)
+    setShare(value > 0 ? (value >= farm.tvl ? 1 : value / farm.tvl) : 0)
+    share !== 1 && setEarning((value * (apy / 100)) / 365)
+  }, [depositValue])
 
   return (
     <Transition
@@ -70,8 +65,7 @@ const SimulatorItemDetails = ({ farm }) => {
       leaveTo="opacity-0"
     >
       <Disclosure.Panel className="flex flex-col w-full border-t-0 rounded rounded-t-none bg-dark-800" static>
-        {/* <div className="grid grid-cols-2 gap-4 p-4"> */}
-        <div className="items-center justify-between px-8 mt-4 md:flex">
+        <div className="justify-between px-6 my-4 space-y-4 lg:px-16 md:w-full md:flex">
           <div className="flex items-center justify-between w-full md:w-5/12">
             <div className="text-white">
               <div className="text-lg">{i18n._(t`You staked`)}</div>
@@ -83,25 +77,24 @@ const SimulatorItemDetails = ({ farm }) => {
             <div className="relative flex items-center">
               <NumericalInput
                 className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-light-purple"
-                value={withdrawValue}
-                onUserInput={setWithdrawValue}
-                placeholder="0.0 CRONA"
+                value={depositValue}
+                onUserInput={setDepositValue}
+                placeholder={`0.0 ${farm.name}`}
               />
             </div>
           </div>
-          <ArrowRightIcon className="h-10" />
-          <div className="flex items-center justify-between md:w-5/12">
+          <ArrowRightIcon className="h-6 rotate-90 md:h-10 md:rotate-0" />
+          <div className="flex justify-between gap-2 -translate-y-2 md:w-5/12">
             <div className="text-white">
               <div className="text-lg">{i18n._(t`Your share of staking`)}</div>
-              <div className="text-lg font-bold md:text-xl">0.000585%</div>
+              <div className="text-lg font-bold md:text-xl">{(share * 100).toFixed(6)}%</div>
             </div>
             <div className="text-white">
               <div className="text-lg">{i18n._(t`CRONA earning`)}</div>
-              <div className="text-lg font-bold md:text-xl">21.6/day</div>
+              <div className="text-lg font-bold md:text-xl">{earning ? earning.toFixed(2) : 0}/day</div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-3"></div>
       </Disclosure.Panel>
     </Transition>
   )
