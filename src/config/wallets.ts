@@ -8,6 +8,8 @@ export const RPC = {
   // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
   [ChainId.CRONOS]: 'https://rpc.cronaswap.org',
   [ChainId.CRONOS_TESTNET]: 'https://evm-t3.cronos.org',
+  [ChainId.ETHEREUM]: 'https://mainnet.infura.io/v3/6120c21d46cb482d9cdabe463da74dd5',
+  [ChainId.BSC]: 'https://bsc-dataseed.binance.org/',
   [ChainId.BSC_TESTNET]: 'https://data-seed-prebsc-1-s1.binance.org:8545',
 }
 
