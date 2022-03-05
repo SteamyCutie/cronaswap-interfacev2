@@ -188,5 +188,8 @@
     "not ie 11",
     "not dead",
     "not op_mini all"
-  ]
+  ],
+  "dependencies": {
+    "react-gauge-chart": "^0.4.0"
+  }
 }

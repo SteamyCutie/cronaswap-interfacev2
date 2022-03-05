@@ -54,8 +54,29 @@ export const POOLS: AddressMap = {
       },
     },
 
-    '0x8F48d6b7F18421664D6DFA4891A5204d099B1F1C': {
+    '0xc8b59413Fe4439933B172AeC68C0547779279333': {
       pid: 1,
+      name: 'CRONA-CROBLANC',
+      tokenPerBlock: '5.03',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://app.croblanc.com',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0xD3ceCBE5639D05Aed446Da11F08D495CA6bF359F',
+        name: 'Croblanc Token',
+        symbol: 'CROBLANC',
+        decimals: 18,
+      },
+    },
+
+    '0x8F48d6b7F18421664D6DFA4891A5204d099B1F1C': {
+      pid: 2,
       name: 'CRONA-CROISSANT',
       tokenPerBlock: '1.25',
       isFinished: false,
@@ -76,7 +97,7 @@ export const POOLS: AddressMap = {
     },
 
     '0x70763d1283fEbEE6B3A6DD2Ff66884Ad79D5bB8b': {
-      pid: 2,
+      pid: 3,
       name: 'CRONA-DARK',
       tokenPerBlock: '0.045',
       isFinished: false,
@@ -97,7 +118,7 @@ export const POOLS: AddressMap = {
     },
 
     '0xc3f38745fD9374836B7D0919758ccE7c89a3Ab19': {
-      pid: 3,
+      pid: 4,
       name: 'CRONA-AGL',
       tokenPerBlock: '1.5',
       isFinished: true,
@@ -113,7 +134,7 @@ export const POOLS: AddressMap = {
     },
 
     '0x0ab39e3981b48E41Bc584AFc67EbA4301094450B': {
-      pid: 4,
+      pid: 5,
       name: 'CRONA-BANK',
       tokenPerBlock: '0.01',
       isFinished: false,

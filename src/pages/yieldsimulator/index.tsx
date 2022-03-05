@@ -4,6 +4,8 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import React, { useEffect, useState } from 'react'
+import GaugeChart from 'react-gauge-chart'
+import { useActiveWeb3React } from 'app/services/web3'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import useSortableData from '../../hooks/useSortableData'
@@ -27,6 +29,7 @@ const INPUT_CHAR_LIMIT = 18
 
 export default function YieldSimulator(): JSX.Element {
   const { i18n } = useLingui()
+  const { account } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
   const addTransaction = useTransactionAdder()
 
@@ -88,6 +91,10 @@ export default function YieldSimulator(): JSX.Element {
   const [inputDuration, setInputDuration] = useState<string>('')
   const handleInputDuration = (v: string) => {
     if (v.length <= INPUT_CHAR_LIMIT) {
+      if (Number(v) > 208) {
+        setInputDuration('208')
+        return
+      }
       setInputDuration(v)
       setActiveTab(0)
       setTimeDuration(remainingTime + Number(v))
@@ -197,7 +204,20 @@ export default function YieldSimulator(): JSX.Element {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 md:gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-50"></div>
+                    <div className="w-10 h-10">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M10.9185 10.9185C7.89206 13.945 6.0086 17.9272 5.58908 22.1867C5.16956 26.4461 6.23993 30.7193 8.61781 34.278C10.9957 37.8368 14.534 40.461 18.6297 41.7034C22.7255 42.9458 27.1254 42.7297 31.0796 41.0918C35.0339 39.4539 38.2979 36.4955 40.3155 32.7208C42.3332 28.9462 42.9795 24.5887 42.1445 20.3908C41.3095 16.193 39.0448 12.4146 35.7363 9.69931C32.4277 6.98406 28.2801 5.5 24 5.5"
+                          stroke="white"
+                          strokeLinecap="round"
+                        />
+                        <path d="M24 24L14 14" stroke="white" strokeLinecap="round" />
+                        <path d="M24 5V10" stroke="white" strokeLinecap="round" />
+                        <path d="M42 24L38 24" stroke="white" strokeLinecap="round" />
+                        <path d="M24 38V42" stroke="white" strokeLinecap="round" />
+                        <path d="M10 24L6 24" stroke="white" strokeLinecap="round" />
+                      </svg>
+                    </div>
                     <div className="flex flex-col">
                       {i18n._(t`Time Duration`)}
                       <div className="text-white">{remainingTime} WEEKS</div>
@@ -232,7 +252,11 @@ export default function YieldSimulator(): JSX.Element {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4 mt-8 text-sm lg:text-base md:grid-cols-4">
+              <div className="flex justify-between px-2 mt-6 mb-2">
+                <div className="text-white">Lock Until</div>
+                <div>{new Date(Date.now() + timeDuration * 7 * 86400).toDateString().slice(3)}</div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm lg:text-base md:grid-cols-4">
                 <button
                   className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}
                   onClick={() => {
@@ -310,22 +334,35 @@ export default function YieldSimulator(): JSX.Element {
             <div className="flex gap-4 p-10 md:w-1/2">
               <div className="space-y-8 font-bold text-white">
                 <div className="mt-2 space-y-8">
-                  {lockedveCrona <= totalVeCrona ? (
-                    <>
-                      <div className="text-2xl font-Poppins">{i18n._(t`Your share of veCRONA`)}</div>
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gray-50"></div>
-                        <div className="text-2xl">{`${((lockedveCrona * 100) / totalVeCrona).toFixed(6)} %`}</div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="py-2 text-2xl lg:text-3xl text-red">
-                      {i18n._(t`Locked veCrona exceeds veCronaSupply`)}
+                  <div className="text-2xl font-Poppins">{i18n._(t`Your share of veCRONA`)}</div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gray-50"></div>
+                    <div className="text-2xl">
+                      {' '}
+                      {lockedveCrona <= totalVeCrona
+                        ? `${((lockedveCrona * 100) / totalVeCrona).toFixed(6)} %`
+                        : account
+                        ? `100 %`
+                        : `0%`}
                     </div>
-                  )}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="text-4xl">{boostFactor?.toFixed(2)}x</div>
+                <div className="">
+                  <div className="flex items-center w-20 h-20 min-w-20 min-h-20">
+                    <GaugeChart
+                      id="gauge-chart6"
+                      hideText={true}
+                      nrOfLevels={5}
+                      arcWidth={0.6}
+                      cornerRadius={1}
+                      arcPadding={0}
+                      percent={(boostFactor - 1) / 1.5}
+                      needleColor="#FFFFFF"
+                      needleBaseColor="#FFFFFF"
+                      colors={['#FF5555', '#FF8855', '#FFD07A', '#ABD888', '#18CFA3']}
+                    />
+                    <div className="text-4xl">{boostFactor?.toFixed(2)}x</div>
+                  </div>
                   <div className="text-base font-medium">
                     <div>{i18n._(t`Potential max boost: 2.5x`)}</div>
                     <div>

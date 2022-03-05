@@ -272,6 +272,21 @@ export const FARMSV2: AddressMap = {
       token0: { id: '0x6ef20cA7E493c52095e892DAB78a7FD0e7e2a279', name: 'AvtoCross', symbol: 'CROSS', decimals: 18 },
       token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
     },
+
+    '0xAC23a7dE083719c0E11D5c2EFBCC99Db5C73BB48': {
+      id: 26,
+      pid: 26,
+      symbol: 'CLP',
+      name: 'CROBLANC-CRO',
+      isCommunity: true,
+      token0: {
+        id: '0xD3ceCBE5639D05Aed446Da11F08D495CA6bF359F',
+        name: 'Croblanc Token',
+        symbol: 'CROBLANC',
+        decimals: 18,
+      },
+      token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
+    },
   },
 
   [ChainId.CRONOS_TESTNET]: {
