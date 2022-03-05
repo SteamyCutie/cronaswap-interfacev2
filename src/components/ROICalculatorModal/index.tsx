@@ -27,6 +27,8 @@ interface RoiCalculatorModalProps {
   lpPrice?: number
   token0?: any
   token1?: any
+  earningTokenName?: string
+  earningTokenPrice?: number
 }
 
 const buttonStyle =
@@ -48,6 +50,8 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
   lpPrice,
   token0,
   token1,
+  earningTokenName,
+  earningTokenPrice,
 }) => {
   const { i18n } = useLingui()
 
@@ -69,7 +73,7 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
     const timesCompounded = isCompounding ? 365 / compoundingPeriod : 365
     const ROI = principal * (1 + aprAsDecimal / timesCompounded) ** (timesCompounded * daysAsDecimalOfYear) - principal
     const cronaPriceInUSD = getCronaPrice()
-    const ROIInTokens = (ROI / cronaPriceInUSD).toFixed(3)
+    const ROIInTokens = earningTokenPrice ? (ROI / earningTokenPrice).toFixed(3) : (ROI / cronaPriceInUSD).toFixed(3)
     const ROIPercentage = Number(usdValue) === 0 ? '0' : ((ROI / Number(usdValue)) * 100).toFixed(2)
     return { ROI, ROIInTokens, ROIPercentage }
   }
@@ -256,7 +260,9 @@ const ROICalculatorModal: React.FC<RoiCalculatorModalProps> = ({
               $ {ROIcalculator(Number(usdValue), apr).ROI.toFixed(3)}
             </div>
             <div className="md:flex">
-              <div className="text-sm">~ {ROIcalculator(Number(usdValue), apr).ROIInTokens} CRONA </div>
+              <div className="text-sm">
+                ~ {ROIcalculator(Number(usdValue), apr).ROIInTokens} {earningTokenName ? earningTokenName : 'CRONA'}{' '}
+              </div>
               <div className="text-sm">({ROIcalculator(Number(usdValue), apr).ROIPercentage}%)</div>
             </div>
           </div>

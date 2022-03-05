@@ -12,8 +12,8 @@ import IncentivePoolItemDetail from './IncentivePoolItemDetail'
 import { usePendingReward, usePoolsInfo } from './hooks'
 import { CalculatorIcon } from '@heroicons/react/solid'
 import ROICalculatorModal from 'app/components/ROICalculatorModal'
-import { Token } from '@cronaswap/core-sdk'
 import { getAddress } from '@ethersproject/address'
+import { CRONA } from '@cronaswap/core-sdk'
 import { useTokenBalance } from 'state/wallet/hooks'
 
 const IncentivePoolItem = ({ pool, ...rest }) => {
@@ -26,6 +26,8 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
   const { apr, endInBlock, bonusEndBlock, totalStaked, stakingTokenPrice, earningTokenPrice } = usePoolsInfo(pool)
 
   const pendingReward = usePendingReward(pool, earningToken)
+  const cronaBalance = useTokenBalance(account ?? undefined, CRONA[chainId])
+  const balance = Number(cronaBalance?.toSignificant(8))
   const [showCalc, setShowCalc] = useState(false)
 
   return (
@@ -90,6 +92,9 @@ const IncentivePoolItem = ({ pool, ...rest }) => {
                   showCompound={false}
                   name={'CRONA'}
                   apr={apr}
+                  Lpbalance={balance}
+                  earningTokenPrice={Number(earningTokenPrice?.toFixed(18))}
+                  earningTokenName={earningToken.symbol}
                 />
               </div>
 
