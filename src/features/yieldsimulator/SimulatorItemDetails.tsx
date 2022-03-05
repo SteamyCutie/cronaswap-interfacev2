@@ -3,18 +3,15 @@ import React, { useEffect, useState } from 'react'
 
 import { useLingui } from '@lingui/react'
 import { useActiveWeb3React } from '../../services/web3'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { Token } from '@cronaswap/core-sdk'
 import { getAddress } from '@ethersproject/address'
-import { usePendingCrona, useUserInfo } from '../farms/hooks'
-import { tryParseAmount } from '../../functions/parse'
+import { useUserInfo } from '../farms/hooks'
 import { formatNumberScale } from '../../functions'
 import { t } from '@lingui/macro'
 import NumericalInput from '../../components/NumericalInput'
-import { ArrowRightIcon, FireIcon, PlusIcon } from '@heroicons/react/outline'
+import { ArrowRightIcon, PlusIcon } from '@heroicons/react/outline'
 import { aprToApy } from '../staking/useStaking'
 import { useLockedBalance } from '../boost/hook'
-import Boost from 'pages/boost'
 
 const SimulatorItemDetails = ({ farm, veCrona, handleBoost }) => {
   const { i18n } = useLingui()

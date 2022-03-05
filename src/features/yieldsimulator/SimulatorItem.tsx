@@ -1,4 +1,4 @@
-import { classNames, formatNumber, formatPercent, formatNumberScale } from '../../functions'
+import { classNames, formatNumber, formatPercent } from '../../functions'
 import React, { useState } from 'react'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useCurrency } from '../../hooks/Tokens'
@@ -14,7 +14,6 @@ import { CurrencyLogoArray } from '../../components/CurrencyLogo'
 import ROICalculatorModal from 'app/components/ROICalculatorModal'
 import { Token } from '@cronaswap/core-sdk'
 import { getAddress } from '@ethersproject/address'
-import { useTokenBalance } from '../../state/wallet/hooks'
 
 const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
   const { i18n } = useLingui()
@@ -154,7 +153,6 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
                     {/* <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} / </div> */}
                     <div className="flex items-center">
                       <LockClosedIcon className="h-4 text-yellow" />
-                      {/* <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr*1.01)} → {formatPercent(farm.boostApr)}</div> */}
                       <div className="text-xs font-bold md:text-base">
                         {formatPercent(farm.boostApr)} → {formatPercent(farm.apr * 2.5)}
                       </div>
