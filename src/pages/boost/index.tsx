@@ -469,9 +469,16 @@ export default function Boost() {
                         : i18n._(t`Create Lock`)}
                     </Button>
                   )
+                ) : approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
+                  <Button color="gradient" disabled={approvalState === ApprovalState.PENDING} onClick={approve}>
+                    {approvalState === ApprovalState.PENDING ? (
+                      <Dots>{i18n._(t`Approving`)} </Dots>
+                    ) : (
+                      i18n._(t`Approve`)
+                    )}
+                  </Button>
                 ) : (
                   <div className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-2">
-                    {/* increacse amount or increacse time */}
                     <Button
                       color={buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'}
                       onClick={handleIncreaseAmount}
