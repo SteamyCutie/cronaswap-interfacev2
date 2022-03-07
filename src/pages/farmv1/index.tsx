@@ -38,7 +38,7 @@ export default function Yield(): JSX.Element {
   })
 
   const FILTER = {
-    all: (farm) => farm.multiplier < 1000,
+    all: (farm) => farm.multiplier < 10000,
     inactive: (farm) => farm.multiplier == 0,
   }
 

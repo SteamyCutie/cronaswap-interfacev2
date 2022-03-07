@@ -64,7 +64,7 @@ const IncentivePoolItemDetail = ({
 
   const [approvalState, approve] = useApproveCallback(typedDepositValue, pool.smartChef)
 
-  const { deposit, withdraw, harvest } = useSmartChef(pool)
+  const { deposit, withdraw, emergencyWithdraw, harvest } = useSmartChef(pool)
 
   const userMaxStake = tryParseAmount('30000', stakingToken).subtract(
     tryParseAmount(amount && amount?.greaterThan(0) ? amount.toFixed(stakingToken?.decimals) : '0.000001', stakingToken)
@@ -210,7 +210,9 @@ const IncentivePoolItemDetail = ({
               onClick={async () => {
                 setPendingTx(true)
                 try {
-                  const tx = await withdraw(withdrawValue.toBigNumber(stakingToken?.decimals))
+                  const tx = pool.isFinished
+                    ? await emergencyWithdraw()
+                    : await withdraw(withdrawValue.toBigNumber(stakingToken?.decimals))
                   addTransaction(tx, {
                     summary: `${i18n._(t`Withdraw`)} ${stakingToken?.symbol}`,
                   })

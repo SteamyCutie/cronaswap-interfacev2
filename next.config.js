@@ -98,6 +98,10 @@ const nextConfig = {
         source: '/find',
         destination: '/exchange/find',
       },
+      {
+        source: '/yield',
+        destination: '/yieldsimulator',
+      },
     ]
   },
   i18n: {

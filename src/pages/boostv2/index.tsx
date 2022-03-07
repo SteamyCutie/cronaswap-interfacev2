@@ -25,7 +25,9 @@ import { useCronaContract } from 'app/hooks/useContract'
 import { getAPY } from 'app/features/staking/useStaking'
 import { CalculatorIcon } from '@heroicons/react/solid'
 import ROICalculatorModal from 'app/components/ROICalculatorModal'
-import VotingItems, { SelectItem, VoteInputItem } from 'app/features/boost/VotingItems'
+import { CurrencyLogoArray } from 'app/components/CurrencyLogo'
+import VotingItems, { SelectItem } from 'app/features/boost/VotingItems'
+import { FARMSV2 } from 'app/constants/farmsv2'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -50,7 +52,7 @@ const inactiveTabStyle = `${tabStyle} bg-dark-700 text-secondary`
 const buttonStyle =
   'flex justify-center items-center w-full h-12 rounded font-bold md:font-medium md:text-lg text-sm focus:outline-none focus:ring bg-blue'
 
-export default function Boost() {
+export default function Boostv2() {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
   const balance = useTokenBalance(account ?? undefined, CRONA[chainId])
@@ -76,7 +78,7 @@ export default function Boost() {
   const toggleWalletModal = useWalletModalToggle()
 
   const [activeTab, setActiveTab] = useState(90)
-  const [input, setInput] = useState<string>('')
+  const [input, setInput] = useState('')
   const [usingBalance, setUsingBalance] = useState(false)
 
   const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
@@ -219,6 +221,56 @@ export default function Boost() {
   }
 
   const [showCalc, setShowCalc] = useState(false)
+
+  const allFarms = Object.keys(FARMSV2[chainId]).map((key) => {
+    return { ...FARMSV2[chainId][key], lpToken: key, isBoost: false }
+  })
+
+  const voteFarms = allFarms.filter((item) => item.isVote == true)
+  const [boostedFarms, setBoostedFarms] = useState([])
+  const handleBoost = (item) => {
+    // item.isBoost = false
+    console.log('******before', item.isBoost)
+    item.isBoost = item.isBoost ? false : true
+    console.log('******after', item)
+    if (item.isBoost == true) {
+      setBoostedFarms((old) => [...old, item])
+    } else {
+      setBoostedFarms(boostedFarms.filter((item) => item.isBoost == true))
+    }
+  }
+
+  console.log('boosted+++++', boostedFarms)
+  const [percent, setPercent] = useState('')
+  const [newWeighting, setNewWeighting] = useState<number>(0)
+  const handlePercentage = (value) => {
+    setPercent(value)
+    setNewWeighting(newWeighting + Number(percent))
+  }
+
+  const VoteInputItem = ({ token0, token1, percentage }) => {
+    const [voteValue, setVoteValue] = useState('')
+    const handleChange = (event) => {
+      percentage(event.target.value)
+      setVoteValue(event.target.value)
+    }
+
+    return (
+      <div className="flex items-center h-12 p-1 border-2 rounded-md w-36 lg:w-44 border-dark-650">
+        <div className="flex items-center gap-2">
+          {token0 && token1 && <CurrencyLogoArray currencies={[token0, token1]} dense size={20} />}
+          <div>%</div>
+        </div>
+        <input
+          type={'number'}
+          value={voteValue}
+          placeholder={`${token0.symbol}-${token1.symbol} LP`}
+          className="w-full px-1 text-sm bg-transparent "
+          onChange={handleChange}
+        />
+      </div>
+    )
+  }
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
@@ -578,37 +630,36 @@ export default function Boost() {
                 <div className="md:w-1/4">
                   <div className="mb-4 font-Poppins">{i18n._(t`Select boosted farms`)}</div>
                   <div className="p-6 overflow-y-auto border-4 h-80 rounded-xl border-dark-650">
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
-                    <SelectItem name="CRONA-CRO LP" />
+                    {voteFarms.map((item, index) => (
+                      <SelectItem key={index} item={item} triggerBoost={handleBoost} />
+                    ))}
                   </div>
                 </div>
                 <div className="md:px-4 md:w-2/4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-base font-Poppins">{i18n._(t`Vote percentage`)}</div>
-                    <SelectItem name="Distribution Helper" />
+                    {/* <SelectItem name="Distribution Helper" triggerBoost={handleBoost} /> */}
                   </div>
                   <div className="grid grid-cols-2 px-2 py-2 overflow-y-auto border-4 h-60 gap-y-1 lg:px-4 rounded-xl border-dark-650">
+                    {boostedFarms.map((item, index) => (
+                      <VoteInputItem
+                        key={index}
+                        token0={CRONA[chainId]}
+                        token1={NATIVE[chainId]}
+                        percentage={handlePercentage}
+                      />
+                    ))}
+
+                    {/* <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
                     <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
                     <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
                     <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
                     <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
                     <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
-                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
-                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
-                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} />
+                    <VoteInputItem token0={CRONA[chainId]} token1={NATIVE[chainId]} percentage={65.2} /> */}
                   </div>
                   <div>
-                    <div className="mt-1 mb-1">New vote weighting: 0%</div>
+                    <div className="mt-1 mb-1">New vote weighting: {newWeighting}%</div>
                     <button className={buttonStyle}>Vote (weights must total 100%)</button>
                   </div>
                 </div>

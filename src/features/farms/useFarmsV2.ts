@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
-import { FARMSV2 } from '../../constants/farms'
+import { FARMSV2 } from '../../constants/farmsv2'
 import { useDashboardV2Contract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../services/web3'
 
