@@ -1,4 +1,12 @@
-import { Field, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  replaceZapState,
+  selectCurrency,
+  selectLPToken,
+  setRecipient,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
 
@@ -9,7 +17,8 @@ export interface ZapState {
     readonly currencyId: string | undefined
   }
   readonly [Field.OUTPUT]: {
-    readonly currencyId: string | undefined
+    readonly lpTokenId: string | undefined
+    readonly lpToken: Object | undefined
   }
   // the typed recipient address or ENS name, or null if zap should go to sender
   readonly recipient: string | null
@@ -22,7 +31,8 @@ const initialState: ZapState = {
     currencyId: '',
   },
   [Field.OUTPUT]: {
-    currencyId: '',
+    lpTokenId: '',
+    lpToken: null,
   },
   recipient: null,
 }
@@ -30,30 +40,28 @@ const initialState: ZapState = {
 export default createReducer<ZapState>(initialState, (builder) =>
   builder
     .addCase(selectCurrency, (state, { payload: { currencyId, field } }) => {
-      const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
-      // console.log({ currencyId, other: state[otherField].currencyId, test: state[otherField].currencyId }, currencyId === state[otherField].currencyId)
-      if (currencyId === state[otherField].currencyId) {
-        // the case where we have to zap the order
-        return {
-          ...state,
-          independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { currencyId: currencyId },
-          [otherField]: { currencyId: state[field].currencyId },
-        }
-      } else {
-        // the normal case
-        return {
-          ...state,
-          [field]: { currencyId: currencyId },
-        }
+      return {
+        ...state,
+        [field]: { currencyId: currencyId },
+      }
+    })
+    .addCase(selectLPToken, (state, { payload: { lpTokenId, lpToken, field } }) => {
+      return {
+        ...state,
+        [field]: { lpTokenId: lpTokenId, lpToken: lpToken },
+      }
+    })
+    .addCase(replaceZapState, (state, { payload: { field, recipient, typedValue, inputCurrencyId } }) => {
+      return {
+        ...state,
+        [field]: { currencyId: inputCurrencyId },
+        typedValue,
+        recipient,
       }
     })
     .addCase(switchCurrencies, (state) => {
       return {
         ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
-        [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue } }) => {

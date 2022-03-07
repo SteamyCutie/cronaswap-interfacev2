@@ -9,7 +9,15 @@ import {
   Trade as V2Trade,
 } from '@cronaswap/core-sdk'
 
-import { Field, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  replaceZapState,
+  selectCurrency,
+  selectLPToken,
+  setRecipient,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 import { isAddress, isZero } from '../../functions/validate'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useCallback, useEffect, useState } from 'react'
@@ -27,13 +35,21 @@ import useENS from '../../hooks/useENS'
 import { useLingui } from '@lingui/react'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTollerence'
+import usePool from '../../hooks/usePool'
+import Zap from 'pages/exchange/zap'
 
+export declare class ZapTrade {
+  inputAmount: CurrencyAmount<Currency>
+  inputCurrency: Currency
+  outputLPToken: Object
+}
 export function useZapState(): AppState['zap'] {
   return useAppSelector((state) => state.zap)
 }
 
 export function useZapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
+  onLPTokenSelection: (field: Field, lpToken: Object) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
@@ -45,6 +61,19 @@ export function useZapActionHandlers(): {
         selectCurrency({
           field,
           currencyId: currency.isToken ? currency.address : currency.isNative ? 'CRO' : '',
+        })
+      )
+    },
+    [dispatch]
+  )
+
+  const onLPTokenSelection = useCallback(
+    (field: Field, lpToken: Object) => {
+      dispatch(
+        selectLPToken({
+          field,
+          lpTokenId: lpToken.lpToken,
+          lpToken: lpToken,
         })
       )
     },
@@ -71,6 +100,7 @@ export function useZapActionHandlers(): {
 
   return {
     onSwitchTokens,
+    onLPTokenSelection,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
@@ -106,8 +136,9 @@ export function useDerivedZapInfo(doArcher = false): {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
-  v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
+  zapTrade: ZapTrade | undefined
   allowedSlippage: Percent
+  lpToken: { [field in Field]?: Object }
 } {
   const { i18n } = useLingui()
 
@@ -119,27 +150,20 @@ export function useDerivedZapInfo(doArcher = false): {
     independentField,
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
-    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    [Field.OUTPUT]: { lpTokenId: outputLPTokenId, lpToken: outputLPToken },
     recipient,
   } = useZapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
 
-  const outputCurrency = useCurrency(outputCurrencyId)
+  // const outputLPToken = usePool(outputLPTokenId)
 
-  const recipientLookup = useENS(recipient ?? undefined)
-
-  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
-
-  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
-    inputCurrency ?? undefined,
-    outputCurrency ?? undefined,
-  ])
+  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [inputCurrency ?? undefined])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  const parsedAmount = tryParseAmount(typedValue, inputCurrency ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
+  const bestTradeExactIn = useTradeExactIn(parsedAmount, undefined, {
     maxHops: singleHopOnly ? 1 : undefined,
   })
 
@@ -147,16 +171,18 @@ export function useDerivedZapInfo(doArcher = false): {
     maxHops: singleHopOnly ? 1 : undefined,
   })
 
-  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const zapTrade = { inputCurrency: inputCurrency, inputAmount: parsedAmount, outputLPToken: outputLPToken }
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
-    [Field.OUTPUT]: relevantTokenBalances[1],
   }
 
   const currencies: { [field in Field]?: Currency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
-    [Field.OUTPUT]: outputCurrency ?? undefined,
+  }
+
+  const lpToken: { [field in Field]?: Object } = {
+    [Field.OUTPUT]: outputLPToken ?? undefined,
   }
 
   let inputError: string | undefined
@@ -168,27 +194,18 @@ export function useDerivedZapInfo(doArcher = false): {
     inputError = inputError ?? i18n._(t`Enter an amount`)
   }
 
-  if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+  if (!currencies[Field.INPUT]) {
     inputError = inputError ?? i18n._(t`Select a token`)
   }
 
-  const formattedTo = isAddress(to)
-  if (!to || !formattedTo) {
-    inputError = inputError ?? i18n._(t`Enter a recipient`)
-  } else {
-    if (
-      BAD_RECIPIENT_ADDRESSES?.[chainId]?.[formattedTo] ||
-      (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) ||
-      (bestTradeExactOut && involvesAddress(bestTradeExactOut, formattedTo))
-    ) {
-      inputError = inputError ?? i18n._(t`Invalid recipient`)
-    }
+  if (!outputLPTokenId) {
+    inputError = inputError ?? i18n._(t`Select a LP token`)
   }
 
-  const allowedSlippage = useSwapSlippageTolerance(v2Trade)
+  const allowedSlippage = undefined //useSwapSlippageTolerance(v2Trade)
 
   // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], v2Trade?.maximumAmountIn(allowedSlippage)]
+  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = i18n._(t`Insufficient ${amountIn.currency.symbol} balance`)
@@ -199,8 +216,9 @@ export function useDerivedZapInfo(doArcher = false): {
     currencyBalances,
     parsedAmount,
     inputError,
-    v2Trade: v2Trade ?? undefined,
+    zapTrade: zapTrade ?? undefined,
     allowedSlippage,
+    lpToken,
   }
 }
 
@@ -233,17 +251,11 @@ function validatedRecipient(recipient: any): string | null {
 }
 export function queryParametersToZapState(parsedQs: ParsedQs, chainId: ChainId = ChainId.ETHEREUM): ZapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   // const eth = chainId === ChainId.CELO ? WNATIVE_ADDRESS[chainId] : 'CRO'
   const eth = 'CRO'
   const sushi = CRONA_ADDRESS[chainId]
-  if (inputCurrency === '' && outputCurrency === '') {
+  if (inputCurrency === '') {
     inputCurrency = eth
-    outputCurrency = sushi
-  } else if (inputCurrency === '') {
-    inputCurrency = outputCurrency === eth ? sushi : eth
-  } else if (outputCurrency === '' || inputCurrency === outputCurrency) {
-    outputCurrency = inputCurrency === eth ? sushi : eth
   }
 
   const recipient = validatedRecipient(parsedQs.recipient)
@@ -253,7 +265,8 @@ export function queryParametersToZapState(parsedQs: ParsedQs, chainId: ChainId =
       currencyId: inputCurrency,
     },
     [Field.OUTPUT]: {
-      currencyId: outputCurrency,
+      lpToken: {},
+      lpTokenId: '',
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
@@ -265,7 +278,8 @@ export function queryParametersToZapState(parsedQs: ParsedQs, chainId: ChainId =
 export function useDefaultsFromURLSearch():
   | {
       inputCurrencyId: string | undefined
-      outputCurrencyId: string | undefined
+      outputLPTokenId: string | undefined
+      outputLPToken: Object | undefined
     }
   | undefined {
   const { chainId } = useActiveWeb3React()
@@ -275,7 +289,8 @@ export function useDefaultsFromURLSearch():
   const [result, setResult] = useState<
     | {
         inputCurrencyId: string | undefined
-        outputCurrencyId: string | undefined
+        outputLPTokenId: string | undefined
+        outputLPToken: Object | undefined
       }
     | undefined
   >()
@@ -284,9 +299,19 @@ export function useDefaultsFromURLSearch():
     if (!chainId) return
     const parsed = queryParametersToZapState(parsedQs, chainId)
 
+    dispatch(
+      replaceZapState({
+        typedValue: parsed.typedValue,
+        field: parsed.independentField,
+        inputCurrencyId: parsed[Field.INPUT].currencyId,
+        recipient: expertMode ? parsed.recipient : null,
+      })
+    )
+
     setResult({
       inputCurrencyId: parsed[Field.INPUT].currencyId,
-      outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+      outputLPTokenId: parsed[Field.OUTPUT].lpTokenId,
+      outputLPToken: parsed[Field.OUTPUT].lpToken,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])

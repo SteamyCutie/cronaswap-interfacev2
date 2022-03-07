@@ -35,8 +35,8 @@
     "@clover-network/clover-connector": "^1.0.0",
     "@commitlint/cli": "^13.0.0",
     "@commitlint/config-conventional": "^13.0.0",
-    "@cronaswap/core-sdk": "1.0.15",
-    "@cronaswap/default-token-list": "1.0.30",
+    "@cronaswap/core-sdk": "1.0.14",
+    "@cronaswap/default-token-list": "1.0.25",
     "@cronaswap/miso": "1.0.1",
     "@ethereumjs/common": "^2.4.0",
     "@ethereumjs/tx": "^3.3.0",
@@ -190,6 +190,12 @@
     "not op_mini all"
   ],
   "dependencies": {
+  "@visx/curve": "^2.1.0",
+    "@visx/group": "^2.1.0",
+    "cids": "^1.1.9",
+    "multicodec": "^3.2.1",
+    "multihashes": "^4.0.3",
+    "web3": "^1.7.0",
     "react-gauge-chart": "^0.4.0",
     "recharts": "^2.1.9"
   }

@@ -12,6 +12,10 @@ const useFarmsV2 = () => {
   const dashboardContract = useDashboardV2Contract()
 
   const fetchAllFarms = useCallback(async () => {
+    if (FARMSV2[chainId] === undefined || Object.keys(FARMSV2[chainId]).length === 0) {
+      setFarms({ farms: [], userFarms: [], stakeFarms: [] })
+      return
+    }
     // Reset pools list
     const farmingPools = Object.keys(FARMSV2[chainId]).map((key) => {
       return { ...FARMSV2[chainId][key], lpToken: key }

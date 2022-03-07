@@ -15,6 +15,7 @@ import {
   CRONA_ADDRESS,
   TIMELOCK_ADDRESS,
   WNATIVE_ADDRESS,
+  ZAPPER_ADDRESS,
 } from '@cronaswap/core-sdk'
 import { STOP_LIMIT_ORDER_ADDRESS } from '@sushiswap/limit-order-sdk'
 import MISO from '@cronaswap/miso/exports/all.json'
@@ -67,7 +68,11 @@ import CRONAVAULT_ABI from '../constants/abis/cronaVault.json'
 import MISO_HELPER_ABI from 'app/constants/abis/miso-helper.json'
 import IFOV1_ABI from '../constants/abis/ifoV1.json'
 import IFOV2_ABI from '../constants/abis/ifoV2.json'
+<<<<<<< HEAD
 import VOTE_ABI from '../constants/abis/vote.json'
+=======
+import ZAP_ABI from '../constants/abis/zap.json'
+>>>>>>> d14c45e46c95b10157d248ba9dc18f143f39aaf2
 
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
@@ -84,7 +89,11 @@ import {
   CRONAVAULT_ADDRESS,
   REWARD_POOL_ADDRESS,
   MASTERCHEFV1_ADDRESS,
+<<<<<<< HEAD
   VOTE_ADDRESS,
+=======
+  ZAP_ADDRESS,
+>>>>>>> d14c45e46c95b10157d248ba9dc18f143f39aaf2
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -318,7 +327,13 @@ export function useIfoV2Contract(tokenAddress?: string, withSignerIfPossible?: b
   return useContract(tokenAddress, IFOV2_ABI, withSignerIfPossible)
 }
 
+<<<<<<< HEAD
 export function useVotingContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(VOTE_ADDRESS[chainId], VOTE_ABI, withSignerIfPossible)
+=======
+export function useZapContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(ZAP_ADDRESS[chainId], ZAP_ABI, withSignerIfPossible)
+>>>>>>> d14c45e46c95b10157d248ba9dc18f143f39aaf2
 }

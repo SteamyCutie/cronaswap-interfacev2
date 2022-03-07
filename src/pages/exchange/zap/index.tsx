@@ -1,14 +1,27 @@
 import { ApprovalState, useApproveCallback } from '../../../hooks/useApproveCallback'
 import { ButtonConfirmed, ButtonError } from '../../../components/Button'
-import { ChainId, Currency, CurrencyAmount, NATIVE, Percent, WNATIVE, WNATIVE_ADDRESS } from '@cronaswap/core-sdk'
-import React, { useCallback, useMemo, useState } from 'react'
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  JSBI,
+  NATIVE,
+  Percent,
+  WNATIVE,
+  WNATIVE_ADDRESS,
+  Trade as V2Trade,
+  Token,
+  TradeType,
+} from '@cronaswap/core-sdk'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import CurrencyInputPanel from 'app/components/CurrencyInputPanel'
+import { useDefaultsFromURLSearch, useDerivedZapInfo, useZapActionHandlers, useZapState } from 'app/state/zap/hooks'
 import { useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from 'app/state/swap/hooks'
-import { Field as SwapField } from 'app/state/swap/actions'
+import { Field as ZapField } from 'app/state/zap/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../../state/burn/hooks'
-import { usePairContract, useRouterContract } from '../../../hooks/useContract'
+import { usePairContract, useRouterContract, useZapContract } from '../../../hooks/useContract'
 
-import { AutoColumn } from '../../../components/Column'
+import Column, { AutoColumn } from '../../../components/Column'
 import Container from '../../../components/Container'
 import { Contract } from '@ethersproject/contracts'
 import Dots from '../../../components/Dots'
@@ -19,130 +32,235 @@ import Header from '../../../features/trade/Header'
 import Web3Connect from '../../../components/Web3Connect'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../services/web3'
-import { useCurrency } from '../../../hooks/Tokens'
+import { useAllTokens, useCurrency } from '../../../hooks/Tokens'
 import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
 import useTransactionDeadline from '../../../hooks/useTransactionDeadline'
-import { useUserSlippageToleranceWithDefault } from '../../../state/user/hooks'
+import {
+  useExpertModeManager,
+  useUserSingleHopOnly,
+  useUserSlippageToleranceWithDefault,
+} from '../../../state/user/hooks'
 import { useV2LiquidityTokenPermit } from '../../../hooks/useERC20Permit'
 import useWrapCallback, { WrapType } from 'app/hooks/useWrapCallback'
-import { maxAmountSpend } from 'app/functions'
+import { maxAmountSpend, warningSeverity } from 'app/functions'
 import { useUSDCValue } from 'app/hooks/useUSDCPrice'
+import { computeFiatValuePriceImpact } from '../../../functions/trade'
+import { AutoRow, RowBetween } from 'app/components/Row'
+import { Zap as ZapIcon } from 'react-feather'
+import LPTokenSelectPanel from 'app/components/LPTokenSelectPanel'
+import Button from 'app/components/Button/index.new'
+import { BottomGrouping, ZapCallbackError } from 'app/features/zap/styleds'
+import { useIsZapUnsupported } from 'app/hooks/useIsZapUnsupported'
+import useIsArgentWallet from 'app/hooks/useIsArgentWallet'
+import { useToggleSettingsMenu } from 'app/state/application/hooks'
+import Loader from 'app/components/Loader'
+import ProgressSteps from '../../../components/ProgressSteps'
+import { useZapCallback } from 'app/hooks/useZapCallback'
+import { parseUnits } from '@ethersproject/units'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
+import { useSingleCallResult } from 'app/state/multicall/hooks'
+import ZAP_ABI from '../../../constants/abis/zap.json'
+
+import Web3 from 'web3'
+import { ZAP_ADDRESS } from 'app/constants/addresses'
+import ConfirmZapModal from 'app/features/zap/ConfirmZapModal'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function Zap() {
   const { i18n } = useLingui()
+
+  const loadedUrlParams = useDefaultsFromURLSearch()
+
   const router = useRouter()
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-  const { independentField, typedValue, recipient } = useSwapState()
-  const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
+  const { independentField, typedValue, recipient } = useZapState()
+
+  // for expert mode
+  const [isExpertMode, setExpertMode] = useExpertModeManager()
+  const toggleSettings = useToggleSettingsMenu()
+
   const {
-    wrapType,
-    execute: onWrap,
-    inputError: wrapInputError,
-  } = useWrapCallback(currencies[SwapField.INPUT], currencies[SwapField.OUTPUT], typedValue)
-  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const tokens = router.query.tokens
-  const [currencyIdA, currencyIdB] = tokens || [undefined, undefined]
-  const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
+    currencyBalances,
+    parsedAmount,
+    currencies,
+    inputError: zapInputError,
+    lpToken,
+    zapTrade,
+  } = useDerivedZapInfo()
+
+  const [currencyA, currencyB] = [currencies[ZapField.INPUT], undefined]
   const { account, chainId, library } = useActiveWeb3React()
 
+  const inputCurrencyAddress = currencies[ZapField.INPUT]?.wrapped.address
+  const outputLPTokenAddress = lpToken[ZapField.OUTPUT]?.lpToken
   // burn state
-  const { pair, parsedAmounts, error } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined)
-  const { onUserInput: _onUserInput } = useBurnActionHandlers()
-  const isValid = !error
-
-  // modal and loading
-  const [showConfirm, setShowConfirm] = useState<boolean>(false)
-
-  // txn values
-  const [txHash, setTxHash] = useState<string>('')
+  const isValid = true
   const deadline = useTransactionDeadline()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
 
-  // pair contract
-  const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
-
-  // router contract
-  const routerContract = useRouterContract()
+  const zapContract: Contract | null = useZapContract()
 
   // allowance handling
-  const { gatherPermitSignature, signatureData } = useV2LiquidityTokenPermit(
-    parsedAmounts[Field.LIQUIDITY],
-    routerContract?.address
-  )
+  const [approvalState, approveCallback] = useApproveCallback(parsedAmount, zapContract?.address)
 
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], routerContract?.address)
-
-  async function onAttemptToApprove() {
-    if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
-    const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
-
-    if (gatherPermitSignature) {
-      try {
-        await gatherPermitSignature()
-      } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
-        if (error?.code !== 4001) {
-          await approveCallback()
-        }
-      }
-    } else {
-      await approveCallback()
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  useEffect(() => {
+    if (approvalState === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
     }
-  }
+  }, [approvalState, approvalSubmitted])
 
-  const dependentField: SwapField = independentField === SwapField.INPUT ? SwapField.OUTPUT : SwapField.INPUT
+  const handleApprove = useCallback(async () => {
+    await approveCallback()
+  }, [approveCallback])
+
+  const dependentField: ZapField = independentField === ZapField.INPUT ? ZapField.OUTPUT : ZapField.INPUT
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: showWrap
-      ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+    [dependentField]: '',
   }
 
-  const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[SwapField.INPUT])
-  const showMaxButton = Boolean(
-    maxInputAmount?.greaterThan(0) && !parsedAmounts[SwapField.INPUT]?.equalTo(maxInputAmount)
-  )
+  const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[ZapField.INPUT])
+  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmount?.equalTo(maxInputAmount))
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onLPTokenSelection, onUserInput, onChangeRecipient } =
+    useZapActionHandlers()
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      onUserInput(SwapField.INPUT, value)
+      onUserInput(ZapField.INPUT, value)
     },
     [onUserInput]
   )
 
   const handleTypeOutput = useCallback(
     (value: string) => {
-      onUserInput(SwapField.OUTPUT, value)
+      onUserInput(ZapField.OUTPUT, value)
     },
     [onUserInput]
   )
 
   const handleMaxInput = useCallback(() => {
-    maxInputAmount && onUserInput(SwapField.INPUT, maxInputAmount.toExact())
+    maxInputAmount && onUserInput(ZapField.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(SwapField.OUTPUT, outputCurrency),
+    (outputCurrency) => onCurrencySelection(ZapField.OUTPUT, outputCurrency),
     [onCurrencySelection]
   )
 
-  const fiatValueInput = useUSDCValue(parsedAmounts[SwapField.INPUT])
-  const fiatValueOutput = useUSDCValue(parsedAmounts[SwapField.OUTPUT])
+  const handleLPTokenSelect = useCallback(
+    (lpToken) => onLPTokenSelection(ZapField.OUTPUT, lpToken),
+    [onLPTokenSelection]
+  )
+
+  const fiatValueInput = useUSDCValue(parsedAmount)
+
+  // modal and loading
+  const [{ showConfirm, zapErrorMessage, attemptingTxn, txHash }, setZapState] = useState<{
+    showConfirm: boolean
+    attemptingTxn: boolean
+    zapErrorMessage: string | undefined
+    txHash: string | undefined
+  }>({
+    showConfirm: false,
+    attemptingTxn: false,
+    zapErrorMessage: undefined,
+    txHash: undefined,
+  })
+
+  const handleAcceptChanges = useCallback(() => {
+    setZapState({
+      zapErrorMessage,
+      txHash,
+      attemptingTxn,
+      showConfirm,
+    })
+  }, [attemptingTxn, showConfirm, zapErrorMessage, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
-      onCurrencySelection(SwapField.INPUT, inputCurrency)
+      onCurrencySelection(ZapField.INPUT, inputCurrency)
     },
     [onCurrencySelection]
   )
+  const handleConfirmDismiss = useCallback(() => {
+    setZapState({
+      showConfirm: false,
+      attemptingTxn,
+      zapErrorMessage,
+      txHash,
+    })
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      onUserInput(ZapField.INPUT, '')
+    }
+  }, [attemptingTxn, onUserInput, zapErrorMessage, txHash])
+
+  const addTransaction = useTransactionAdder()
+  const handleZap = async function () {
+    setZapState({
+      attemptingTxn: true,
+      showConfirm,
+      zapErrorMessage: undefined,
+      txHash: undefined,
+    })
+    const amount = parsedAmount.quotient.toString()
+    console.log(inputCurrencyAddress, amount, outputLPTokenAddress)
+
+    // await approveCallback()
+    try {
+      const tx = await zapContract.zapInToken(inputCurrencyAddress, amount, outputLPTokenAddress)
+      debugger
+      setZapState({
+        attemptingTxn: false,
+        showConfirm, // showConfirm,
+        zapErrorMessage: undefined,
+        txHash: tx.hash,
+      })
+      return addTransaction(tx, {
+        summary:
+          'ZapIn from ' +
+          typedValue +
+          ' ' +
+          currencies[ZapField.INPUT]?.symbol +
+          ' to ' +
+          lpToken[ZapField.OUTPUT]?.token0.symbol +
+          '-' +
+          lpToken[ZapField.OUTPUT]?.token1.symbol,
+      })
+    } catch (error) {
+      setZapState({
+        attemptingTxn: false,
+        showConfirm,
+        zapErrorMessage: 'No transaction submitted!',
+        txHash: '',
+      })
+    }
+  }
+
+  const zapIsUnsupported = useIsZapUnsupported(currencies?.INPUT, lpToken?.OUTPUT)
+
+  const userHasSpecifiedInputOutput = Boolean(
+    currencies[ZapField.INPUT] && lpToken[ZapField.OUTPUT] && parsedAmount?.greaterThan(JSBI.BigInt(0))
+  )
+
+  const [singleHopOnly] = useUserSingleHopOnly()
+  const [showInverted, setShowInverted] = useState<boolean>(false)
+
+  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
+  // never show if price impact is above threshold in non expert mode
+  const showApproveFlow =
+    !zapInputError &&
+    (approvalState === ApprovalState.NOT_APPROVED ||
+      approvalState === ApprovalState.PENDING ||
+      (approvalSubmitted && approvalState === ApprovalState.APPROVED))
+
+  // the callback to execute the zap
+  const { callback: zapCallback, error: zapCallbackError } = useZapCallback(allowedSlippage, recipient)
 
   return (
     <Container id="remove-liquidity-page" className="py-4 space-y-4 md:py-12 lg:py-24" maxWidth="2xl">
@@ -154,63 +272,143 @@ export default function Zap() {
       <DoubleGlowShadow>
         <div className="p-4 space-y-4 rounded bg-dark-900" style={{ zIndex: 1 }}>
           <Header input={currencyA} output={currencyB} allowedSlippage={allowedSlippage} />
+          <ConfirmZapModal
+            trade={zapTrade}
+            isOpen={showConfirm}
+            onAcceptChanges={handleAcceptChanges}
+            attemptingTxn={attemptingTxn}
+            txHash={txHash}
+            recipient={recipient}
+            allowedSlippage={allowedSlippage}
+            onConfirm={handleZap}
+            zapErrorMessage={zapErrorMessage}
+            onDismiss={handleConfirmDismiss}
+          />
           <div>
             <CurrencyInputPanel
-              // priceImpact={priceImpact}
-              label={
-                independentField === SwapField.OUTPUT && !showWrap
-                  ? i18n._(t`Swap From (est.):`)
-                  : i18n._(t`Swap From:`)
-              }
-              value={formattedAmounts[SwapField.INPUT]}
+              label={i18n._(t`Zap From:`)}
+              value={formattedAmounts[ZapField.INPUT]}
               showMaxButton={showMaxButton}
-              currency={currencies[SwapField.INPUT]}
+              currency={currencies[ZapField.INPUT]}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
               fiatValue={fiatValueInput ?? undefined}
               onCurrencySelect={handleInputSelect}
-              otherCurrency={currencies[SwapField.OUTPUT]}
+              otherCurrency={currencies[ZapField.OUTPUT]}
               showCommonBases={true}
-              id="swap-currency-input"
+              id="zap-currency-input"
             />
-            <AutoColumn gap="md">
-              {/* body */}
-              <div id="remove-liquidity-output" className="p-[108px] rounded bg-dark-800">
-                {/* 1-click convert tokens to LP tokens.<br/> */}
-              </div>
-
-              {/* button area */}
-              <div style={{ position: 'relative' }}>
-                {!account ? (
-                  <Web3Connect size="lg" color="blue" className="w-full" />
-                ) : (
-                  <div className="grid grid-cols-2 gap-4">
-                    <ButtonConfirmed
-                      onClick={onAttemptToApprove}
-                      confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                      disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <Dots>{i18n._(t`Approving`)}</Dots>
-                      ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                        i18n._(t`Approved`)
-                      ) : (
-                        i18n._(t`Approve`)
-                      )}
-                    </ButtonConfirmed>
-                    <ButtonError
-                      onClick={() => {
-                        setShowConfirm(true)
-                      }}
-                      disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
-                      error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                    >
-                      {error || i18n._(t`Zap`)}
-                    </ButtonError>
+            <AutoColumn justify="space-between" className="py-2.5">
+              <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                <button className="z-10 -mt-6 -mb-6 rounded-full cursor-default bg-dark-900 p-3px">
+                  <div className="p-3 rounded-full bg-dark-800">
+                    <ZapIcon size="32" />
                   </div>
-                )}
+                </button>
+              </AutoRow>
+            </AutoColumn>
+            <LPTokenSelectPanel
+              label={i18n._(t`Zap To (estimate not available):`)}
+              showMaxButton={false}
+              hideBalance={false}
+              currency={currencies[ZapField.OUTPUT]}
+              onCurrencySelect={handleOutputSelect}
+              otherCurrency={currencies[ZapField.INPUT]}
+              showCommonBases={true}
+              id="zap-currency-output"
+              onLPTokenSelect={handleLPTokenSelect}
+              lpToken={lpToken[ZapField.OUTPUT]}
+            />
+            <AutoColumn className="md py-2.5" gap={'md'}>
+              {/* body */}
+              <div id="remove-liquidity-output" className="p-1 rounded bg-dark-800">
+                1-click convert tokens to LP tokens.
+                <br />
               </div>
             </AutoColumn>
+            <BottomGrouping>
+              {zapIsUnsupported ? (
+                <Button color="red" size="lg" disabled>
+                  {i18n._(t`Unsupported Asset`)}
+                </Button>
+              ) : !account ? (
+                <Web3Connect size="lg" color="blue" className="w-full" />
+              ) : // !userHasSpecifiedInputOutput ? (
+              //   <div style={{ textAlign: 'center' }}>
+              //     <div className="mb-1">{i18n._(t`Insufficient liquidity for this trade`)}</div>
+              //     {singleHopOnly && <div className="mb-1">{i18n._(t`Try enabling multi-hop trades`)}</div>}
+              //   </div>
+              // ) :
+              showApproveFlow ? (
+                <div>
+                  {approvalState !== ApprovalState.APPROVED && (
+                    <ButtonConfirmed
+                      onClick={handleApprove}
+                      disabled={approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                      size="lg"
+                    >
+                      {approvalState === ApprovalState.PENDING ? (
+                        <div className="flex items-center justify-center h-full space-x-2">
+                          <div>Approving</div>
+                          <Loader stroke="white" />
+                        </div>
+                      ) : (
+                        i18n._(t`Approve ${currencies[ZapField.INPUT]?.symbol}`)
+                      )}
+                    </ButtonConfirmed>
+                  )}
+                  {approvalState === ApprovalState.APPROVED && (
+                    <ButtonError
+                      onClick={() => {
+                        if (isExpertMode) {
+                          handleZap()
+                        } else {
+                          setZapState({
+                            attemptingTxn: false,
+                            zapErrorMessage: undefined,
+                            showConfirm: true,
+                            txHash: undefined,
+                          })
+                        }
+                      }}
+                      id="zap-button"
+                      disabled={
+                        !isValid || zapInputError || approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
+                      }
+                    >
+                      {zapInputError ? zapInputError : i18n._(t`Zap`)}
+                    </ButtonError>
+                  )}
+                </div>
+              ) : (
+                <ButtonError
+                  onClick={() => {
+                    if (isExpertMode) {
+                      handleZap()
+                    } else {
+                      setZapState({
+                        attemptingTxn: false,
+                        zapErrorMessage: undefined,
+                        showConfirm: true,
+                        txHash: undefined,
+                      })
+                    }
+                  }}
+                  id="zap-button"
+                  disabled={
+                    !isValid || zapInputError || approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
+                  }
+                >
+                  {zapInputError ? zapInputError : i18n._(t`Zap`)}
+                </ButtonError>
+              )}
+              {showApproveFlow && (
+                <Column style={{ marginTop: '1rem' }}>
+                  <ProgressSteps steps={[approvalState === ApprovalState.APPROVED]} />
+                </Column>
+              )}
+              {isExpertMode && zapErrorMessage ? <ZapCallbackError error={zapErrorMessage} /> : null}
+            </BottomGrouping>
           </div>
         </div>
       </DoubleGlowShadow>
