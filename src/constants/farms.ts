@@ -404,6 +404,7 @@ export const FARMS: AddressMap = {
 
 // For MasterChefV2
 export const FARMSV2: AddressMap = {
+  [ChainId.BSC_TESTNET]: {},
   [ChainId.CRONOS]: {
     // '0xadbd1231fb360047525bedf962581f3eee7b49fe': {
     //   id: 0, symbol: 'CLP', name: 'CronaSwap LP',

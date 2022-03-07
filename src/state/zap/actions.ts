@@ -9,6 +9,17 @@ export const selectCurrency = createAction<{
   field: Field
   currencyId: string
 }>('zap/selectCurrency')
+export const selectLPToken = createAction<{
+  field: Field
+  lpTokenId: string
+  lpToken: Object
+}>('zap/selectLPToken')
+export const replaceZapState = createAction<{
+  field: Field
+  typedValue: string
+  inputCurrencyId?: string
+  recipient: string | null
+}>('swap/replaceZapState')
 export const switchCurrencies = createAction<void>('zap/switchCurrencies')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('zap/typeInput')
 export const setRecipient = createAction<{ recipient: string | null }>('zap/setRecipient')
