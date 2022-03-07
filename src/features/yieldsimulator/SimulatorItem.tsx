@@ -33,8 +33,6 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
       farm.token1 ? farm.symbol : farm.token0.symbol,
       farm.token1 ? farm.name : farm.token0.name
     )
-
-    // const balance = useTokenBalance(account, liquidityToken)
     const { amount } = useUserInfo(farm, liquidityToken)
     return Number(amount?.toFixed(liquidityToken?.decimals))
   }
@@ -53,7 +51,6 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
             <div className="flex gap-x-2">
               {/* Token logo */}
               <div className="flex items-center w-1/2 col-span-2 space-x-4 lg:gap-5 lg:w-3/12 lg:col-span-1">
-                {/* <DoubleLogo currency0={token0} currency1={token1} size={window.innerWidth > 768 ? 40 : 24} /> */}
                 {token0 && token1 && (
                   <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 40 : 28} />
                 )}
@@ -88,7 +85,6 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
 
               {/* Multiplier */}
               <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
-                {/* <div className="text-xs md:text-base text-secondary">{i18n._(t`Multiplier`)}</div> */}
                 <div className="flex items-center text-xs md:text-[14px] text-secondary">
                   {i18n._(t`Multiplier`)}
                   <QuestionHelper text="The Multiplier represents the proportion of CRONA rewards each farm receives, as a proportion of the CRONA produced each block. For example, if a 1x farm received 1 CRONA per block, a 40x farm would receive 40 CRONA per block. This amount is already included in all APR calculations for the farm." />
@@ -103,11 +99,6 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
                   <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} </div>
                 </div>
               ) : (
-                // <div className="flex flex-col justify-center w-2/12 lg:w-3/12">
-                //   <div className="text-xs md:text-base text-secondary">vAPR</div>
-                //   <div className="text-xs font-bold md:text-base">{formatPercent(farm.apr)} (proj. 332.91%)<LockClosedIcon className="h-4" /></div>
-                // </div>
-
                 <div className="flex flex-col justify-center w-2/12 space-y-1 lg:w-2/12">
                   <div className="text-xs md:text-[14px] text-secondary">
                     <div className="flex items-center">
