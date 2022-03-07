@@ -190,6 +190,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "react-gauge-chart": "^0.4.0"
+    "react-gauge-chart": "^0.4.0",
+    "recharts": "^2.1.9"
   }
 }

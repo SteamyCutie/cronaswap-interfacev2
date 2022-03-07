@@ -191,9 +191,8 @@ export default function YieldSimulator(): JSX.Element {
                       <div className={`flex justify-between items-center h-14 rounded px-3 md:px-5`}>
                         <div className="flex space-x-2 ">
                           <p
-                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${
-                              inputLocked ? 'text-high-emphesis' : 'text-secondary'
-                            }`}
+                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${inputLocked ? 'text-high-emphesis' : 'text-secondary'
+                              }`}
                           >
                             {`${inputLocked ? inputLocked : '0'} CRONA`}
                           </p>
@@ -209,13 +208,13 @@ export default function YieldSimulator(): JSX.Element {
                         <path
                           d="M10.9185 10.9185C7.89206 13.945 6.0086 17.9272 5.58908 22.1867C5.16956 26.4461 6.23993 30.7193 8.61781 34.278C10.9957 37.8368 14.534 40.461 18.6297 41.7034C22.7255 42.9458 27.1254 42.7297 31.0796 41.0918C35.0339 39.4539 38.2979 36.4955 40.3155 32.7208C42.3332 28.9462 42.9795 24.5887 42.1445 20.3908C41.3095 16.193 39.0448 12.4146 35.7363 9.69931C32.4277 6.98406 28.2801 5.5 24 5.5"
                           stroke="white"
-                          stroke-linecap="round"
+                          strokeLinecap="round"
                         />
-                        <path d="M24 24L14 14" stroke="white" stroke-linecap="round" />
-                        <path d="M24 5V10" stroke="white" stroke-linecap="round" />
-                        <path d="M42 24L38 24" stroke="white" stroke-linecap="round" />
-                        <path d="M24 38V42" stroke="white" stroke-linecap="round" />
-                        <path d="M10 24L6 24" stroke="white" stroke-linecap="round" />
+                        <path d="M24 24L14 14" stroke="white" strokeLinecap="round" />
+                        <path d="M24 5V10" stroke="white" strokeLinecap="round" />
+                        <path d="M42 24L38 24" stroke="white" strokeLinecap="round" />
+                        <path d="M24 38V42" stroke="white" strokeLinecap="round" />
+                        <path d="M10 24L6 24" stroke="white" strokeLinecap="round" />
                       </svg>
                     </div>
                     <div className="flex flex-col">
@@ -240,9 +239,8 @@ export default function YieldSimulator(): JSX.Element {
                       <div className={`flex justify-between items-center h-14 rounded px-3 md:px-5`}>
                         <div className="flex space-x-2 ">
                           <p
-                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${
-                              inputDuration ? 'text-high-emphesis' : 'text-secondary'
-                            }`}
+                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${inputDuration ? 'text-high-emphesis' : 'text-secondary'
+                              }`}
                           >
                             {`${inputDuration ? inputDuration : '0'} WEEKS`}
                           </p>
@@ -342,8 +340,8 @@ export default function YieldSimulator(): JSX.Element {
                       {lockedveCrona <= totalVeCrona
                         ? `${((lockedveCrona * 100) / totalVeCrona).toFixed(6)} %`
                         : account
-                        ? `100 %`
-                        : `0%`}
+                          ? `100 %`
+                          : `0%`}
                     </div>
                   </div>
                 </div>
