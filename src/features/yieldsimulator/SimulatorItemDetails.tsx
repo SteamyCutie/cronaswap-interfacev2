@@ -45,11 +45,13 @@ const SimulatorItemDetails = ({ farm, veCrona, handleBoost }) => {
   const apy = aprToApy(farm.apr * BoostFactor)
   const [share, setShare] = useState(Number(amount?.toSignificant(6, undefined, 4)) / farm.tvl)
   const [earning, setEarning] = useState((Number(amount?.toSignificant(6, undefined, 4)) * (apy / 100)) / 365)
-  useEffect(() => {
+
+  const handleInput = (val) => {
+    setDepositValue(val)
     const value = Number(amount?.toSignificant(6, undefined, 4)) + Number(depositValue)
     setShare(value > 0 ? (value >= farm.tvl ? 1 : value / farm.tvl) : 0)
     share !== 1 && setEarning((value * (apy / 100)) / 365)
-  }, [depositValue])
+  }
 
   return (
     <Transition
@@ -75,7 +77,9 @@ const SimulatorItemDetails = ({ farm, veCrona, handleBoost }) => {
               <NumericalInput
                 className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-light-purple"
                 value={depositValue}
-                onUserInput={setDepositValue}
+                onUserInput={(val) => {
+                  handleInput(val)
+                }}
                 placeholder={`0.0 ${farm.name}`}
               />
             </div>

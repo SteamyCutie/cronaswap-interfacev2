@@ -111,7 +111,7 @@ export default function YieldSimulator(): JSX.Element {
   }
 
   const lockedveCrona = calcVeCrona(Number(lockedAmount))
-  const [boostFactor, setBoostFactor] = useState(1)
+  const [boostFactor, setBoostFactor] = useState(1.0)
   const handleBoost = (value) => {
     setBoostFactor(value)
   }
@@ -191,8 +191,9 @@ export default function YieldSimulator(): JSX.Element {
                       <div className={`flex justify-between items-center h-14 rounded px-3 md:px-5`}>
                         <div className="flex space-x-2 ">
                           <p
-                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${inputLocked ? 'text-high-emphesis' : 'text-secondary'
-                              }`}
+                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${
+                              inputLocked ? 'text-high-emphesis' : 'text-secondary'
+                            }`}
                           >
                             {`${inputLocked ? inputLocked : '0'} CRONA`}
                           </p>
@@ -239,8 +240,9 @@ export default function YieldSimulator(): JSX.Element {
                       <div className={`flex justify-between items-center h-14 rounded px-3 md:px-5`}>
                         <div className="flex space-x-2 ">
                           <p
-                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${inputDuration ? 'text-high-emphesis' : 'text-secondary'
-                              }`}
+                            className={`text-sm md:text-lg font-bold whitespace-nowrap ${
+                              inputDuration ? 'text-high-emphesis' : 'text-secondary'
+                            }`}
                           >
                             {`${inputDuration ? inputDuration : '0'} WEEKS`}
                           </p>
@@ -252,7 +254,7 @@ export default function YieldSimulator(): JSX.Element {
               </div>
               <div className="flex justify-between px-2 mt-6 mb-2">
                 <div className="text-white">Lock Until</div>
-                <div>{new Date(Date.now() + timeDuration * 7 * 86400).toDateString().slice(3)}</div>
+                <div>{new Date(Date.now() + timeDuration * 7 * 86400 * 1000).toDateString().slice(3)}</div>
               </div>
               <div className="grid grid-cols-2 gap-4 text-sm lg:text-base md:grid-cols-4">
                 <button
@@ -340,8 +342,8 @@ export default function YieldSimulator(): JSX.Element {
                       {lockedveCrona <= totalVeCrona
                         ? `${((lockedveCrona * 100) / totalVeCrona).toFixed(6)} %`
                         : account
-                          ? `100 %`
-                          : `0%`}
+                        ? `100 %`
+                        : `0%`}
                     </div>
                   </div>
                 </div>
