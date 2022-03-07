@@ -77,6 +77,9 @@ export default function Boostv2() {
     withdrawWithMc,
   } = useVotingEscrow()
 
+  const addTransaction = useTransactionAdder()
+  const voteContract = useVotingContract()
+
   const WEEK = 7 * 86400
 
   const walletConnected = !!account
@@ -224,8 +227,6 @@ export default function Boostv2() {
     }
   }
 
-  const addTransaction = useTransactionAdder()
-  const voteContract = useVotingContract()
   const handleVote = async () => {
     if (!walletConnected) {
       toggleWalletModal()
@@ -236,7 +237,6 @@ export default function Boostv2() {
       boostedFarms.map((item) => { addrArr.push(item.lpToken) })
 
       const args = [addrArr, voteValueArr]
-      console.log('aaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrr', args)
       const gasLimit = await voteContract.estimateGas.vote(...args)
       const tx = await voteContract.vote(...args, {
         gasLimit: gasLimit.mul(120).div(100),
@@ -244,7 +244,6 @@ export default function Boostv2() {
       addTransaction(tx, {
         summary: `${i18n._(t`Vote`)} Farms`,
       })
-      // const success = await sendTx(() => )
 
       handleInput('')
       setPendingTx(false)
