@@ -32,6 +32,8 @@ import NumericalInput from 'components/NumericalInput'
 import { VoteInputItem } from 'app/features/boost/VotingItems'
 import Checkbox from 'app/components/Checkbox'
 import { VotingChart } from 'app/features/boost/VotingChart'
+import { useVotingContract } from 'app/hooks'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -216,6 +218,33 @@ export default function Boostv2() {
         // setModalOpen(true)
         return
       }
+
+      handleInput('')
+      setPendingTx(false)
+    }
+  }
+
+  const addTransaction = useTransactionAdder()
+  const voteContract = useVotingContract()
+  const handleVote = async () => {
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      let addrArr = []
+      boostedFarms.map((item) => { addrArr.push(item.lpToken) })
+
+      const args = [addrArr, voteValueArr]
+      console.log('aaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrr', args)
+      const gasLimit = await voteContract.estimateGas.vote(...args)
+      const tx = await voteContract.vote(...args, {
+        gasLimit: gasLimit.mul(120).div(100),
+      })
+      addTransaction(tx, {
+        summary: `${i18n._(t`Vote`)} Farms`,
+      })
+      // const success = await sendTx(() => )
 
       handleInput('')
       setPendingTx(false)
@@ -665,6 +694,7 @@ export default function Boostv2() {
                     <button
                       className={newWeighting === 100 ? activeTabStyle : inactiveTabStyle}
                       disabled={newWeighting != 100}
+                      onClick={handleVote}
                     >
                       {newWeighting === 100 ? `Vote` : `Vote (weights must total 100%)`}
                     </button>

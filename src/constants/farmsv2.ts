@@ -335,6 +335,7 @@ export const FARMSV2: AddressMap = {
       name: 'CRONA-BNB',
       token1: { id: '0x50fbded2063577995389fd5fa0eb349ccbc7ca67', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token0: { id: '0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5', name: 'WBNB Token', symbol: 'BNB', decimals: 18 },
+      isVote: true,
     },
 
     '0x00C5cfBDFC8c84a42C2162A3089b5BC65E2FF72E': {
@@ -344,6 +345,7 @@ export const FARMSV2: AddressMap = {
       name: 'USDC-BNB',
       token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
       token0: { id: '0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5', name: 'WBNB Token', symbol: 'BNB', decimals: 18 },
+      isVote: true,
     },
 
     // '0xecf2Ef00DBF270154f84Fc580262aE1a2eD31B6D': {

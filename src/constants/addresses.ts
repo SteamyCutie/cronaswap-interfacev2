@@ -73,3 +73,7 @@ export const PUBLIC_SALE_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '0x941a3703E106707668f38E779c7984383638173e',
   [ChainId.CRONOS_TESTNET]: '',
 }
+
+export const VOTE_ADDRESS: AddressMap = {
+  [ChainId.BSC_TESTNET]: '0x6a8c1ba309136D78245f1F0a14790239b71a9577',
+}
