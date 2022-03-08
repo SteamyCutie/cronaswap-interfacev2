@@ -68,8 +68,8 @@ export default function LPTokenSelectPanel({
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
 
-  let token0 = useCurrency(lpToken ? lpToken.token0?.id : undefined)
-  let token1 = useCurrency(lpToken ? lpToken.token1?.id : undefined)
+  let token0 = useCurrency(lpToken ? lpToken?.token0?.id : undefined)
+  let token1 = useCurrency(lpToken ? lpToken?.token1?.id : undefined)
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
