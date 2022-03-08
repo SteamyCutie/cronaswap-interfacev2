@@ -17,8 +17,6 @@ import { isTokenOnList } from '../../functions/validate'
 import styled from 'styled-components'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../services/web3'
-import { useCombinedActiveList } from '../../state/lists/hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useCurrency, useIsUserAddedToken } from '../../hooks/Tokens'
 import { useLingui } from '@lingui/react'
 import { classNames, formatNumber } from '../../functions'
@@ -26,8 +24,8 @@ import { usePendingCrona } from 'app/features/farms/hooks'
 import { getAddress } from '@ethersproject/address'
 import { useUserInfo } from 'app/features/staking/IncentivePool/hooks'
 
-function lpTokenKey(currency: Object): string {
-  return currency.lpToken ? currency.lpToken : 'ETHER'
+function lpTokenKey(lpToken: Object): string {
+  return lpToken?.lpToken ? lpToken.lpToken : 'ETHER'
 }
 
 const Tag = styled.div`
@@ -99,7 +97,6 @@ function TokenTags({ currency }: { currency: Currency }) {
 }
 
 function LPTokenRow({
-  currency,
   onSelect,
   isSelected,
   otherSelected,
@@ -107,7 +104,6 @@ function LPTokenRow({
   hideBalance = false,
   lpToken,
 }: {
-  currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
@@ -118,12 +114,11 @@ function LPTokenRow({
   const { account, chainId } = useActiveWeb3React()
   const key = lpTokenKey(lpToken)
 
-  let token0 = useCurrency(lpToken.token0?.id)
-  let token1 = useCurrency(lpToken.token1?.id)
+  let token0 = useCurrency(lpToken?.token0?.id)
+  let token1 = useCurrency(lpToken?.token1?.id)
 
   const pendingCrona = usePendingCrona(lpToken)
 
-  const [showCalc, setShowCalc] = useState(false)
   const MyLpBalance = (lpToken) => {
     const liquidityToken = new Token(
       chainId,
@@ -183,13 +178,10 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowFixed>
           <TokenListLogoWrapper src="/tokenlist.svg" />
           <Typography variant="sm" className="ml-3">
-            {i18n._(t`Expanded results from inactive Token Lists`)}
+            {i18n._(t`Expanded results from Pool`)}
           </Typography>
         </RowFixed>
-        <QuestionHelper
-          text={i18n._(t`Tokens from inactive lists. Import specific tokens below or
-            click Manage to activate more lists.`)}
-        />
+        <QuestionHelper text={i18n._(t`LP Tokens from pool.`)} />
       </RowBetween>
     </FixedContentRow>
   )

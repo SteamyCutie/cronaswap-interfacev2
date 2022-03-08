@@ -109,18 +109,7 @@ export default function LPTokenSelectPanel({
                 {label && <div className="text-xs font-medium text-secondary whitespace-nowrap">{label}</div>}
                 <div className="flex items-center">
                   <div className="text-lg font-bold token-symbol-container md:text-2xl">
-                    {(lpToken &&
-                      (token0 && token0.symbol && token0.symbol.length > 20
-                        ? token0.symbol.slice(0, 4) +
-                          '...' +
-                          token0.symbol.slice(token0.symbol.length - 5, token0.symbol.length) +
-                          ' - '
-                        : token0?.symbol + ' - ') +
-                        (token1 && token1.symbol && token1.symbol.length > 20
-                          ? token1.symbol.slice(0, 4) +
-                            '...' +
-                            token1.symbol.slice(token1.symbol.length - 5, token1.symbol.length)
-                          : token1?.symbol)) || (
+                    {(lpToken && lpToken?.name) || (
                       <div className="px-2 py-1 mt-1 text-xs font-medium bg-transparent border rounded-full hover:bg-primary border-low-emphesis text-secondary whitespace-nowrap ">
                         {i18n._(t`Select a LP token`)}
                       </div>
