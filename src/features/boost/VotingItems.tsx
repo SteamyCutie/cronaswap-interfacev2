@@ -9,7 +9,7 @@ export const SelectItem = ({ item, triggerBoost }) => {
   }
   return (
     <div className="flex items-center gap-2 hover:cursor-pointer">
-      <Checkbox color="blue" className="w-4 h-4 border-2 rounded-sm border-dark-650" set={handleSet} />
+      <Checkbox color="blue" checked={item.isBoost} className="w-4 h-4 border-2 rounded-sm border-dark-650" set={handleSet} />
       <div className="text-base text-dark-650 hover:text-blue text-[15px]">{item.name} LP</div>
     </div>
   )
