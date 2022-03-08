@@ -84,20 +84,10 @@ function LPTokenSearchModal({
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={75} minHeight={minHeight} padding={1}>
       {modalView === CurrencyModalView.search ? (
         <LPTokenSearch
-          isOpen={isOpen}
           onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
           showImportView={() => setModalView(CurrencyModalView.importToken)}
           setImportToken={setImportToken}
-          showManageView={() => setModalView(CurrencyModalView.manage)}
-          currencyList={currencyList}
-          includeNativeCurrency={includeNativeCurrency}
-          allowManageTokenList={allowManageTokenList}
           hideBalance={hideBalance}
-          showSearch={showSearch}
           onLPTokenSelect={handleLPTokenSelect}
         />
       ) : modalView === CurrencyModalView.importToken && importToken ? (

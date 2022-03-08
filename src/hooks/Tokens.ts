@@ -1,6 +1,12 @@
 import { ChainId, Currency, NATIVE, Token, WNATIVE, WNATIVE_ADDRESS, currencyEquals } from '@cronaswap/core-sdk'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { TokenAddressMap, useAllLists, useInactiveListUrls, useUnsupportedTokenList } from '../state/lists/hooks'
+import {
+  TokenAddressMap,
+  useAllLists,
+  useInactiveListUrls,
+  useUnsupportedTokenList,
+  useZapInList,
+} from '../state/lists/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
@@ -47,6 +53,11 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 
     return mapWithoutUrls
   }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
+}
+
+export function useZapInTokens(): { [address: string]: Token } {
+  const zapInTokens = useZapInList()
+  return useTokensFromMap(zapInTokens, false)
 }
 
 export function useAllTokens(): { [address: string]: Token } {

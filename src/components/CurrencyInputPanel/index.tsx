@@ -38,6 +38,7 @@ interface CurrencyInputPanelProps {
   locked?: boolean
   customBalanceText?: string
   showSearch?: boolean
+  currencyList?: string[]
 }
 
 export default function CurrencyInputPanel({
@@ -62,6 +63,7 @@ export default function CurrencyInputPanel({
   customBalanceText,
   allowManageTokenList = true,
   showSearch = true,
+  currencyList = null,
 }: CurrencyInputPanelProps) {
   const { i18n } = useLingui()
   const [modalOpen, setModalOpen] = useState(false)
@@ -189,6 +191,7 @@ export default function CurrencyInputPanel({
           allowManageTokenList={allowManageTokenList}
           hideBalance={hideBalance}
           showSearch={showSearch}
+          currencyList={currencyList}
         />
       )}
     </div>

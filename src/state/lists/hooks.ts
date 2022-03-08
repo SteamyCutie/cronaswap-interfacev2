@@ -1,5 +1,6 @@
 import { AppState } from '..'
 import DEFAULT_TOKEN_LIST from '@cronaswap/default-token-list'
+import ZAP_IN_TOKEN_LIST from '../../constants/token-lists/cronaswap-zapin.tokenlist.json'
 import { TokenList } from '@uniswap/token-lists'
 import { UNSUPPORTED_LIST_URLS } from '../../config/token-lists'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/token-lists/sushiswap-v2-unsupported.tokenlist.json'
@@ -43,6 +44,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 }
 
 const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
+
+const TRANSFORMED_ZAP_IN_TOKEN_LIST = listToTokenMap(ZAP_IN_TOKEN_LIST)
 
 export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
@@ -119,6 +122,11 @@ export function useInactiveListUrls(): string[] {
   const lists = useAllLists()
   const allActiveListUrls = useActiveListUrls()
   return Object.keys(lists).filter((url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
+}
+
+// get all the tokens from active lists, combine with local default tokens
+export function useZapInList(): TokenAddressMap {
+  return TRANSFORMED_ZAP_IN_TOKEN_LIST
 }
 
 // get all the tokens from active lists, combine with local default tokens
