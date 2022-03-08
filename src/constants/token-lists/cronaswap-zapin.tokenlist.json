@@ -51,22 +51,6 @@
       "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/usdt.jpg"
     },
     {
-      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-      "chainId": 1,
-      "name": "Dai Stablecoin",
-      "symbol": "DAI",
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/dai.jpg"
-    },
-    {
-      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-      "chainId": 1,
-      "name": "Tether USD",
-      "symbol": "USDT",
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/usdt.jpg"
-    },
-    {
       "name": "Dai Stablecoin",
       "symbol": "DAI",
       "address": "0xF2001B145b43032AAF5Ee2884e456CCd805F677D",

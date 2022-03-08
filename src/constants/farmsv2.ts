@@ -674,13 +674,26 @@ export const FARMSV2: AddressMap = {
       isZap: false,
     },
 
-    // '0xecf2Ef00DBF270154f84Fc580262aE1a2eD31B6D': {
+    '0x921629c3F034845F4d09779E547b278C431eF104': {
+      id: 2,
+      pid: 2,
+      symbol: 'CLP',
+      name: 'USDC-USDT',
+      isVote: true,
+      isZap: true,
+      token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+      token0: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+    },
+
+    // '0x5163a0c952dc0e4090d8566912399a6af1edaf7f': {
     //   id: 2,
-    //   pid: 2,
+    //   pid: 3,
     //   symbol: 'CLP',
     //   name: 'USDC-USDT',
-    //   token1: { id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-    //   token0: { id: '0xE912124f1204208e3EBA49BAbe3Fc1028351808d', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+    //   isVote: true,
+    //   isZap: true,
+    //   token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+    //   token0: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
     // },
   },
 }
