@@ -49,8 +49,8 @@ const SimulatorItemDetails = ({ farm, veCrona, handleBoost }) => {
   const handleInput = (val) => {
     setDepositValue(val)
     const value = Number(amount?.toSignificant(6, undefined, 4)) + Number(depositValue)
-    setShare(value > 0 ? (value >= farm.tvl ? 1 : value / farm.tvl) : 0)
-    share !== 1 && setEarning((value * (apy / 100)) / 365)
+    setShare(value > 0 ? value / (farm.tvl + value) : 0)
+    share <= 0.9999 && setEarning((value * (apy / 100)) / 365)
   }
 
   return (
@@ -88,7 +88,7 @@ const SimulatorItemDetails = ({ farm, veCrona, handleBoost }) => {
           <div className="flex justify-between gap-2 -translate-y-2 md:w-5/12">
             <div className="text-white">
               <div className="text-lg">{i18n._(t`Your share of staking`)}</div>
-              <div className="text-lg font-bold md:text-xl">{(share * 100).toFixed(6)}%</div>
+              <div className="text-lg font-bold md:text-xl">{(share * 100).toFixed(2)}%</div>
             </div>
             <div className="text-white">
               <div className="text-lg">{i18n._(t`CRONA earning`)}</div>

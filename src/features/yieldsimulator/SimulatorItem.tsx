@@ -38,6 +38,12 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
   }
   const Lpbalance = { account } ? MyLpBalance(farm) : 0
 
+  const [boostFactor, setBoostFactor] = useState(1.0)
+  const handleBF = (value) => {
+    handleBoost(value)
+    setBoostFactor(value)
+  }
+
   return (
     <Disclosure>
       {({ open }) => (
@@ -145,7 +151,7 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
                     <div className="flex items-center">
                       <LockClosedIcon className="h-4 text-yellow" />
                       <div className="text-xs font-bold md:text-base">
-                        {formatPercent(farm.boostApr)} → {formatPercent(farm.apr * 2.5)}
+                        {formatPercent(farm.boostApr)} → {formatPercent(farm.apr * boostFactor)}
                       </div>
                     </div>
                   </div>
@@ -160,7 +166,7 @@ const SimulatorItem = ({ farm, veCrona, handleBoost }) => {
             </div>
           </Disclosure.Button>
 
-          {open && <SimulatorItemDetails farm={farm} veCrona={veCrona} handleBoost={handleBoost} />}
+          {open && <SimulatorItemDetails farm={farm} veCrona={veCrona} handleBoost={handleBF} />}
         </div>
       )}
     </Disclosure>

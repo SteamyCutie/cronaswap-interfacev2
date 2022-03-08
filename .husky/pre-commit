@@ -1,4 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm test
+yarn lint
+yarn lint-staged
+yarn lingui
+# yarn test
