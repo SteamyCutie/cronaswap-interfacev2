@@ -684,5 +684,16 @@ export const FARMSV2: AddressMap = {
       token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
       token0: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
     },
+
+    // '0x5163a0c952dc0e4090d8566912399a6af1edaf7f': {
+    //   id: 2,
+    //   pid: 3,
+    //   symbol: 'CLP',
+    //   name: 'USDC-USDT',
+    //   isVote: true,
+    //   isZap: true,
+    //   token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+    //   token0: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+    // },
   },
 }
