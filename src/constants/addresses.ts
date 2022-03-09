@@ -79,5 +79,7 @@ export const VOTE_ADDRESS: AddressMap = {
 }
 
 export const ZAP_ADDRESS: AddressMap = {
+  [ChainId.CRONOS]: '0xe7CD641c86B6F2Ccf63b95B9b2951beb5fe567e9',
+  [ChainId.CRONOS_TESTNET]: '',
   [ChainId.BSC_TESTNET]: '0xF4E667173f6983A81fABFAf8d71e6078F261E596',
 }

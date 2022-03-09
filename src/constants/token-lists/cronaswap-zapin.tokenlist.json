@@ -1,22 +1,25 @@
 {
   "name": "CronaSwap Menu",
-  "timestamp": "2022-02-26T13:08:04.660Z",
+  "timestamp": "2022-03-04T09:26:46.320Z",
   "version": {
     "major": 1,
     "minor": 0,
-    "patch": 25
+    "patch": 30
   },
   "tags": {},
   "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/master/assets/logox200.png",
-  "keywords": ["cronaswap", "default"],
+  "keywords": [
+    "cronaswap",
+    "default"
+  ],
   "tokens": [
     {
-      "name": "Binance",
-      "symbol": "BNB",
-      "address": "0xfA9343C3897324496A05fC75abeD6bAC29f8A40f",
-      "chainId": 25,
+      "address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+      "chainId": 1,
+      "name": "Curve DAO Token",
+      "symbol": "CRV",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xfA9343C3897324496A05fC75abeD6bAC29f8A40f/logo.png"
+      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/crv.jpg"
     },
     {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -25,14 +28,6 @@
       "symbol": "DAI",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/dai.jpg"
-    },
-    {
-      "name": "Crona Token",
-      "symbol": "CRONA",
-      "address": "0xadbd1231fb360047525BEdF962581F3eee7b49fe",
-      "chainId": 25,
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png"
     },
     {
       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -49,6 +44,31 @@
       "symbol": "USDT",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/usdt.jpg"
+    },
+    {
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "chainId": 1,
+      "name": "Wrapped Bitcoin",
+      "symbol": "WBTC",
+      "decimals": 8,
+      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/btc.jpg"
+    },
+    {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/eth.jpg"
+    },
+    
+    {
+      "name": "Crona Token",
+      "symbol": "CRONA",
+      "address": "0xadbd1231fb360047525BEdF962581F3eee7b49fe",
+      "chainId": 25,
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png"
     },
     {
       "name": "Dai Stablecoin",
@@ -75,6 +95,14 @@
       "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0x66e428c3f67a68878562e79A0234c1F83c208770/logo.png"
     },
     {
+      "name": "Wrapped BTC",
+      "symbol": "WBTC",
+      "address": "0x062E66477Faf219F25D27dCED647BF57C3107d52",
+      "chainId": 25,
+      "decimals": 8,
+      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0x062E66477Faf219F25D27dCED647BF57C3107d52/logo.png"
+    },
+    {
       "name": "WCRO Token",
       "symbol": "WCRO",
       "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
@@ -82,6 +110,15 @@
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23/logo.png"
     },
+    {
+      "name": "Wrapped ETH",
+      "symbol": "WETH",
+      "address": "0xe44Fd7fCb2b1581822D0c862B68222998a0c299a",
+      "chainId": 25,
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xe44Fd7fCb2b1581822D0c862B68222998a0c299a/logo.png"
+    },
+    
     {
       "name": "Crona Token",
       "symbol": "CRONA",
@@ -115,12 +152,12 @@
       "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/bsc-testnet/0xf9586C796087b3c6F39ffd85cB0129f0745143d3/logo.svg"
     },
     {
-      "name": "WCRO Token",
-      "symbol": "WCRO",
-      "address": "0x2c149a0b0C0225469DC2eA9619Fc90baDF193414",
+      "name": "WBNB Token",
+      "symbol": "WBNB",
+      "address": "0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5",
       "chainId": 97,
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/bsc-testnet/0x2c149a0b0C0225469DC2eA9619Fc90baDF193414/logo.png"
+      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/bsc-testnet/0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5/logo.png"
     },
     {
       "name": "Crona Token",
