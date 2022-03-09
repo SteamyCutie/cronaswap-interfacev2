@@ -575,13 +575,13 @@ export const FARMSV2: AddressMap = {
       pid: 0,
       symbol: 'CLP',
       name: 'CRONA-CRO',
-      token1: {
+      token0: {
         id: '0x7B6D3ec86493F7930EdA24a33C1A316bfD405188',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
       },
-      token0: {
+      token1: {
         id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146',
         name: 'WCRO Token',
         symbol: 'CRO',
@@ -595,13 +595,13 @@ export const FARMSV2: AddressMap = {
       pid: 1,
       symbol: 'CLP',
       name: 'USDC-CRO',
-      token1: {
+      token0: {
         id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8',
         name: 'USD Coin',
         symbol: 'USDC',
         decimals: 6,
       },
-      token0: {
+      token1: {
         id: '0x873c905681Fb587cc12a29DA5CD3c447bE61F146',
         name: 'WCRO Token',
         symbol: 'CRO',
@@ -615,13 +615,13 @@ export const FARMSV2: AddressMap = {
       pid: 2,
       symbol: 'CLP',
       name: 'USDC-USDT',
-      token1: {
+      token0: {
         id: '0x374AC6edeE4385411FF36BEf74D2c1723bD7A6e8',
         name: 'USD Coin',
         symbol: 'USDC',
         decimals: 6,
       },
-      token0: {
+      token1: {
         id: '0xE912124f1204208e3EBA49BAbe3Fc1028351808d',
         name: 'Tether USD',
         symbol: 'USDT',
@@ -637,13 +637,13 @@ export const FARMSV2: AddressMap = {
       pid: 0,
       symbol: 'CLP',
       name: 'CRONA-BNB',
-      token1: {
+      token0: {
         id: '0x50fbded2063577995389fd5fa0eb349ccbc7ca67',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
       },
-      token0: {
+      token1: {
         id: '0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5',
         name: 'WBNB Token',
         symbol: 'BNB',
@@ -658,13 +658,13 @@ export const FARMSV2: AddressMap = {
       pid: 1,
       symbol: 'CLP',
       name: 'USDC-BNB',
-      token1: {
+      token0: {
         id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A',
         name: 'USD Coin',
         symbol: 'USDC',
         decimals: 6,
       },
-      token0: {
+      token1: {
         id: '0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5',
         name: 'WBNB Token',
         symbol: 'BNB',
@@ -681,8 +681,8 @@ export const FARMSV2: AddressMap = {
       name: 'USDC-USDT',
       isVote: true,
       isZap: true,
-      token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-      token0: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+      token0: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+      token1: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
     },
 
     // '0x5163a0c952dc0e4090d8566912399a6af1edaf7f': {
@@ -692,8 +692,8 @@ export const FARMSV2: AddressMap = {
     //   name: 'USDC-USDT',
     //   isVote: true,
     //   isZap: true,
-    //   token1: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-    //   token0: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+    //   token0: { id: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A', name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+    //   token1: { id: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3', name: 'Tether USD', symbol: 'USDT', decimals: 6 },
     // },
   },
 }

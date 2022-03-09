@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useLingui } from '@lingui/react'
 import { NATIVE, ZERO, Token } from '@cronaswap/core-sdk'
 import Head from 'next/head'
@@ -295,15 +295,20 @@ export default function Boostv2() {
   // Votes from BoostedFarms
   const [voteValueArr, setVoteValueArr] = useState([])
   const [chartData, setChartData] = useState([])
-  const votingItems = [];
+  const votingItems = useRef([]);
 
+  const getVoteInfo = async (lpAddr: string) => {
+    let vote = await voteContract.weights(lpAddr)
+    let weight = await voteContract.totalWeight();
+    return [vote, weight]
+  }
   const getGlobalVotes = () => {
     voteFarms.map((item, i) => {
-      let token0 = item.token0
-      let token1 = item.token1
-      let vote = 23439900
-      let weight = 32.23
-      votingItems.push(<VotingItems key={i} token0={CRONA[chainId]} token1={NATIVE[chainId]} vote={vote} weight={weight.toFixed(2) + '%'} />)
+      getVoteInfo(item.lpToken).then((res) => {
+        let vote = res[0].toFixed()
+        let weight = vote / res[1].toFixed() * 100;
+        votingItems.current[i] = (<VotingItems key={i} token0={item.token0} token1={item.token1} chainId={chainId} vote={formatNumber(Number(vote).toFixed(2))} weight={weight.toFixed(2) + '%'} />)
+      })
     });
   }
 
@@ -314,7 +319,7 @@ export default function Boostv2() {
   const [isHelper, setIsHelper] = useState(true)
 
   const inputHandler = (inputid: number, inputValue: number) => {
-    let voteValueArray = voteValueArr.length === 0 ? new Array(boostedFarms.length).fill(0) : Array.from(voteValueArr)
+    let voteValueArray = voteValueArr.length === 0 ? new Array(boostedFarms.length).fill(0) : voteValueArr.slice(0, boostedFarms.length)
     voteValueArray[inputid] = inputValue
     if (isHelper) {
       const length = boostedFarms.length
@@ -336,16 +341,26 @@ export default function Boostv2() {
         }
       }
     }
+    setVoteValueArr(voteValueArray)
+  }
+
+  const updateListing = useCallback(() => {
+
+    let voteValueArray = voteValueArr.length === 0 ? [] : voteValueArr.slice(0, boostedFarms.length)
+    // setVoteValueArr(voteValueArray)
     setNewWeighting(voteValueArray.reduce((prevValue, newValue) => prevValue + newValue, 0))
 
     let chData = [];
     boostedFarms.map((items, index) => {
       const sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
-      chData.push({ name: sectorName, value: voteValueArray[index] })
+      chData.push({ name: sectorName, value: voteValueArr[index] })
     })
-    setVoteValueArr(voteValueArray)
     setChartData(chData)
-  }
+  }, [boostedFarms, voteValueArr])
+
+  useEffect(() => {
+    updateListing()
+  }, [updateListing, voteValueArr])
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
@@ -360,7 +375,7 @@ export default function Boostv2() {
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
                 <div className="flex items-center self-end justify-self-center hover:cursor-pointer" onClick={() => setShowCalc(true)}>
                   <h1 className="text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
-                  <CalculatorIcon className="w-5 h-5 hidden" />
+                  {/* <CalculatorIcon className="w-5 h-5 hidden" /> */}
                 </div>
                 <ROICalculatorModal
                   isfarm={false}
@@ -373,8 +388,8 @@ export default function Boostv2() {
                   apr={manualAPY}
                 />
                 <h2 className="flex flex-row items-center justify-self-center self-start text-[21px] text-[#798090]">
-                  veCRONA APY
-                  {/* <QuestionHelper text="The reward apy of lock CRONA." /> */}
+                  veCRONA APY&nbsp;
+                  <QuestionHelper text="The reward apy of lock CRONA." />
                 </h2>
               </div>
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
@@ -387,21 +402,21 @@ export default function Boostv2() {
                   )}
                 </h1>
                 <h2 className="flex items-center place-content-center self-start text-center text-[21px] text-[#798090]">
-                  % of CRONA locked
-                  {/* <QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." /> */}
+                  % of CRONA locked&nbsp;
+                  <span className="mt-[4px]"><QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." /></span>
                 </h2>
               </div>
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
                 <h1 className="text-[32px] self-end justify-self-center text-center font-bold text-white">{formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years</h1>
                 <h2 className="flex items-center place-content-center self-start text-center text-[21px] text-[#798090]">
-                  Average lock time
-                  {/* <QuestionHelper text="Average CRONA lock time in veCRONA." /> */}
+                  Average lock time&nbsp;
+                  <span className="mt-[6px]"><QuestionHelper text="Average CRONA lock time in veCRONA." /></span>
                 </h2>
               </div>
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800 px-8">
                 <div className="flex flex-row items-center text-[21px] text-[#798090]">
-                  {i18n._(t`Auto Crona Bounty`)}
-                  {/* <QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" /> */}
+                  {i18n._(t`Auto Crona Bounty`)}&nbsp;
+                  <span className="mt-[6px]"><QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" /></span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
@@ -672,14 +687,14 @@ export default function Boostv2() {
                       <></>
                     )}
 
-                    {Number(harvestRewards) > 0 ? (
+                    {/* {Number(harvestRewards) > 0 ? (
                       <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('harvest')}>
                         {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Auto Boost Bounty`)} (
                         {formatNumber(harvestRewards?.toFixed(18))})
                       </Button>
                     ) : (
                       <></>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -694,7 +709,7 @@ export default function Boostv2() {
                     <div className="w-1/5 text-right">Weight %</div>
                   </div>
                   <div className="h-[440px] overflow-y-auto my-2">
-                    {votingItems}
+                    {votingItems.current}
                   </div>
                 </div>
               </div>
