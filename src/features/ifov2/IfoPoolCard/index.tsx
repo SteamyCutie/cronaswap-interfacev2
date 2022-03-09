@@ -19,7 +19,9 @@ import { PublicIfoData, WalletIfoData } from '../hooks/types'
 import useIfoPool from '../hooks/useIfoPool'
 import IfoCardDetails from './IfoCardDetails'
 import BigNumber from 'bignumber.js'
-
+import { useIfoV2Contract } from 'app/hooks'
+import { useSingleCallResult } from 'app/state/multicall/hooks'
+import { useTransactionAdder } from '../../../state/transactions/hooks'
 interface IfoCardProps {
   poolId: PoolIds
   ifo: Ifo
@@ -71,6 +73,8 @@ const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
 const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walletIfoData }) => {
   const config = cardConfig(poolId)
   const { account, chainId } = useActiveWeb3React()
+  const { address } = ifo
+  const ifoContract = useIfoV2Contract(address[chainId])
   const now = Date.parse(new Date().toString()) / 1000
 
   const { status, raiseToken, offerToken } = publicIfoData
@@ -222,9 +226,37 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     }
   }
 
+  const callsData = useMemo(
+    () => [
+      { methodName: 'viewUserInfo', callInputs: [account, [0, 1]] }, // viewUserInfo
+      { methodName: 'viewUserOfferingAndRefundingAmountsForPools', callInputs: [account, [0, 1]] }, // viewUserOfferingAndRefundingAmountsForPools
+    ],
+    [account]
+  )
+
+  const allowClaimObject = useSingleCallResult([] ? ifoContract : null, 'allowClaim', [])?.result
+  const allowClaim = allowClaimObject ? allowClaimObject[0] : false
+
+  const addTransaction = useTransactionAdder()
+  const [pendingAllowTx, setPendingAllowTx] = useState(false)
+  const handleAllowClaim = async () => {
+    setPendingAllowTx(true)
+    try {
+      const args = [!allowClaim]
+      const tx = await ifoContract.setAllowClaim(...args)
+      addTransaction(tx, {
+        summary: `${i18n._(t`Set`)} CRONA`,
+      })
+      setPendingAllowTx(false)
+    } catch (error) {
+      console.log(error)
+      setPendingAllowTx(false)
+    }
+  }
+
   return (
-    <div className="md:mt-4 md:mb-4 md:ml-4 rounded-lg bg-dark-800 space-y-6">
-      <div className="flex flex-row item-center justify-between p-6 rounded-t bg-dark-600">
+    <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 md:ml-4 bg-dark-800">
+      <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
         <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
           {config.title}
           <QuestionHelper text={config.tooltip} />
@@ -254,15 +286,15 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
           <div className="text-2xl leading-7 tracking-[-0.01em] font-bold truncate text-high-emphesis">
             {ifo[poolId].saleAmount} {offerToken.symbol}
           </div>
-          <div className="text-sm leading-5 font-bold text-secondary">
+          <div className="text-sm font-bold leading-5 text-secondary">
             {ifo[poolId].distributionRatio * 100}% of total sale
           </div>
         </div>
       </div>
 
       {/* input */}
-      <div className="col-span-2 text-center md:col-span-1  px-4">
-        <div className="flex justify-between items-center mb-2 text-left cursor-pointer text-secondary">
+      <div className="col-span-2 px-4 text-center md:col-span-1">
+        <div className="flex items-center justify-between mb-2 text-left cursor-pointer text-secondary">
           <div>
             {raiseToken.symbol} {i18n._(t`Balance`)}:{' '}
             {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
@@ -311,12 +343,16 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
           </Button>
         ) : (
           <Button
-            color={buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'}
+            color={
+              buttonDisabled || !allowClaim ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'
+            }
             onClick={handleDepositPool}
-            disabled={buttonDisabled || inputError}
+            disabled={buttonDisabled || inputError || !allowClaim}
           >
             {!walletConnected
               ? i18n._(t`Connect Wallet`)
+              : !allowClaim
+              ? i18n._(t`Claim is not allowed`)
               : !input
               ? i18n._(t`Commit`)
               : insufficientFunds
