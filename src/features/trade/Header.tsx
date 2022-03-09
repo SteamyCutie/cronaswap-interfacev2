@@ -92,14 +92,14 @@ const ExchangeHeader: FC<ExchangeHeaderProps> = ({ input, output, allowedSlippag
               </div>
             </div>
           )}
-          <a
+          {/* <a
             href={'https://app.multichain.org/#/router'}
             target="_blank"
             rel="noreferrer"
             className="relative text-blue flex items-center w-full h-full px-4 rounded bg-dark-800 hover:bg-dark-700"
           >
             Bridge
-          </a>
+          </a> */}
           <div className="relative flex items-center w-full h-full rounded p-2 bg-dark-800 hover:bg-dark-700">
             <Settings placeholderSlippage={allowedSlippage} />
           </div>

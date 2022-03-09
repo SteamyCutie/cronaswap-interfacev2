@@ -59,9 +59,6 @@ const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 export default function Zap() {
   const { i18n } = useLingui()
 
-  const loadedUrlParams = useDefaultsFromURLSearch()
-
-  const router = useRouter()
   const { independentField, typedValue, recipient } = useZapState()
 
   // for expert mode
@@ -301,7 +298,7 @@ export default function Zap() {
             <LPTokenSelectPanel
               label={i18n._(t`Zap To (estimate not available):`)}
               showMaxButton={false}
-              hideBalance={false}
+              hideBalance={true}
               currency={currencies[ZapField.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[ZapField.INPUT]}
