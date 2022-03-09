@@ -420,10 +420,10 @@ export default function Boostv2() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-[28px] font-bold text-white">{Number(autocronaBountyValue.current).toFixed(3)}</div>
+                    <div className="text-[28px] font-bold text-white">{formatNumber(harvestRewards?.toFixed(18))}</div>
                     <div className="text-[14px] text-light-blue">
                       {'~$'}
-                      {Number(autocronaBountyValue.current * cronaPrice).toFixed(3)}
+                      {formatNumber(Number(Number(harvestRewards?.toFixed(18)) * Number(cronaPrice.toFixed(3))).toFixed(3))}
                     </div>
                   </div>
                   <div className='flex'>
@@ -433,8 +433,8 @@ export default function Boostv2() {
                       className="font-bold font-[20px] text-[#6F7285]"
                       variant="outlined"
                       size="sm"
-                      disabled={!autocronaBountyValue.current || pendingBountyTx}
-                      onClick={handleBountyClaim}
+                      disabled={!harvestRewards || pendingBountyTx}
+                      onClick={() => handleClaimRewards('harvest')}
                     >
                       {pendingBountyTx ? <Dots>{i18n._(t`Claiming`)} </Dots> : i18n._(t`Claim`)}
                     </Button>
