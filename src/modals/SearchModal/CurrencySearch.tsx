@@ -79,8 +79,11 @@ export function CurrencySearch({
     }, {})
   }
 
+  const ether = useMemo(() => chainId && NATIVE[chainId], [chainId])
+  let isAllTokenContainEther: Boolean = false
   if (currencyList) {
     allTokens = Object.keys(allTokens).reduce((obj, key) => {
+      if (key === ether.wrapped.address) isAllTokenContainEther = true
       if (currencyList.includes(key)) obj[key] = allTokens[key]
       return obj
     }, {})
@@ -115,12 +118,10 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
-  const ether = useMemo(() => chainId && NATIVE[chainId], [chainId])
-
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
     if (s === '' || s === 'c' || s === 'cr' || s === 'cro') {
-      return ether ? [ether, ...filteredSortedTokens] : filteredSortedTokens
+      return ether && !isAllTokenContainEther ? [ether, ...filteredSortedTokens] : filteredSortedTokens
     }
     return filteredSortedTokens
   }, [debouncedQuery, ether, filteredSortedTokens])

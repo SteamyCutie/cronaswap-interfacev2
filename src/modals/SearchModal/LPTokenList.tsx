@@ -117,23 +117,26 @@ function LPTokenRow({
   let token0 = useCurrency(lpToken?.token0?.id)
   let token1 = useCurrency(lpToken?.token1?.id)
 
-  const pendingCrona = usePendingCrona(lpToken)
+  let pendingCrona: CurrencyAmount<Token> = null
+  if (hideBalance === false) {
+    pendingCrona = usePendingCrona(lpToken)
 
-  const MyLpBalance = (lpToken) => {
-    const liquidityToken = new Token(
-      chainId,
-      getAddress(lpToken.lpToken),
-      lpToken.token1 ? 18 : lpToken.token0 ? lpToken.token0.decimals : 18,
-      lpToken.token1 ? lpToken.symbol : lpToken.token0.symbol,
-      lpToken.token1 ? lpToken.name : lpToken.token0.name
-    )
+    const MyLpBalance = (lpToken) => {
+      const liquidityToken = new Token(
+        chainId,
+        getAddress(lpToken.lpToken),
+        lpToken.token1 ? 18 : lpToken.token0 ? lpToken.token0.decimals : 18,
+        lpToken.token1 ? lpToken.symbol : lpToken.token0.symbol,
+        lpToken.token1 ? lpToken.name : lpToken.token0.name
+      )
 
-    // const balance = useTokenBalance(account, liquidityToken)
-    const { amount } = useUserInfo(lpToken, liquidityToken)
-    return Number(amount?.toFixed(liquidityToken?.decimals))
+      // const balance = useTokenBalance(account, liquidityToken)
+      const { amount } = useUserInfo(lpToken, liquidityToken)
+      return Number(amount?.toFixed(liquidityToken?.decimals))
+    }
+
+    const Lpbalance = { account } ? MyLpBalance(lpToken) : 0
   }
-
-  const Lpbalance = { account } ? MyLpBalance(lpToken) : 0
 
   // only show add or remove buttons if not on selected list
   return (
@@ -148,18 +151,20 @@ function LPTokenRow({
       <div className="flex flex-row items-center space-x-4">
         <div className="flex items-center">
           {token0 && token1 && (
-            <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 40 : 28} />
+            <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 40 : 24} />
           )}
           <div className="flex flex-col justify-center">
-            <div className="pl-4 text-xs font-bold md:text-base">{lpToken?.name}</div>
+            <div className="pl-12 text-xs font-bold md:text-base">{lpToken?.name}</div>
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-end">
-        <div className="flex flex-col justify-center w-2/12 space-y-1">
-          <div className="text-xs font-bold md:text-base">{formatNumber(pendingCrona?.toFixed(18))}</div>
+      {!hideBalance && (
+        <div className="flex items-center justify-end">
+          <div className="flex flex-col justify-center w-2/12 space-y-1">
+            <div className="text-xs font-bold md:text-base">{formatNumber(pendingCrona?.toFixed(18))}</div>
+          </div>
         </div>
-      </div>
+      )}
     </RowBetween>
   )
 }
