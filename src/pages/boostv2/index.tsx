@@ -356,6 +356,7 @@ export default function Boostv2() {
       chData.push({ name: sectorName, value: voteValueArr[index] })
     })
     setChartData(chData)
+    console.log(chData)
   }, [boostedFarms, voteValueArr])
 
   useEffect(() => {

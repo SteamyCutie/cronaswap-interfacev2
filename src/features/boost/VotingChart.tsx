@@ -85,13 +85,18 @@ export const VotingChart = ({ data }: any) => {
     [setActiveIndex]
   );
 
+  var pieData = data.length > 0 ? data : [{ name: "Empty vote", value: 100 }]
+  data.map((item) => {
+    item.value === undefined && (pieData = [{ name: "Empty vote", value: 100 }])
+  })
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart width={200} height={200}>
         <Pie
           activeIndex={activeIndex}
           activeShape={renderActiveShape}
-          data={data.length > 0 ? data : [{ name: "Empty vote", value: 100 }]}
+          data={pieData}
           cx={235}
           cy={125}
           innerRadius={0}
