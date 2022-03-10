@@ -48,7 +48,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'USDC',
         decimals: 6,
       },
-      isVote: false,
+      isVote: true,
       isZap: true,
     },
 
@@ -111,7 +111,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'CRO',
         decimals: 18,
       },
-      isVote: true,
+      isVote: false,
       isZap: false,
     },
 
@@ -133,6 +133,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       isVote: false,
+      isZap: false,
     },
 
     '0xb4684F52867dC0dDe6F931fBf6eA66Ce94666860': {
@@ -152,7 +153,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'CRO',
         decimals: 18,
       },
-      isVote: true,
+      isVote: false,
       isZap: false,
     },
 
@@ -276,7 +277,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'USDT',
         decimals: 6,
       },
-      isVote: false,
+      isVote: true,
       isZap: true,
     },
 
@@ -339,6 +340,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'USDT',
         decimals: 6,
       },
+      isVote: true,
       isZap: false,
     },
 
@@ -359,6 +361,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'USDT',
         decimals: 6,
       },
+      isVote: true,
       isZap: false,
     },
 
@@ -379,6 +382,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'USDT',
         decimals: 6,
       },
+      isVote: true,
       isZap: false,
     },
 
@@ -399,6 +403,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'USDT',
         decimals: 6,
       },
+      isVote: true,
       isZap: false,
     },
 
@@ -419,6 +424,7 @@ export const FARMSV2: AddressMap = {
         symbol: 'DOT',
         decimals: 10,
       },
+      isVote: true,
       isZap: false,
     },
 

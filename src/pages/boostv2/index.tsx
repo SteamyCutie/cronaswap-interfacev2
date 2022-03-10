@@ -39,7 +39,7 @@ import { getCronaPrice } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
-interface VoteInputItemProps { }
+interface VoteInputItemProps {}
 
 const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
   let success = true
@@ -260,7 +260,7 @@ export default function Boostv2() {
     } else {
       setPendingTx(true)
 
-      const args = [Array.from(boostedFarms, x => x.lpToken), Array.from(voteValueArr, x => (x * 1e18).toFixed())]
+      const args = [Array.from(boostedFarms, (x) => x.lpToken), Array.from(voteValueArr, (x) => (x * 1e18).toFixed())]
       const gasLimit = await voteContract.estimateGas.vote(...args)
       const tx = await voteContract.vote(...args, {
         gasLimit: gasLimit.mul(120).div(100),
@@ -280,7 +280,13 @@ export default function Boostv2() {
     return { ...FARMSV2[chainId][key], lpToken: key, isBoost: false }
   })
 
-  const voteFarms = Array.from(allFarms.filter((item) => item.isVote == true), x => { x.isBoost = true; return x })
+  const voteFarms = Array.from(
+    allFarms.filter((item) => item.isVote == true),
+    (x) => {
+      x.isBoost = true
+      return x
+    }
+  )
   const [boostedFarms, setBoostedFarms] = useState(voteFarms)
   const handleBoost = (item) => {
     if (boostedFarms.some((boostedFarm) => boostedFarm.name === item.name) == false) {
@@ -295,31 +301,41 @@ export default function Boostv2() {
   // Votes from BoostedFarms
   const [voteValueArr, setVoteValueArr] = useState([])
   const [chartData, setChartData] = useState([])
-  const votingItems = useRef([]);
+  const votingItems = useRef([])
 
   const getVoteInfo = async (lpAddr: string) => {
     let vote = await voteContract.weights(lpAddr)
-    let weight = await voteContract.totalWeight();
+    let weight = await voteContract.totalWeight()
     return [vote, weight]
   }
   const getGlobalVotes = () => {
     voteFarms.map((item, i) => {
       getVoteInfo(item.lpToken).then((res) => {
         let vote = res[0].toFixed()
-        let weight = vote / res[1].toFixed() * 100;
-        votingItems.current[i] = (<VotingItems key={i} token0={item.token0} token1={item.token1} chainId={chainId} vote={formatNumber(Number(vote).toFixed(2))} weight={weight.toFixed(2) + '%'} />)
+        let weight = (vote / res[1].toFixed()) * 100
+        votingItems.current[i] = (
+          <VotingItems
+            key={i}
+            token0={item.token0}
+            token1={item.token1}
+            chainId={chainId}
+            vote={formatNumber(Number(vote).toFixed(2))}
+            weight={weight.toFixed(2) + '%'}
+          />
+        )
       })
-    });
+    })
   }
 
-  getGlobalVotes();
+  getGlobalVotes()
 
   const [newWeighting, setNewWeighting] = useState<number>(0)
 
   const [isHelper, setIsHelper] = useState(true)
 
   const inputHandler = (inputid: number, inputValue: number) => {
-    let voteValueArray = voteValueArr.length === 0 ? new Array(boostedFarms.length).fill(0) : voteValueArr.slice(0, boostedFarms.length)
+    let voteValueArray =
+      voteValueArr.length === 0 ? new Array(boostedFarms.length).fill(0) : voteValueArr.slice(0, boostedFarms.length)
     voteValueArray[inputid] = inputValue
     if (isHelper) {
       const length = boostedFarms.length
@@ -329,7 +345,8 @@ export default function Boostv2() {
       for (let j = 0; j <= i; j++) {
         prevSum += voteValueArray[j]
       }
-      if ((inputid !== 0 && (prevSum > 0) === false) || prevSum > 100) { } else {
+      if ((inputid !== 0 && prevSum > 0 === false) || prevSum > 100) {
+      } else {
         if (inputid === length - 2) {
           voteValueArray[inputid + 1] = 100 - prevSum
         } else {
@@ -345,12 +362,11 @@ export default function Boostv2() {
   }
 
   const updateListing = useCallback(() => {
-
     let voteValueArray = voteValueArr.length === 0 ? [] : voteValueArr.slice(0, boostedFarms.length)
     // setVoteValueArr(voteValueArray)
     setNewWeighting(voteValueArray.reduce((prevValue, newValue) => prevValue + newValue, 0))
 
-    let chData = [];
+    let chData = []
     boostedFarms.map((items, index) => {
       const sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
       chData.push({ name: sectorName, value: voteValueArr[index] })
@@ -374,8 +390,13 @@ export default function Boostv2() {
           <div className="flex flex-col space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-4 auto-cols-max">
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
-                <div className="flex items-center self-end justify-self-center hover:cursor-pointer" onClick={() => setShowCalc(true)}>
-                  <h1 className="text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
+                <div
+                  className="flex items-center self-end justify-self-center hover:cursor-pointer"
+                  onClick={() => setShowCalc(true)}
+                >
+                  <h1 className="text-[32px] font-bold text-white">{`${
+                    autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)
+                  }`}</h1>
                   {/* <CalculatorIcon className="w-5 h-5 hidden" /> */}
                 </div>
                 <ROICalculatorModal
@@ -398,40 +419,50 @@ export default function Boostv2() {
                   {formatPercent(
                     formatNumber(
                       Number(formatBalance(cronaSupply ? cronaSupply : 1)) /
-                      Number(cronaInfo.circulatingSupply ? cronaInfo.circulatingSupply : 1)
+                        Number(cronaInfo.circulatingSupply ? cronaInfo.circulatingSupply : 1)
                     )
                   )}
                 </h1>
                 <h2 className="flex items-center place-content-center self-start text-center text-[21px] text-[#798090]">
                   % of CRONA locked&nbsp;
-                  <span className="mt-[4px]"><QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." /></span>
+                  <span className="mt-[4px]">
+                    <QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." />
+                  </span>
                 </h2>
               </div>
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
-                <h1 className="text-[32px] self-end justify-self-center text-center font-bold text-white">{formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years</h1>
+                <h1 className="text-[32px] self-end justify-self-center text-center font-bold text-white">
+                  {formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years
+                </h1>
                 <h2 className="flex items-center place-content-center self-start text-center text-[21px] text-[#798090]">
                   Average lock time&nbsp;
-                  <span className="mt-[6px]"><QuestionHelper text="Average CRONA lock time in veCRONA." /></span>
+                  <span className="mt-[6px]">
+                    <QuestionHelper text="Average CRONA lock time in veCRONA." />
+                  </span>
                 </h2>
               </div>
               <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800 px-8">
                 <div className="flex flex-row items-center text-[21px] text-[#798090]">
                   {i18n._(t`Auto Crona Bounty`)}&nbsp;
-                  <span className="mt-[6px]"><QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" /></span>
+                  <span className="mt-[6px]">
+                    <QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" />
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-[28px] font-bold text-white">{formatNumber(harvestRewards?.toFixed(18))}</div>
                     <div className="text-[14px] text-light-blue">
                       {'~$'}
-                      {formatNumber(Number(Number(harvestRewards?.toFixed(18)) * Number(cronaPrice.toFixed(3))).toFixed(3))}
+                      {formatNumber(
+                        Number(Number(harvestRewards?.toFixed(18)) * Number(cronaPrice.toFixed(3))).toFixed(3)
+                      )}
                     </div>
                   </div>
-                  <div className='flex'>
+                  <div className="flex">
                     <Button
                       id="btn-create-new-pool"
-                      // color="gradient"
-                      className="font-bold font-[20px] text-[#6F7285]"
+                      color="gradient"
+                      // className="font-bold font-[20px] text-[#6F7285]"
                       variant="outlined"
                       size="sm"
                       disabled={!harvestRewards || pendingBountyTx}
@@ -471,8 +502,9 @@ export default function Boostv2() {
                   {/* input overlay: */}
                   <div className="relative w-full h-0 pointer-events-none bottom-14">
                     <div
-                      className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${inputError ? ' border border-red' : ''
-                        }`}
+                      className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
+                        inputError ? ' border border-red' : ''
+                      }`}
                     >
                       <div className="flex space-x-2 ">
                         {inputError && (
@@ -485,8 +517,9 @@ export default function Boostv2() {
                           />
                         )}
                         <p
-                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
-                            }`}
+                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${
+                            input ? 'text-high-emphesis' : 'text-secondary'
+                          }`}
                         >
                           {`${input ? input : '0'} CRONA`}
                         </p>
@@ -623,10 +656,10 @@ export default function Boostv2() {
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
                           : !input
-                            ? i18n._(t`Create Lock`)
-                            : insufficientFunds
-                              ? i18n._(t`Insufficient Balance`)
-                              : i18n._(t`Create Lock`)}
+                          ? i18n._(t`Create Lock`)
+                          : insufficientFunds
+                          ? i18n._(t`Insufficient Balance`)
+                          : i18n._(t`Create Lock`)}
                       </Button>
                     )
                   ) : (
@@ -640,10 +673,10 @@ export default function Boostv2() {
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
                           : !input
-                            ? i18n._(t`Increase Amount`)
-                            : insufficientFunds
-                              ? i18n._(t`Insufficient Balance`)
-                              : i18n._(t`Increase Amount`)}
+                          ? i18n._(t`Increase Amount`)
+                          : insufficientFunds
+                          ? i18n._(t`Insufficient Balance`)
+                          : i18n._(t`Increase Amount`)}
                       </Button>
                       <Button
                         color={lockTimeBtnDisabled ? 'gray' : 'blue'}
@@ -674,7 +707,7 @@ export default function Boostv2() {
                   <div
                     className={
                       Number(rewards) > 0 && Number(harvestRewards) > 0
-                        ? 'grid grid-cols-1 gap-2 md:grid-cols-2 mt-2'
+                        ? 'grid grid-cols-1 gap-2 md:grid-cols-1 mt-2'
                         : 'grid grid-cols-1 gap-2 md:grid-cols-1 mt-2'
                     }
                   >
@@ -709,16 +742,16 @@ export default function Boostv2() {
                     <div className="w-2/5 text-center">Votes</div>
                     <div className="w-1/5 text-right">Weight %</div>
                   </div>
-                  <div className="h-[440px] overflow-y-auto my-2">
-                    {votingItems.current}
-                  </div>
+                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current}</div>
                 </div>
               </div>
             </div>
             <div className="w-full text-white bg-gray-900 rounded-lg">
               <div className="flex items-center p-8 rounded-lg bg-dark-800">
                 <h1 className="text-2xl font-bold">{i18n._(t`Vote to boost your farm`)}</h1>
-                <div className="flex mt-[6px] ml-1"><QuestionHelper text="Voting for a Boosted farm increases the emissions that a farm receives." /></div>
+                <div className="flex mt-[6px] ml-1">
+                  <QuestionHelper text="Voting for a Boosted farm increases the emissions that a farm receives." />
+                </div>
               </div>
               <div className="p-8 space-y-2 md:space-y-0 md:flex bg-dark-900">
                 <div className="md:w-1/5">
@@ -748,7 +781,10 @@ export default function Boostv2() {
                   </div>
                   <div className="flex border-2 h-60 p-2 pr-1 rounded-xl border-dark-650">
                     <div className="flex overflow-y-auto w-full">
-                      <div className="grid grid-cols-2 px-2 py-2 w-full items-center gap-2" style={{ height: 'fit-content' }}>
+                      <div
+                        className="grid grid-cols-2 px-2 py-2 w-full items-center gap-2"
+                        style={{ height: 'fit-content' }}
+                      >
                         {boostedFarms.map((item, index) => (
                           <VoteInputItem
                             key={index}
