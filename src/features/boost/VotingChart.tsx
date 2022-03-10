@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, createRef } from "react";
+import ReactDOM from "react-dom";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
 const renderActiveShape = (props: any) => {
@@ -73,6 +74,60 @@ const renderActiveShape = (props: any) => {
     </g>
   );
 };
+const renderActiveShapeSM = (props: any) => {
+  const RADIAN = Math.PI / 180;
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    percent,
+    value
+  } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? "start" : "end";
+
+  return (
+    <g>
+      <text x={cx} y={cy - 10} dy={8} fontSize="12px" textAnchor="middle" fill={fill}>
+        {payload.name}
+      </text>
+      <text x={cx} y={cy + 10} dy={8} fontSize="12px" textAnchor="middle" fill={fill}>
+        Rate {(percent * 100).toFixed(2)}%
+      </text>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={payload.name === "Empty vote" ? "white" : fill}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 6}
+        outerRadius={outerRadius + 10}
+        fill={payload.name === "Empty vote" ? "white" : fill}
+      />
+    </g>
+  );
+};
 
 const COLORS = ['#fcbfff', '#96abe8', '#94f794', '#f7ab96', '#f9aed8', '#a3f989', '#80bcfc', '#ef75e5', '#adffce', '#bae86a', '#e1c6ff', '#766be5', '#fc88f4', '#8bf4ab', '#a1ed6a', '#86f9cf', '#dcccff', '#fcbff1', '#f9b298', '#98cef2', '#f799fc', '#aceef9', '#f38cff', '#abfcbd', '#8eb7ed', '#6996db', '#ed89e3', '#f2a2aa'];
 
@@ -90,26 +145,51 @@ export const VotingChart = ({ data }: any) => {
     item.value === undefined && (pieData = [{ name: "Empty vote", value: 100 }])
   })
 
+  const ccxLG = document.getElementById("parentContainerLG")?.clientWidth / 2
+  const ccxSM = document.getElementById("parentContainerSM")?.clientWidth / 2
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart width={200} height={200}>
-        <Pie
-          activeIndex={activeIndex}
-          activeShape={renderActiveShape}
-          data={pieData}
-          cx={235}
-          cy={125}
-          innerRadius={0}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-          onMouseEnter={onPieEnter}
-        >
-          {data.map((_entry: any, index: number) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
+    <>
+      <ResponsiveContainer id="parentContainerLG" className="hidden md:grid">
+        <PieChart width={200} height={200}>
+          <Pie
+            activeIndex={activeIndex}
+            activeShape={renderActiveShape}
+            data={pieData}
+            cx={ccxLG}
+            cy={125}
+            innerRadius={0}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+            onMouseEnter={onPieEnter}
+          >
+            {data.map((_entry: any, index: number) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer id="parentContainerSM" className="grid md:hidden">
+        <PieChart width={200} height={200}>
+          <Pie
+            activeIndex={activeIndex}
+            activeShape={renderActiveShapeSM}
+            data={pieData}
+            cx={ccxSM}
+            cy={125}
+            innerRadius={60}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+            onMouseEnter={onPieEnter}
+          >
+            {data.map((_entry: any, index: number) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+    </>
   );
 }
