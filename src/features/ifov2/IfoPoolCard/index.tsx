@@ -77,7 +77,8 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const ifoContract = useIfoV2Contract(address[chainId])
   const now = Date.parse(new Date().toString()) / 1000
 
-  const { status, raiseToken, offerToken } = publicIfoData
+  const { status, offerToken } = publicIfoData
+  const raiseToken = publicIfoData[poolId].raiseToken
 
   const publicPoolCharacteristics = publicIfoData[poolId]
   const userPoolCharacteristics = walletIfoData[poolId]
@@ -112,6 +113,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const { amountTokenCommittedInLP } = userPoolCharacteristics
 
   const veCronaLeft = walletIfoData.ifoVeCrona?.veCronaLeft
+  console.log('+++++++', veCronaLeft.toNumber())
   const maximumTokenEntry = useMemo(() => {
     if (!veCronaLeft) {
       return BIG_ZERO
@@ -172,7 +174,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     !input ||
     pendingTx ||
     (parsedAmount && parsedAmount.equalTo(ZERO)) ||
-    status === 'finished' ||
+    // status === 'finished' ||
     (poolId === PoolIds.poolBasic && Number(input) > getBalanceNumber(maximumTokenEntry))
 
   const { harvestPool, depositPool } = useIfoPool(walletIfoData.contract)
@@ -235,7 +237,8 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   )
 
   const allowClaimObject = useSingleCallResult([] ? ifoContract : null, 'allowClaim', [])?.result
-  const allowClaim = allowClaimObject ? allowClaimObject[0] : false
+  // const allowClaim = allowClaimObject ? allowClaimObject[0] : false
+  const allowClaim = true
 
   const addTransaction = useTransactionAdder()
   const [pendingAllowTx, setPendingAllowTx] = useState(false)
