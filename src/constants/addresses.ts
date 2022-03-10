@@ -75,6 +75,7 @@ export const PUBLIC_SALE_ADDRESS: AddressMap = {
 }
 
 export const VOTE_ADDRESS: AddressMap = {
+  [ChainId.CRONOS]: '0x2Cb151D71D5EE6FD5a805a8614803e0e48e67c3B',
   [ChainId.BSC_TESTNET]: '0x6a8c1ba309136D78245f1F0a14790239b71a9577',
 }
 
