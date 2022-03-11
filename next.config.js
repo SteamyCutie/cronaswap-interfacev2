@@ -99,7 +99,7 @@ const nextConfig = {
         destination: '/exchange/find',
       },
       {
-        source: '/yield',
+        source: '/simulator',
         destination: '/yieldsimulator',
       },
     ]
