@@ -9,23 +9,8 @@ import TransactionConfirmationModal, {
 import ZapModalFooter from './ZapModalFooter'
 import ZapModalHeader from './ZapModalHeader'
 
-/**
- * Returns true if the trade requires a confirmation of details before we can submit it
- * @param args either a pair of V2 trades or a pair of V3 trades
- */
-
-function tradeMeaningfullyDiffers(...args: [ZapTrade, ZapTrade]): boolean {
-  const [tradeA, tradeB] = args
-  return (
-    !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
-    !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
-    !tradeA.outputLPToken.equal(tradeB.outputLPToken)
-  )
-}
-
 export default function ConfirmZapModal({
   trade,
-  originalTrade,
   onAcceptChanges,
   allowedSlippage,
   onConfirm,
@@ -38,7 +23,6 @@ export default function ConfirmZapModal({
 }: {
   isOpen: boolean
   trade: ZapTrade | undefined
-  originalTrade: ZapTrade | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
@@ -48,33 +32,20 @@ export default function ConfirmZapModal({
   zapErrorMessage: string | undefined
   onDismiss: () => void
 }) {
-  const showAcceptChanges = useMemo(
-    () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
-    [originalTrade, trade]
-  )
-
   const modalHeader = useCallback(() => {
     return trade ? (
       <ZapModalHeader
         trade={trade}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
-        showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, trade])
 
   const modalBottom = useCallback(() => {
-    return trade ? (
-      <ZapModalFooter
-        onConfirm={onConfirm}
-        trade={trade}
-        disabledConfirm={showAcceptChanges}
-        zapErrorMessage={zapErrorMessage}
-      />
-    ) : null
-  }, [onConfirm, showAcceptChanges, zapErrorMessage, trade])
+    return trade ? <ZapModalFooter onConfirm={onConfirm} trade={trade} zapErrorMessage={zapErrorMessage} /> : null
+  }, [onConfirm, zapErrorMessage, trade])
 
   // text to show while loading
   const pendingText = `Zapping ${trade?.inputAmount?.toSignificant(6)} ${trade?.inputAmount?.currency?.symbol} for  ${

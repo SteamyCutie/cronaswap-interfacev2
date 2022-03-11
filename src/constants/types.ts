@@ -12,13 +12,14 @@ interface IfoPoolInfo {
   raiseAmount: string
   cronaToBurn: string
   distributionRatio: number // Range [0-1]
+  raiseToken: ChainTokenMap
 }
 export interface Ifo {
   id: string
   isActive: boolean
   address: AddressMap
   name: string
-  raiseToken: ChainTokenMap
+  // raiseToken: ChainTokenMap
   offerToken: ChainTokenMap
   releaseTimestamp: number
   claimDelayTime: number

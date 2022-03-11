@@ -11,7 +11,8 @@ export interface IfoCardDetailsProps {
 }
 
 const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoData, walletIfoData }) => {
-  const { status, raiseToken, offerToken, raiseTokenPriceInUSD } = publicIfoData
+  const { status, offerToken, raiseTokenPriceInUSD } = publicIfoData
+  const raiseToken = publicIfoData[poolId].raiseToken
 
   const poolCharacteristic = publicIfoData[poolId]
   const walletCharacteristic = walletIfoData[poolId]

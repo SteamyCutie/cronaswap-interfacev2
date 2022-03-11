@@ -9,6 +9,7 @@ import {
 } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 export interface ZapState {
   readonly independentField: Field
@@ -18,7 +19,7 @@ export interface ZapState {
   }
   readonly [Field.OUTPUT]: {
     readonly lpTokenId: string | undefined
-    readonly lpToken: Object | undefined
+    readonly lpToken: FarmPairInfo | undefined
   }
   // the typed recipient address or ENS name, or null if zap should go to sender
   readonly recipient: string | null

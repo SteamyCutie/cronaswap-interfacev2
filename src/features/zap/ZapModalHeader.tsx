@@ -22,13 +22,11 @@ export default function ZapModalHeader({
   trade,
   allowedSlippage,
   recipient,
-  showAcceptChanges,
   onAcceptChanges,
 }: {
   trade: ZapTrade
   allowedSlippage: Percent
   recipient: string | null
-  showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
   const { i18n } = useLingui()

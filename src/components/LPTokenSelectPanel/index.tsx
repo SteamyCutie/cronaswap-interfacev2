@@ -17,6 +17,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
 import LPTokenSearchModal from 'app/modals/SearchModal/LPTokenSearchModal'
 import { useCurrency } from 'app/hooks/Tokens'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 interface LPTokenSelectPanelProps {
   onMax?: () => void
@@ -37,8 +38,8 @@ interface LPTokenSelectPanelProps {
   locked?: boolean
   customBalanceText?: string
   showSearch?: boolean
-  onLPTokenSelect?: (lpToken: Object) => void
-  lpToken?: Object | null
+  onLPTokenSelect?: (lpToken: FarmPairInfo) => void
+  lpToken?: FarmPairInfo | null
 }
 
 export default function LPTokenSelectPanel({
