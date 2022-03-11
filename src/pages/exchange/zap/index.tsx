@@ -51,7 +51,7 @@ import Loader from 'app/components/Loader'
 import ProgressSteps from '../../../components/ProgressSteps'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import ConfirmZapModal from 'app/features/zap/ConfirmZapModal'
-import { useAllTokens, useZapInTokens } from 'app/hooks/Tokens'
+import { useAllTokens, useCurrency, useZapInTokens } from 'app/hooks/Tokens'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
@@ -73,7 +73,10 @@ export default function Zap() {
     zapTrade,
   } = useDerivedZapInfo()
 
-  const [currencyA, currencyB] = [currencies[ZapField.INPUT], undefined]
+  const [currencyA, currencyB] = [
+    useCurrency(lpToken[ZapField.OUTPUT]?.token0?.id),
+    useCurrency(lpToken[ZapField.OUTPUT]?.token1?.id),
+  ]
   const { account, chainId, library } = useActiveWeb3React()
 
   const inputCurrencyAddress = currencies[ZapField.INPUT]?.wrapped.address

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { useLingui } from '@lingui/react'
 import { NATIVE, ZERO, Token } from '@cronaswap/core-sdk'
 import Head from 'next/head'
@@ -36,6 +36,9 @@ import { useVotingContract } from 'app/hooks'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
+import NavLink from 'app/components/NavLink'
+import { useSingleCallResult, useSingleContractMultipleData } from 'app/state/multicall/hooks'
+import { ChartIconButton, VoteChartModal } from 'app/features/boost/ChartModal'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -275,6 +278,7 @@ export default function Boostv2() {
   }
 
   const [showCalc, setShowCalc] = useState(false)
+  const [showChart, setShowChart] = useState(false)
 
   const allFarms = Object.keys(FARMSV2[chainId]).map((key) => {
     return { ...FARMSV2[chainId][key], lpToken: key, isBoost: false }
@@ -303,32 +307,29 @@ export default function Boostv2() {
   const [chartData, setChartData] = useState([])
   const votingItems = useRef([])
 
-  const getVoteInfo = async (lpAddr: string) => {
-    let vote = await voteContract.weights(lpAddr)
-    let weight = await voteContract.totalWeight()
-    return [vote, weight]
-  }
-  const getGlobalVotes = () => {
-    if (!voteContract) return
-    voteFarms.map((item, i) => {
-      getVoteInfo(item.lpToken).then((res) => {
-        let vote = res[0].toFixed()
-        let weight = (vote / res[1].toFixed()) * 100
-        votingItems.current[i] = (
-          <VotingItems
-            key={i}
-            token0={item.token0}
-            token1={item.token1}
-            chainId={chainId}
-            vote={formatNumber(Number(vote).toFixed(2))}
-            weight={weight.toFixed(2) + '%'}
-          />
-        )
-      })
-    })
-  }
+  const args = useMemo(() => {
+    if (!account || !voteContract) return
+    return [...voteFarms.map((item) => [String(item.lpToken)])]
+  }, [account, voteContract, voteFarms])
 
-  getGlobalVotes()
+  const votingData = useSingleContractMultipleData(args ? voteContract : null, 'weights', args)
+  const voteWeight = useSingleCallResult(voteContract, 'totalWeight', [])
+
+  votingData.map((item, i) => {
+    let vote = item.result ? item.result[0]?.toFixed() : 0
+    let weight = (vote / (voteWeight.result ? voteWeight.result[0]?.toFixed() : 1)) * 100
+    if (vote === 0 && weight === 0) return
+    votingItems.current[i] = (
+      <VotingItems
+        key={i}
+        token0={voteFarms[i].token0}
+        token1={voteFarms[i].token1}
+        chainId={chainId}
+        vote={formatNumber(Number(vote).toFixed(2))}
+        weight={weight.toFixed(2) + '%'}
+      />
+    )
+  })
 
   const [newWeighting, setNewWeighting] = useState<number>(0)
 
@@ -393,7 +394,7 @@ export default function Boostv2() {
                   className="flex items-center self-end justify-self-center hover:cursor-pointer"
                   onClick={() => setShowCalc(true)}
                 >
-                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)
+                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : <Dots>{i18n._(t`Loading`)} </Dots>
                     }`}</h1>
                   {/* <CalculatorIcon className="w-5 h-5 hidden" /> */}
                 </div>
@@ -448,7 +449,9 @@ export default function Boostv2() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-[24px] md:text-[28px] font-bold text-white">{formatNumber(harvestRewards?.toFixed(18))}</div>
+                    <div className="text-[24px] md:text-[28px] font-bold text-white">
+                      {formatNumber(harvestRewards?.toFixed(18))}
+                    </div>
                     <div className="text-[14px] text-light-blue">
                       {'~$'}
                       {formatNumber(
@@ -513,7 +516,10 @@ export default function Boostv2() {
                             height="20px"
                           />
                         )}
-                        <p className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'}`}>
+                        <p
+                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
+                            }`}
+                        >
                           {`${input ? input : '0'} CRONA`}
                         </p>
                       </div>
@@ -713,20 +719,33 @@ export default function Boostv2() {
                     ) : (
                       <></>
                     )} */}
+
+                    <NavLink href={'/simulator'}>
+                      <a
+                        id={`simulator-nav-link`}
+                        className="p-2 text-baseline text-yellow hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                      >
+                        {i18n._(t`> Simulate your staking strategy`)}
+                      </a>
+                    </NavLink>
                   </div>
                 </div>
               </div>
               <div className="rounded-lg mt-4 md:mt-0 md:w-1/2 bg-dark-900">
-                <div className="py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
+                <div className="flex justify-between items-center py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
                   <h1 className="text-xl md:text-2xl font-bold">Global votes</h1>
+                  <ChartIconButton handler={() => setShowChart(true)} />
+                  <VoteChartModal isOpen={showChart} onDismiss={() => setShowChart(false)} data={chartData} />
                 </div>
                 <div className="p-4">
                   <div className="flex p-2 text-sm md:text-lg border-b-2 border-dark-700">
                     <div className="w-2/5">Boosted Farms</div>
                     <div className="w-2/5 text-center place-content-center">Votes</div>
-                    <div className="w-1/5 text-right flex justify-end">Weight <p className="text-[11px] ml-[2px] mt-[1px]">%</p></div>
+                    <div className="w-1/5 text-right flex justify-end">
+                      Weight <p className="text-[11px] ml-[2px] mt-[1px]">%</p>
+                    </div>
                   </div>
-                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current}</div>
+                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current.length > 0 ? votingItems.current : <div className="flex w-full justify-center my-2"><Dots>{i18n._(t`Loading`)} </Dots></div>}</div>
                 </div>
               </div>
             </div>
@@ -807,6 +826,6 @@ export default function Boostv2() {
           </div>
         </div>
       </div>
-    </Container>
+    </Container >
   )
 }

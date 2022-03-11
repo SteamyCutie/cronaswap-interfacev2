@@ -15,7 +15,6 @@ import {
   CRONA_ADDRESS,
   TIMELOCK_ADDRESS,
   WNATIVE_ADDRESS,
-  ZAPPER_ADDRESS,
 } from '@cronaswap/core-sdk'
 import { STOP_LIMIT_ORDER_ADDRESS } from '@sushiswap/limit-order-sdk'
 import MISO from '@cronaswap/miso/exports/all.json'
