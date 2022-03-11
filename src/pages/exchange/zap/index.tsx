@@ -49,7 +49,6 @@ import { useIsZapUnsupported } from 'app/hooks/useIsZapUnsupported'
 import { useToggleSettingsMenu } from 'app/state/application/hooks'
 import Loader from 'app/components/Loader'
 import ProgressSteps from '../../../components/ProgressSteps'
-import { useZapCallback } from 'app/hooks/useZapCallback'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import ConfirmZapModal from 'app/features/zap/ConfirmZapModal'
 import { useAllTokens, useZapInTokens } from 'app/hooks/Tokens'
@@ -194,7 +193,6 @@ export default function Zap() {
       txHash: undefined,
     })
     const amount = parsedAmount.quotient.toString()
-    console.log(inputCurrencyAddress, amount, outputLPTokenAddress)
 
     // await approveCallback()
     try {
@@ -242,9 +240,6 @@ export default function Zap() {
     (approvalState === ApprovalState.NOT_APPROVED ||
       approvalState === ApprovalState.PENDING ||
       (approvalSubmitted && approvalState === ApprovalState.APPROVED))
-
-  // the callback to execute the zap
-  const { callback: zapCallback, error: zapCallbackError } = useZapCallback(allowedSlippage, recipient)
 
   const zapInTokens = useZapInTokens()
   const zapInCurrencyList = Object.keys(zapInTokens).flat()
@@ -361,7 +356,9 @@ export default function Zap() {
                       }}
                       id="zap-button"
                       disabled={
-                        !isValid || zapInputError || approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
+                        !isValid ||
+                        (zapInputError ? true : false) ||
+                        approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
                       }
                     >
                       {zapInputError ? zapInputError : i18n._(t`Zap`)}
@@ -384,7 +381,9 @@ export default function Zap() {
                   }}
                   id="zap-button"
                   disabled={
-                    !isValid || zapInputError || approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
+                    !isValid ||
+                    (zapInputError ? true : false) ||
+                    approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
                   }
                 >
                   {zapInputError ? zapInputError : i18n._(t`Zap`)}

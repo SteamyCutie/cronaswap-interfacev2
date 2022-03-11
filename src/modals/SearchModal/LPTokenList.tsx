@@ -23,8 +23,9 @@ import { classNames, formatNumber } from '../../functions'
 import { usePendingCrona } from 'app/features/farms/hooks'
 import { getAddress } from '@ethersproject/address'
 import { useUserInfo } from 'app/features/staking/IncentivePool/hooks'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
-function lpTokenKey(lpToken: Object): string {
+function lpTokenKey(lpToken: FarmPairInfo): string {
   return lpToken?.lpToken ? lpToken.lpToken : 'ETHER'
 }
 
@@ -109,7 +110,7 @@ function LPTokenRow({
   otherSelected: boolean
   hideBalance: boolean
   style: CSSProperties
-  lpToken: Object
+  lpToken: FarmPairInfo
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = lpTokenKey(lpToken)
@@ -209,13 +210,13 @@ export default function LPTokenList({
   showImportView: () => void
   setImportToken: (token: Token) => void
   hideBalance: boolean
-  lpTokenList: Object[]
-  otherListLPTokens?: Object[]
-  selectedLPToken?: Object | null
-  onLPTokenSelect: (lpToken: Object) => void
-  otherLPToken?: Object | null
+  lpTokenList: FarmPairInfo[]
+  otherListLPTokens?: FarmPairInfo[]
+  selectedLPToken?: FarmPairInfo | null
+  onLPTokenSelect: (lpToken: FarmPairInfo) => void
+  otherLPToken?: FarmPairInfo | null
 }) {
-  const itemData: (Object | BreakLine)[] = useMemo(() => {
+  const itemData: (FarmPairInfo | BreakLine)[] = useMemo(() => {
     if (otherListLPTokens && otherListLPTokens?.length > 0) {
       return [...lpTokenList, BREAK_LINE, ...otherListLPTokens]
     }
@@ -224,7 +225,7 @@ export default function LPTokenList({
 
   const Row = useCallback(
     function TokenRow({ data, index, style }) {
-      const row: Object | BreakLine = data[index]
+      const row: FarmPairInfo | BreakLine = data[index]
 
       if (isBreakLine(row)) {
         return <BreakLineComponent style={style} />
@@ -232,19 +233,11 @@ export default function LPTokenList({
 
       const lpToken = row
 
-      const isSelected = Boolean(lpToken && selectedLPToken && selectedLPToken.equals(lpToken))
-      const otherSelected = Boolean(lpToken && otherLPToken && otherLPToken.equals(lpToken))
+      const isSelected = Boolean(lpToken && selectedLPToken && selectedLPToken.lpToken === lpToken.lpToken)
+      const otherSelected = Boolean(lpToken && otherLPToken && otherLPToken.lpToken === lpToken.lpToken)
       const handleSelect = () => lpToken && onLPTokenSelect(lpToken)
 
-      const token = lpToken?.wrapped
-
-      const showImport = index > lpTokenList.length
-
-      if (showImport && token) {
-        return (
-          <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
-        )
-      } else if (lpToken) {
+      if (lpToken) {
         return (
           <LPTokenRow
             style={style}

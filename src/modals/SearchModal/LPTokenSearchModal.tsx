@@ -12,6 +12,7 @@ import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import useLast from '../../hooks/useLast'
 import usePrevious from '../../hooks/usePrevious'
 import { LPTokenSearch } from './LPTokenSearch'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 interface LPTokenSearchModalProps {
   isOpen: boolean
@@ -25,7 +26,7 @@ interface LPTokenSearchModalProps {
   allowManageTokenList?: boolean
   hideBalance?: boolean
   showSearch?: boolean
-  onLPTokenSelect: (lpToken: Object) => void
+  onLPTokenSelect: (lpToken: FarmPairInfo) => void
 }
 
 function LPTokenSearchModal({
@@ -60,7 +61,7 @@ function LPTokenSearchModal({
   )
 
   const handleLPTokenSelect = useCallback(
-    (lpToken: Object) => {
+    (lpToken: FarmPairInfo) => {
       onLPTokenSelect(lpToken)
       onDismiss()
     },

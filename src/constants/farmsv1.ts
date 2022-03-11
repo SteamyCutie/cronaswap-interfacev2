@@ -22,6 +22,31 @@ export type PairInfo = {
   isZap?: boolean
 }
 
+export type FarmPairInfo = {
+  id: number
+  pid: number
+  token0: TokenInfo
+  token1?: TokenInfo
+  name?: string
+  symbol?: string
+  pair?: string
+  isCommunity?: boolean
+  migrate?: boolean
+  isVote?: boolean
+  isZap?: boolean
+  lpToken?: string
+  chef?: number
+  type?: string
+  tokenPrice?: number
+  totalTvlInUSD?: number
+  flpBalance?: number
+  tvl?: number
+  apr?: number
+  lpPrice?: number
+  boostApr?: number
+  multiplier?: number
+}
+
 export type AddressMap = {
   [chainId: number]: {
     [address: string]: PairInfo
