@@ -644,7 +644,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRONA-BNB',
       token0: {
-        id: '0x50fbded2063577995389fd5fa0eb349ccbc7ca67',
+        id: '0x50FbdED2063577995389fd5fa0eB349cCbc7cA67',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,

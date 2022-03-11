@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { useLingui } from '@lingui/react'
 import { NATIVE, ZERO, Token } from '@cronaswap/core-sdk'
 import Head from 'next/head'
@@ -37,6 +37,7 @@ import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
 import NavLink from 'app/components/NavLink'
+import { useSingleCallResult, useSingleContractMultipleData } from 'app/state/multicall/hooks'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -304,32 +305,29 @@ export default function Boostv2() {
   const [chartData, setChartData] = useState([])
   const votingItems = useRef([])
 
-  const getVoteInfo = async (lpAddr: string) => {
-    let vote = await voteContract.weights(lpAddr)
-    let weight = await voteContract.totalWeight()
-    return [vote, weight]
-  }
-  const getGlobalVotes = () => {
-    if (!voteContract) return
-    voteFarms.map((item, i) => {
-      getVoteInfo(item.lpToken).then((res) => {
-        let vote = res[0].toFixed()
-        let weight = (vote / res[1].toFixed()) * 100
-        votingItems.current[i] = (
-          <VotingItems
-            key={i}
-            token0={item.token0}
-            token1={item.token1}
-            chainId={chainId}
-            vote={formatNumber(Number(vote).toFixed(2))}
-            weight={weight.toFixed(2) + '%'}
-          />
-        )
-      })
-    })
-  }
+  const args = useMemo(() => {
+    if (!account || !voteContract) return
+    return [...voteFarms.map((item) => [String(item.lpToken)])]
+  }, [account, voteContract, voteFarms])
 
-  getGlobalVotes()
+  const votingData = useSingleContractMultipleData(args ? voteContract : null, 'weights', args)
+  const voteWeight = useSingleCallResult(voteContract, 'totalWeight', [])
+
+  votingData.map((item, i) => {
+    let vote = item.result ? item.result[0]?.toFixed() : 0
+    let weight = (vote / (voteWeight.result ? voteWeight.result[0]?.toFixed() : 1)) * 100
+    if (vote === 0 && weight === 0) return
+    votingItems.current[i] = (
+      <VotingItems
+        key={i}
+        token0={voteFarms[i].token0}
+        token1={voteFarms[i].token1}
+        chainId={chainId}
+        vote={formatNumber(Number(vote).toFixed(2))}
+        weight={weight.toFixed(2) + '%'}
+      />
+    )
+  })
 
   const [newWeighting, setNewWeighting] = useState<number>(0)
 
