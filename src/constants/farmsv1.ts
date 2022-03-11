@@ -19,6 +19,7 @@ export type PairInfo = {
   isCommunity?: boolean
   migrate?: boolean
   isVote?: boolean
+  isZap?: boolean
 }
 
 export type AddressMap = {

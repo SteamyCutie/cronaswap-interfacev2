@@ -17,8 +17,6 @@ import { isTokenOnList } from '../../functions/validate'
 import styled from 'styled-components'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../services/web3'
-import { useCombinedActiveList } from '../../state/lists/hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useCurrency, useIsUserAddedToken } from '../../hooks/Tokens'
 import { useLingui } from '@lingui/react'
 import { classNames, formatNumber } from '../../functions'
@@ -26,8 +24,8 @@ import { usePendingCrona } from 'app/features/farms/hooks'
 import { getAddress } from '@ethersproject/address'
 import { useUserInfo } from 'app/features/staking/IncentivePool/hooks'
 
-function lpTokenKey(currency: Object): string {
-  return currency.lpToken ? currency.lpToken : 'ETHER'
+function lpTokenKey(lpToken: Object): string {
+  return lpToken?.lpToken ? lpToken.lpToken : 'ETHER'
 }
 
 const Tag = styled.div`
@@ -99,7 +97,6 @@ function TokenTags({ currency }: { currency: Currency }) {
 }
 
 function LPTokenRow({
-  currency,
   onSelect,
   isSelected,
   otherSelected,
@@ -107,7 +104,6 @@ function LPTokenRow({
   hideBalance = false,
   lpToken,
 }: {
-  currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
@@ -118,27 +114,29 @@ function LPTokenRow({
   const { account, chainId } = useActiveWeb3React()
   const key = lpTokenKey(lpToken)
 
-  let token0 = useCurrency(lpToken.token0?.id)
-  let token1 = useCurrency(lpToken.token1?.id)
+  let token0 = useCurrency(lpToken?.token0?.id)
+  let token1 = useCurrency(lpToken?.token1?.id)
 
-  const pendingCrona = usePendingCrona(lpToken)
+  let pendingCrona: CurrencyAmount<Token> = null
+  if (hideBalance === false) {
+    pendingCrona = usePendingCrona(lpToken)
 
-  const [showCalc, setShowCalc] = useState(false)
-  const MyLpBalance = (lpToken) => {
-    const liquidityToken = new Token(
-      chainId,
-      getAddress(lpToken.lpToken),
-      lpToken.token1 ? 18 : lpToken.token0 ? lpToken.token0.decimals : 18,
-      lpToken.token1 ? lpToken.symbol : lpToken.token0.symbol,
-      lpToken.token1 ? lpToken.name : lpToken.token0.name
-    )
+    const MyLpBalance = (lpToken) => {
+      const liquidityToken = new Token(
+        chainId,
+        getAddress(lpToken.lpToken),
+        lpToken.token1 ? 18 : lpToken.token0 ? lpToken.token0.decimals : 18,
+        lpToken.token1 ? lpToken.symbol : lpToken.token0.symbol,
+        lpToken.token1 ? lpToken.name : lpToken.token0.name
+      )
 
-    // const balance = useTokenBalance(account, liquidityToken)
-    const { amount } = useUserInfo(lpToken, liquidityToken)
-    return Number(amount?.toFixed(liquidityToken?.decimals))
+      // const balance = useTokenBalance(account, liquidityToken)
+      const { amount } = useUserInfo(lpToken, liquidityToken)
+      return Number(amount?.toFixed(liquidityToken?.decimals))
+    }
+
+    const Lpbalance = { account } ? MyLpBalance(lpToken) : 0
   }
-
-  const Lpbalance = { account } ? MyLpBalance(lpToken) : 0
 
   // only show add or remove buttons if not on selected list
   return (
@@ -153,18 +151,20 @@ function LPTokenRow({
       <div className="flex flex-row items-center space-x-4">
         <div className="flex items-center">
           {token0 && token1 && (
-            <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 40 : 28} />
+            <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 40 : 24} />
           )}
           <div className="flex flex-col justify-center">
-            <div className="pl-4 text-xs font-bold md:text-base">{lpToken?.name}</div>
+            <div className="pl-12 text-xs font-bold md:text-base">{lpToken?.name}</div>
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-end">
-        <div className="flex flex-col justify-center w-2/12 space-y-1">
-          <div className="text-xs font-bold md:text-base">{formatNumber(pendingCrona?.toFixed(18))}</div>
+      {!hideBalance && (
+        <div className="flex items-center justify-end">
+          <div className="flex flex-col justify-center w-2/12 space-y-1">
+            <div className="text-xs font-bold md:text-base">{formatNumber(pendingCrona?.toFixed(18))}</div>
+          </div>
         </div>
-      </div>
+      )}
     </RowBetween>
   )
 }
@@ -183,13 +183,10 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowFixed>
           <TokenListLogoWrapper src="/tokenlist.svg" />
           <Typography variant="sm" className="ml-3">
-            {i18n._(t`Expanded results from inactive Token Lists`)}
+            {i18n._(t`Expanded results from Pool`)}
           </Typography>
         </RowFixed>
-        <QuestionHelper
-          text={i18n._(t`Tokens from inactive lists. Import specific tokens below or
-            click Manage to activate more lists.`)}
-        />
+        <QuestionHelper text={i18n._(t`LP Tokens from pool.`)} />
       </RowBetween>
     </FixedContentRow>
   )

@@ -24,12 +24,14 @@ import QuestionHelper from 'app/components/QuestionHelper'
 import Input from '../../components/Input'
 import { useLockedBalance } from 'app/features/boost/hook'
 import { classNames } from '../../functions'
+import { CurrencyLogo } from 'app/components/CurrencyLogo'
+import { CRONA } from '@cronaswap/core-sdk'
 
 const INPUT_CHAR_LIMIT = 18
 
 export default function YieldSimulator(): JSX.Element {
   const { i18n } = useLingui()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
   const addTransaction = useTransactionAdder()
 
@@ -139,7 +141,7 @@ export default function YieldSimulator(): JSX.Element {
           </Typography>
         </div>
 
-        <div className="overflow-y-auto max-h-72">
+        <div className="overflow-y-auto max-h-[600px]">
           {items && items.length > 0 ? (
             <InfiniteScroll
               dataLength={numDisplayed}
@@ -169,7 +171,7 @@ export default function YieldSimulator(): JSX.Element {
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 md:gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-50"></div>
+                    <CurrencyLogo currency={CRONA[chainId]} size={'48px'} />
                     <div className="flex flex-col">
                       {i18n._(t`Your Locked`)}
                       <div className="text-white">{formatNumber(lockAmount?.toFixed(18))}</div>
@@ -203,7 +205,7 @@ export default function YieldSimulator(): JSX.Element {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 md:gap-4">
+                  <div className="flex items-center gap-4">
                     <div className="w-10 h-10">
                       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -336,14 +338,14 @@ export default function YieldSimulator(): JSX.Element {
                 <div className="mt-2 space-y-8">
                   <div className="text-2xl font-Poppins">{i18n._(t`Your share of veCRONA`)}</div>
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-50"></div>
+                    <CurrencyLogo currency={CRONA[chainId]} size={'36px'} />
                     <div className="text-2xl">
                       {' '}
-                      {lockedveCrona <= totalVeCrona
-                        ? `${((lockedveCrona * 100) / totalVeCrona).toFixed(6)} %`
+                      {lockedveCrona / (totalVeCrona + lockedveCrona) <= 0.999999
+                        ? `${((lockedveCrona * 100) / (totalVeCrona + lockedveCrona)).toFixed(4)} %`
                         : account
-                        ? `100 %`
-                        : `0%`}
+                        ? `100.0 %`
+                        : `0.0 %`}
                     </div>
                   </div>
                 </div>

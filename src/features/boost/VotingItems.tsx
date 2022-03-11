@@ -9,7 +9,7 @@ export const SelectItem = ({ item, triggerBoost }) => {
   }
   return (
     <div className="flex items-center gap-2 hover:cursor-pointer">
-      <Checkbox color="blue" className="w-4 h-4 border-2 rounded-sm border-dark-650" set={handleSet} />
+      <Checkbox color="blue" checked={item.isBoost} className="w-4 h-4 border-2 rounded-sm border-dark-650" set={handleSet} />
       <div className="text-base text-dark-650 hover:text-blue text-[15px]">{item.name} LP</div>
     </div>
   )
@@ -30,7 +30,7 @@ export const VoteInputItem = ({ id, token0, token1, chainId, value, inputHandler
   const Token0 = new Token(chainId, token0.id, token0.decimals, token0.symbol, token0.name)
   const Token1 = new Token(chainId, token1.id, token1.decimals, token1.symbol, token1.name)
   return (
-    <div className={`flex items-center h-12 px-2 py-1 border-[1px] rounded-md w-36 lg:w-48 ${focus ? 'border-blue/60' : 'border-dark-650'}`}>
+    <div className={`flex items-center h-12 px-2 py-1 border-[1px] rounded-md w-full lg:w-full ${focus ? 'border-blue/60' : 'border-dark-650'}`}>
       <div className="flex items-center gap-2">
         {Token0 && Token1 && <CurrencyLogoArray currencies={[Token0, Token1]} dense size={28} />}
         <div>%</div>
@@ -48,17 +48,20 @@ export const VoteInputItem = ({ id, token0, token1, chainId, value, inputHandler
   )
 }
 
-const VotingItems = ({ token0, token1, vote, weight }) => {
+const VotingItems = ({ token0, token1, chainId, vote, weight }) => {
+
+  const Token0 = new Token(chainId, token0.id, token0.decimals, token0.symbol, token0.name)
+  const Token1 = new Token(chainId, token1.id, token1.decimals, token1.symbol, token1.name)
   return (
     <div className="flex justify-between p-2">
       <div className='flex w-2/5 items-center align-middle text-[14px] gap-2'>
-        {token0 && token1 && (
-          <CurrencyLogoArray currencies={[token0, token1]} dense size={window.innerWidth > 968 ? 28 : 24} />
+        {Token0 && Token1 && (
+          <CurrencyLogoArray currencies={[Token0, Token1]} dense size={window.innerWidth > 968 ? 28 : 24} />
         )}
-        {`${token0.symbol}-${token1.symbol} LP`}
+        {`${Token0.symbol}-${Token1.symbol} LP`}
       </div>
-      <div className="w-2/5 text-center items-center text-[14px]">{vote}</div>
-      <div className="w-1/5 text-right items-center text-[14px]">{weight}</div>
+      <div className="flex w-2/5 justify-center items-center align-middle text-[14px]">{vote}</div>
+      <div className="flex w-1/5 justify-end items-center align-middle text-[14px]">{weight}</div>
     </div >
   )
 }

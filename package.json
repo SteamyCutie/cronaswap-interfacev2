@@ -36,7 +36,7 @@
     "@commitlint/cli": "^13.0.0",
     "@commitlint/config-conventional": "^13.0.0",
     "@cronaswap/core-sdk": "1.0.15",
-    "@cronaswap/default-token-list": "1.0.30",
+    "@cronaswap/default-token-list": "1.0.25",
     "@cronaswap/miso": "1.0.1",
     "@ethereumjs/common": "^2.4.0",
     "@ethereumjs/tx": "^3.3.0",
@@ -136,7 +136,7 @@
     "polished": "^4.1.3",
     "postcss": "^8.3.6",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-preset-env": "^6.7.0",
+    "postcss-preset-env": "^7.4.2",
     "prettier": "^2.3.2",
     "qs": "^6.10.1",
     "rc-slider": "^9.7.2",
@@ -190,7 +190,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-  "@visx/curve": "^2.1.0",
+    "@visx/curve": "^2.1.0",
     "@visx/group": "^2.1.0",
     "cids": "^1.1.9",
     "multicodec": "^3.2.1",

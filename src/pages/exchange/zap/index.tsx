@@ -24,15 +24,12 @@ import { usePairContract, useRouterContract, useZapContract } from '../../../hoo
 import Column, { AutoColumn } from '../../../components/Column'
 import Container from '../../../components/Container'
 import { Contract } from '@ethersproject/contracts'
-import Dots from '../../../components/Dots'
 import DoubleGlowShadow from '../../../components/DoubleGlowShadow'
-import { Field } from '../../../state/burn/actions'
 import Head from 'next/head'
 import Header from '../../../features/trade/Header'
 import Web3Connect from '../../../components/Web3Connect'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../services/web3'
-import { useAllTokens, useCurrency } from '../../../hooks/Tokens'
 import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
 import useTransactionDeadline from '../../../hooks/useTransactionDeadline'
@@ -41,39 +38,27 @@ import {
   useUserSingleHopOnly,
   useUserSlippageToleranceWithDefault,
 } from '../../../state/user/hooks'
-import { useV2LiquidityTokenPermit } from '../../../hooks/useERC20Permit'
-import useWrapCallback, { WrapType } from 'app/hooks/useWrapCallback'
 import { maxAmountSpend, warningSeverity } from 'app/functions'
 import { useUSDCValue } from 'app/hooks/useUSDCPrice'
-import { computeFiatValuePriceImpact } from '../../../functions/trade'
 import { AutoRow, RowBetween } from 'app/components/Row'
 import { Zap as ZapIcon } from 'react-feather'
 import LPTokenSelectPanel from 'app/components/LPTokenSelectPanel'
 import Button from 'app/components/Button/index.new'
 import { BottomGrouping, ZapCallbackError } from 'app/features/zap/styleds'
 import { useIsZapUnsupported } from 'app/hooks/useIsZapUnsupported'
-import useIsArgentWallet from 'app/hooks/useIsArgentWallet'
 import { useToggleSettingsMenu } from 'app/state/application/hooks'
 import Loader from 'app/components/Loader'
 import ProgressSteps from '../../../components/ProgressSteps'
 import { useZapCallback } from 'app/hooks/useZapCallback'
-import { parseUnits } from '@ethersproject/units'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
-import { useSingleCallResult } from 'app/state/multicall/hooks'
-import ZAP_ABI from '../../../constants/abis/zap.json'
-
-import Web3 from 'web3'
-import { ZAP_ADDRESS } from 'app/constants/addresses'
 import ConfirmZapModal from 'app/features/zap/ConfirmZapModal'
+import { useAllTokens, useZapInTokens } from 'app/hooks/Tokens'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function Zap() {
   const { i18n } = useLingui()
 
-  const loadedUrlParams = useDefaultsFromURLSearch()
-
-  const router = useRouter()
   const { independentField, typedValue, recipient } = useZapState()
 
   // for expert mode
@@ -214,7 +199,6 @@ export default function Zap() {
     // await approveCallback()
     try {
       const tx = await zapContract.zapInToken(inputCurrencyAddress, amount, outputLPTokenAddress)
-      debugger
       setZapState({
         attemptingTxn: false,
         showConfirm, // showConfirm,
@@ -262,6 +246,9 @@ export default function Zap() {
   // the callback to execute the zap
   const { callback: zapCallback, error: zapCallbackError } = useZapCallback(allowedSlippage, recipient)
 
+  const zapInTokens = useZapInTokens()
+  const zapInCurrencyList = Object.keys(zapInTokens).flat()
+
   return (
     <Container id="remove-liquidity-page" className="py-4 space-y-4 md:py-12 lg:py-24" maxWidth="2xl">
       <Head>
@@ -294,9 +281,10 @@ export default function Zap() {
               onMax={handleMaxInput}
               fiatValue={fiatValueInput ?? undefined}
               onCurrencySelect={handleInputSelect}
-              otherCurrency={currencies[ZapField.OUTPUT]}
-              showCommonBases={true}
+              otherCurrency={null}
+              showCommonBases={false}
               id="zap-currency-input"
+              currencyList={zapInCurrencyList}
             />
             <AutoColumn justify="space-between" className="py-2.5">
               <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -310,7 +298,7 @@ export default function Zap() {
             <LPTokenSelectPanel
               label={i18n._(t`Zap To (estimate not available):`)}
               showMaxButton={false}
-              hideBalance={false}
+              hideBalance={true}
               currency={currencies[ZapField.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[ZapField.INPUT]}

@@ -17,6 +17,7 @@ export interface PoolCharacteristics {
   taxRate: number
   totalAmountPool: BigNumber
   sumTaxesOverflow: BigNumber
+  raiseToken: Token
 }
 
 // IFO data unrelated to the user returned by useGetPublicIfoData
@@ -29,7 +30,7 @@ export interface PublicIfoData {
   secondsUntilEnd: number
   startTimeNum: number
   endTimeNum: number
-  raiseToken: Token
+  // raiseToken: Token
   offerToken: Token
   raiseTokenPriceInUSD: BigNumber
   [PoolIds.poolBasic]?: PoolCharacteristics

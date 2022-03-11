@@ -32,6 +32,13 @@ export const USDC: ChainTokenMap = {
     'USDC',
     'USD Coin'
   ),
+  [ChainId.BSC_TESTNET]: new Token(
+    ChainId.BSC_TESTNET,
+    '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A',
+    6,
+    'USDC',
+    'USD Coin'
+  ),
 }
 export const USDT = new Token(ChainId.ETHEREUM, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 

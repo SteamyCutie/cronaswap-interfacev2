@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useLingui } from '@lingui/react'
 import { NATIVE, ZERO, Token } from '@cronaswap/core-sdk'
 import Head from 'next/head'
@@ -21,7 +21,7 @@ import { format, addDays, getUnixTime } from 'date-fns'
 import { useLockedBalance } from 'app/features/boost/hook'
 import QuestionHelper from 'app/components/QuestionHelper'
 import { useTokenInfo } from 'app/features/farms/hooks'
-import { useCronaContract } from 'app/hooks/useContract'
+import { useCronaContract, useCronaVaultContract } from 'app/hooks/useContract'
 import { getAPY } from 'app/features/staking/useStaking'
 import { CalculatorIcon } from '@heroicons/react/solid'
 import ROICalculatorModal from 'app/components/ROICalculatorModal'
@@ -32,6 +32,10 @@ import NumericalInput from 'components/NumericalInput'
 import { VoteInputItem } from 'app/features/boost/VotingItems'
 import Checkbox from 'app/components/Checkbox'
 import { VotingChart } from 'app/features/boost/VotingChart'
+import { useVotingContract } from 'app/hooks'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
+import { getBalanceAmount } from 'functions/formatBalance'
+import { getCronaPrice } from 'features/staking/useStaking'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -52,8 +56,8 @@ const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
 }
 
 const tabStyle = 'rounded-lg p-3'
-const activeTabStyle = `${tabStyle} flex justify-center items-center w-full h-12 rounded font-bold md:font-medium md:text-lg text-sm focus:outline-none focus:ring bg-blue`
-const inactiveTabStyle = `${tabStyle} flex justify-center items-center w-full h-12 rounded font-bold md:font-medium md:text-lg text-sm focus:outline-none focus:ring bg-dark-700 text-secondary`
+const activeTabStyle = `${tabStyle} flex justify-center items-center w-full h-12 rounded font-bold md:font-medium lg:text-lg text-sm focus:outline-none focus:ring bg-blue`
+const inactiveTabStyle = `${tabStyle} flex justify-center items-center w-full h-12 rounded font-bold md:font-medium lg:text-lg text-sm focus:outline-none focus:ring bg-dark-700 text-secondary`
 
 export default function Boostv2() {
   const { i18n } = useLingui()
@@ -75,7 +79,35 @@ export default function Boostv2() {
     withdrawWithMc,
   } = useVotingEscrow()
 
+  const addTransaction = useTransactionAdder()
+  const voteContract = useVotingContract()
   const WEEK = 7 * 86400
+
+  const cronavaultContract = useCronaVaultContract()
+  const autocronaBountyValue = useRef(0)
+
+  const getCronaVault = async () => {
+    const autocronaBounty = await cronavaultContract.calculateHarvestCronaRewards()
+    autocronaBountyValue.current = getBalanceAmount(autocronaBounty._hex, 18).toNumber()
+  }
+  getCronaVault()
+
+  const cronaPrice = getCronaPrice()
+  const [pendingBountyTx, setPendingBountyTx] = useState(false)
+  const handleBountyClaim = async () => {
+    setPendingBountyTx(true)
+    try {
+      const gasLimit = await cronavaultContract.estimateGas.harvest()
+      const tx = await cronavaultContract.harvest({ gasLimit: gasLimit.mul(120).div(100) })
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claim`)} CRONA`,
+      })
+      setPendingBountyTx(false)
+    } catch (error) {
+      console.error(error)
+      setPendingBountyTx(false)
+    }
+  }
 
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
@@ -222,14 +254,40 @@ export default function Boostv2() {
     }
   }
 
+  const handleVote = async () => {
+    if (!walletConnected) {
+      toggleWalletModal()
+    } else {
+      setPendingTx(true)
+
+      const args = [Array.from(boostedFarms, (x) => x.lpToken), Array.from(voteValueArr, (x) => (x * 1e18).toFixed())]
+      const gasLimit = await voteContract.estimateGas.vote(...args)
+      const tx = await voteContract.vote(...args, {
+        gasLimit: gasLimit.mul(120).div(100),
+      })
+      addTransaction(tx, {
+        summary: `${i18n._(t`Vote`)} Farms`,
+      })
+
+      handleInput('')
+      setPendingTx(false)
+    }
+  }
+
   const [showCalc, setShowCalc] = useState(false)
 
   const allFarms = Object.keys(FARMSV2[chainId]).map((key) => {
     return { ...FARMSV2[chainId][key], lpToken: key, isBoost: false }
   })
 
-  const voteFarms = allFarms.filter((item) => item.isVote == true)
-  const [boostedFarms, setBoostedFarms] = useState([])
+  const voteFarms = Array.from(
+    allFarms.filter((item) => item.isVote == true),
+    (x) => {
+      x.isBoost = true
+      return x
+    }
+  )
+  const [boostedFarms, setBoostedFarms] = useState(voteFarms)
   const handleBoost = (item) => {
     if (boostedFarms.some((boostedFarm) => boostedFarm.name === item.name) == false) {
       item.isBoost = true
@@ -243,15 +301,42 @@ export default function Boostv2() {
   // Votes from BoostedFarms
   const [voteValueArr, setVoteValueArr] = useState([])
   const [chartData, setChartData] = useState([])
-  const votingItems = [];
-  (new Array(10).fill(0)).map((_item, i) => votingItems.push(<VotingItems key={i} token0={CRONA[chainId]} token1={NATIVE[chainId]} vote="23439900" weight="32.23" />))
+  const votingItems = useRef([])
+
+  const getVoteInfo = async (lpAddr: string) => {
+    let vote = await voteContract.weights(lpAddr)
+    let weight = await voteContract.totalWeight()
+    return [vote, weight]
+  }
+  const getGlobalVotes = () => {
+    if (!voteContract) return
+    voteFarms.map((item, i) => {
+      getVoteInfo(item.lpToken).then((res) => {
+        let vote = res[0].toFixed()
+        let weight = (vote / res[1].toFixed()) * 100
+        votingItems.current[i] = (
+          <VotingItems
+            key={i}
+            token0={item.token0}
+            token1={item.token1}
+            chainId={chainId}
+            vote={formatNumber(Number(vote).toFixed(2))}
+            weight={weight.toFixed(2) + '%'}
+          />
+        )
+      })
+    })
+  }
+
+  getGlobalVotes()
 
   const [newWeighting, setNewWeighting] = useState<number>(0)
 
   const [isHelper, setIsHelper] = useState(true)
 
   const inputHandler = (inputid: number, inputValue: number) => {
-    let voteValueArray = voteValueArr.length === 0 ? new Array(boostedFarms.length).fill(0) : Array.from(voteValueArr)
+    let voteValueArray =
+      voteValueArr.length === 0 ? new Array(boostedFarms.length).fill(0) : voteValueArr.slice(0, boostedFarms.length)
     voteValueArray[inputid] = inputValue
     if (isHelper) {
       const length = boostedFarms.length
@@ -261,7 +346,8 @@ export default function Boostv2() {
       for (let j = 0; j <= i; j++) {
         prevSum += voteValueArray[j]
       }
-      if ((inputid !== 0 && (prevSum > 0) === false) || prevSum > 100) { } else {
+      if ((inputid !== 0 && prevSum > 0 === false) || prevSum > 100) {
+      } else {
         if (inputid === length - 2) {
           voteValueArray[inputid + 1] = 100 - prevSum
         } else {
@@ -273,16 +359,24 @@ export default function Boostv2() {
         }
       }
     }
+    setVoteValueArr(voteValueArray)
+  }
+
+  const updateListing = useCallback(() => {
+    let voteValueArray = voteValueArr.length === 0 ? [] : voteValueArr.slice(0, boostedFarms.length)
     setNewWeighting(voteValueArray.reduce((prevValue, newValue) => prevValue + newValue, 0))
 
-    let chData = [];
+    let chData = []
     boostedFarms.map((items, index) => {
       const sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
-      chData.push({ name: sectorName, value: voteValueArray[index] })
+      chData.push({ name: sectorName, value: voteValueArr[index] })
     })
-    setVoteValueArr(voteValueArray)
     setChartData(chData)
-  }
+  }, [boostedFarms, voteValueArr])
+
+  useEffect(() => {
+    updateListing()
+  }, [updateListing, voteValueArr])
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
@@ -293,11 +387,15 @@ export default function Boostv2() {
       <div className="flex flex-col items-center justify-start flex-grow w-full h-full">
         <div className="items-center w-full px-4 py-4 max-w-7xl">
           <div className="flex flex-col space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 auto-cols-max">
-              <div className="p-4 rounded-lg bg-dark-800">
-                <div className="flex items-center hover:cursor-pointer" onClick={() => setShowCalc(true)}>
-                  <h1 className="text-lg">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)}`}</h1>
-                  <CalculatorIcon className="w-5 h-5" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-cols-max">
+              <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
+                <div
+                  className="flex items-center self-end justify-self-center hover:cursor-pointer"
+                  onClick={() => setShowCalc(true)}
+                >
+                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)
+                    }`}</h1>
+                  {/* <CalculatorIcon className="w-5 h-5 hidden" /> */}
                 </div>
                 <ROICalculatorModal
                   isfarm={false}
@@ -309,12 +407,13 @@ export default function Boostv2() {
                   name={'CRONA'}
                   apr={manualAPY}
                 />
-                <h2 className="flex flex-row items-center text-sm">
-                  veCRONA APY <QuestionHelper text="The reward apy of lock CRONA." />
+                <h2 className="flex flex-row items-center justify-self-center self-start text-[16px] md:text-[21px] text-[#798090]">
+                  veCRONA APY&nbsp;
+                  <QuestionHelper text="The reward apy of lock CRONA." />
                 </h2>
               </div>
-              <div className="p-4 rounded-lg bg-dark-800">
-                <h1 className="text-lg">
+              <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
+                <h1 className="text-[24px] md:text-[32px] self-end justify-self-center text-center font-bold text-white">
                   {formatPercent(
                     formatNumber(
                       Number(formatBalance(cronaSupply ? cronaSupply : 1)) /
@@ -322,37 +421,68 @@ export default function Boostv2() {
                     )
                   )}
                 </h1>
-                <h2 className="flex flex-row items-center text-sm">
-                  % of CRONA locked
-                  <QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." />
+                <h2 className="flex items-center place-content-center self-start text-center text-[16px] md:text-[21px] text-[#798090]">
+                  % of CRONA locked&nbsp;
+                  <span className="mt-[4px]">
+                    <QuestionHelper text="Percentage of circulating CRONA locked in veCRONA earning protocol revenue." />
+                  </span>
                 </h2>
               </div>
-              <div className="p-4 rounded-lg bg-dark-800">
-                <h1 className="text-lg">{formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years</h1>
-                <h2 className="flex flex-row items-center text-sm">
-                  Average CRONA lock time <QuestionHelper text="Average CRONA lock time in veCRONA." />
+              <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800">
+                <h1 className="text-[24px] md:text-[32px] self-end justify-self-center text-center font-bold text-white">
+                  {formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years
+                </h1>
+                <h2 className="flex items-center place-content-center self-start text-center text-[16px] md:text-[21px] text-[#798090]">
+                  Average lock time&nbsp;
+                  <span className="mt-[6px]">
+                    <QuestionHelper text="Average CRONA lock time in veCRONA." />
+                  </span>
                 </h2>
               </div>
-              {/* <div className="p-4 rounded-lg bg-dark-800">
-                <h3>Auto CRONA Bounty</h3>
-                <div className="flex"></div>
-                <h1 className="text-lg">{formatNumber((Number(veCronaSupply) / Number(cronaSupply)) * 4)} years</h1>
-                <h2 className="flex flex-row items-center text-sm">
-                  Average CRONA lock time <QuestionHelper text="Average CRONA lock time in veCRONA." />
-                </h2>
-              </div> */}
+              <div className="grid grid-cols-1 items-center p-4 rounded-lg bg-dark-800 px-8">
+                <div className="flex flex-row items-center text-[16px] md:text-[21px] text-[#798090]">
+                  {i18n._(t`Auto Crona Bounty`)}&nbsp;
+                  <span className="mt-[6px]">
+                    <QuestionHelper text="This bounty is given as a reward for providing a service to other users. Whenever you successfully claim the bounty, you’re also helping out by activating the Auto CRONA Pool’s compounding function for everyone.Auto-Compound Bounty: 0.25% of all Auto CRONA pool users pending yield" />
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-[24px] md:text-[28px] font-bold text-white">{formatNumber(harvestRewards?.toFixed(18))}</div>
+                    <div className="text-[14px] text-light-blue">
+                      {'~$'}
+                      {formatNumber(
+                        Number(Number(harvestRewards?.toFixed(18)) * Number(cronaPrice.toFixed(3))).toFixed(3)
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <Button
+                      id="btn-create-new-pool"
+                      color="gradient"
+                      // className="font-bold font-[20px] text-[#6F7285]"
+                      variant="outlined"
+                      size="sm"
+                      disabled={!harvestRewards || pendingBountyTx}
+                      onClick={() => handleClaimRewards('harvest')}
+                    >
+                      {pendingBountyTx ? <Dots>{i18n._(t`Claiming`)} </Dots> : i18n._(t`Claim`)}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="gap-4 md:flex">
               {/* lock crona */}
               <div className="rounded-lg md:w-1/2 bg-dark-900">
-                <div className="p-8 rounded-t-lg bg-dark-800">
-                  <h1 className="text-2xl font-bold">CRONA Boost Lock</h1>
+                <div className="py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
+                  <h1 className="text-xl md:text-2xl font-bold">CRONA Boost Lock</h1>
                 </div>
                 <div className="p-6">
                   <div className="flex items-center justify-between w-full">
-                    <p className="text-base md:text-lg text-high-emphesis">{i18n._(t`Your CRONA Balance`)}</p>
-                    <div className="text-base font-medium text-high-emphesis md:text-lg md:font-normal">
+                    <p className="text-sm md:text-lg text-high-emphesis">{i18n._(t`Your CRONA Balance`)}</p>
+                    <div className="text-sm font-medium text-high-emphesis md:text-lg md:font-normal">
                       {balance?.toSignificant(12)} CRONA
                     </div>
                   </div>
@@ -383,10 +513,7 @@ export default function Boostv2() {
                             height="20px"
                           />
                         )}
-                        <p
-                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
-                            }`}
-                        >
+                        <p className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'}`}>
                           {`${input ? input : '0'} CRONA`}
                         </p>
                       </div>
@@ -414,7 +541,6 @@ export default function Boostv2() {
                     >
                       1 Week
                     </button>
-
                     <button
                       className={activeTab === 14 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -423,7 +549,6 @@ export default function Boostv2() {
                     >
                       2 Weeks
                     </button>
-
                     <button
                       className={activeTab === 30 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -432,7 +557,6 @@ export default function Boostv2() {
                     >
                       1 Month
                     </button>
-
                     <button
                       className={activeTab === 90 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -441,7 +565,6 @@ export default function Boostv2() {
                     >
                       3 Months
                     </button>
-
                     <button
                       className={activeTab === 180 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -450,7 +573,6 @@ export default function Boostv2() {
                     >
                       6 Months
                     </button>
-
                     <button
                       className={activeTab === 365 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -459,7 +581,6 @@ export default function Boostv2() {
                     >
                       1 Year
                     </button>
-
                     <button
                       className={activeTab === 730 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -468,7 +589,6 @@ export default function Boostv2() {
                     >
                       2 Years
                     </button>
-
                     {/* <button
                     className={activeTab === 1095 ? activeTabStyle : inactiveTabStyle}
                     onClick={() => {
@@ -477,7 +597,6 @@ export default function Boostv2() {
                   >
                     3 Years
                   </button> */}
-
                     <button
                       className={activeTab === 1460 ? activeTabStyle : inactiveTabStyle}
                       onClick={() => {
@@ -487,7 +606,6 @@ export default function Boostv2() {
                       4 Years
                     </button>
                   </div>
-
                   <div className="flex flex-col pb-4 mt-6 space-y-2">
                     <div className="flex flex-row items-center justify-between text-base">
                       <div className="text-sm">My CRONA Locked</div>
@@ -529,7 +647,7 @@ export default function Boostv2() {
                       </Button>
                     )
                   ) : (
-                    <div className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-1">
                       {/* increacse amount or increacse time */}
                       <Button
                         color={buttonDisabled ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'}
@@ -573,7 +691,7 @@ export default function Boostv2() {
                   <div
                     className={
                       Number(rewards) > 0 && Number(harvestRewards) > 0
-                        ? 'grid grid-cols-1 gap-2 md:grid-cols-2 mt-2'
+                        ? 'grid grid-cols-1 gap-2 md:grid-cols-1 mt-2'
                         : 'grid grid-cols-1 gap-2 md:grid-cols-1 mt-2'
                     }
                   >
@@ -587,90 +705,98 @@ export default function Boostv2() {
                       <></>
                     )}
 
-                    {Number(harvestRewards) > 0 ? (
+                    {/* {Number(harvestRewards) > 0 ? (
                       <Button color="gradient" className="mt-2" onClick={() => handleClaimRewards('harvest')}>
                         {!walletConnected ? i18n._(t`Connect Wallet`) : i18n._(t`Auto Boost Bounty`)} (
                         {formatNumber(harvestRewards?.toFixed(18))})
                       </Button>
                     ) : (
                       <></>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
-              <div className="rounded-lg md:w-1/2 bg-dark-900">
-                <div className="p-8 rounded-t-lg bg-dark-800">
-                  <h1 className="text-2xl font-bold">Global votes</h1>
+              <div className="rounded-lg mt-4 md:mt-0 md:w-1/2 bg-dark-900">
+                <div className="py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
+                  <h1 className="text-xl md:text-2xl font-bold">Global votes</h1>
                 </div>
                 <div className="p-4">
-                  <div className="flex p-2 text-lg border-b-2 border-dark-700">
+                  <div className="flex p-2 text-sm md:text-lg border-b-2 border-dark-700">
                     <div className="w-2/5">Boosted Farms</div>
-                    <div className="w-2/5 text-center">Votes</div>
-                    <div className="w-1/5 text-right">Weight %</div>
+                    <div className="w-2/5 text-center place-content-center">Votes</div>
+                    <div className="w-1/5 text-right flex justify-end">Weight <p className="text-[11px] ml-[2px] mt-[1px]">%</p></div>
                   </div>
-                  <div className="h-[440px] overflow-y-auto my-2">
-                    {votingItems}
-                  </div>
+                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current}</div>
                 </div>
               </div>
             </div>
             <div className="w-full text-white bg-gray-900 rounded-lg">
-              <div className="flex items-center p-8 rounded-lg bg-dark-800">
-                <h1 className="text-2xl font-bold">{i18n._(t`Vote to boost your farm`)}</h1>
-                <div className="flex mt-[6px] ml-1"><QuestionHelper text="Vote to boost your farm" /></div>
-              </div>
-              <div className="p-8 space-y-2 md:space-y-0 md:flex bg-dark-900">
-                <div className="md:w-1/5">
-                  <div className="mb-4 font-Poppins">{i18n._(t`Select boosted farms`)}</div>
-                  <div className="pl-4 pr-2 py-3 border-2 h-80 rounded-xl border-dark-650">
-                    <div className="grid w-full h-[100%] overflow-y-auto ">
-                      {voteFarms.map((item, index) => (
-                        <SelectItem key={index} item={item} triggerBoost={handleBoost} />
-                      ))}
-                    </div>
-                  </div>
+              <div className="flex items-center py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
+                <h1 className="text-lg md:text-2xl font-bold">{i18n._(t`Vote to boost your farm`)}</h1>
+                <div className="flex mt-[3px] md:mt-[6px] ml-1">
+                  <QuestionHelper text="Voting for a Boosted farm increases the emissions that a farm receives." />
                 </div>
-                <div className="md:px-4 md:w-2/5">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-base font-Poppins">{i18n._(t`Vote percentage`)}</div>
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        checked={isHelper}
-                        color="blue"
-                        className="w-4 h-4 border-2 rounded-sm border-dark-650"
-                        set={() => setIsHelper(!isHelper)}
-                      />
-                      <div>{i18n._(t`Distribution Helper`)}</div>
-                    </div>
-                  </div>
-                  <div className="flex border-2 h-60 p-2 pr-1 rounded-xl border-dark-650">
-                    <div className="flex overflow-y-auto w-full">
-                      <div className="grid grid-cols-2 px-2 py-2 w-full items-center gap-2" style={{ height: 'fit-content' }}>
-                        {boostedFarms.map((item, index) => (
-                          <VoteInputItem
-                            key={index}
-                            id={index}
-                            token0={item.token0}
-                            token1={item.token1}
-                            chainId={chainId}
-                            value={voteValueArr[index]}
-                            inputHandler={inputHandler}
-                          />
-                        ))}
+              </div>
+              <div className="py-6 md:py-8 px-8 space-y-2 md:space-y-0 md:grid md:grid-cols-1 lg:flex bg-dark-900">
+                <div className="w-full lg:w-3/5 md:flex">
+                  <div className="w-full md:w-1/3 lg:w-1/3">
+                    <div className="mb-4 font-Poppins">{i18n._(t`Select boosted farms`)}</div>
+                    <div className="pl-4 pr-2 py-3 border-2 h-80 rounded-xl border-dark-650">
+                      <div className="flex overflow-y-auto w-full" style={{ height: '-webkit-fill-available' }}>
+                        <div className="grid w-full items-center gap-2" style={{ height: 'fit-content' }}>
+                          {voteFarms.map((item, index) => (
+                            <SelectItem key={index} item={item} triggerBoost={handleBoost} />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <div className="mt-1 mb-1">New vote weighting: {newWeighting}%</div>
-                    <button
-                      className={newWeighting === 100 ? activeTabStyle : inactiveTabStyle}
-                      disabled={newWeighting != 100}
-                    >
-                      {newWeighting === 100 ? `Vote` : `Vote (weights must total 100%)`}
-                    </button>
+                  <div className="w-full md:w-2/3 lg:w-2/3 mt-4 md:mt-0 md:px-4 ">
+                    <div className="flex-row md:flex items-center justify-between mb-4">
+                      <div className="text-base font-Poppins">{i18n._(t`Vote percentage`)}</div>
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          checked={isHelper}
+                          color="blue"
+                          className="w-4 h-4 border-2 rounded-sm border-dark-650"
+                          set={() => setIsHelper(!isHelper)}
+                        />
+                        <div>{i18n._(t`Distribution Helper`)}</div>
+                      </div>
+                    </div>
+                    <div className="flex border-2 h-60 p-2 pr-1 rounded-xl border-dark-650">
+                      <div className="flex overflow-y-auto w-full">
+                        <div
+                          className="grid grid-cols-1 md:grid-cols-2 px-2 py-2 w-full items-center gap-2"
+                          style={{ height: 'fit-content' }}
+                        >
+                          {boostedFarms.map((item, index) => (
+                            <VoteInputItem
+                              key={index}
+                              id={index}
+                              token0={item.token0}
+                              token1={item.token1}
+                              chainId={chainId}
+                              value={voteValueArr[index]}
+                              inputHandler={inputHandler}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="mt-1 mb-1">New vote weighting: {newWeighting}%</div>
+                      <button
+                        className={newWeighting === 100 ? activeTabStyle : inactiveTabStyle}
+                        disabled={newWeighting != 100}
+                        onClick={handleVote}
+                      >
+                        {newWeighting === 100 ? `Vote` : `Vote (weights must total 100%)`}
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="w-2/5">
+                <div className="w-full lg:w-2/5">
                   <div className="w-full h-64 mx-auto my-8">
                     <VotingChart data={chartData} />
                   </div>

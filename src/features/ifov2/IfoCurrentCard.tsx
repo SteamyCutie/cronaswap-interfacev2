@@ -57,7 +57,7 @@ export const IfoCurrentCard = ({
 
   return (
     <div className="flex flex-row justify-between gap-4">
-      <div className="bg-dark-900 rounded w-full">
+      <div className="w-full rounded bg-dark-900">
         <div
           className={
             !publicIfoData.poolBasic || !walletIfoData.poolBasic
@@ -86,7 +86,7 @@ export const IfoCurrentCard = ({
           {/* ifo info */}
 
           <div
-            className="flex flex-col px-4 pt-14 space-y-8 rounded-r bg-dark-800"
+            className="flex flex-col px-4 space-y-8 rounded-r pt-14 bg-dark-800"
             {...{
               style: {
                 backgroundImage: `url("/images/ifo/${ifo.id}-bg.png")`,
@@ -97,7 +97,7 @@ export const IfoCurrentCard = ({
               <Image src={`/images/ifo/${ifo.id}.png`} alt={ifo.name} width="285px" height="55px" />
             </div>
 
-            <div className="flex mx-auto gap-1 text-high-emphesis rounded-md bg-dark-700 p-4 items-center">
+            <div className="flex items-center gap-1 p-4 mx-auto rounded-md text-high-emphesis bg-dark-700">
               {(publicIfoData.status === 'live' || publicIfoData.status === 'finished') && (
                 <>
                   <CloseIcon className="h-8 text-red " />
@@ -138,7 +138,7 @@ export const IfoCurrentCard = ({
 
               <div className="text-xl font-bold">Introduction</div>
               <div className="text-[14px] text-high-emphesis">{ifo.description}</div>
-              <div className="flex gap-4 items-center pb-4">
+              <div className="flex items-center gap-4 pb-4">
                 <a href={ifo.articleUrl} target="_blank" rel="noreferrer">
                   <TokenomicsIcon width={16} className="text-low-emphesis" />
                 </a>

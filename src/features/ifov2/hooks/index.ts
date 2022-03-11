@@ -70,12 +70,20 @@ export function useGetPublicIfoData(ifo: Ifo) {
 
   return {
     isInitialized: true,
-    raiseToken: ifo.raiseToken[chainId ? chainId : ChainId.CRONOS],
+    // raiseToken: ifo.raiseToken[chainId ? chainId : ChainId.CRONOS],
     offerToken: ifo.offerToken[chainId ? chainId : ChainId.CRONOS],
     secondsUntilEnd: timesRemaining,
     secondsUntilStart: startTimeNum - currentTime,
-    poolBasic: { ...poolBasicFormatted, taxRate: 0 },
-    poolUnlimited: { ...poolUnlimitedFormatted, taxRate: taxRateNum },
+    poolBasic: {
+      ...poolBasicFormatted,
+      taxRate: 0,
+      raiseToken: ifo.poolBasic.raiseToken[chainId ? chainId : ChainId.CRONOS],
+    },
+    poolUnlimited: {
+      ...poolUnlimitedFormatted,
+      taxRate: taxRateNum,
+      raiseToken: ifo.poolUnlimited.raiseToken[chainId ? chainId : ChainId.CRONOS],
+    },
     status,
     progress,
     timesRemaining,
@@ -88,7 +96,7 @@ export function useGetPublicIfoData(ifo: Ifo) {
 // wallet data
 export function useGetWalletIfoData(ifo: Ifo) {
   const { account, chainId } = useWeb3React()
-  const { address, raiseToken } = ifo
+  const { address } = ifo
   const ifoContract = useIfoV2Contract(address[chainId])
   const veCronaContract = useVotingEscrowAtContract()
 

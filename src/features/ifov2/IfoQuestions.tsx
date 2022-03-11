@@ -34,21 +34,22 @@ function classNames(...classes) {
 }
 
 export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: PublicIfoData }) => {
-  const { raiseToken } = publicIfoData
+  const raiseTokenBasic = publicIfoData['poolBasic'].raiseToken
+  const raiseTokenUnlimited = publicIfoData['poolUnlimited'].raiseToken
 
   return (
-    <div className="mx-auto py-6 px-4 sm:py-8 sm:px-6 lg:px-8 bg-dark-900 rounded">
+    <div className="px-4 py-6 mx-auto rounded sm:py-8 sm:px-6 lg:px-8 bg-dark-900">
       {/* step */}
-      <h2 className="text-center text-3xl font-extrabold text-high-emphesis sm:text-4xl mb-8">How to take part</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-cols-max mb-8">
+      <h2 className="mb-8 text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">How to take part</h2>
+      <div className="grid grid-cols-1 gap-4 mb-8 md:grid-cols-3 auto-cols-max">
         <div className="p-4 rounded-lg bg-dark-800">
           <h1 className="text-lg">1. Get veCRONA</h1>
-          <h2 className="text-sm flex flex-row items-center">
+          <h2 className="flex flex-row items-center mb-2 text-sm">
             Lock your CRONA in the Boost Locker to get veCRONA. You’ll spend them to buy IFO sale tokens
           </h2>
 
           {/* <NavLink href={'/boost'}>
-                <a className="mt-4  p-2 rounded-md text-white" >
+                <a className="p-2 mt-4 text-white rounded-md" >
                   Get veCRONA
                 </a>
               </NavLink> */}
@@ -57,23 +58,26 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
           </Button>
         </div>
         <div className="p-4 rounded-lg bg-dark-800">
-          <h1 className="text-lg">2. Commit {raiseToken.symbol} Tokens</h1>
-          <h2 className="text-sm flex flex-row items-center">
-            When the IFO sales are live, you can “commit” your {raiseToken.symbol} tokens to buy the tokens being sold.
-            We recommend committing to the Basic Sale first, but you can do both if you like.
+          <h1 className="text-lg">
+            2. Commit {raiseTokenBasic.symbol}/{raiseTokenUnlimited.symbol} Tokens
+          </h1>
+          <h2 className="flex flex-row items-center text-sm">
+            When the IFO sales are live, you can “commit” your {raiseTokenBasic.symbol}/{raiseTokenUnlimited.symbol}{' '}
+            tokens to buy the tokens being sold. We recommend committing to the Basic Sale first, but you can do both if
+            you like.
           </h2>
         </div>
         <div className="p-4 rounded-lg bg-dark-800">
           <h1 className="text-lg">3. Claim Your Tokens</h1>
-          <h2 className="text-sm flex flex-row items-center">
+          <h2 className="flex flex-row items-center text-sm">
             After the IFO sales finish, you can claim any IFO tokens that you bought, and any unspent{' '}
-            {raiseToken.symbol} tokens will be returned to your wallet.
+            {raiseTokenBasic.symbol}/{raiseTokenUnlimited.symbol} tokens will be returned to your wallet.
           </h2>
         </div>
       </div>
 
       <div className="mx-auto divide-y-2 divide-dark-800">
-        <h2 className="text-center text-3xl font-extrabold text-high-emphesis sm:text-4xl">
+        <h2 className="text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">
           Frequently Asked Questions
         </h2>
         <dl className="mt-6 space-y-6 divide-y-2 divide-dark-800">
@@ -82,9 +86,9 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
               {({ open }) => (
                 <>
                   <dt className="text-lg">
-                    <Disclosure.Button className="text-left w-full flex justify-between items-start text-gray-600">
+                    <Disclosure.Button className="flex items-start justify-between w-full text-left text-gray-600">
                       <span className="font-medium text-white">{faq.question}</span>
-                      <span className="ml-6 h-7 flex items-center">
+                      <span className="flex items-center ml-6 h-7">
                         <ChevronDownIcon
                           className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-6 w-6 transform')}
                           aria-hidden="true"
@@ -92,7 +96,7 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
                       </span>
                     </Disclosure.Button>
                   </dt>
-                  <Disclosure.Panel as="dd" className="mt-2 pr-12">
+                  <Disclosure.Panel as="dd" className="pr-12 mt-2">
                     <p className="text-base text-gray-400">{faq.answer}</p>
                   </Disclosure.Panel>
                 </>
