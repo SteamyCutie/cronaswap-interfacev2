@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -12,7 +13,7 @@ export const selectCurrency = createAction<{
 export const selectLPToken = createAction<{
   field: Field
   lpTokenId: string
-  lpToken: Object
+  lpToken: FarmPairInfo
 }>('zap/selectLPToken')
 export const replaceZapState = createAction<{
   field: Field

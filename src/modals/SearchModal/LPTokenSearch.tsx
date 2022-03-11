@@ -17,13 +17,14 @@ import useFarmsV2 from 'app/features/farms/useFarmsV2'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'app/state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from 'app/state/wallet/hooks'
 import { useV2Pairs } from 'app/hooks/useV2Pairs'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 interface LPTokenSearchProps {
   onDismiss: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
   hideBalance: boolean
-  onLPTokenSelect: (lpToken: Object) => void
+  onLPTokenSelect: (lpToken: FarmPairInfo) => void
 }
 
 export function LPTokenSearch({
@@ -74,7 +75,7 @@ export function LPTokenSearch({
   const { items, requestSort, sortConfig } = useSortableData(flattenSearchResults)
 
   const handleLPTokenSelect = useCallback(
-    (lpToken: Object) => {
+    (lpToken: FarmPairInfo) => {
       onLPTokenSelect(lpToken)
       onDismiss()
     },

@@ -1,4 +1,5 @@
 import { Currency, Token } from '@cronaswap/core-sdk'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 import { useMemo } from 'react'
 import { useUnsupportedTokens } from './Tokens'
@@ -8,7 +9,7 @@ import { useUnsupportedTokens } from './Tokens'
  * @param currencyIn the input currency to check
  * @param currencyOut the output currency to check
  */
-export function useIsZapUnsupported(currencyIn?: Currency, lpTokenOut?: Object): boolean {
+export function useIsZapUnsupported(currencyIn?: Currency, lpTokenOut?: FarmPairInfo): boolean {
   const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
   return useMemo(() => {

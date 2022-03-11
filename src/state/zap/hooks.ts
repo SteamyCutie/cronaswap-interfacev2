@@ -37,11 +37,12 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTollerence'
 import usePool from '../../hooks/usePool'
 import Zap from 'pages/exchange/zap'
+import { FarmPairInfo } from 'app/constants/farmsv1'
 
 export declare class ZapTrade {
   inputAmount: CurrencyAmount<Currency>
   inputCurrency: Currency
-  outputLPToken: Object
+  outputLPToken: FarmPairInfo
 }
 export function useZapState(): AppState['zap'] {
   return useAppSelector((state) => state.zap)
@@ -49,7 +50,7 @@ export function useZapState(): AppState['zap'] {
 
 export function useZapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
-  onLPTokenSelection: (field: Field, lpToken: Object) => void
+  onLPTokenSelection: (field: Field, lpToken: FarmPairInfo) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
@@ -68,7 +69,7 @@ export function useZapActionHandlers(): {
   )
 
   const onLPTokenSelection = useCallback(
-    (field: Field, lpToken: Object) => {
+    (field: Field, lpToken: FarmPairInfo) => {
       dispatch(
         selectLPToken({
           field,
@@ -138,7 +139,7 @@ export function useDerivedZapInfo(doArcher = false): {
   inputError?: string
   zapTrade: ZapTrade | undefined
   allowedSlippage: Percent
-  lpToken: { [field in Field]?: Object }
+  lpToken: { [field in Field]?: FarmPairInfo }
 } {
   const { i18n } = useLingui()
 
@@ -181,7 +182,7 @@ export function useDerivedZapInfo(doArcher = false): {
     [Field.INPUT]: inputCurrency ?? undefined,
   }
 
-  const lpToken: { [field in Field]?: Object } = {
+  const lpToken: { [field in Field]?: FarmPairInfo } = {
     [Field.OUTPUT]: outputLPToken ?? undefined,
   }
 
@@ -279,7 +280,7 @@ export function useDefaultsFromURLSearch():
   | {
       inputCurrencyId: string | undefined
       outputLPTokenId: string | undefined
-      outputLPToken: Object | undefined
+      outputLPToken: FarmPairInfo | undefined
     }
   | undefined {
   const { chainId } = useActiveWeb3React()
@@ -290,7 +291,7 @@ export function useDefaultsFromURLSearch():
     | {
         inputCurrencyId: string | undefined
         outputLPTokenId: string | undefined
-        outputLPToken: Object | undefined
+        outputLPToken: FarmPairInfo | undefined
       }
     | undefined
   >()
