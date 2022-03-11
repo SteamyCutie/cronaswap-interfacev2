@@ -433,7 +433,7 @@ export const FARMS: AddressMap = {
       pid: 1,
       symbol: 'CLP',
       name: 'CRONA-BNB',
-      token1: { id: '0x50fbded2063577995389fd5fa0eb349ccbc7ca67', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+      token1: { id: '0x50FbdED2063577995389fd5fa0eB349cCbc7cA67', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
       token0: { id: '0xD3c2fb1A20bE1e8BcBA44594d677f37f3A193ED5', name: 'WBNB Token', symbol: 'BNB', decimals: 18 },
     },
 

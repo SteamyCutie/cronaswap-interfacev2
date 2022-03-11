@@ -141,17 +141,17 @@ export const VotingChart = ({ data }: any) => {
   );
 
   var pieData = data.length > 0 ? data : [{ name: "Empty vote", value: 100 }]
-  data.map((item) => {
+  data.map((item: any) => {
     item.value === undefined && (pieData = [{ name: "Empty vote", value: 100 }])
   })
 
-  const ccxLG = document.getElementById("parentContainerLG")?.clientWidth / 2
-  const ccxSM = document.getElementById("parentContainerSM")?.clientWidth / 2
+  var ccxLG = document.getElementById("parentContainerLG")?.clientWidth / 2
+  var ccxSM = document.getElementById("parentContainerSM")?.clientWidth / 2
 
   return (
     <>
-      <ResponsiveContainer id="parentContainerLG" className="hidden md:grid">
-        <PieChart width={200} height={200}>
+      <div id="parentContainerLG" className="hidden md:grid">
+        <PieChart width={480} height={280}>
           <Pie
             activeIndex={activeIndex}
             activeShape={renderActiveShape}
@@ -169,9 +169,9 @@ export const VotingChart = ({ data }: any) => {
             ))}
           </Pie>
         </PieChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer id="parentContainerSM" className="grid md:hidden">
-        <PieChart width={200} height={200}>
+      </div>
+      <div id="parentContainerSM" className="grid md:hidden">
+        <PieChart width={768} height={280}>
           <Pie
             activeIndex={activeIndex}
             activeShape={renderActiveShapeSM}
@@ -189,7 +189,7 @@ export const VotingChart = ({ data }: any) => {
             ))}
           </Pie>
         </PieChart>
-      </ResponsiveContainer>
+      </div>
     </>
   );
 }

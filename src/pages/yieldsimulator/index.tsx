@@ -135,7 +135,7 @@ export default function YieldSimulator(): JSX.Element {
             {i18n._(
               t`Changes made in the simulator do not take effect. The simulator helps you understand how your return on investment changes when you adjust your staked and locked amount. Read more about boosting `
             )}
-            <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
+            <a href="https://docs.cronaswap.org/tokenomics/what-is-vecrona" target="_blank" rel="noreferrer">
               <div className="text-sm text-yellow font-Poppins">{i18n._(t`Here`)}</div>
             </a>
           </Typography>
