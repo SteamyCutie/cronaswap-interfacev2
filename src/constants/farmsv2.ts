@@ -4,10 +4,10 @@ import { AddressMap } from './farmsv1'
 // For MasterChefV2
 export const FARMSV2: AddressMap = {
   [ChainId.CRONOS]: {
-    // '0xadbd1231fb360047525bedf962581f3eee7b49fe': {
+    // '0xadbd1231fb360047525BEdF962581F3eee7b49fe': {
     //   id: 0, symbol: 'CLP', name: 'CronaSwap LP',
-    //   token0: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
-    //   token1: { id: '0xadbd1231fb360047525bedf962581f3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+    //   token0: { id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
+    //   token1: { id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe', name: 'CronSwap', symbol: 'CRONA', decimals: 18 },
     // },
 
     '0xeD75347fFBe08d5cce4858C70Df4dB4Bbe8532a0': {
@@ -16,13 +16,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRONA-CRO',
       token0: {
-        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -37,7 +37,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRONA-USDC',
       token0: {
-        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
@@ -58,13 +58,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRONA-USDT',
       token0: {
-        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -79,7 +79,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRO-USDC',
       token0: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -100,13 +100,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'USDT-CRO',
       token0: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -121,13 +121,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'WETH-CRO',
       token0: {
-        id: '0xe44fd7fcb2b1581822d0c862b68222998a0c299a',
+        id: '0xe44Fd7fCb2b1581822D0c862B68222998a0c299a',
         name: 'Wrapped ETH',
         symbol: 'WETH',
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -148,7 +148,7 @@ export const FARMSV2: AddressMap = {
         decimals: 8,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -163,7 +163,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'WETH-USDC',
       token0: {
-        id: '0xe44fd7fcb2b1581822d0c862b68222998a0c299a',
+        id: '0xe44Fd7fCb2b1581822D0c862B68222998a0c299a',
         name: 'Wrapped ETH',
         symbol: 'WETH',
         decimals: 18,
@@ -210,7 +210,7 @@ export const FARMSV2: AddressMap = {
         decimals: 8,
       },
       token1: {
-        id: '0xe44fd7fcb2b1581822d0c862b68222998a0c299a',
+        id: '0xe44Fd7fCb2b1581822D0c862B68222998a0c299a',
         name: 'Wrapped ETH',
         symbol: 'WETH',
         decimals: 18,
@@ -224,7 +224,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'DAI-USDC',
       token0: {
-        id: '0xf2001b145b43032aaf5ee2884e456ccd805f677d',
+        id: '0xF2001B145b43032AAF5Ee2884e456CCd805F677D',
         name: 'Dai Stablecoin',
         symbol: 'DAI',
         decimals: 18,
@@ -251,7 +251,7 @@ export const FARMSV2: AddressMap = {
         decimals: 6,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -266,13 +266,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'BUSD-USDT',
       token0: {
-        id: '0x6ab6d61428fde76768d7b45d8bfeec19c6ef91a8',
+        id: '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8',
         name: 'Binance USD',
         symbol: 'BUSD',
         decimals: 18,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -287,13 +287,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'BNB-BUSD',
       token0: {
-        id: '0xfa9343c3897324496a05fc75abed6bac29f8a40f',
+        id: '0xfA9343C3897324496A05fC75abeD6bAC29f8A40f',
         name: 'Binance BNB',
         symbol: 'BNB',
         decimals: 18,
       },
       token1: {
-        id: '0x6ab6d61428fde76768d7b45d8bfeec19c6ef91a8',
+        id: '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8',
         name: 'Binance USD',
         symbol: 'BUSD',
         decimals: 18,
@@ -314,7 +314,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -329,13 +329,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'AVAX-USDT',
       token0: {
-        id: '0x765277eebeca2e31912c9946eae1021199b39c61',
+        id: '0x765277EebeCA2e31912C9946eAe1021199B39C61',
         name: 'Avalanche',
         symbol: 'AVAX',
         decimals: 18,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -350,13 +350,13 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'MATIC-USDT',
       token0: {
-        id: '0xc9baa8cfdde8e328787e29b4b078abf2dadc2055',
+        id: '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
         name: 'Matic Network',
         symbol: 'MATIC',
         decimals: 18,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -377,7 +377,7 @@ export const FARMSV2: AddressMap = {
         decimals: 6,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -398,7 +398,7 @@ export const FARMSV2: AddressMap = {
         decimals: 6,
       },
       token1: {
-        id: '0x66e428c3f67a68878562e79a0234c1f83c208770',
+        id: '0x66e428c3f67a68878562e79A0234c1F83c208770',
         name: 'Tether USD',
         symbol: 'USDT',
         decimals: 6,
@@ -413,7 +413,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRONA-DOT',
       token0: {
-        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
@@ -441,7 +441,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -462,7 +462,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -476,7 +476,7 @@ export const FARMSV2: AddressMap = {
       symbol: 'CLP',
       name: 'CRONA-ADA',
       token0: {
-        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         name: 'CronSwap',
         symbol: 'CRONA',
         decimals: 18,
@@ -503,7 +503,7 @@ export const FARMSV2: AddressMap = {
         decimals: 9,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -524,7 +524,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -545,7 +545,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
@@ -566,7 +566,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       token1: {
-        id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23',
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
         name: 'WCRO Token',
         symbol: 'CRO',
         decimals: 18,
