@@ -84,3 +84,7 @@ export const ZAP_ADDRESS: AddressMap = {
   [ChainId.CRONOS_TESTNET]: '',
   [ChainId.BSC_TESTNET]: '0xF4E667173f6983A81fABFAf8d71e6078F261E596',
 }
+
+export const FAUCET_ADDRESS: AddressMap = {
+  [ChainId.BSC_TESTNET]: '0xe5eD4378f4761cb4b6a6904df5A29003C3e35557',
+}
