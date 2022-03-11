@@ -225,7 +225,7 @@ export default function LPTokenList({
 
   const Row = useCallback(
     function TokenRow({ data, index, style }) {
-      const row: Object | BreakLine = data[index]
+      const row: FarmPairInfo | BreakLine = data[index]
 
       if (isBreakLine(row)) {
         return <BreakLineComponent style={style} />
@@ -233,19 +233,11 @@ export default function LPTokenList({
 
       const lpToken = row
 
-      const isSelected = Boolean(lpToken && selectedLPToken && selectedLPToken.equals(lpToken))
-      const otherSelected = Boolean(lpToken && otherLPToken && otherLPToken.equals(lpToken))
+      const isSelected = Boolean(lpToken && selectedLPToken && selectedLPToken.lpToken === lpToken.lpToken)
+      const otherSelected = Boolean(lpToken && otherLPToken && otherLPToken.lpToken === lpToken.lpToken)
       const handleSelect = () => lpToken && onLPTokenSelect(lpToken)
 
-      const token = lpToken?.wrapped
-
-      const showImport = index > lpTokenList.length
-
-      if (showImport && token) {
-        return (
-          <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
-        )
-      } else if (lpToken) {
+      if (lpToken) {
         return (
           <LPTokenRow
             style={style}

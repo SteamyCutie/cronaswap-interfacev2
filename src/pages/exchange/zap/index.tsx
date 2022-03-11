@@ -194,7 +194,6 @@ export default function Zap() {
       txHash: undefined,
     })
     const amount = parsedAmount.quotient.toString()
-    console.log(inputCurrencyAddress, amount, outputLPTokenAddress)
 
     // await approveCallback()
     try {
@@ -361,7 +360,9 @@ export default function Zap() {
                       }}
                       id="zap-button"
                       disabled={
-                        !isValid || zapInputError || approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
+                        !isValid ||
+                        (zapInputError ? true : false) ||
+                        approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
                       }
                     >
                       {zapInputError ? zapInputError : i18n._(t`Zap`)}
@@ -384,7 +385,9 @@ export default function Zap() {
                   }}
                   id="zap-button"
                   disabled={
-                    !isValid || zapInputError || approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
+                    !isValid ||
+                    (zapInputError ? true : false) ||
+                    approvalState !== ApprovalState.APPROVED /*|| !!zapCallbackError*/
                   }
                 >
                   {zapInputError ? zapInputError : i18n._(t`Zap`)}

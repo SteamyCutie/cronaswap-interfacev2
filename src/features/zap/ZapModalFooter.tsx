@@ -11,12 +11,10 @@ export default function ZapModalFooter({
   trade,
   onConfirm,
   zapErrorMessage,
-  disabledConfirm,
 }: {
   trade: ZapTrade
   onConfirm: () => void
   zapErrorMessage: ReactNode | undefined
-  disabledConfirm: boolean
 }) {
   const { i18n } = useLingui()
   return (
@@ -92,12 +90,7 @@ export default function ZapModalFooter({
         )}
       </div> */}
 
-      <ButtonError
-        onClick={onConfirm}
-        disabled={disabledConfirm}
-        id="confirm-zap-or-send"
-        className="text-xl font-semibold"
-      >
+      <ButtonError onClick={onConfirm} id="confirm-zap-or-send" className="text-xl font-semibold">
         {i18n._(t`Confirm Zap`)}
       </ButtonError>
 

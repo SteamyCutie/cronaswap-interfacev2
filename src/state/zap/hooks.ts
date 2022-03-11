@@ -266,7 +266,7 @@ export function queryParametersToZapState(parsedQs: ParsedQs, chainId: ChainId =
       currencyId: inputCurrency,
     },
     [Field.OUTPUT]: {
-      lpToken: {},
+      lpToken: null,
       lpTokenId: '',
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
