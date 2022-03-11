@@ -40,7 +40,7 @@ import NavLink from 'app/components/NavLink'
 
 const INPUT_CHAR_LIMIT = 18
 
-interface VoteInputItemProps {}
+interface VoteInputItemProps { }
 
 const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
   let success = true
@@ -394,9 +394,8 @@ export default function Boostv2() {
                   className="flex items-center self-end justify-self-center hover:cursor-pointer"
                   onClick={() => setShowCalc(true)}
                 >
-                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${
-                    autoAPY ? autoAPY.toFixed(2) + '%' : i18n._(t`Loading...`)
-                  }`}</h1>
+                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : <Dots>{i18n._(t`Loading`)} </Dots>
+                    }`}</h1>
                   {/* <CalculatorIcon className="w-5 h-5 hidden" /> */}
                 </div>
                 <ROICalculatorModal
@@ -419,7 +418,7 @@ export default function Boostv2() {
                   {formatPercent(
                     formatNumber(
                       Number(formatBalance(cronaSupply ? cronaSupply : 1)) /
-                        Number(cronaInfo.circulatingSupply ? cronaInfo.circulatingSupply : 1)
+                      Number(cronaInfo.circulatingSupply ? cronaInfo.circulatingSupply : 1)
                     )
                   )}
                 </h1>
@@ -504,9 +503,8 @@ export default function Boostv2() {
                   {/* input overlay: */}
                   <div className="relative w-full h-0 pointer-events-none bottom-14">
                     <div
-                      className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
-                        inputError ? ' border border-red' : ''
-                      }`}
+                      className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${inputError ? ' border border-red' : ''
+                        }`}
                     >
                       <div className="flex space-x-2 ">
                         {inputError && (
@@ -519,9 +517,8 @@ export default function Boostv2() {
                           />
                         )}
                         <p
-                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${
-                            input ? 'text-high-emphesis' : 'text-secondary'
-                          }`}
+                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
+                            }`}
                         >
                           {`${input ? input : '0'} CRONA`}
                         </p>
@@ -649,10 +646,10 @@ export default function Boostv2() {
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
                           : !input
-                          ? i18n._(t`Create Lock`)
-                          : insufficientFunds
-                          ? i18n._(t`Insufficient Balance`)
-                          : i18n._(t`Create Lock`)}
+                            ? i18n._(t`Create Lock`)
+                            : insufficientFunds
+                              ? i18n._(t`Insufficient Balance`)
+                              : i18n._(t`Create Lock`)}
                       </Button>
                     )
                   ) : (
@@ -666,10 +663,10 @@ export default function Boostv2() {
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
                           : !input
-                          ? i18n._(t`Increase Amount`)
-                          : insufficientFunds
-                          ? i18n._(t`Insufficient Balance`)
-                          : i18n._(t`Increase Amount`)}
+                            ? i18n._(t`Increase Amount`)
+                            : insufficientFunds
+                              ? i18n._(t`Insufficient Balance`)
+                              : i18n._(t`Increase Amount`)}
                       </Button>
                       <Button
                         color={lockTimeBtnDisabled ? 'gray' : 'blue'}
@@ -746,7 +743,7 @@ export default function Boostv2() {
                       Weight <p className="text-[11px] ml-[2px] mt-[1px]">%</p>
                     </div>
                   </div>
-                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current}</div>
+                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current.length > 0 ? votingItems.current : <div className="flex w-full justify-center my-2"><Dots>{i18n._(t`Loading`)} </Dots></div>}</div>
                 </div>
               </div>
             </div>
@@ -827,6 +824,6 @@ export default function Boostv2() {
           </div>
         </div>
       </div>
-    </Container>
+    </Container >
   )
 }
