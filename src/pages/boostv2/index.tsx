@@ -750,7 +750,8 @@ export default function Boostv2() {
                       Weight <p className="text-[11px] ml-[2px] mt-[1px]">%</p>
                     </div>
                   </div>
-                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current.length > 0 ? votingItems.current : <div className="flex w-full justify-center my-2"><Dots>{i18n._(t`Loading`)} </Dots></div>}</div>
+                  <div className="h-[400px] overflow-y-auto my-2">{votingItems.current.length > 0 ? votingItems.current : <div className="flex w-full justify-center my-2"><Dots>{i18n._(t`Loading`)} </Dots></div>}</div>
+                  <div className="p-2 text-baseline text-yellow text-center text-[12px]">The weight of the pool will be adjusted according to the voting results every Wednesday.</div>
                 </div>
               </div>
             </div>
