@@ -314,11 +314,16 @@ export default function Boostv2() {
 
   const votingData = useSingleContractMultipleData(args ? voteContract : null, 'weights', args)
   const voteWeight = useSingleCallResult(voteContract, 'totalWeight', [])
+  var chData = []
 
   votingData.map((item, i) => {
     let vote = item.result ? item.result[0]?.toFixed() : 0
     let weight = (vote / (voteWeight.result ? voteWeight.result[0]?.toFixed() : 1)) * 100
     if (vote === 0 && weight === 0) return
+
+    let sectorName = voteFarms[i].token0.symbol + '-' + voteFarms[i].token1.symbol + ' LP'
+    chData.push({ name: sectorName, value: weight })
+
     votingItems.current[i] = (
       <VotingItems
         key={i}
@@ -369,7 +374,7 @@ export default function Boostv2() {
 
     let chData = []
     boostedFarms.map((items, index) => {
-      const sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
+      let sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
       chData.push({ name: sectorName, value: voteValueArr[index] })
     })
     setChartData(chData)
@@ -735,7 +740,7 @@ export default function Boostv2() {
                 <div className="flex justify-between items-center py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
                   <h1 className="text-xl md:text-2xl font-bold">Global votes</h1>
                   <ChartIconButton handler={() => setShowChart(true)} />
-                  <VoteChartModal isOpen={showChart} onDismiss={() => setShowChart(false)} data={chartData} />
+                  <VoteChartModal isOpen={showChart} onDismiss={() => setShowChart(false)} data={chData} />
                 </div>
                 <div className="p-4">
                   <div className="flex p-2 text-sm md:text-lg border-b-2 border-dark-700">
