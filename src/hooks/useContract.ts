@@ -69,6 +69,7 @@ import IFOV1_ABI from '../constants/abis/ifoV1.json'
 import IFOV2_ABI from '../constants/abis/ifoV2.json'
 import VOTE_ABI from '../constants/abis/vote.json'
 import ZAP_ABI from '../constants/abis/zap.json'
+import FAUCET_ABI from '../constants/abis/faucet.json'
 
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
@@ -87,6 +88,7 @@ import {
   MASTERCHEFV1_ADDRESS,
   VOTE_ADDRESS,
   ZAP_ADDRESS,
+  FAUCET_ADDRESS,
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -328,4 +330,9 @@ export function useVotingContract(withSignerIfPossible?: boolean): Contract | nu
 export function useZapContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(ZAP_ADDRESS[chainId], ZAP_ABI, withSignerIfPossible)
+}
+
+export function useFaucetContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(FAUCET_ADDRESS[chainId], FAUCET_ABI, withSignerIfPossible)
 }

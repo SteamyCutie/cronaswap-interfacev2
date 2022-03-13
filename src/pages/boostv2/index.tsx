@@ -38,10 +38,11 @@ import { getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
 import NavLink from 'app/components/NavLink'
 import { useSingleCallResult, useSingleContractMultipleData } from 'app/state/multicall/hooks'
+import { ChartIconButton, VoteChartModal } from 'app/features/boost/ChartModal'
 
 const INPUT_CHAR_LIMIT = 18
 
-interface VoteInputItemProps { }
+interface VoteInputItemProps {}
 
 const sendTx = async (txFunc: () => Promise<any>): Promise<boolean> => {
   let success = true
@@ -277,6 +278,7 @@ export default function Boostv2() {
   }
 
   const [showCalc, setShowCalc] = useState(false)
+  const [showChart, setShowChart] = useState(false)
 
   const allFarms = Object.keys(FARMSV2[chainId]).map((key) => {
     return { ...FARMSV2[chainId][key], lpToken: key, isBoost: false }
@@ -312,11 +314,16 @@ export default function Boostv2() {
 
   const votingData = useSingleContractMultipleData(args ? voteContract : null, 'weights', args)
   const voteWeight = useSingleCallResult(voteContract, 'totalWeight', [])
+  var chData = []
 
   votingData.map((item, i) => {
     let vote = item.result ? item.result[0]?.toFixed() : 0
     let weight = (vote / (voteWeight.result ? voteWeight.result[0]?.toFixed() : 1)) * 100
     if (vote === 0 && weight === 0) return
+
+    let sectorName = voteFarms[i].token0.symbol + '-' + voteFarms[i].token1.symbol + ' LP'
+    chData.push({ name: sectorName, value: weight })
+
     votingItems.current[i] = (
       <VotingItems
         key={i}
@@ -367,7 +374,7 @@ export default function Boostv2() {
 
     let chData = []
     boostedFarms.map((items, index) => {
-      const sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
+      let sectorName = items.token0.symbol + '-' + items.token1.symbol + ' LP'
       chData.push({ name: sectorName, value: voteValueArr[index] })
     })
     setChartData(chData)
@@ -392,8 +399,9 @@ export default function Boostv2() {
                   className="flex items-center self-end justify-self-center hover:cursor-pointer"
                   onClick={() => setShowCalc(true)}
                 >
-                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${autoAPY ? autoAPY.toFixed(2) + '%' : <Dots>{i18n._(t`Loading`)} </Dots>
-                    }`}</h1>
+                  <h1 className="text-[24px] md:text-[32px] font-bold text-white">{`${
+                    autoAPY ? autoAPY.toFixed(2) + '%' : <Dots>{i18n._(t`Loading`)} </Dots>
+                  }`}</h1>
                   {/* <CalculatorIcon className="w-5 h-5 hidden" /> */}
                 </div>
                 <ROICalculatorModal
@@ -416,7 +424,7 @@ export default function Boostv2() {
                   {formatPercent(
                     formatNumber(
                       Number(formatBalance(cronaSupply ? cronaSupply : 1)) /
-                      Number(cronaInfo.circulatingSupply ? cronaInfo.circulatingSupply : 1)
+                        Number(cronaInfo.circulatingSupply ? cronaInfo.circulatingSupply : 1)
                     )
                   )}
                 </h1>
@@ -501,8 +509,9 @@ export default function Boostv2() {
                   {/* input overlay: */}
                   <div className="relative w-full h-0 pointer-events-none bottom-14">
                     <div
-                      className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${inputError ? ' border border-red' : ''
-                        }`}
+                      className={`flex justify-between items-center h-14 rounded px-3 md:px-5 ${
+                        inputError ? ' border border-red' : ''
+                      }`}
                     >
                       <div className="flex space-x-2 ">
                         {inputError && (
@@ -515,8 +524,9 @@ export default function Boostv2() {
                           />
                         )}
                         <p
-                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${input ? 'text-high-emphesis' : 'text-secondary'
-                            }`}
+                          className={`text-sm md:text-lg font-bold whitespace-nowrap ${
+                            input ? 'text-high-emphesis' : 'text-secondary'
+                          }`}
                         >
                           {`${input ? input : '0'} CRONA`}
                         </p>
@@ -644,10 +654,10 @@ export default function Boostv2() {
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
                           : !input
-                            ? i18n._(t`Create Lock`)
-                            : insufficientFunds
-                              ? i18n._(t`Insufficient Balance`)
-                              : i18n._(t`Create Lock`)}
+                          ? i18n._(t`Create Lock`)
+                          : insufficientFunds
+                          ? i18n._(t`Insufficient Balance`)
+                          : i18n._(t`Create Lock`)}
                       </Button>
                     )
                   ) : (
@@ -661,10 +671,10 @@ export default function Boostv2() {
                         {!walletConnected
                           ? i18n._(t`Connect Wallet`)
                           : !input
-                            ? i18n._(t`Increase Amount`)
-                            : insufficientFunds
-                              ? i18n._(t`Insufficient Balance`)
-                              : i18n._(t`Increase Amount`)}
+                          ? i18n._(t`Increase Amount`)
+                          : insufficientFunds
+                          ? i18n._(t`Insufficient Balance`)
+                          : i18n._(t`Increase Amount`)}
                       </Button>
                       <Button
                         color={lockTimeBtnDisabled ? 'gray' : 'blue'}
@@ -730,8 +740,10 @@ export default function Boostv2() {
                 </div>
               </div>
               <div className="rounded-lg mt-4 md:mt-0 md:w-1/2 bg-dark-900">
-                <div className="py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
+                <div className="flex justify-between items-center py-6 md:py-8 px-8 rounded-t-lg bg-dark-800">
                   <h1 className="text-xl md:text-2xl font-bold">Global votes</h1>
+                  <ChartIconButton handler={() => setShowChart(true)} />
+                  <VoteChartModal isOpen={showChart} onDismiss={() => setShowChart(false)} data={chData} />
                 </div>
                 <div className="p-4">
                   <div className="flex p-2 text-sm md:text-lg border-b-2 border-dark-700">
@@ -741,7 +753,18 @@ export default function Boostv2() {
                       Weight <p className="text-[11px] ml-[2px] mt-[1px]">%</p>
                     </div>
                   </div>
-                  <div className="h-[440px] overflow-y-auto my-2">{votingItems.current.length > 0 ? votingItems.current : <div className="flex w-full justify-center my-2"><Dots>{i18n._(t`Loading`)} </Dots></div>}</div>
+                  <div className="h-[440px] overflow-y-auto my-2">
+                    {votingItems.current.length > 0 ? (
+                      votingItems.current
+                    ) : (
+                      <div className="flex w-full justify-center my-2">
+                        <Dots>{i18n._(t`Loading`)} </Dots>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-2 text-baseline text-yellow text-center text-[12px]">
+                    The weight of the pool will be adjusted according to the voting results every Wednesday.
+                  </div>
                 </div>
               </div>
             </div>
@@ -822,6 +845,6 @@ export default function Boostv2() {
           </div>
         </div>
       </div>
-    </Container >
+    </Container>
   )
 }
