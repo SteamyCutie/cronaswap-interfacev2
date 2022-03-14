@@ -102,6 +102,10 @@ const nextConfig = {
         source: '/simulator',
         destination: '/yieldsimulator',
       },
+      {
+        source: '/prisale',
+        destination: '/prisale',
+      },
     ]
   },
   i18n: {
