@@ -39,13 +39,13 @@ const cardConfig = (
   switch (poolId) {
     case PoolIds.poolBasic:
       return {
-        title: 'Basic Sale',
+        title: 'CRONA OFFERING',
         variant: 'blue',
         tooltip: 'Every person can only commit a limited amount, but may expect a higher return per token committed.',
       }
     case PoolIds.poolUnlimited:
       return {
-        title: 'Unlimited Sale',
+        title: 'USDC OFFERING',
         variant: 'violet',
         tooltip: 'No limits on the amount you can commit. Additional fee applies when claiming.',
       }

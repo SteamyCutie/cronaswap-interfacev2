@@ -98,21 +98,21 @@ export const IfoCurrentCard = ({
             </div>
 
             <div className="flex items-center gap-1 p-4 mx-auto rounded-md text-high-emphesis bg-dark-700">
-              {(publicIfoData.status === 'live' || publicIfoData.status === 'finished') && (
+              {/* {(publicIfoData.status === 'live' || publicIfoData.status === 'finished') && (
                 <>
                   <CloseIcon className="h-8 text-red " />
                   <Typography variant="h2" className="opacity-80 text-red">
                     IFO CANCELLED
                   </Typography>
                 </>
-              )}
+              )} */}
 
-              {/* {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
+              {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
                 <>
                   <ClockIcon className="h-8 text-yellow " />
                   <IfoActivityTimer remainingTime={remainingTime(ifo, publicIfoData)} />
                 </>
-              )} */}
+              )}
             </div>
 
             {publicIfoData.status === 'live' && (
@@ -129,12 +129,12 @@ export const IfoCurrentCard = ({
             )}
 
             <div className="space-y-2">
-              <div className="text-[14px]">Start: 12th Feb, 2:00pm UTC</div>
-              <div className="text-[14px]">End: 13th Feb, 2:00pm UTC</div>
-              {/* <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 13th Feb, 5:00pm UTC)</div> */}
-              <div className="text-[14px] text-pink-red">
+              <div className="text-[14px]">Start: 28th Mar, 2:00pm UTC</div>
+              <div className="text-[14px]">End: 29th Mar, 2:00pm UTC</div>
+              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 29th Mar, 4:00pm UTC)</div>
+              {/* <div className="text-[14px] text-pink-red">
                 IFO has been cancelled. We will arrange for refunds in the next 48 hours.
-              </div>
+              </div> */}
 
               <div className="text-xl font-bold">Introduction</div>
               <div className="text-[14px] text-high-emphesis">{ifo.description}</div>
