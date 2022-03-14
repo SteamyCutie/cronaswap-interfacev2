@@ -11,8 +11,9 @@ export interface IfoCardDetailsProps {
 }
 
 const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoData, walletIfoData }) => {
-  const { status, offerToken, raiseTokenPriceInUSD } = publicIfoData
+  const { status, offerToken } = publicIfoData
   const raiseToken = publicIfoData[poolId].raiseToken
+  const raiseTokenPriceInUSD = publicIfoData[poolId].raiseTokenPriceInUSD
 
   const poolCharacteristic = publicIfoData[poolId]
   const walletCharacteristic = walletIfoData[poolId]
@@ -26,12 +27,16 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
   // totalCommited
   const totalLPCommitted = getBalanceNumber(poolCharacteristic.totalAmountPool, raiseToken.decimals)
   const totalLPCommittedInUSD = raiseTokenPriceInUSD.times(totalLPCommitted)
-  const totalCommitted = `~$${formatNumber(totalLPCommittedInUSD.toNumber())} (${totalCommittedPercent}%)`
+  const totalCommitted = `~$${formatNumber(totalLPCommittedInUSD.toNumber())} ${
+    poolId == 'poolBasic' ? `(${totalLPCommitted} CRONA)` : ''
+  } (${totalCommittedPercent}%)`
 
   // yourCommited
   const yourLPCommitted = getBalanceNumber(walletCharacteristic.amountTokenCommittedInLP, raiseToken.decimals)
   const yourLPCommittedInUSD = raiseTokenPriceInUSD.times(yourLPCommitted)
-  const yourCommitted = `~$${formatNumber(yourLPCommittedInUSD.toNumber())}`
+  const yourCommitted = `~$${formatNumber(yourLPCommittedInUSD.toNumber())} ${
+    poolId == 'poolBasic' ? `(${yourLPCommitted} CRONA)` : ''
+  }`
 
   // pricePerTokenWithFee
   const sumTaxesOverflow = poolCharacteristic.totalAmountPool.times(poolCharacteristic.taxRate).times(0.01)

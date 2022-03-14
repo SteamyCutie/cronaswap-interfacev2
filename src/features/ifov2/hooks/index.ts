@@ -8,23 +8,26 @@ import { useMemo } from 'react'
 import { getStatus } from './helpers'
 import { useWeb3React } from '@web3-react/core'
 import { ChainId } from '@cronaswap/core-sdk'
+import { useCronaUsdcPrice } from 'app/features/farms/hooks'
+import { getCronaPrice } from 'app/features/staking/useStaking'
 
 const TAX_PRECISION = FixedNumber.from(10000000000)
 
 const formatPool = (pool) => ({
-  raisingAmountPool: pool ? new BigNumber(pool[0].toString()) : BIG_ZERO,
-  offeringAmountPool: pool ? new BigNumber(pool[1].toString()) : BIG_ZERO,
-  limitPerUserInLP: pool ? new BigNumber(pool[2].toString()) : BIG_ZERO,
-  hasTax: pool ? pool[3] : false,
-  totalAmountPool: pool ? new BigNumber(pool[4].toString()) : BIG_ZERO,
-  sumTaxesOverflow: pool ? new BigNumber(pool[5].toString()) : BIG_ZERO,
+  raisingAmountPool: pool ? new BigNumber(pool[1].toString()) : BIG_ZERO,
+  offeringAmountPool: pool ? new BigNumber(pool[2].toString()) : BIG_ZERO,
+  limitPerUserInLP: pool ? new BigNumber(pool[3].toString()) : BIG_ZERO,
+  hasTax: pool ? pool[7] : false,
+  totalAmountPool: pool ? new BigNumber(pool[8].toString()) : BIG_ZERO,
+  sumTaxesOverflow: pool ? new BigNumber(pool[9].toString()) : BIG_ZERO,
 })
 
 // Get ifo card infos
 export function useGetPublicIfoData(ifo: Ifo) {
   const { chainId } = useWeb3React()
   const { address, releaseTimestamp } = ifo
-  const raiseTokenPriceInUSD = BIG_ONE
+  const cronaPrice = new BigNumber(getCronaPrice())
+  const usdcPrice = BIG_ONE
   const currentTime = Date.parse(new Date().toString()) / 1000
 
   // block info
@@ -78,18 +81,19 @@ export function useGetPublicIfoData(ifo: Ifo) {
       ...poolBasicFormatted,
       taxRate: 0,
       raiseToken: ifo.poolBasic.raiseToken[chainId ? chainId : ChainId.CRONOS],
+      raiseTokenPriceInUSD: cronaPrice,
     },
     poolUnlimited: {
       ...poolUnlimitedFormatted,
       taxRate: taxRateNum,
       raiseToken: ifo.poolUnlimited.raiseToken[chainId ? chainId : ChainId.CRONOS],
+      raiseTokenPriceInUSD: usdcPrice,
     },
     status,
     progress,
     timesRemaining,
     startTimeNum,
     endTimeNum,
-    raiseTokenPriceInUSD,
   }
 }
 
@@ -144,8 +148,9 @@ export function useGetWalletIfoData(ifo: Ifo) {
 
   // const creditLeftWithNegative = veCrona?.[0].minus(new BigNumber(userInfo?.[0][0].toString())).minus(new BigNumber(userInfo?.[0][1].toString()))
   const creditLeftWithNegative = new BigNumber(veCrona?.[0].toString()).minus(
-    new BigNumber(userInfo?.[0][0].toString())
+    new BigNumber(userInfo?.[0][1].toString())
   )
+  console.log('IFO: ', veCrona)
 
   const ifoVeCrona = {
     veCrona: veCrona?.[0].toString(),
