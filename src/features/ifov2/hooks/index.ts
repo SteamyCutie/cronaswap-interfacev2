@@ -150,7 +150,6 @@ export function useGetWalletIfoData(ifo: Ifo) {
   const creditLeftWithNegative = new BigNumber(veCrona?.[0].toString()).minus(
     new BigNumber(userInfo?.[0][1].toString())
   )
-  console.log('IFO: ', veCrona)
 
   const ifoVeCrona = {
     veCrona: veCrona?.[0].toString(),

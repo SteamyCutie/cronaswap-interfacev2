@@ -159,6 +159,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
     return veCronaLeft.multipliedBy(10)
   }, [veCronaLeft, limitPerUserInLP, amountTokenCommittedInLP])
+  console.log('++++:::', Number(maximumTokenEntry))
 
   // include user balance for input
   // const maximumTokenCommittable = useMemo(() => {
@@ -304,8 +305,9 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
           </div>
           {poolId === PoolIds.poolBasic && (
             <div className="text-sm text-blue">
-              maxCommit: <br />
-              {(Number(maximumTokenEntry) / 1e18).toFixed(6)} CRONA
+              {limitPerUserInLP.isGreaterThan(0) &&
+                `maxCommit: ${(<br />)}
+              ${(Number(maximumTokenEntry) / 1e18).toFixed(6)} CRONA`}
             </div>
           )}
         </div>
@@ -325,7 +327,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
               onClick={() => {
                 if (!rasieTokenBalance?.equalTo(ZERO)) {
                   setInput(
-                    poolId === PoolIds.poolBasic
+                    poolId === PoolIds.poolBasic && limitPerUserInLP.isGreaterThan(0)
                       ? getBalanceAmount(maximumTokenEntry).toFixed(7).slice(0, -1)
                       : rasieTokenBalance?.toFixed(raiseToken?.decimals)
                   )
