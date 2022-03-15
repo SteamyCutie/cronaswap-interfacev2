@@ -71,6 +71,9 @@ module.exports = {
         'Mardi-Gras': '#212B2B',
         Myrtle: '#23274A',
         'aqua-pearl': '#5CB6D5',
+        'black-russian': '#1A1D26',
+        'carribean-green': '#00D395',
+        'tahiti-gold': '#F5841F',
       },
       lineHeight: {
         '48px': '48px',

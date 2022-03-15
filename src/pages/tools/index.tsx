@@ -11,10 +11,11 @@ import { useTransactionAdder } from 'app/state/transactions/hooks'
 import Button from 'app/components/Button'
 import { useTokenBalance } from 'state/wallet/hooks'
 import QuestionHelper from 'app/components/QuestionHelper'
-import { CRONA, USDC } from 'app/config/tokens'
+import { CRONA, USDC, USDT } from 'app/config/tokens'
 
 const faucetTokenAddress = {
   USDC: '0x63cE1066c7cA0a028Db94031794bFfe40ceE8b0A',
+  USDT: '0xf9586C796087b3c6F39ffd85cB0129f0745143d3',
   CRONA: '0x50FbdED2063577995389fd5fa0eB349cCbc7cA67',
 }
 
@@ -27,6 +28,7 @@ export default function Tools() {
   const faucetAddress = '0xe5eD4378f4761cb4b6a6904df5A29003C3e35557'
   const cronaBalance = Number(useTokenBalance(faucetAddress ?? undefined, CRONA[chainId])?.toSignificant(8))
   const usdcBalance = Number(useTokenBalance(faucetAddress ?? undefined, USDC[chainId])?.toSignificant(8))
+  const usdtBalance = Number(useTokenBalance(faucetAddress ?? undefined, USDT[chainId])?.toSignificant(8))
   const handleFaucetToken = async (token: string) => {
     try {
       const args = [faucetTokenAddress[token]]
@@ -57,17 +59,6 @@ export default function Tools() {
         <BscNetworkModal />
       </div>
       <Button
-        color={usdcBalance >= 500 ? 'blue' : 'gray'}
-        size="sm"
-        onClick={() => handleFaucetToken('USDC')}
-        className={`w-48 m-10 flex gap-2 items-center justify-center ${
-          usdcBalance >= 500 ? `hover:bg-red` : `bg-gray`
-        }`}
-      >
-        {usdcBalance >= 500 ? 'Take test USDC' : 'Not enough faucet USDC'}
-        <QuestionHelper text="You send little native token to the protocol and get 500 USDC" />
-      </Button>
-      <Button
         color={cronaBalance >= 500 ? 'blue' : 'gray'}
         size="sm"
         onClick={() => handleFaucetToken('CRONA')}
@@ -78,6 +69,30 @@ export default function Tools() {
       >
         {cronaBalance >= 500 ? 'Take test CRONA' : 'Not enough faucet CRONA'}
         <QuestionHelper text="You send little native token to the protocol and get 500 CRONA" />
+      </Button>
+      <Button
+        color={usdcBalance >= 500 ? 'blue' : 'gray'}
+        size="sm"
+        onClick={() => handleFaucetToken('USDC')}
+        className={`w-48 m-10 flex gap-2 items-center justify-center ${
+          usdcBalance >= 500 ? `hover:bg-red` : `bg-gray`
+        }`}
+        disabled={!usdcBalance}
+      >
+        {usdcBalance >= 500 ? 'Take test USDC' : 'Not enough faucet USDC'}
+        <QuestionHelper text="You send little native token to the protocol and get 500 USDC" />
+      </Button>
+      <Button
+        color={usdtBalance >= 500 ? 'blue' : 'gray'}
+        size="sm"
+        onClick={() => handleFaucetToken('USDT')}
+        className={`w-48 m-10 flex gap-2 items-center justify-center ${
+          usdtBalance >= 500 ? `hover:bg-red` : `bg-gray`
+        }`}
+        disabled={!usdtBalance}
+      >
+        {usdtBalance >= 500 ? 'Take test USDT' : 'Not enough faucet USDT'}
+        <QuestionHelper text="You send little native token to the protocol and get 500 USDT" />
       </Button>
     </>
   )

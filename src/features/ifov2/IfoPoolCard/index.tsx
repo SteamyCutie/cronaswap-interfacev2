@@ -39,13 +39,13 @@ const cardConfig = (
   switch (poolId) {
     case PoolIds.poolBasic:
       return {
-        title: 'Basic Sale',
+        title: 'CRONA OFFERING',
         variant: 'blue',
         tooltip: 'Every person can only commit a limited amount, but may expect a higher return per token committed.',
       }
     case PoolIds.poolUnlimited:
       return {
-        title: 'Unlimited Sale',
+        title: 'USDC OFFERING',
         variant: 'violet',
         tooltip: 'No limits on the amount you can commit. Additional fee applies when claiming.',
       }
@@ -113,7 +113,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const { amountTokenCommittedInLP } = userPoolCharacteristics
 
   const veCronaLeft = walletIfoData.ifoVeCrona?.veCronaLeft
-  console.log('+++++++', veCronaLeft.toNumber())
+
   const maximumTokenEntry = useMemo(() => {
     if (!veCronaLeft) {
       return BIG_ZERO
@@ -159,6 +159,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
     return veCronaLeft.multipliedBy(10)
   }, [veCronaLeft, limitPerUserInLP, amountTokenCommittedInLP])
+  console.log('++++:::', Number(maximumTokenEntry))
 
   // include user balance for input
   // const maximumTokenCommittable = useMemo(() => {
@@ -303,7 +304,11 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
             {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
           </div>
           {poolId === PoolIds.poolBasic && (
-            <div className="text-sm text-blue">maxCommit: {formatNumber(Number(maximumTokenEntry) / 1e18, true)}</div>
+            <div className="text-sm text-blue">
+              {limitPerUserInLP.isGreaterThan(0) &&
+                `maxCommit: ${(<br />)}
+              ${(Number(maximumTokenEntry) / 1e18).toFixed(6)} CRONA`}
+            </div>
           )}
         </div>
 
@@ -322,7 +327,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
               onClick={() => {
                 if (!rasieTokenBalance?.equalTo(ZERO)) {
                   setInput(
-                    poolId === PoolIds.poolBasic
+                    poolId === PoolIds.poolBasic && limitPerUserInLP.isGreaterThan(0)
                       ? getBalanceAmount(maximumTokenEntry).toFixed(7).slice(0, -1)
                       : rasieTokenBalance?.toFixed(raiseToken?.decimals)
                   )

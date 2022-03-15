@@ -40,7 +40,22 @@ export const USDC: ChainTokenMap = {
     'USD Coin'
   ),
 }
-export const USDT = new Token(ChainId.ETHEREUM, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+export const USDT: ChainTokenMap = {
+  [ChainId.ETHEREUM]: new Token(
+    ChainId.ETHEREUM,
+    '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    6,
+    'USDT',
+    'Tether USD'
+  ),
+  [ChainId.BSC_TESTNET]: new Token(
+    ChainId.BSC_TESTNET,
+    '0xf9586C796087b3c6F39ffd85cB0129f0745143d3',
+    6,
+    'USDT',
+    'Tether USD'
+  ),
+}
 
 export const XCRONA: ChainTokenMap = {
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x25f0965F285F03d6F6B3B21c8EC3367412Fd0ef6', 18, 'xCRONA', 'CronaBar'),
