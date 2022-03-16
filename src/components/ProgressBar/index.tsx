@@ -20,7 +20,7 @@ const ProgressBar: FC<ProgressBarProps> = ({ progress, className }) => {
         />
       </div>
       <Typography variant="xs" className="text-green">
-        {Number(progress) * 100}%
+        {(Number(progress) * 100).toFixed(2)}%
       </Typography>
     </div>
   )
