@@ -573,6 +573,27 @@ export const FARMSV2: AddressMap = {
       },
       isZap: false,
     },
+
+    '0x7E5581DB727C4Aa1873ef338E0d7Be3195da28A1': {
+      id: 27,
+      pid: 27,
+      symbol: 'CLP',
+      name: 'SPHERE-CRO',
+      isCommunity: true,
+      token0: {
+        id: '0xc9FDE867a14376829Ab759F4C4871F67e2d3E441',
+        name: 'SPHERE Token',
+        symbol: 'SPHERE',
+        decimals: 18,
+      },
+      token1: {
+        id: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
+        name: 'WCRO Token',
+        symbol: 'CRO',
+        decimals: 18,
+      },
+      isZap: false,
+    },
   },
 
   [ChainId.CRONOS_TESTNET]: {

@@ -9,6 +9,7 @@ const ifos: Ifo[] = [
   {
     id: 'mifo',
     address: {
+      [ChainId.CRONOS]: '0xC28a8dc376A64eBc37E189F66CDB12a4CBDC7595',
       [ChainId.BSC_TESTNET]: '0xD1e0Da69F2Ee9B7d3602DB9F41F37beE2d99F176',
     },
     isActive: true,
@@ -29,6 +30,7 @@ const ifos: Ifo[] = [
     },
     // raiseToken: USDC,
     offerToken: {
+      [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x78f0953f2d07eB8B50397415e85b97F3360211c7', 18, 'ARCANE', 'ARCANE'),
       [ChainId.BSC_TESTNET]: new Token(
         ChainId.BSC_TESTNET,
         '0xf2C856AB8Ed6f67Fd7D45Fd017c811347bF01a28',
