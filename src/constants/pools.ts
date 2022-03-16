@@ -154,8 +154,29 @@ export const POOLS: AddressMap = {
       },
     },
 
+    '0x52C73A8F10335E74aFFfA39fC6456C93586639E0': {
+      pid: 6,
+      name: 'CRONA-SPHERE',
+      tokenPerBlock: '0.06',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://cronosphere.org/',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0xc9FDE867a14376829Ab759F4C4871F67e2d3E441',
+        name: 'Cronosphere',
+        symbol: 'SPHERE',
+        decimals: 18,
+      },
+    },
+
     '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
-      pid: 5,
+      pid: 7,
       name: 'CRONA-CROSS',
       tokenPerBlock: '0.0575',
       isFinished: true,
