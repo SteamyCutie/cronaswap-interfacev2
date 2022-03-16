@@ -7,7 +7,7 @@ import IfoPoolCard from './IfoPoolCard'
 import { getExplorerLink } from 'app/functions'
 import IfoActivityTimer from './IfoActivityTimer'
 import Typography from 'app/components/Typography'
-import { ClockIcon } from '@heroicons/react/outline'
+import { ClockIcon, GlobeAltIcon } from '@heroicons/react/outline'
 import { GiftIcon } from '@heroicons/react/solid'
 import CloseIcon from 'app/components/CloseIcon'
 
@@ -98,21 +98,24 @@ export const IfoCurrentCard = ({
             </div>
 
             <div className="flex items-center gap-1 p-4 mx-auto rounded-md text-high-emphesis bg-dark-700">
-              {/* {(publicIfoData.status === 'live' || publicIfoData.status === 'finished') && (
+              {(publicIfoData.status === 'coming_soon' ||
+                publicIfoData.status === 'live' ||
+                publicIfoData.status === 'finished') && (
                 <>
-                  <CloseIcon className="h-8 text-red " />
-                  <Typography variant="h2" className="opacity-80 text-red">
-                    IFO CANCELLED
+                  {/* <CloseIcon className="h-8 text-red " /> */}
+                  <ClockIcon className="h-8 text-yellow " />
+                  <Typography variant="h2" className="opacity-80 text-yellow">
+                    COMING SOON
                   </Typography>
                 </>
-              )} */}
+              )}
 
-              {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
+              {/* {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
                 <>
                   <ClockIcon className="h-8 text-yellow " />
                   <IfoActivityTimer remainingTime={remainingTime(ifo, publicIfoData)} />
                 </>
-              )}
+              )} */}
             </div>
 
             {publicIfoData.status === 'live' && (
@@ -129,9 +132,12 @@ export const IfoCurrentCard = ({
             )}
 
             <div className="space-y-2">
-              <div className="text-[14px]">Start: 28th Mar, 2:00pm UTC</div>
+              <div className="text-[14px]">Start: TBH</div>
+              <div className="text-[14px]">End: TBH</div>
+
+              {/* <div className="text-[14px]">Start: 28th Mar, 2:00pm UTC</div>
               <div className="text-[14px]">End: 29th Mar, 2:00pm UTC</div>
-              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 29th Mar, 4:00pm UTC)</div>
+              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 29th Mar, 4:00pm UTC)</div> */}
               {/* <div className="text-[14px] text-pink-red">
                 IFO has been cancelled. We will arrange for refunds in the next 48 hours.
               </div> */}
@@ -140,11 +146,11 @@ export const IfoCurrentCard = ({
               <div className="text-[14px] text-high-emphesis">{ifo.description}</div>
               <div className="flex items-center gap-4 pb-4">
                 <a href={ifo.articleUrl} target="_blank" rel="noreferrer">
-                  <TokenomicsIcon width={16} className="text-low-emphesis" />
+                  <GlobeAltIcon width={16} className="text-low-emphesis" />
                 </a>
-                <a href={getExplorerLink(chainId, ifo.address[chainId], 'address')} target="_blank" rel="noreferrer">
+                {/* <a href={getExplorerLink(chainId, ifo.address[chainId], 'address')} target="_blank" rel="noreferrer">
                   <BlocksIcon width={16} className="text-low-emphesis" />
-                </a>
+                </a> */}
                 <a href={ifo.telegramUrl} target="_blank" rel="noreferrer">
                   <TelegramIcon width={16} className="text-low-emphesis" />
                 </a>

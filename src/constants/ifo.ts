@@ -2,28 +2,28 @@ import { ChainId, CRONA, Token } from '@cronaswap/core-sdk'
 import { Ifo } from './types'
 import { BETA, USDC } from './../config/tokens'
 
-// UPCOMING -
+// UPCOMING - 0xD1e0Da69F2Ee9B7d3602DB9F41F37beE2d99F176
 // LIVE - 0x37B9227d8154870481171C4C910884e82903992f
 // FINISH -
 const ifos: Ifo[] = [
   {
     id: 'mifo',
     address: {
-      [ChainId.BSC_TESTNET]: '0x37B9227d8154870481171C4C910884e82903992f',
+      [ChainId.BSC_TESTNET]: '0xD1e0Da69F2Ee9B7d3602DB9F41F37beE2d99F176',
     },
     isActive: true,
-    name: 'MIFO',
+    name: 'ARCANE',
     poolBasic: {
-      saleAmount: '30,000',
-      raiseAmount: '$300,000',
+      saleAmount: '1,000,000',
+      raiseAmount: '$200,000',
       cronaToBurn: '$90,000',
       distributionRatio: 0.3,
       raiseToken: CRONA,
     },
     poolUnlimited: {
-      saleAmount: '70,000',
-      raiseAmount: '$700,000',
-      cronaToBurn: '$210,000',
+      saleAmount: '2,000,000',
+      raiseAmount: '$400,000',
+      cronaToBurn: '$110,000',
       distributionRatio: 0.7,
       raiseToken: USDC,
     },
@@ -33,8 +33,8 @@ const ifos: Ifo[] = [
         ChainId.BSC_TESTNET,
         '0xf2C856AB8Ed6f67Fd7D45Fd017c811347bF01a28',
         18,
-        'MIFO',
-        'Mifo'
+        'ARCANE',
+        'ARCANE'
       ),
     },
     releaseTimestamp: 1646922000,
@@ -47,12 +47,12 @@ const ifos: Ifo[] = [
     // veCronaCheckPoint: 1644665700, //start time
 
     campaignId: '511160000',
-    twitterUrl: 'https://twitter.com/KryptonProt',
-    telegramUrl: 'https://t.me/KryptonProtocol',
-    discordUrl: 'https://discord.gg/7cQyTcBbqf',
-    articleUrl: 'https://kryptonprotocol.gitbook.io/krypton-protocol',
+    twitterUrl: 'https://twitter.com/thearcanefi',
+    telegramUrl: 'https://t.me/arcanenftfinancial',
+    discordUrl: 'https://discord.gg/ajesZGddzV',
+    articleUrl: 'https://arcanenft.financial/',
     description:
-      "MIFO is a decentralized reserve currency platform on Cronos. Unlike DAI or USDT, which are pegged to the value of the U.S. dollar, MIFO's reserves are crypto assets held by the MIFO Treasury.",
+      'ARCANE is the premier gaming NFT Token on CRONOS that will allow you to control an infinite supply of Protonium. Gather Protonium and become the most powerful Arcane of all time. ARCANE has one purpose: Unite the cybertornian army to protect the cronos ecosystem.',
     tokenOfferingPrice: 0.2,
     version: 2,
   },
