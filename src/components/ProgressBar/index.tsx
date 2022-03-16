@@ -19,7 +19,9 @@ const ProgressBar: FC<ProgressBarProps> = ({ progress, className }) => {
           style={{ width: `${Number(progress) * 100}%` }}
         />
       </div>
-      <Typography variant="xs">{Number(progress) * 100}%</Typography>
+      <Typography variant="xs" className="text-green">
+        {Number(progress) * 100}%
+      </Typography>
     </div>
   )
 }
