@@ -14,6 +14,7 @@ const Footer = () => {
     aboutus: [
       { name: `${i18n._(t`Contact`)}`, href: 'https://docs.cronaswap.org/' },
       { name: `${i18n._(t`Careers`)}`, href: 'https://docs.cronaswap.org/hiring/careers' },
+      { name: `${i18n._(t`Nomics`)}`, href: 'https://nomics.com/assets/crona-cronaswap' },
       { name: `${i18n._(t`Defi Llama`)}`, href: 'https://defillama.com/protocol/cronaswap' },
       { name: `${i18n._(t`Coingecko`)}`, href: 'https://www.coingecko.com/en/coins/cronaswap' },
       { name: `${i18n._(t`CoinMarketCap`)}`, href: 'https://coinmarketcap.com/currencies/cronaswap/' },
@@ -36,8 +37,8 @@ const Footer = () => {
       { name: `${i18n._(t`Documentation`)}`, href: 'https://docs.cronaswap.org' },
     ],
     business: [
-      { name: `${i18n._(t`Contact Us`)}`, href: 'mailto:chef@cronaswap.org' },
       { name: `${i18n._(t`Token Listing`)}`, href: 'https://github.com/cronaswap/default-token-list' },
+      { name: `${i18n._(t`Support#Discord`)}`, href: 'https://discord.gg/Ue9yWgC5dE' },
       { name: `${i18n._(t`Apply For Farm/IFO`)}`, href: 'https://forms.gle/6QpGGpFZhkFhGCqg8' },
     ],
     social: [
