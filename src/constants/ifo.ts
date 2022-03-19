@@ -15,15 +15,15 @@ const ifos: Ifo[] = [
     isActive: true,
     name: 'ARCANE',
     poolBasic: {
-      saleAmount: '1,000,000',
-      raiseAmount: '$200,000',
+      saleAmount: '1,200,000',
+      raiseAmount: '$180,000',
       cronaToBurn: '$90,000',
       distributionRatio: 0.3,
       raiseToken: CRONA,
     },
     poolUnlimited: {
-      saleAmount: '2,000,000',
-      raiseAmount: '$400,000',
+      saleAmount: '3,800,000',
+      raiseAmount: '$420,000',
       cronaToBurn: '$110,000',
       distributionRatio: 0.7,
       raiseToken: USDC,
@@ -55,7 +55,7 @@ const ifos: Ifo[] = [
     articleUrl: 'https://arcanenft.financial/',
     description:
       'ARCANE is the premier gaming NFT Token on CRONOS that will allow you to control an infinite supply of Protonium. Gather Protonium and become the most powerful Arcane of all time. ARCANE has one purpose: Unite the cybertornian army to protect the cronos ecosystem.',
-    tokenOfferingPrice: 0.2,
+    tokenOfferingPrice: 0.15,
     version: 2,
   },
 ]

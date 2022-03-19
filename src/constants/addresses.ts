@@ -90,5 +90,5 @@ export const FAUCET_ADDRESS: AddressMap = {
 }
 
 export const PRIVATESALE_ADDRESS: AddressMap = {
-  [ChainId.BSC_TESTNET]: '0xAFac8cb0F3aD8D3eF7DBdb22e9be231Fd0c2F5b9',
+  [ChainId.BSC_TESTNET]: '0xf3CAb862A2f696fa493db85749736411635fA273',
 }
