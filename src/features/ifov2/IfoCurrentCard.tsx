@@ -132,12 +132,13 @@ export const IfoCurrentCard = ({
             )}
 
             <div className="space-y-2">
-              <div className="text-[14px]">Start: TBH</div>
-              <div className="text-[14px]">End: TBH</div>
+              {/* <div className="text-[14px]">Start: TBH</div>
+              <div className="text-[14px]">End: TBH</div> */}
 
-              {/* <div className="text-[14px]">Start: 28th Mar, 2:00pm UTC</div>
-              <div className="text-[14px]">End: 29th Mar, 2:00pm UTC</div>
-              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 29th Mar, 4:00pm UTC)</div> */}
+              <div className="text-[14px]">Start: 28th Mar, 12:00pm UTC</div>
+              <div className="text-[14px]">End: 29th Mar, 12:00pm UTC</div>
+              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 29th Mar, 2:00pm UTC)</div>
+
               {/* <div className="text-[14px] text-pink-red">
                 IFO has been cancelled. We will arrange for refunds in the next 48 hours.
               </div> */}
