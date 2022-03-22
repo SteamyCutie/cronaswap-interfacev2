@@ -106,6 +106,10 @@ const nextConfig = {
         source: '/prisale',
         destination: '/prisale',
       },
+      {
+        source: '/lottery',
+        destination: '/lottery',
+      },
     ]
   },
   i18n: {
