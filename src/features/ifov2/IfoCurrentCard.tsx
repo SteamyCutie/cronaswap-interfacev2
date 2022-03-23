@@ -149,9 +149,9 @@ export const IfoCurrentCard = ({
                 <a href={ifo.articleUrl} target="_blank" rel="noreferrer">
                   <GlobeAltIcon width={16} className="text-low-emphesis" />
                 </a>
-                {/* <a href={getExplorerLink(chainId, ifo.address[chainId], 'address')} target="_blank" rel="noreferrer">
+                <a href={getExplorerLink(chainId, ifo.address[chainId], 'address')} target="_blank" rel="noreferrer">
                   <BlocksIcon width={16} className="text-low-emphesis" />
-                </a> */}
+                </a>
                 <a href={ifo.telegramUrl} target="_blank" rel="noreferrer">
                   <TelegramIcon width={16} className="text-low-emphesis" />
                 </a>
