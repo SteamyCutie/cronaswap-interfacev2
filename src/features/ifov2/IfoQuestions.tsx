@@ -1,9 +1,18 @@
 import { Disclosure } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/outline'
 import Button from 'app/components/Button'
 import NavLink from 'app/components/NavLink'
 import { Ifo } from 'app/constants/types'
 import { PublicIfoData } from './hooks/types'
+import {
+  ChevronDownIcon,
+  AdjustmentsIcon,
+  GlobeAltIcon,
+  LightningBoltIcon,
+  ScaleIcon,
+  TerminalIcon,
+  ClockIcon,
+  CalendarIcon,
+} from '@heroicons/react/outline'
 
 const faqs = [
   {
@@ -41,38 +50,54 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
     <div className="px-4 py-6 mx-auto rounded sm:py-8 sm:px-6 lg:px-8 bg-dark-900">
       {/* step */}
       <h2 className="mb-8 text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">How to take part</h2>
-      <div className="grid grid-cols-1 gap-4 mb-8 md:grid-cols-3 auto-cols-max">
-        <div className="p-4 rounded-lg bg-dark-800">
-          <h1 className="text-lg">1. Get CRONA</h1>
-          <h2 className="flex flex-row items-center mb-2 text-sm">
-            Lock your CRONA in the Boost Locker to get CRONA. You’ll spend them to buy IFO sale tokens
-          </h2>
+      <div className="grid grid-cols-2 gap-4 mb-8 md:grid-cols-2 auto-cols-max">
+        <div className="relative p-6 rounded-lg bg-dark-800">
+          <dt>
+            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+              <AdjustmentsIcon className="h-8" />
+            </div>
+            <p className="ml-16 text-lg font-bold">TWO WAYS TO PARTICIPATE</p>
+          </dt>
+          <dd className="ml-16 text-base text-gray-500">
+            Option 1: Commit with CRONA. <br /> Option 2: Commit with USDC.{' '}
+          </dd>
+        </div>
 
-          {/* <NavLink href={'/boost'}>
-                <a className="p-2 mt-4 text-white rounded-md" >
-                  Get veCRONA
-                </a>
-              </NavLink> */}
-          <Button id="btn-create-new-pool" color="gradient" size="sm">
-            <a href="/swap">Get CRONA</a>
-          </Button>
+        <div className="relative p-6 rounded-lg bg-dark-800">
+          <dt>
+            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+              <TerminalIcon className="h-8" />
+            </div>
+            <p className="ml-16 text-lg font-bold">OVERFLOW MODEL</p>
+          </dt>
+          <dd className="ml-16 text-base text-gray-500">
+            Your token allocation is based on your percentage of the total raise. All overflow contributions will be
+            returned post-raise.
+          </dd>
         </div>
-        <div className="p-4 rounded-lg bg-dark-800">
-          <h1 className="text-lg">
-            2. Commit {raiseTokenBasic.symbol}/{raiseTokenUnlimited.symbol} Tokens
-          </h1>
-          <h2 className="flex flex-row items-center text-sm">
-            When the IFO sales are live, you can “commit” your {raiseTokenBasic.symbol}/{raiseTokenUnlimited.symbol}{' '}
-            tokens to buy the tokens being sold. We recommend committing to the CRONA OFFERING first, but you can do
-            both if you like.
-          </h2>
+
+        <div className="relative p-6 rounded-lg bg-dark-800">
+          <dt>
+            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+              <ClockIcon className="h-8" />
+            </div>
+            <p className="ml-16 text-lg font-bold">CONTRIBUTION WINDOW</p>
+          </dt>
+          <dd className="ml-16 text-base text-gray-500">
+            IFOs run anywhere from 12-24 hours to ensure everyone across the globe has time to enter with ease.
+          </dd>
         </div>
-        <div className="p-4 rounded-lg bg-dark-800">
-          <h1 className="text-lg">3. Claim Your Tokens</h1>
-          <h2 className="flex flex-row items-center text-sm">
-            After the IFO sales finish, you can claim any IFO tokens that you bought, and any unspent{' '}
-            {raiseTokenBasic.symbol}/{raiseTokenUnlimited.symbol} tokens will be returned to your wallet.
-          </h2>
+
+        <div className="relative p-6 rounded-lg bg-dark-800">
+          <dt>
+            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+              <CalendarIcon className="h-8" />
+            </div>
+            <p className="ml-16 text-lg font-bold">VESTING SCHEDULE</p>
+          </dt>
+          <dd className="ml-16 text-base text-gray-500">
+            25% of tokens unlock immediately. The remaining 75% vest linearly over a timeframe specific to each IFO.
+          </dd>
         </div>
       </div>
 

@@ -31,7 +31,7 @@ export interface PublicIfoData {
   secondsUntilEnd: number
   startTimeNum: number
   endTimeNum: number
-  // raiseToken: Token
+  allowClaim: boolean
   offerToken: Token
   // raiseTokenPriceInUSD: BigNumber
   [PoolIds.poolBasic]?: PoolCharacteristics

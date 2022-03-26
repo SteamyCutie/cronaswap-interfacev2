@@ -10,7 +10,7 @@ const ifos: Ifo[] = [
     id: 'mifo',
     address: {
       [ChainId.CRONOS]: '0x2c741797403b1F486EE28116091Bf86293C90b53',
-      [ChainId.BSC_TESTNET]: '0xD1e0Da69F2Ee9B7d3602DB9F41F37beE2d99F176',
+      [ChainId.BSC_TESTNET]: '0x5059c8B82BC016BcD81C5d3071570c140fcdC1c0', //finished 0x5059c8B82BC016BcD81C5d3071570c140fcdC1c0 live-0x947f6899b2DdedD9a03ae62eC92771aD888b1a6F
     },
     isActive: true,
     name: 'ARCANE',
@@ -35,7 +35,7 @@ const ifos: Ifo[] = [
         ChainId.BSC_TESTNET,
         '0xf2C856AB8Ed6f67Fd7D45Fd017c811347bF01a28',
         18,
-        'ARCANE',
+        'ARC',
         'ARCANE'
       ),
     },

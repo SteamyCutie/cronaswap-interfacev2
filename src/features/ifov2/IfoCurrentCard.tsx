@@ -98,24 +98,32 @@ export const IfoCurrentCard = ({
             </div>
 
             <div className="flex items-center gap-1 p-4 mx-auto rounded-md text-high-emphesis bg-dark-700">
-              {(publicIfoData.status === 'coming_soon' ||
-                publicIfoData.status === 'live' ||
-                publicIfoData.status === 'finished') && (
+              {publicIfoData.status === 'coming_soon' && (
                 <>
                   {/* <CloseIcon className="h-8 text-red " /> */}
                   <ClockIcon className="h-8 text-yellow " />
                   <Typography variant="h2" className="opacity-80 text-yellow">
-                    COMING SOON
+                    IFO UPCOMING
                   </Typography>
                 </>
               )}
 
-              {/* {(publicIfoData.status === 'coming_soon' || publicIfoData.status === 'live') && (
+              {publicIfoData.status === 'live' && (
                 <>
                   <ClockIcon className="h-8 text-yellow " />
                   <IfoActivityTimer remainingTime={remainingTime(ifo, publicIfoData)} />
                 </>
-              )} */}
+              )}
+
+              {publicIfoData.status === 'finished' && (
+                <>
+                  {/* <CloseIcon className="h-8 text-red " /> */}
+                  <GiftIcon className="h-8 text-green " />
+                  <Typography variant="h2" className="opacity-80 text-green">
+                    IFO FINISHED
+                  </Typography>
+                </>
+              )}
             </div>
 
             {publicIfoData.status === 'live' && (
@@ -137,7 +145,7 @@ export const IfoCurrentCard = ({
 
               <div className="text-[14px]">Start: 28th Mar, 12:00pm UTC</div>
               <div className="text-[14px]">End: 29th Mar, 12:00pm UTC</div>
-              <div className="text-[14px] text-pink-red">Duration: 24H (Claim Time: 29th Mar, 2:00pm UTC)</div>
+              <div className="text-[14px] text-pink-red">Duration: 25% unlock immediately. 75% vesting in 90 days.</div>
 
               {/* <div className="text-[14px] text-pink-red">
                 IFO has been cancelled. We will arrange for refunds in the next 48 hours.

@@ -35,6 +35,7 @@ export function useGetPublicIfoData(ifo: Ifo) {
     () => [
       { methodName: 'startTime', callInputs: [] }, // startTime
       { methodName: 'endTime', callInputs: [] }, // endTime
+      { methodName: 'allowClaim', callInputs: [] }, // endTime
       { methodName: 'viewPoolInformation', callInputs: [0] }, // viewPoolInformation pid=0
       { methodName: 'viewPoolInformation', callInputs: [1] }, // viewPoolInformation pid=1
       { methodName: 'viewPoolTaxRateOverflow', callInputs: [1] }, // viewPoolTaxRateOverflow pid=1
@@ -49,6 +50,7 @@ export function useGetPublicIfoData(ifo: Ifo) {
   const [
     { result: startTime },
     { result: endTime },
+    { result: allowClaim },
     { result: poolBasic },
     { result: poolUnlimited },
     { result: taxRate },
@@ -64,6 +66,7 @@ export function useGetPublicIfoData(ifo: Ifo) {
   const status = getStatus(currentTime, startTimeNum, endTimeNum)
   const totalSaleTimes = endTimeNum - startTimeNum
   const timesRemaining = endTimeNum - currentTime
+  const allowHaverst = allowClaim ? allowClaim[0] : false
 
   // // Calculate the total progress until finished or until start
   const progress =
@@ -94,6 +97,7 @@ export function useGetPublicIfoData(ifo: Ifo) {
     timesRemaining,
     startTimeNum,
     endTimeNum,
+    allowClaim: allowHaverst,
   }
 }
 
