@@ -179,6 +179,10 @@ const IfoCardDetails: React.FC<IfoCardDetailsProps> = ({ poolId, ifo, publicIfoD
             <div className="text-xs">Total committed:</div>
             <div className="text-xs text-high-emphesis">{raiseTokenPriceInUSD.gt(0) ? totalCommitted : null}</div>
           </div>
+          <div className="flex justify-between gap-0.5">
+            <div className="text-xs">Total vesting time:</div>
+            <div className="text-xs text-high-emphesis">3 Months (Remaining 75%)</div>
+          </div>
         </>
       )
     }

@@ -79,7 +79,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
   const { status, offerToken } = publicIfoData
   const raiseToken = publicIfoData[poolId].raiseToken
-
+  const allowClaimStatus = publicIfoData.allowClaim
   const publicPoolCharacteristics = publicIfoData[poolId]
   const userPoolCharacteristics = walletIfoData[poolId]
 
@@ -159,7 +159,6 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
     return veCronaLeft.multipliedBy(10)
   }, [veCronaLeft, limitPerUserInLP, amountTokenCommittedInLP])
-  console.log('++++:::', Number(maximumTokenEntry))
 
   // include user balance for input
   // const maximumTokenCommittable = useMemo(() => {
@@ -171,12 +170,9 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
   // console.log('abcd', getBalanceAmount(maximumTokenCommittable).toFixed(7).slice(0, -1))
 
-  const buttonDisabled =
-    !input ||
-    pendingTx ||
-    (parsedAmount && parsedAmount.equalTo(ZERO)) ||
-    // status === 'finished' ||
-    (poolId === PoolIds.poolBasic && Number(input) > getBalanceNumber(maximumTokenEntry))
+  const buttonDisabled = !input || pendingTx || (parsedAmount && parsedAmount.equalTo(ZERO))
+  // status === 'finished' ||
+  // (poolId === PoolIds.poolBasic && Number(input) > getBalanceNumber(maximumTokenEntry))
 
   const { harvestPool, depositPool } = useIfoPool(walletIfoData.contract)
 
@@ -298,7 +294,82 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
 
       {/* input */}
       <div className="col-span-2 px-4 text-center md:col-span-1">
-        <div className="flex items-center justify-between mb-2 text-left cursor-pointer text-secondary">
+        <div className={status === 'finished' && 'hidden'}>
+          <div className="flex items-center justify-between mb-2 text-left cursor-pointer text-secondary">
+            <div>
+              {raiseToken.symbol} {i18n._(t`Balance`)}:{' '}
+              {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
+            </div>
+            {poolId === PoolIds.poolBasic && (
+              <div className="text-sm text-blue">
+                {limitPerUserInLP.isGreaterThan(0) &&
+                  `maxCommit: ${(<br />)}
+                ${(Number(maximumTokenEntry) / 1e18).toFixed(6)} CRONA`}
+              </div>
+            )}
+          </div>
+
+          {/* <div className={`relative flex items-center w-full mb-4 ${inputError ? 'rounded border border-red' : ''}`}> */}
+
+          <div className="relative flex items-center w-full mb-4">
+            <NumericalInput
+              className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-dark-purple"
+              value={input}
+              onUserInput={handleInput}
+            />
+            {account && (
+              <Button
+                variant="outlined"
+                color="blue"
+                size="xs"
+                onClick={() => {
+                  if (!rasieTokenBalance?.equalTo(ZERO)) {
+                    setInput(
+                      poolId === PoolIds.poolBasic && limitPerUserInLP.isGreaterThan(0)
+                        ? getBalanceAmount(maximumTokenEntry).toFixed(7).slice(0, -1)
+                        : rasieTokenBalance?.toFixed(raiseToken?.decimals)
+                    )
+                  }
+                }}
+                className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
+              >
+                {i18n._(t`MAX`)}
+              </Button>
+            )}
+          </div>
+
+          {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
+            <Button
+              className="w-full"
+              color="gradient"
+              disabled={approvalState === ApprovalState.PENDING}
+              onClick={approve}
+            >
+              {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)}</Dots> : i18n._(t`Approve`)}
+            </Button>
+          ) : (
+            <Button
+              color={
+                buttonDisabled || !allowClaim ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'
+              }
+              onClick={handleDepositPool}
+              disabled={buttonDisabled || inputError || !allowClaim}
+            >
+              {!walletConnected
+                ? i18n._(t`Connect Wallet`)
+                : !allowClaim
+                ? i18n._(t`Claim is not allowed`)
+                : !input
+                ? i18n._(t`Commit`)
+                : insufficientFunds
+                ? i18n._(t`Insufficient Balance`)
+                : i18n._(t`Commit`)}
+            </Button>
+          )}
+        </div>
+
+        {/* claim */}
+        {/* <div className="flex items-center justify-between text-left cursor-pointer text-secondary">
           <div>
             {raiseToken.symbol} {i18n._(t`Balance`)}:{' '}
             {formatNumberScale(rasieTokenBalance?.toSignificant(6, undefined, 4) ?? 0, false, 4)}
@@ -310,73 +381,28 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
               ${(Number(maximumTokenEntry) / 1e18).toFixed(6)} CRONA`}
             </div>
           )}
-        </div>
+        </div> */}
 
-        {/* <div className={`relative flex items-center w-full mb-4 ${inputError ? 'rounded border border-red' : ''}`}> */}
-        <div className="relative flex items-center w-full mb-4">
-          <NumericalInput
-            className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-dark-purple"
-            value={input}
-            onUserInput={handleInput}
-          />
-          {account && (
-            <Button
-              variant="outlined"
-              color="blue"
-              size="xs"
-              onClick={() => {
-                if (!rasieTokenBalance?.equalTo(ZERO)) {
-                  setInput(
-                    poolId === PoolIds.poolBasic && limitPerUserInLP.isGreaterThan(0)
-                      ? getBalanceAmount(maximumTokenEntry).toFixed(7).slice(0, -1)
-                      : rasieTokenBalance?.toFixed(raiseToken?.decimals)
-                  )
-                }
-              }}
-              className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
-            >
-              {i18n._(t`MAX`)}
-            </Button>
-          )}
-        </div>
-
-        {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
-          <Button
-            className="w-full"
-            color="gradient"
-            disabled={approvalState === ApprovalState.PENDING}
-            onClick={approve}
-          >
-            {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)}</Dots> : i18n._(t`Approve`)}
-          </Button>
-        ) : (
-          <Button
-            color={
-              buttonDisabled || !allowClaim ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'
-            }
-            onClick={handleDepositPool}
-            disabled={buttonDisabled || inputError || !allowClaim}
-          >
-            {!walletConnected
-              ? i18n._(t`Connect Wallet`)
-              : !allowClaim
-              ? i18n._(t`Claim is not allowed`)
-              : !input
-              ? i18n._(t`Commit`)
-              : insufficientFunds
-              ? i18n._(t`Insufficient Balance`)
-              : i18n._(t`Commit`)}
-          </Button>
-        )}
-
-        {/* claim */}
         {status === 'finished' &&
-          !userPoolCharacteristics.hasClaimed &&
-          now > publicIfoData.endTimeNum + ifo.claimDelayTime &&
+          now > publicIfoData.endTimeNum &&
           (userPoolCharacteristics.offeringAmountInToken.isGreaterThan(0) ||
             userPoolCharacteristics.refundingAmountInLP.isGreaterThan(0)) && (
-            <Button className="w-full mt-2" color="gradient" disabled={claimPendingTx} onClick={handleHarvestPool}>
+            <Button
+              className="w-full mt-2"
+              color={allowClaimStatus ? 'gradient' : 'gray'}
+              disabled={claimPendingTx || !allowClaimStatus}
+              onClick={handleHarvestPool}
+            >
               {claimPendingTx ? <Dots>{i18n._(t`Claiming`)}</Dots> : i18n._(t`Claim`)}
+            </Button>
+          )}
+
+        {status === 'finished' &&
+          now > publicIfoData.endTimeNum &&
+          (userPoolCharacteristics.offeringAmountInToken.isLessThanOrEqualTo(0) ||
+            userPoolCharacteristics.refundingAmountInLP.isLessThanOrEqualTo(0)) && (
+            <Button className="w-full mt-2" color="gray" disabled={true}>
+              You didn't participate
             </Button>
           )}
       </div>
