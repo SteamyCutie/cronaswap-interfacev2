@@ -43,6 +43,18 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/gamefi',
+        destination: '/gamefi',
+      },
+      {
+        source: '/diceroll',
+        destination: '/gamefi/diceroll',
+      },
+      {
+        source: '/cointoss',
+        destination: '/gamefi/cointoss',
+      },
+      {
         source: '/farmv1',
         destination: '/farmv1',
       },
