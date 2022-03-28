@@ -44,6 +44,7 @@ export interface UserPoolCharacteristics {
   offeringAmountInToken: BigNumber // @contract: userOfferingAmountPool
   refundingAmountInLP: BigNumber // @contract: userRefundingAmountPool
   taxAmountInLP: BigNumber // @contract: userTaxAmountPool
+  offeringTokenTotalHarvest: BigNumber
   hasClaimed: boolean // @contract: claimedPool
 }
 

@@ -18,10 +18,6 @@ import { useMemo, useState } from 'react'
 import { PublicIfoData, WalletIfoData } from '../hooks/types'
 import useIfoPool from '../hooks/useIfoPool'
 import IfoCardDetails from './IfoCardDetails'
-import BigNumber from 'bignumber.js'
-import { useIfoV2Contract } from 'app/hooks'
-import { useSingleCallResult } from 'app/state/multicall/hooks'
-import { useTransactionAdder } from '../../../state/transactions/hooks'
 interface IfoCardProps {
   poolId: PoolIds
   ifo: Ifo
@@ -74,7 +70,6 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
   const config = cardConfig(poolId)
   const { account, chainId } = useActiveWeb3React()
   const { address } = ifo
-  const ifoContract = useIfoV2Contract(address[chainId])
   const now = Date.parse(new Date().toString()) / 1000
 
   const { status, offerToken } = publicIfoData
@@ -225,35 +220,6 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
     }
   }
 
-  const callsData = useMemo(
-    () => [
-      { methodName: 'viewUserInfo', callInputs: [account, [0, 1]] }, // viewUserInfo
-      { methodName: 'viewUserOfferingAndRefundingAmountsForPools', callInputs: [account, [0, 1]] }, // viewUserOfferingAndRefundingAmountsForPools
-    ],
-    [account]
-  )
-
-  const allowClaimObject = useSingleCallResult([] ? ifoContract : null, 'allowClaim', [])?.result
-  // const allowClaim = allowClaimObject ? allowClaimObject[0] : false
-  const allowClaim = true
-
-  const addTransaction = useTransactionAdder()
-  const [pendingAllowTx, setPendingAllowTx] = useState(false)
-  const handleAllowClaim = async () => {
-    setPendingAllowTx(true)
-    try {
-      const args = [!allowClaim]
-      const tx = await ifoContract.setAllowClaim(...args)
-      addTransaction(tx, {
-        summary: `${i18n._(t`Set`)} CRONA`,
-      })
-      setPendingAllowTx(false)
-    } catch (error) {
-      console.log(error)
-      setPendingAllowTx(false)
-    }
-  }
-
   return (
     <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 md:ml-4 bg-dark-800">
       <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
@@ -349,16 +315,12 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
             </Button>
           ) : (
             <Button
-              color={
-                buttonDisabled || !allowClaim ? 'gray' : !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'
-              }
+              color={buttonDisabled || !walletConnected ? 'blue' : insufficientFunds ? 'red' : 'blue'}
               onClick={handleDepositPool}
-              disabled={buttonDisabled || inputError || !allowClaim}
+              disabled={buttonDisabled || inputError}
             >
               {!walletConnected
                 ? i18n._(t`Connect Wallet`)
-                : !allowClaim
-                ? i18n._(t`Claim is not allowed`)
                 : !input
                 ? i18n._(t`Commit`)
                 : insufficientFunds
@@ -389,18 +351,29 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
             userPoolCharacteristics.refundingAmountInLP.isGreaterThan(0)) && (
             <Button
               className="w-full mt-2"
-              color={allowClaimStatus ? 'gradient' : 'gray'}
-              disabled={claimPendingTx || !allowClaimStatus}
+              color={
+                allowClaimStatus && userPoolCharacteristics.offeringTokenTotalHarvest.isGreaterThan(0)
+                  ? 'gradient'
+                  : 'gray'
+              }
+              disabled={
+                claimPendingTx ||
+                !allowClaimStatus ||
+                !userPoolCharacteristics.offeringTokenTotalHarvest.isGreaterThan(0)
+              }
               onClick={handleHarvestPool}
             >
-              {claimPendingTx ? <Dots>{i18n._(t`Claiming`)}</Dots> : i18n._(t`Claim`)}
+              {claimPendingTx ? (
+                <Dots>{i18n._(t`Claiming`)}</Dots>
+              ) : (
+                'Claim (' + (Number(userPoolCharacteristics.offeringTokenTotalHarvest) / 1e18).toFixed(4) + ')'
+              )}
             </Button>
           )}
 
         {status === 'finished' &&
           now > publicIfoData.endTimeNum &&
-          (userPoolCharacteristics.offeringAmountInToken.isLessThanOrEqualTo(0) ||
-            userPoolCharacteristics.refundingAmountInLP.isLessThanOrEqualTo(0)) && (
+          userPoolCharacteristics.amountTokenCommittedInLP.isLessThanOrEqualTo(0) && (
             <Button className="w-full mt-2" color="gray" disabled={true}>
               You didn't participate
             </Button>
