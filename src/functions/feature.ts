@@ -59,7 +59,7 @@ const features = {
     // Feature.MISO,
     Feature.STAKING,
     Feature.BOOST,
-    // Feature.GAMEFI,
+    Feature.GAMEFI,
   ],
 }
 
