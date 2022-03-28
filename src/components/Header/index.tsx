@@ -127,7 +127,7 @@ function AppBar(): JSX.Element {
                       {chainId && featureEnabled(Feature.GAMEFI, chainId) && (
                         <NavLink href={'/gamefi'}>
                           <a
-                            id={`boost-nav-link`}
+                            id={`gamefi-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
                             {i18n._(t`GameFi`)}
