@@ -143,8 +143,8 @@ export const IfoCurrentCard = ({
               {/* <div className="text-[14px]">Start: TBH</div>
               <div className="text-[14px]">End: TBH</div> */}
 
-              <div className="text-[14px]">Start: 28th Mar, 12:00pm UTC</div>
-              <div className="text-[14px]">End: 29th Mar, 12:00pm UTC</div>
+              <div className="text-[14px]">Start: 06th Apr, 12:00pm UTC</div>
+              <div className="text-[14px]">End: 07th Apr, 12:00pm UTC</div>
               <div className="text-[14px] text-pink-red">Duration: 25% unlock immediately. 75% vesting in 90 days.</div>
 
               {/* <div className="text-[14px] text-pink-red">
@@ -157,9 +157,9 @@ export const IfoCurrentCard = ({
                 <a href={ifo.articleUrl} target="_blank" rel="noreferrer">
                   <GlobeAltIcon width={16} className="text-low-emphesis" />
                 </a>
-                <a href={getExplorerLink(chainId, ifo.address[chainId], 'address')} target="_blank" rel="noreferrer">
+                {/* <a href={getExplorerLink(chainId, ifo.address[chainId], 'address')} target="_blank" rel="noreferrer">
                   <BlocksIcon width={16} className="text-low-emphesis" />
-                </a>
+                </a> */}
                 <a href={ifo.telegramUrl} target="_blank" rel="noreferrer">
                   <TelegramIcon width={16} className="text-low-emphesis" />
                 </a>
