@@ -308,7 +308,7 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
             <Button
               className="w-full"
               color="gradient"
-              disabled={approvalState === ApprovalState.PENDING}
+              disabled={approvalState === ApprovalState.PENDING || status === 'coming_soon'}
               onClick={approve}
             >
               {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)}</Dots> : i18n._(t`Approve`)}
