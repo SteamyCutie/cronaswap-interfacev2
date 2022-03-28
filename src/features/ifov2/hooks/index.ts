@@ -132,13 +132,15 @@ export function useGetWalletIfoData(ifo: Ifo) {
   const callsData = useMemo(
     () => [
       { methodName: 'viewUserInfo', callInputs: [account, [0, 1]] }, // viewUserInfo
+      { methodName: 'userTokenStatus', callInputs: [account, [0]] }, // userTokenStatus
+      { methodName: 'userTokenStatus', callInputs: [account, [1]] }, // userTokenStatus
       { methodName: 'viewUserOfferingAndRefundingAmountsForPools', callInputs: [account, [0, 1]] }, // viewUserOfferingAndRefundingAmountsForPools
     ],
     [account]
   )
 
   const results = useSingleContractMultipleMethods(ifoContract, callsData)
-  const [{ result: userInfo }, { result: amounts }] = results
+  const [{ result: userInfo }, { result: poolBasic }, { result: poolUnlimited }, { result: amounts }] = results
 
   // Calc VeCRONA
   const args = useMemo(() => {
@@ -168,6 +170,7 @@ export function useGetWalletIfoData(ifo: Ifo) {
       offeringAmountInToken: new BigNumber(amounts?.[0][0][0].toString()),
       refundingAmountInLP: new BigNumber(amounts?.[0][0][1].toString()),
       taxAmountInLP: new BigNumber(amounts?.[0][0][2].toString()),
+      offeringTokenTotalHarvest: new BigNumber(poolBasic?.['offeringTokenTotalHarvest'].toString()),
       hasClaimed: userInfo?.[1][0],
     },
     poolUnlimited: {
@@ -175,6 +178,7 @@ export function useGetWalletIfoData(ifo: Ifo) {
       offeringAmountInToken: new BigNumber(amounts?.[0][1][0].toString()),
       refundingAmountInLP: new BigNumber(amounts?.[0][1][1].toString()),
       taxAmountInLP: new BigNumber(amounts?.[0][1][2].toString()),
+      offeringTokenTotalHarvest: new BigNumber(poolUnlimited?.['offeringTokenTotalHarvest'].toString()),
       hasClaimed: userInfo?.[1][1],
     },
     ifoVeCrona,

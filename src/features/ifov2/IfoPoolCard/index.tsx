@@ -351,18 +351,29 @@ const IfoPoolCard: React.FC<IfoCardProps> = ({ poolId, ifo, publicIfoData, walle
             userPoolCharacteristics.refundingAmountInLP.isGreaterThan(0)) && (
             <Button
               className="w-full mt-2"
-              color={allowClaimStatus ? 'gradient' : 'gray'}
-              disabled={claimPendingTx || !allowClaimStatus}
+              color={
+                allowClaimStatus && userPoolCharacteristics.offeringTokenTotalHarvest.isGreaterThan(0)
+                  ? 'gradient'
+                  : 'gray'
+              }
+              disabled={
+                claimPendingTx ||
+                !allowClaimStatus ||
+                !userPoolCharacteristics.offeringTokenTotalHarvest.isGreaterThan(0)
+              }
               onClick={handleHarvestPool}
             >
-              {claimPendingTx ? <Dots>{i18n._(t`Claiming`)}</Dots> : i18n._(t`Claim`)}
+              {claimPendingTx ? (
+                <Dots>{i18n._(t`Claiming`)}</Dots>
+              ) : (
+                'Claim (' + (Number(userPoolCharacteristics.offeringTokenTotalHarvest) / 1e18).toFixed(4) + ')'
+              )}
             </Button>
           )}
 
         {status === 'finished' &&
           now > publicIfoData.endTimeNum &&
-          (userPoolCharacteristics.offeringAmountInToken.isLessThanOrEqualTo(0) ||
-            userPoolCharacteristics.refundingAmountInLP.isLessThanOrEqualTo(0)) && (
+          userPoolCharacteristics.amountTokenCommittedInLP.isLessThanOrEqualTo(0) && (
             <Button className="w-full mt-2" color="gray" disabled={true}>
               You didn't participate
             </Button>

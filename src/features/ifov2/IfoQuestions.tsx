@@ -50,56 +50,65 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
     <div className="px-4 py-6 mx-auto rounded sm:py-8 sm:px-6 lg:px-8 bg-dark-900">
       {/* step */}
       <h2 className="mb-8 text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">How to take part</h2>
-      <div className="grid grid-cols-2 gap-4 mb-8 md:grid-cols-2 auto-cols-max">
-        <div className="relative p-6 rounded-lg bg-dark-800">
-          <dt>
-            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-              <AdjustmentsIcon className="h-8" />
-            </div>
-            <p className="ml-16 text-lg font-bold">TWO WAYS TO PARTICIPATE</p>
-          </dt>
-          <dd className="ml-16 text-base text-gray-500">
-            Option 1: Commit with CRONA. <br /> Option 2: Commit with USDC.{' '}
-          </dd>
-        </div>
 
-        <div className="relative p-6 rounded-lg bg-dark-800">
-          <dt>
-            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-              <TerminalIcon className="h-8" />
+      <ul role="list" className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-4 lg:gap-y-4 lg:space-y-0 mb-4">
+        <li className="flex p-6 rounded-lg bg-dark-800">
+          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+            <AdjustmentsIcon className="h-8" />
+          </div>
+          <div className="ml-16">
+            <div className="text-lg font-bold">
+              <h3>TWO WAYS TO PARTICIPATE</h3>
             </div>
-            <p className="ml-16 text-lg font-bold">OVERFLOW MODEL</p>
-          </dt>
-          <dd className="ml-16 text-base text-gray-500">
-            Your token allocation is based on your percentage of the total raise. All overflow contributions will be
-            returned post-raise.
-          </dd>
-        </div>
+            <div className="text-base text-gray-500">
+              Option 1: Commit with CRONA. <br /> Option 2: Commit with USDC.
+            </div>
+          </div>
+        </li>
 
-        <div className="relative p-6 rounded-lg bg-dark-800">
-          <dt>
-            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-              <ClockIcon className="h-8" />
+        <li className="flex p-6 rounded-lg bg-dark-800">
+          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+            <TerminalIcon className="h-8" />
+          </div>
+          <div className="ml-16">
+            <div className="text-lg font-bold">
+              <h3>OVERFLOW MODEL</h3>
             </div>
-            <p className="ml-16 text-lg font-bold">CONTRIBUTION WINDOW</p>
-          </dt>
-          <dd className="ml-16 text-base text-gray-500">
-            IFOs run anywhere from 12-24 hours to ensure everyone across the globe has time to enter with ease.
-          </dd>
-        </div>
+            <div className="text-base text-gray-500">
+              Your token allocation is based on your percentage of the total raise. All overflow contributions will be
+              returned post-raise.
+            </div>
+          </div>
+        </li>
 
-        <div className="relative p-6 rounded-lg bg-dark-800">
-          <dt>
-            <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-              <CalendarIcon className="h-8" />
+        <li className="flex p-6 rounded-lg bg-dark-800">
+          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+            <ClockIcon className="h-8" />
+          </div>
+          <div className="ml-16">
+            <div className="text-lg font-bold">
+              <h3>CONTRIBUTION WINDOW</h3>
             </div>
-            <p className="ml-16 text-lg font-bold">VESTING SCHEDULE</p>
-          </dt>
-          <dd className="ml-16 text-base text-gray-500">
-            25% of tokens unlock immediately. The remaining 75% vest linearly over a timeframe specific to each IFO.
-          </dd>
-        </div>
-      </div>
+            <div className="text-base text-gray-500">
+              IFOs run anywhere from 12-24 hours to ensure everyone across the globe has time to enter with ease.
+            </div>
+          </div>
+        </li>
+
+        <li className="flex p-6 rounded-lg bg-dark-800">
+          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+            <ClockIcon className="h-8" />
+          </div>
+          <div className="ml-16">
+            <div className="text-lg font-bold">
+              <h3>VESTING SCHEDULE</h3>
+            </div>
+            <div className="text-base text-gray-500">
+              25% of tokens unlock immediately. The remaining 75% vest linearly over a timeframe specific to each IFO.
+            </div>
+          </div>
+        </li>
+      </ul>
 
       <div className="mx-auto divide-y-2 divide-dark-800">
         <h2 className="text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">
