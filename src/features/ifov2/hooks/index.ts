@@ -117,6 +117,7 @@ export function useGetWalletIfoData(ifo: Ifo) {
         offeringAmountInToken: BIG_ZERO,
         refundingAmountInLP: BIG_ZERO,
         taxAmountInLP: BIG_ZERO,
+        offeringTokenTotalHarvest: BIG_ZERO,
         hasClaimed: false,
       },
       poolUnlimited: {
@@ -124,6 +125,7 @@ export function useGetWalletIfoData(ifo: Ifo) {
         offeringAmountInToken: BIG_ZERO,
         refundingAmountInLP: BIG_ZERO,
         taxAmountInLP: BIG_ZERO,
+        offeringTokenTotalHarvest: BIG_ZERO,
         hasClaimed: false,
       },
     }
