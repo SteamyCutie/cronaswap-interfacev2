@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useLingui } from '@lingui/react'
 import Head from 'next/head'
 import Container from 'app/components/Container'
@@ -11,29 +11,27 @@ import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
+import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
+import GameReviewPanel from 'app/components/GameReviewPanel'
 
 export default function CoinToss() {
   const { i18n } = useLingui()
-  enum CoinTossStatus {
-    HEAD,
-    TAIL,
-    NONE,
-  }
 
   const router = useRouter()
-  const type = router.query.filter == null ? 'all' : (router.query.filter as string)
+  const type = router.query.filter == null ? '' : (router.query.filter as string)
   const tabStyle = 'px-[27px] py-[8px] rounded text-base font-normal cursor-pointer'
   const activeTabStyle = `${tabStyle} bg-[#0D0C2B]`
   const inactiveTabStyle = `${tabStyle}`
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState<CoinTossReview>(CoinTossReview.ALLBETS)
   const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
     setCoinTossStatus(selection)
   }
+
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>
-        <title key="title">Landing | CronaSwap</title>
+        <title key="title">CoinToss | CronaSwap</title>
         <meta key="description" name="description" content="Welcome to CronaSwap" />
       </Head>
       <div className="relative flex flex-col items-center w-full">
@@ -66,32 +64,41 @@ export default function CoinToss() {
                 <div className="flex flex-row">
                   <div
                     onClick={() => {
-                      setActiveTab(0)
+                      setActiveTab(CoinTossReview.ALLBETS)
                     }}
                   >
                     <NavLink href="/cointoss?filter=allbets">
-                      <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>All Bets</div>
+                      <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
+                        All Bets
+                      </div>
                     </NavLink>
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(1)
+                      setActiveTab(CoinTossReview.YOURBETS)
                     }}
                   >
                     <NavLink href="/cointoss?filter=yourbets">
-                      <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>Your Bets</div>
+                      <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
+                        Your Bets
+                      </div>
                     </NavLink>
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(2)
+                      setActiveTab(CoinTossReview.LEADERBOARD)
                     }}
                   >
                     <NavLink href="/cointoss?filter=leaderboard">
-                      <div className={activeTab === 2 ? activeTabStyle : inactiveTabStyle}>Leaderboard</div>
+                      <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
+                        Leaderboard
+                      </div>
                     </NavLink>
                   </div>
                 </div>
+              </div>
+              <div className="mt-[22px]">
+                <GameReviewPanel />
               </div>
             </div>
           </div>

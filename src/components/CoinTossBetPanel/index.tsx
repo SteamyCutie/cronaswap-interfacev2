@@ -23,7 +23,11 @@ export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossB
       <div className="w-[139px] h-[40px] absolute top-[40px] right-[64px] bg-[#0D0C2B] rounded">
         <div className="mt-[12px] ml-[16px] font-normal text-[14px] leading-[16px] flex">
           How it works
-          <InformationHelper text={'How it works'} />
+          <InformationHelper
+            text={
+              'Coin Toss is a single game, the user flips the coin and calls “heads” or “tails.” If the call matches the result, the player wins the flip. Otherwise, the player loses the flip. If the bet is correct, the user earns 1.96x.\nGame Play\n1. Start by setting your Bet Amount.\n2. Select your coin, guess what will come up: heads or tails.\n 3. After you are ALL set, place your bet and press the BET button to start the game.'
+            }
+          />
         </div>
       </div>
       <div className="absolute top-[173px] w-full text-center font-bold text-base text-white">Select Head or Tail</div>

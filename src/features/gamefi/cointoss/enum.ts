@@ -3,3 +3,9 @@ export enum CoinTossStatus {
   TAIL,
   NONE,
 }
+
+export enum CoinTossReview {
+  ALLBETS,
+  YOURBETS,
+  LEADERBOARD,
+}

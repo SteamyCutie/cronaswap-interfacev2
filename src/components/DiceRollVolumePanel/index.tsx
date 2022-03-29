@@ -1,15 +1,8 @@
 import React from 'react'
 import InformationHelper from '../InformationHelper'
-export const CoinTossVolumePanel = ({
-  tokenName,
-  totalBetsCount,
-  totalBetsAmount,
-  headWinRate,
-  tailWinRate,
-  houseEdge,
-}) => {
+export const DiceRollVolumePanel = ({ tokenName, totalBetsCount, totalBetsAmount, houseEdge }) => {
   return (
-    <div className="flex flex-row divide-x-2 divide-white divide-opacity-20 min-w-[86.25vw] py-[45px] mt-[64px] h-[172px] bg-[#2172E5] rounded text-white justify-between">
+    <div className="flex flex-row divide-x-2 divide-white divide-opacity-20 py-[45px] mt-[64px] h-[172px] bg-[#2172E5] rounded text-white min-w-[86.25vw] justify-between">
       {[
         {
           desc: `Total ${tokenName} Bets`,
@@ -24,20 +17,6 @@ export const CoinTossVolumePanel = ({
           value: totalBetsAmount,
         },
         {
-          desc: 'Head Win Rate',
-          hasInfo: true,
-          unit: '%',
-          value: headWinRate,
-          info: 'Head Win Rate',
-        },
-        {
-          desc: 'Tail Win Rate',
-          hasInfo: true,
-          unit: '%',
-          value: tailWinRate,
-          info: 'Tail Win Rate',
-        },
-        {
           desc: 'House Edge',
           hasInfo: true,
           unit: '%',
@@ -45,7 +24,7 @@ export const CoinTossVolumePanel = ({
           info: 'House Edge',
         },
       ].map((e) => (
-        <div className="pl-[3.33vw] pr-[3.75vw]" key={e.desc}>
+        <div className="pl-[6.32vw] pr-[8.89vw]" key={e.desc}>
           <div className="flex items-center">
             <div className="text-[14px] leading-[18px] font-medium flex-wrap">{e.desc} </div>
             {e.hasInfo && <InformationHelper text={e.info} />}
