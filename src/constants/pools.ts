@@ -100,7 +100,7 @@ export const POOLS: AddressMap = {
       pid: 3,
       name: 'CRONA-DARK',
       tokenPerBlock: '0.045',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://darkcrypto.finance/',
       stakingToken: {
