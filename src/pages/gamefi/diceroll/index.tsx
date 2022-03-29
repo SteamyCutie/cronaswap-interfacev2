@@ -71,7 +71,7 @@ export default function DiceRoll() {
                       setActiveTab(CoinTossReview.ALLBETS)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=allbets">
+                    <NavLink href="/diceroll?filter=allbets">
                       <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
                         All Bets
                       </div>
@@ -82,7 +82,7 @@ export default function DiceRoll() {
                       setActiveTab(CoinTossReview.YOURBETS)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=yourbets">
+                    <NavLink href="/diceroll?filter=yourbets">
                       <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
                         Your Bets
                       </div>
@@ -93,7 +93,7 @@ export default function DiceRoll() {
                       setActiveTab(CoinTossReview.LEADERBOARD)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=leaderboard">
+                    <NavLink href="/diceroll?filter=leaderboard">
                       <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
                         Leaderboard
                       </div>
