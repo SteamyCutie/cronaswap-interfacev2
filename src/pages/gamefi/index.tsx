@@ -10,8 +10,8 @@ const games = [
   {
     name: 'Dice Roll',
     role: 'Guess the dice face that comes up. Payouts are up to 5.94x',
-    logoImageUrl: `url('/images/pages/landing/diceroll/logo.png')`,
-    backImageUrl: `url('/images/pages/landing/diceroll/back.png')`,
+    logoImageUrl: `url('/images/pages/gamefi/landing/diceroll/logo.png')`,
+    backImageUrl: `url('/images/pages/gamefi/landing/diceroll/back.png')`,
     gameFiUrl: 'https://croissant.games/dice-roll/CRONA',
     gameFiTitle: 'Dice Roll',
     description: 'Guess the dice face that comes up. Payouts are up to 5.94x',
@@ -19,8 +19,8 @@ const games = [
   {
     name: 'Coin Toss',
     role: 'Choose numbers from from 0 to 36. Payouts are up to 34.65X',
-    logoImageUrl: `url('/images/pages/landing/cointoss/logo.png')`,
-    backImageUrl: `url('/images/pages/landing/cointoss/back.png')`,
+    logoImageUrl: `url('/images/pages/gamefi/landing/cointoss/logo.png')`,
+    backImageUrl: `url('/images/pages/gamefi/landing/cointoss/back.png')`,
     gameFiUrl: 'https://croissant.games/coin-toss/CRONA',
     gameFiTitle: 'Coin Toss',
     description: 'Choose numbers from from 0 to 36. Payouts are up to 34.65X',
@@ -28,8 +28,8 @@ const games = [
   {
     name: 'Lottery(Comming Soon)',
     role: 'CRONA lottery is coming soon. We will let you know immediately it’s out.',
-    logoImageUrl: `url('/images/pages/landing/lottery/logo.png')`,
-    backImageUrl: `url('/images/pages/landing/lottery/back.png')`,
+    logoImageUrl: `url('/images/pages/gamefi/landing/lottery/logo.png')`,
+    backImageUrl: `url('/images/pages/gamefi/landing/lottery/back.png')`,
     gameFiUrl: '/gamefi',
     gameFiTitle: 'Lottery',
     description: 'CRONA lottery is coming soon. We will let you know immediately it’s out.',
@@ -39,7 +39,7 @@ const games = [
 export default function GameFi() {
   const { i18n } = useLingui()
   return (
-    <Container id="gamefi-page" maxWidth="full" className="py-4 md:py-8 lg:py-24">
+    <Container id="gamefi-page" maxWidth="full" className="">
       <Head>
         <title key="title">GameFi | CronaSwap</title>
         <meta key="description" name="description" content="Welcome to CronaSwap" />
@@ -47,7 +47,7 @@ export default function GameFi() {
       <div className="relative flex flex-col items-center w-full">
         <div className="absolute top-1/4 -left-10 bg-blue bottom-4 w-3/5 rounded-full z-0 filter blur-[150px]" />
         <div className="absolute bottom-1/4 -right-10 bg-red top-4 w-3/5 rounded-full z-0  filter blur-[150px]" />
-        {/* <img src="images/pages/landing/center-ellipse.png" className="" /> */}
+        {/* <img src="images/pages/gamefi/landing/center-ellipse.png" className="" /> */}
         <div className="relative filter drop-shadow">
           <div className="mt-[100px] flex flex-col items-center">
             <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Welcome to Crona Game</div>
