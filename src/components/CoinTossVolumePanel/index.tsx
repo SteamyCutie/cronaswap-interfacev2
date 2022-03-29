@@ -45,17 +45,17 @@ export const CoinTossVolumePanel = ({
           info: 'House Edge',
         },
       ].map((e) => (
-        <React.Fragment>
-          <div className="pl-[3.33vw] pr-[3.75vw]">
+        <>
+          <div className="pl-[3.33vw] pr-[3.75vw]" key={e.desc}>
             <div className="flex items-center">
-              <div className="text-[1.1vw] leading-[1.6vw] font-medium">{e.desc} </div>
+              <div className="text-[14px] leading-[18px] font-medium flex-wrap">{e.desc} </div>
               {e.hasInfo && <InformationHelper text={e.info} />}
             </div>
             <h4 className="mt-3 text-[2.5vw] leading-[3.1vw] font-bold">
               {e.value} {e.unit}
             </h4>
           </div>
-        </React.Fragment>
+        </>
       ))}
     </div>
   )

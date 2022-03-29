@@ -3,6 +3,7 @@ import { CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import { useActiveWeb3React } from 'app/services/web3'
 import InformationHelper from '../InformationHelper'
 import Web3Connect from '../Web3Connect'
+import Image from 'next/image'
 
 interface CoinTossBetPanelProps {
   coinTossStatus: CoinTossStatus
@@ -33,9 +34,19 @@ export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossB
           }}
         >
           {coinTossStatus == CoinTossStatus.HEAD ? (
-            <img src="images\pages\gamefi\cointoss\coin-head-active.png" />
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-head-active.png"
+              width="120px"
+              height="120px"
+              alt="Coin Head Active"
+            />
           ) : (
-            <img src="images\pages\gamefi\cointoss\coin-head-inactive.png" />
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-head-inactive.png"
+              width="120px"
+              height="120px"
+              alt="Coin Head Inactive"
+            />
           )}
         </button>
         <button
@@ -44,9 +55,19 @@ export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossB
           }}
         >
           {coinTossStatus == CoinTossStatus.TAIL ? (
-            <img src="images\pages\gamefi\cointoss\coin-tail-active.png" />
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-tail-active.png"
+              width="120px"
+              height="120px"
+              alt="Coin Tail Active"
+            />
           ) : (
-            <img src="images\pages\gamefi\cointoss\coin-tail-inactive.png" />
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-tail-inactive.png"
+              width="120px"
+              height="120px"
+              alt="Coin Tail Inactive"
+            />
           )}
         </button>
       </div>

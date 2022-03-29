@@ -9,6 +9,8 @@ import { CoinTossBetPanel } from 'app/components/CoinTossBetPanel'
 import { CoinTossVolumePanel } from 'app/components/CoinTossVolumePanel'
 import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
+import { useRouter } from 'next/router'
+import NavLink from 'app/components/NavLink'
 
 export default function CoinToss() {
   const { i18n } = useLingui()
@@ -18,6 +20,12 @@ export default function CoinToss() {
     NONE,
   }
 
+  const router = useRouter()
+  const type = router.query.filter == null ? 'all' : (router.query.filter as string)
+  const tabStyle = 'px-[27px] py-[8px] rounded text-base font-normal cursor-pointer'
+  const activeTabStyle = `${tabStyle} bg-[#0D0C2B]`
+  const inactiveTabStyle = `${tabStyle}`
+  const [activeTab, setActiveTab] = useState(0)
   const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
     setCoinTossStatus(selection)
@@ -44,14 +52,46 @@ export default function CoinToss() {
               tailWinRate={49.9}
               houseEdge={1}
             />
-
-            <div className="flex lg:flex-row flex-col items-center gap-10 mt-[64px]">
-              <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
-                <CoinTossBetPanel coinTossStatus={coinTossStatus} onCoinTossSelect={handleCoinTossSelect} />
+            <div className="flex flex-col w-auto">
+              <div className="flex lg:flex-row flex-col items-center gap-10 mt-[64px]">
+                <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
+                  <CoinTossBetPanel coinTossStatus={coinTossStatus} onCoinTossSelect={handleCoinTossSelect} />
+                </div>
+                <div className="flex flex-col gap-10">
+                  <SwapCroToWCro />
+                  <GameRewardClaimPanel />
+                </div>
               </div>
-              <div className="flex flex-col gap-10">
-                <SwapCroToWCro />
-                <GameRewardClaimPanel />
+              <div className="w-[fit-content] h-[56px] mt-[64px] py-[8px] px-[8px] rounded bg-[#1C1B38]">
+                <div className="flex flex-row">
+                  <div
+                    onClick={() => {
+                      setActiveTab(0)
+                    }}
+                  >
+                    <NavLink href="/cointoss?filter=allbets">
+                      <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>All Bets</div>
+                    </NavLink>
+                  </div>
+                  <div
+                    onClick={() => {
+                      setActiveTab(1)
+                    }}
+                  >
+                    <NavLink href="/cointoss?filter=yourbets">
+                      <div className={activeTab === 1 ? activeTabStyle : inactiveTabStyle}>Your Bets</div>
+                    </NavLink>
+                  </div>
+                  <div
+                    onClick={() => {
+                      setActiveTab(2)
+                    }}
+                  >
+                    <NavLink href="/cointoss?filter=leaderboard">
+                      <div className={activeTab === 2 ? activeTabStyle : inactiveTabStyle}>Leaderboard</div>
+                    </NavLink>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
