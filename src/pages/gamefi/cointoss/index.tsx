@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
 import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
+import { useGameFiTokens } from 'app/hooks/Tokens'
 
 export default function CoinToss() {
   const { i18n } = useLingui()
@@ -28,6 +29,8 @@ export default function CoinToss() {
     setCoinTossStatus(selection)
   }
 
+  const gameFiTokens = useGameFiTokens()
+  const gameFiCurrencyList = Object.keys(gameFiTokens).flat()
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>

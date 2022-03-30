@@ -12,6 +12,7 @@ import { DiceRollVolumePanel } from 'app/components/DiceRollVolumePanel'
 import { DiceRollBetPanel } from 'app/components/DiceRollBetPanel'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
+import { useGameFiTokens } from 'app/hooks/Tokens'
 
 const DiceRoll = () => {
   const { i18n } = useLingui()
@@ -42,9 +43,10 @@ const DiceRoll = () => {
 
   const handleDiceSelect = (selection: DiceRollOption) => {
     setDiceRollOption({ ...selection })
-    // calculateWinningChance()
   }
 
+  const gameFiTokens = useGameFiTokens()
+  const gameFiCurrencyList = Object.keys(gameFiTokens).flat()
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>
