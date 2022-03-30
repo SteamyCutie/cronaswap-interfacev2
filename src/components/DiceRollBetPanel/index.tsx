@@ -9,6 +9,11 @@ interface DiceRollBetPanelProps {
   diceRollOption: DiceRollOption
   onDiceRollSelect: (value: DiceRollOption) => void
   winningChance: number | 0
+  selectedToken: string | ''
+  onSelectToken: (value: string) => void
+  onMax
+  inputValue: string | ''
+  onInputValue: (value: string) => void
 }
 
 const Dice = ({ diceSide, isSelected, onDiceSelect }) => {
@@ -69,7 +74,16 @@ const Dice = ({ diceSide, isSelected, onDiceSelect }) => {
   )
 }
 
-export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect, winningChance }: DiceRollBetPanelProps) => {
+export const DiceRollBetPanel = ({
+  diceRollOption,
+  onDiceRollSelect,
+  winningChance,
+  onSelectToken,
+  selectedToken,
+  onMax,
+  inputValue,
+  onInputValue,
+}: DiceRollBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   const IsAnyChoiceSelected = (opt: DiceRollOption) =>
     opt[DiceRollStatus.D1] ||
@@ -109,7 +123,13 @@ export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect, winningChan
           ))}
         </div>
         <div className="mt-[100px] w-full">
-          <BetAmountInputPanel />
+          <BetAmountInputPanel
+            onSelectToken={onSelectToken}
+            selectedToken={selectedToken}
+            onMax={onMax}
+            inputValue={inputValue}
+            onInputValue={onInputValue}
+          />
         </div>
 
         <div className="w-full h-[65px] mt-[40px]">

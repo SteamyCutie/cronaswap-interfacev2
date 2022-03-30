@@ -13,8 +13,12 @@ import { DiceRollBetPanel } from 'app/components/DiceRollBetPanel'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import { useGameFiTokens } from 'app/hooks/Tokens'
+import { CRONA_ADDRESS, Token } from '@cronaswap/core-sdk'
+import { useActiveWeb3React } from 'app/services/web3'
 
 const DiceRoll = () => {
+  const { account, chainId, library } = useActiveWeb3React()
+
   const { i18n } = useLingui()
 
   const router = useRouter()
@@ -45,8 +49,18 @@ const DiceRoll = () => {
     setDiceRollOption({ ...selection })
   }
 
-  const gameFiTokens = useGameFiTokens()
-  const gameFiCurrencyList = Object.keys(gameFiTokens).flat()
+  const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
+
+  const handleSelectToken = (token: string) => {
+    setselectedToken(token)
+  }
+
+  const handleMax = () => {}
+
+  const [inputValue, setinputValue] = useState<string>('0.0')
+  const handleInputValue = (value) => {
+    setinputValue(value)
+  }
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>
@@ -69,6 +83,11 @@ const DiceRoll = () => {
                     diceRollOption={diceRollOption}
                     onDiceRollSelect={handleDiceSelect}
                     winningChance={winningChance}
+                    onSelectToken={handleSelectToken}
+                    selectedToken={selectedToken}
+                    onMax={handleMax}
+                    inputValue={inputValue}
+                    onInputValue={handleInputValue}
                   />
                 </div>
                 <div className="flex flex-col gap-10">

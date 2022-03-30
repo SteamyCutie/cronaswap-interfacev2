@@ -14,8 +14,11 @@ import NavLink from 'app/components/NavLink'
 import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { useGameFiTokens } from 'app/hooks/Tokens'
+import { CRONA_ADDRESS } from '@cronaswap/core-sdk'
+import { useActiveWeb3React } from 'app/services/web3'
 
 export default function CoinToss() {
+  const { account, chainId, library } = useActiveWeb3React()
   const { i18n } = useLingui()
 
   const router = useRouter()
@@ -29,8 +32,18 @@ export default function CoinToss() {
     setCoinTossStatus(selection)
   }
 
-  const gameFiTokens = useGameFiTokens()
-  const gameFiCurrencyList = Object.keys(gameFiTokens).flat()
+  const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
+
+  const handleSelectToken = (token: string) => {
+    setselectedToken(token)
+  }
+
+  const handleMax = () => {}
+
+  const [inputValue, setinputValue] = useState<string>('0.0')
+  const handleInputValue = (value) => {
+    setinputValue(value)
+  }
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>
@@ -56,7 +69,15 @@ export default function CoinToss() {
             <div className="flex flex-col w-auto">
               <div className="flex lg:flex-row flex-col items-center gap-10 mt-[64px]">
                 <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
-                  <CoinTossBetPanel coinTossStatus={coinTossStatus} onCoinTossSelect={handleCoinTossSelect} />
+                  <CoinTossBetPanel
+                    coinTossStatus={coinTossStatus}
+                    onCoinTossSelect={handleCoinTossSelect}
+                    onSelectToken={handleSelectToken}
+                    selectedToken={selectedToken}
+                    onMax={handleMax}
+                    inputValue={inputValue}
+                    onInputValue={handleInputValue}
+                  />
                 </div>
                 <div className="flex flex-col gap-10">
                   <SwapCroToWCro />

@@ -8,9 +8,22 @@ import BetAmountInputPanel from '../BetAmountInputPanel'
 interface CoinTossBetPanelProps {
   coinTossStatus: CoinTossStatus
   onCoinTossSelect: (value: CoinTossStatus) => void
+  selectedToken: string | ''
+  onSelectToken: (value: string) => void
+  onMax
+  inputValue: string | ''
+  onInputValue: (value: string) => void
 }
 
-export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossBetPanelProps) => {
+export const CoinTossBetPanel = ({
+  coinTossStatus,
+  onCoinTossSelect,
+  onSelectToken,
+  selectedToken,
+  onMax,
+  inputValue,
+  onInputValue,
+}: CoinTossBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
@@ -76,7 +89,13 @@ export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossB
         </button>
       </div>
       <div className="absolute top-[453px] left-[64px] right-[64px]">
-        <BetAmountInputPanel />
+        <BetAmountInputPanel
+          onSelectToken={onSelectToken}
+          selectedToken={selectedToken}
+          onMax={onMax}
+          inputValue={inputValue}
+          onInputValue={onInputValue}
+        />
         <div className="w-[476px] h-[65px] mt-[40px]">
           <div className="flex flex-col gap-[17px]">
             <div className="flex flex-row justify-between">
