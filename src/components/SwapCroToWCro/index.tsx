@@ -3,8 +3,10 @@ import useFarmsV2 from 'app/features/farms/useFarmsV2'
 import { formatCurrencyAmount, maxAmountSpend } from 'app/functions'
 import { useCurrency } from 'app/hooks/Tokens'
 import useWrapCallback from 'app/hooks/useWrapCallback'
+import TransactionConfirmationModal, { TransactionErrorContent } from 'app/modals/TransactionConfirmationModal'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useDefaultsFromURLSearch } from 'app/state/swap/hooks'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { useCurrencyBalance } from 'app/state/wallet/hooks'
 import React, { useState } from 'react'
 import Button from '../Button'
@@ -32,8 +34,73 @@ const SwapCroToWCro = () => {
     execute: onWrap,
     inputError: wrapInputError,
   } = useWrapCallback(NativeToken, WNativeToken, inputValue)
+
+  const [{ showConfirm, wrapErrorMessage, attemptingTxn, txHash }, setWrapState] = useState<{
+    showConfirm: boolean
+    attemptingTxn: boolean
+    wrapErrorMessage: string | undefined
+    txHash: string | undefined
+  }>({
+    showConfirm: false,
+    attemptingTxn: false,
+    wrapErrorMessage: undefined,
+    txHash: undefined,
+  })
+
+  const addTransaction = useTransactionAdder()
+  const handleErrorDismiss = () => {
+    setWrapState({
+      attemptingTxn: false,
+      showConfirm: false,
+      wrapErrorMessage: undefined,
+      txHash: undefined,
+    })
+  }
+  const handleWrap = async function () {
+    setWrapState({
+      attemptingTxn: true,
+      showConfirm: true,
+      wrapErrorMessage: undefined,
+      txHash: undefined,
+    })
+
+    const { tx, error } = await onWrap()
+    if (Boolean(error)) {
+      setWrapState({
+        attemptingTxn: false,
+        showConfirm: true,
+        wrapErrorMessage: error,
+        txHash: '',
+      })
+    } else {
+      setWrapState({
+        attemptingTxn: false,
+        showConfirm: false, // showConfirm,
+        wrapErrorMessage: undefined,
+        txHash: tx,
+      })
+    }
+  }
   return (
     <div className="w-[532px] h-[429px] bg-[#1C1B38] rounded relative">
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={() => {}}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={() =>
+          wrapErrorMessage && (
+            <TransactionErrorContent
+              onDismiss={() => {
+                handleErrorDismiss()
+              }}
+              message={wrapErrorMessage}
+            />
+          )
+        }
+        pendingText={'Wrapping ' + inputValue + ' ' + NativeToken?.symbol}
+        currencyToAdd={undefined}
+      />
       <div className="mt-10 ml-10">
         <h4 className="text-white font-bold text-[36px] leading-[44.65px]">Swap {NativeToken?.symbol}</h4>
         <p className="mt-2 text-[14px] leading-[16px] font-normal">
@@ -85,7 +152,7 @@ const SwapCroToWCro = () => {
             color="blue"
             size="lg"
             onClick={() => {
-              onWrap()
+              handleWrap()
             }}
           >
             Swap

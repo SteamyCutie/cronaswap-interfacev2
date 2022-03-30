@@ -27,7 +27,7 @@ export default function useWrapCallback(
   typedValue: string | undefined
 ): {
   wrapType: WrapType
-  execute?: undefined | (() => Promise<void>)
+  execute?: undefined | (() => Promise<{ tx: string; error: string }>)
   inputError?: string
 } {
   const { chainId, account } = useActiveWeb3React()
@@ -60,8 +60,10 @@ export default function useWrapCallback(
                       WNATIVE[chainId].symbol
                     }`,
                   })
+                  return { tx: txReceipt, error: undefined }
                 } catch (error) {
                   console.error('Could not deposit', error)
+                  return { tx: undefined, error: error?.message }
                 }
               }
             : undefined,
@@ -84,8 +86,10 @@ export default function useWrapCallback(
                       NATIVE[chainId].symbol
                     }`,
                   })
+                  return { tx: txReceipt, error: undefined }
                 } catch (error) {
                   console.error('Could not withdraw', error)
+                  return { tx: undefined, error: error?.message }
                 }
               }
             : undefined,
