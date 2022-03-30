@@ -4,24 +4,22 @@ import Web3Connect from '../Web3Connect'
 import Image from 'next/image'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 interface DiceRollBetPanelProps {
   diceRollOption: DiceRollOption
   onDiceRollSelect: (value: DiceRollOption) => void
+  winningChance: number | 0
 }
 
-const Dice = ({ diceSide, onDiceSelect }) => {
-  const [isSelected, setisSelected] = useState<boolean>(false)
-
+const Dice = ({ diceSide, isSelected, onDiceSelect }) => {
   return (
     <div
       className={`cursor-pointer w-[64px] h-[64px] px-3 py-3 border border-[#AFAFC5] rounded grid hover:bg-slate-800 active:bg-slate-700 ${
         isSelected && 'bg-slate-700'
       }`}
       onClick={() => {
-        onDiceSelect(diceSide, isSelected)
-        setisSelected(!isSelected)
+        onDiceSelect(diceSide, !isSelected)
       }}
     >
       {diceSide == DiceRollStatus.D1 ? (
@@ -72,7 +70,7 @@ const Dice = ({ diceSide, onDiceSelect }) => {
   )
 }
 
-export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect }: DiceRollBetPanelProps) => {
+export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect, winningChance }: DiceRollBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   const anyChoiceSelected = (opt: DiceRollOption) =>
     opt[DiceRollStatus.D1] ||
@@ -81,9 +79,13 @@ export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect }: DiceRollB
     opt[DiceRollStatus.D4] ||
     opt[DiceRollStatus.D5] ||
     opt[DiceRollStatus.D6]
+
   const handleDiceSelect = (diceSide: DiceRollStatus, isSelected: boolean) => {
-    diceRollOption[diceSide] = isSelected
+    let option = diceRollOption
+    option[diceSide] = isSelected
+    onDiceRollSelect(option)
   }
+
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
       <div className="h-[69px] absolute top-[40px] left-[40px]">
@@ -106,7 +108,7 @@ export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect }: DiceRollB
         <div className="text-center font-bold text-base text-white">Select dice side</div>
         <div className="mt-[64px] w-[474px] h-[64px] flex flex-row gap-[18px]">
           {[0, 1, 2, 3, 4, 5].map((e) => (
-            <Dice diceSide={e} onDiceSelect={handleDiceSelect} key={e}></Dice>
+            <Dice diceSide={e} isSelected={diceRollOption[e]} onDiceSelect={handleDiceSelect} key={e}></Dice>
           ))}
         </div>
         <div className="flex flex-row justify-between w-full mt-[100px]">
@@ -128,7 +130,7 @@ export const DiceRollBetPanel = ({ diceRollOption, onDiceRollSelect }: DiceRollB
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Chance:</div>
-              <div className="text-[14px] leading-[24px] font-bold">{'-'}%</div>
+              <div className="text-[14px] leading-[24px] font-bold">{winningChance.toFixed(2)} %</div>
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Payout:</div>

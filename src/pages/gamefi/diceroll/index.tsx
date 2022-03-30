@@ -1,12 +1,7 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLingui } from '@lingui/react'
 import Head from 'next/head'
 import Container from 'app/components/Container'
-import { map } from 'lodash'
-import QuestionHelper from 'app/components/QuestionHelper'
-import InformationHelper from 'app/components/InformationHelper'
-import { CoinTossBetPanel } from 'app/components/CoinTossBetPanel'
-import { CoinTossVolumePanel } from 'app/components/CoinTossVolumePanel'
 import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
@@ -18,7 +13,7 @@ import { DiceRollBetPanel } from 'app/components/DiceRollBetPanel'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 
-export default function DiceRoll() {
+const DiceRoll = () => {
   const { i18n } = useLingui()
 
   const router = useRouter()
@@ -35,8 +30,19 @@ export default function DiceRoll() {
     [DiceRollStatus.D5]: false,
     [DiceRollStatus.D6]: false,
   })
+
+  const winningChance = useMemo(() => {
+    let chance = 0
+    Object.keys(diceRollOption).forEach((key) => {
+      diceRollOption[key] && (chance += 100 / 6)
+    })
+
+    return chance
+  }, [diceRollOption])
+
   const handleDiceSelect = (selection: DiceRollOption) => {
-    setDiceRollOption(selection)
+    setDiceRollOption({ ...selection })
+    // calculateWinningChance()
   }
 
   return (
@@ -57,7 +63,11 @@ export default function DiceRoll() {
             <div className="flex flex-col w-auto">
               <div className="flex lg:flex-row flex-col items-center gap-10 mt-[64px]">
                 <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
-                  <DiceRollBetPanel diceRollOption={diceRollOption} onDiceRollSelect={handleDiceSelect} />
+                  <DiceRollBetPanel
+                    diceRollOption={diceRollOption}
+                    onDiceRollSelect={handleDiceSelect}
+                    winningChance={winningChance}
+                  />
                 </div>
                 <div className="flex flex-col gap-10">
                   <SwapCroToWCro />
@@ -111,3 +121,4 @@ export default function DiceRoll() {
     </Container>
   )
 }
+export default DiceRoll
