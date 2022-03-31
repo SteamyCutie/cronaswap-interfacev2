@@ -9,19 +9,21 @@ export const CoinTossVolumePanel = ({
   houseEdge,
 }) => {
   return (
-    <div className="flex flex-row divide-x-2 divide-white divide-opacity-20 min-w-[86.25vw] py-[45px] mt-[64px] h-[172px] bg-[#2172E5] rounded text-white justify-between">
+    <div className="w-full flex flex-row bg-[#2172E5] rounded divide-x-2 divide-white divide-opacity-20 text-white h-[172px] py-[45px]">
       {[
         {
           desc: `Total ${tokenName} Bets`,
           hasInfo: false,
           unit: '',
           value: totalBetsCount,
+          width: '2/12',
         },
         {
           desc: `All time ${tokenName} Volume`,
           hasInfo: false,
           unit: tokenName,
           value: totalBetsAmount,
+          width: '1/3',
         },
         {
           desc: 'Head Win Rate',
@@ -29,6 +31,7 @@ export const CoinTossVolumePanel = ({
           unit: '%',
           value: headWinRate,
           info: 'Head Win Rate',
+          width: '2/12',
         },
         {
           desc: 'Tail Win Rate',
@@ -36,6 +39,7 @@ export const CoinTossVolumePanel = ({
           unit: '%',
           value: tailWinRate,
           info: 'Tail Win Rate',
+          width: '2/12',
         },
         {
           desc: 'House Edge',
@@ -43,14 +47,15 @@ export const CoinTossVolumePanel = ({
           unit: '%',
           value: houseEdge,
           info: 'House Edge',
+          width: '2/12',
         },
       ].map((e) => (
-        <div className="pl-[3.33vw] pr-[3.75vw]" key={e.desc}>
+        <div className={`w-${e.width} flex flex-col items-center`} key={e.desc}>
           <div className="flex items-center">
             <div className="text-[14px] leading-[18px] font-medium flex-wrap">{e.desc} </div>
             {e.hasInfo && <InformationHelper text={e.info} />}
           </div>
-          <h4 className="mt-3 text-[2.5vw] leading-[3.1vw] font-bold">
+          <h4 className="mt-3 text-[2.2vw] leading-[3.1vw] font-bold">
             {e.value} {e.unit}
           </h4>
         </div>

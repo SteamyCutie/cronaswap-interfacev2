@@ -53,37 +53,37 @@ export default function CoinToss() {
       <div className="relative flex flex-col items-center w-full">
         {/* <div className="absolute top-1/4 -left-10 bg-blue bottom-4 w-3/5 rounded-full z-0 filter blur-[150px]" />
         <div className="absolute bottom-1/4 -right-10 bg-red top-4 w-3/5 rounded-full z-0  filter blur-[150px]" /> */}
-        <div className="relative">
-          <div className="flex flex-col items-center">
-            {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
+        <div className="flex flex-col items-center">
+          {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}
 
+          <div className="mt-[64px] w-full">
             <CoinTossVolumePanel
               tokenName={'WCRO'}
-              totalBetsCount={245}
-              totalBetsAmount={123}
+              totalBetsCount={245123}
+              totalBetsAmount={1231231}
               headWinRate={50.1}
               tailWinRate={49.9}
               houseEdge={1}
             />
-            <div className="flex flex-col w-auto">
-              <div className="flex lg:flex-row flex-col items-center gap-10 mt-[64px]">
-                <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
-                  <CoinTossBetPanel
-                    coinTossStatus={coinTossStatus}
-                    onCoinTossSelect={handleCoinTossSelect}
-                    onSelectToken={handleSelectToken}
-                    selectedToken={selectedToken}
-                    onMax={handleMax}
-                    inputValue={inputValue}
-                    onInputValue={handleInputValue}
-                  />
-                </div>
-                <div className="flex flex-col gap-10">
-                  <SwapCroToWCro />
-                  <GameRewardClaimPanel />
-                </div>
+          </div>
+          <div className="flex flex-col">
+            <div className="flex lg:flex-row flex-col items-center gap-10 mt-[64px]">
+              <CoinTossBetPanel
+                coinTossStatus={coinTossStatus}
+                onCoinTossSelect={handleCoinTossSelect}
+                onSelectToken={handleSelectToken}
+                selectedToken={selectedToken}
+                onMax={handleMax}
+                inputValue={inputValue}
+                onInputValue={handleInputValue}
+              />
+              <div className="flex flex-col gap-10">
+                <SwapCroToWCro />
+                <GameRewardClaimPanel />
               </div>
+            </div>
+            <div className="w-full">
               <div className="w-[fit-content] h-[56px] mt-[64px] py-[8px] px-[8px] rounded bg-[#1C1B38]">
                 <div className="flex flex-row">
                   <div
@@ -121,9 +121,9 @@ export default function CoinToss() {
                   </div>
                 </div>
               </div>
-              <div className="mt-[22px]">
-                <GameReviewPanel />
-              </div>
+            </div>
+            <div className="mt-[22px]">
+              <GameReviewPanel />
             </div>
           </div>
         </div>
