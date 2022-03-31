@@ -51,8 +51,8 @@ export const CoinTossVolumePanel = ({
         },
       ].map((e) => (
         <div className={`w-${e.width} flex flex-col items-center`} key={e.desc}>
-          <div className="flex items-center">
-            <div className="text-[14px] leading-[18px] font-medium flex-wrap">{e.desc} </div>
+          <div className="flex justify-center items-center w-full">
+            <div className="text-[14px] leading-[18px] font-medium truncate text-center">{e.desc}</div>
             {e.hasInfo && <InformationHelper text={e.info} />}
           </div>
           <h4 className="mt-3 text-[2.2vw] leading-[3.1vw] font-bold">
