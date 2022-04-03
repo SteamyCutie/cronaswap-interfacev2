@@ -6,6 +6,7 @@ import {
   useInactiveListUrls,
   useUnsupportedTokenList,
   useZapInList,
+  useGameFiList,
 } from '../state/lists/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
@@ -58,6 +59,11 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 export function useZapInTokens(): { [address: string]: Token } {
   const zapInTokens = useZapInList()
   return useTokensFromMap(zapInTokens, false)
+}
+
+export function useGameFiTokens(): { [address: string]: Token } {
+  const gamefiTokens = useGameFiList()
+  return useTokensFromMap(gamefiTokens, false)
 }
 
 export function useAllTokens(): { [address: string]: Token } {

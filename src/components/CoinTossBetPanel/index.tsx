@@ -1,16 +1,29 @@
-import { useWeb3React } from '@web3-react/core'
 import { CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import { useActiveWeb3React } from 'app/services/web3'
 import InformationHelper from '../InformationHelper'
 import Web3Connect from '../Web3Connect'
 import Image from 'next/image'
+import BetAmountInputPanel from '../BetAmountInputPanel'
 
 interface CoinTossBetPanelProps {
   coinTossStatus: CoinTossStatus
   onCoinTossSelect: (value: CoinTossStatus) => void
+  selectedToken: string | ''
+  onSelectToken: (value: string) => void
+  onMax
+  inputValue: string | ''
+  onInputValue: (value: string) => void
 }
 
-export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossBetPanelProps) => {
+export const CoinTossBetPanel = ({
+  coinTossStatus,
+  onCoinTossSelect,
+  onSelectToken,
+  selectedToken,
+  onMax,
+  inputValue,
+  onInputValue,
+}: CoinTossBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
@@ -23,7 +36,11 @@ export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossB
       <div className="w-[139px] h-[40px] absolute top-[40px] right-[64px] bg-[#0D0C2B] rounded">
         <div className="mt-[12px] ml-[16px] font-normal text-[14px] leading-[16px] flex">
           How it works
-          <InformationHelper text={'How it works'} />
+          <InformationHelper
+            text={
+              'Coin Toss is a single game, the user flips the coin and calls “heads” or “tails.” If the call matches the result, the player wins the flip. Otherwise, the player loses the flip. If the bet is correct, the user earns 1.96x.\nGame Play\n1. Start by setting your Bet Amount.\n2. Select your coin, guess what will come up: heads or tails.\n 3. After you are ALL set, place your bet and press the BET button to start the game.'
+            }
+          />
         </div>
       </div>
       <div className="absolute top-[173px] w-full text-center font-bold text-base text-white">Select Head or Tail</div>
@@ -72,17 +89,13 @@ export const CoinTossBetPanel = ({ coinTossStatus, onCoinTossSelect }: CoinTossB
         </button>
       </div>
       <div className="absolute top-[453px] left-[64px] right-[64px]">
-        <div className="flex flex-row justify-between w-full">
-          <div>Bet amount</div>
-          <div className="flex flex-row gap-1 align-middle">
-            <div className="text-[12px] leading-[24px] font-medium">Limit: </div>
-            <div className="text-blue text-[14px] leading-[24px] font-bold">{30} </div>
-            <div className="text-[12px] leading-[24px] font-medium">Max: </div>
-            <div className="text-blue text-[14px] leading-[24px] font-bold">{3000}</div>
-            <div className="text-[14px] leading-[24px] font-bold">{'WCRO'}</div>
-          </div>
-        </div>
-        <div className="rounded border border-[#2172E5] w-[477px] h-[60px] bg-[#0D0C2B] mt-[8px]"></div>
+        <BetAmountInputPanel
+          onSelectToken={onSelectToken}
+          selectedToken={selectedToken}
+          onMax={onMax}
+          inputValue={inputValue}
+          onInputValue={onInputValue}
+        />
         <div className="w-[476px] h-[65px] mt-[40px]">
           <div className="flex flex-col gap-[17px]">
             <div className="flex flex-row justify-between">

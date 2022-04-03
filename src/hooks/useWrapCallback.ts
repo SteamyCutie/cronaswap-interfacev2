@@ -6,6 +6,7 @@ import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useWETH9Contract } from './useContract'
+import { maxAmountSpend } from 'app/functions'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -26,12 +27,12 @@ export default function useWrapCallback(
   typedValue: string | undefined
 ): {
   wrapType: WrapType
-  execute?: undefined | (() => Promise<void>)
+  execute?: undefined | (() => Promise<{ tx: string; error: string }>)
   inputError?: string
 } {
   const { chainId, account } = useActiveWeb3React()
   const wethContract = useWETH9Contract()
-  const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
+  const balance = maxAmountSpend(useCurrencyBalance(account ?? undefined, inputCurrency))
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
   const addTransaction = useTransactionAdder()
@@ -59,8 +60,10 @@ export default function useWrapCallback(
                       WNATIVE[chainId].symbol
                     }`,
                   })
+                  return { tx: txReceipt, error: undefined }
                 } catch (error) {
                   console.error('Could not deposit', error)
+                  return { tx: undefined, error: error?.message }
                 }
               }
             : undefined,
@@ -83,8 +86,10 @@ export default function useWrapCallback(
                       NATIVE[chainId].symbol
                     }`,
                   })
+                  return { tx: txReceipt, error: undefined }
                 } catch (error) {
                   console.error('Could not withdraw', error)
+                  return { tx: undefined, error: error?.message }
                 }
               }
             : undefined,
