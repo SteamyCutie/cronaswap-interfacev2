@@ -6,7 +6,7 @@ import { NetworkConnector } from '../entities/connectors/NetworkConnector'
 export const RPC = {
   // https://evm-cronos.crypto.org
   // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
-  [ChainId.CRONOS]: 'https://rpc.cronaswap.org',
+  [ChainId.CRONOS]: 'https://rpc.cronaswap.io',
   [ChainId.CRONOS_TESTNET]: 'https://evm-t3.cronos.org',
   [ChainId.ETHEREUM]: 'https://mainnet.infura.io/v3/6120c21d46cb482d9cdabe463da74dd5',
   [ChainId.BSC]: 'https://bsc-dataseed.binance.org/',
@@ -90,24 +90,24 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true,
   },
 
-  // WALLET_CONNECT: {
-  //   connector: async () => {
-  //     const WalletConnectConnector = (await import('@web3-react/walletconnect-connector')).WalletConnectConnector
-  //     return new WalletConnectConnector({
-  //       rpc: RPC,
-  //       bridge: 'https://bridge.walletconnect.org',
-  //       qrcode: true,
-  //       supportedChainIds,
-  //       // pollingInterval: 15000,
-  //     })
-  //   },
-  //   name: 'WalletConnect',
-  //   iconName: 'wallet-connect.svg',
-  //   description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-  //   href: null,
-  //   color: '#4196FC',
-  //   mobile: true,
-  // },
+  WALLET_CONNECT: {
+    connector: async () => {
+      const WalletConnectConnector = (await import('@web3-react/walletconnect-connector')).WalletConnectConnector
+      return new WalletConnectConnector({
+        rpc: RPC,
+        bridge: 'https://bridge.walletconnect.org',
+        qrcode: true,
+        supportedChainIds: [25, 338],
+        // pollingInterval: 15000,
+      })
+    },
+    name: 'WalletConnect',
+    iconName: 'wallet-connect.svg',
+    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+    href: null,
+    color: '#4196FC',
+    mobile: true,
+  },
 
   // KEYSTONE: {
   //   connector: async () => {

@@ -9,7 +9,7 @@ const ifos: Ifo[] = [
   {
     id: 'mifo',
     address: {
-      [ChainId.CRONOS]: '0x0D46D9b0C14d088Dff9b692f1b02b06D1B770DD2',
+      [ChainId.CRONOS]: '0xA5F673915F10276999Ab24266bF5E0846344962b',
       [ChainId.BSC_TESTNET]: '0x8BC2661d0d483cc0Da04BdbAC001c62E98549CF2', //finished 0x5059c8B82BC016BcD81C5d3071570c140fcdC1c0 live-0x947f6899b2DdedD9a03ae62eC92771aD888b1a6F 0x8BC2661d0d483cc0Da04BdbAC001c62E98549CF2
     },
     isActive: true,
