@@ -278,7 +278,7 @@ export const FARMSV2: AddressMap = {
         decimals: 6,
       },
       isVote: true,
-      isZap: true,
+      isZap: false,
     },
 
     '0xe8B18116040acf83D6e1f873375adF61103AB45c': {
@@ -299,7 +299,7 @@ export const FARMSV2: AddressMap = {
         decimals: 18,
       },
       isVote: true,
-      isZap: true,
+      isZap: false,
     },
 
     '0xDee7A79bb414FFB248EF4d4c5560AdC91F547F41': {
