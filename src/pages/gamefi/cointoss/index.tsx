@@ -1,10 +1,7 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLingui } from '@lingui/react'
 import Head from 'next/head'
 import Container from 'app/components/Container'
-import { map } from 'lodash'
-import QuestionHelper from 'app/components/QuestionHelper'
-import InformationHelper from 'app/components/InformationHelper'
 import { CoinTossBetPanel } from 'app/components/CoinTossBetPanel'
 import { CoinTossVolumePanel } from 'app/components/CoinTossVolumePanel'
 import SwapCroToWCro from 'app/components/SwapCroToWCro'
@@ -13,9 +10,17 @@ import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
 import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
-import { useGameFiTokens } from 'app/hooks/Tokens'
-import { CRONA_ADDRESS } from '@cronaswap/core-sdk'
+import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
+import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 import { useActiveWeb3React } from 'app/services/web3'
+import { useCurrencyBalance } from 'app/state/wallet/hooks'
+import { maxAmountSpend, tryParseAmount } from 'app/functions'
+import useCoinTossCallback from 'app/hooks/useCoinTossCallback'
+import { ApprovalState } from 'app/hooks'
+import { splitSignature } from '@ethersproject/bytes'
+import BigNumber from 'bignumber.js'
+import { getBalanceAmount } from 'app/functions/formatBalance'
+const { default: axios } = require('axios')
 
 export default function CoinToss() {
   const { account, chainId, library } = useActiveWeb3React()
@@ -28,21 +33,136 @@ export default function CoinToss() {
   const inactiveTabStyle = `${tabStyle}`
   const [activeTab, setActiveTab] = useState<CoinTossReview>(CoinTossReview.ALLBETS)
   const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
+
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
     setCoinTossStatus(selection)
   }
 
   const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
+  const selectedCurrency = useCurrency(selectedToken)
+  const selectedTokenBalance = useCurrencyBalance(account ?? undefined, selectedCurrency ?? undefined)
+  const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(selectedTokenBalance)
 
   const handleSelectToken = (token: string) => {
     setselectedToken(token)
   }
 
-  const handleMax = () => {}
+  const handleMax = () => {
+    setinputValue(getBalanceAmount(new BigNumber(maxBetAmount?.toString()), selectedCurrency?.decimals).toString())
+  }
 
   const [inputValue, setinputValue] = useState<string>('0.0')
   const handleInputValue = (value) => {
     setinputValue(value)
+  }
+
+  const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
+  const {
+    error: cointossBetError,
+    rewards,
+    claimRewards,
+    approvalState,
+    approveCallback,
+    contract: cointossContract,
+    totalBetsAmount,
+    totalBetsCount,
+    headsCount,
+    tailsCount,
+    betsCountByPlayer,
+    minBetAmount,
+    maxBetAmount,
+  } = useCoinTossCallback(selectedCurrency, inputValue)
+  const handleClaim = () => {
+    claimRewards()
+  }
+  tryParseAmount
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  useEffect(() => {
+    if (approvalState === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approvalState, approvalSubmitted])
+
+  const handleApprove = useCallback(async () => {
+    await approveCallback()
+  }, [approveCallback])
+  const showApproveFlow =
+    !cointossBetError &&
+    (approvalState === ApprovalState.NOT_APPROVED ||
+      approvalState === ApprovalState.PENDING ||
+      (approvalSubmitted && approvalState === ApprovalState.APPROVED))
+  const [signatureData, setSignatureData] = useState(null)
+  const [betPending, setbetPending] = useState<boolean>(false)
+  const handleBet = () => {
+    const msgParams = JSON.stringify({
+      domain: {
+        // Give a user friendly name to the specific contract you are signing for.
+        name: 'CoinToss',
+        // Just let's you know the latest version. Definitely make sure the field name is correct.
+        version: '1',
+        // Defining the chain aka Rinkeby testnet or Ethereum Main Net
+        chainId: chainId,
+        // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
+        verifyingContract: cointossContract.address,
+      },
+
+      // Defining the message signing data content.
+      message: {
+        player: account,
+        amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
+        choice: coinTossStatus.toString(),
+        token: selectedToken,
+        nonce: betsCountByPlayer,
+        deadline: 0,
+      },
+      // Refers to the keys of the *types* object below.
+      primaryType: 'PlaceBet',
+      types: {
+        // TODO: Clarify if EIP712Domain refers to the domain the contract is hosted on
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' },
+        ],
+        // Refer to PrimaryType
+        PlaceBet: [
+          { name: 'player', type: 'address' },
+          { name: 'amount', type: 'uint256' },
+          { name: 'choice', type: 'uint256' },
+          { name: 'token', type: 'address' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'deadline', type: 'uint256' },
+        ],
+      },
+    })
+
+    const placebet = async (signature) => {
+      setbetPending(true)
+      const response = await axios.get('http://localhost:8080/placebet', {
+        params: {
+          player: account,
+          amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
+          choice: coinTossStatus.toString(),
+          token: selectedToken,
+          nonce: betsCountByPlayer.toString(),
+          deadline: '0',
+          signature: signature,
+        },
+      })
+
+      console.log(response)
+      setinputValue('')
+    }
+    library
+      .send('eth_signTypedData_v4', [account, msgParams])
+      .then((signature) => {
+        placebet(signature)
+        return splitSignature(signature)
+      })
+      .then((signature) => {
+        setSignatureData(signature)
+      })
   }
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
@@ -59,11 +179,11 @@ export default function CoinToss() {
 
           <div className="mt-[64px] w-full">
             <CoinTossVolumePanel
-              tokenName={'WCRO'}
-              totalBetsCount={245123}
-              totalBetsAmount={1231231}
-              headWinRate={50.1}
-              tailWinRate={49.9}
+              token={selectedCurrency}
+              totalBetsCount={totalBetsCount}
+              totalBetsAmount={totalBetsAmount}
+              headWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * headsCount) / (headsCount + tailsCount)}
+              tailWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * tailsCount) / (headsCount + tailsCount)}
               houseEdge={1}
             />
           </div>
@@ -77,10 +197,17 @@ export default function CoinToss() {
                 onMax={handleMax}
                 inputValue={inputValue}
                 onInputValue={handleInputValue}
+                error={cointossBetError}
+                approvalState={approvalState}
+                onApprove={handleApprove}
+                showApproveFlow={showApproveFlow}
+                onBet={handleBet}
+                minBetAmount={minBetAmount}
+                maxBetAmount={maxBetAmount}
               />
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
-                <GameRewardClaimPanel />
+                <GameRewardClaimPanel rewards={rewards} selectedCurrency={selectedCurrency} onClaim={handleClaim} />
               </div>
             </div>
             <div className="w-full">

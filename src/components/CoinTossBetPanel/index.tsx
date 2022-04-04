@@ -4,6 +4,17 @@ import InformationHelper from '../InformationHelper'
 import Web3Connect from '../Web3Connect'
 import Image from 'next/image'
 import BetAmountInputPanel from '../BetAmountInputPanel'
+import { splitSignature } from '@ethersproject/bytes'
+import { useState } from 'react'
+import { tryParseAmount } from 'app/functions'
+import { useCurrency } from 'app/hooks/Tokens'
+import { ApprovalState, useCoinTossContract } from 'app/hooks'
+import { ButtonConfirmed } from '../Button'
+import Loader from '../Loader'
+import { i18n } from '@lingui/core'
+import { t } from '@lingui/macro'
+import { BigNumber as BN } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
 
 interface CoinTossBetPanelProps {
   coinTossStatus: CoinTossStatus
@@ -13,6 +24,13 @@ interface CoinTossBetPanelProps {
   onMax
   inputValue: string | ''
   onInputValue: (value: string) => void
+  error: string | ''
+  onBet: () => void
+  approvalState: ApprovalState | undefined
+  onApprove: () => void
+  showApproveFlow: boolean | 'false'
+  minBetAmount: BN | undefined
+  maxBetAmount: BN | undefined
 }
 
 export const CoinTossBetPanel = ({
@@ -23,8 +41,17 @@ export const CoinTossBetPanel = ({
   onMax,
   inputValue,
   onInputValue,
+  error,
+  onBet,
+  approvalState,
+  onApprove,
+  showApproveFlow,
+  minBetAmount,
+  maxBetAmount,
 }: CoinTossBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
+  const selectedCurrency = useCurrency(selectedToken)
+
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
       <div className="w-[252px] h-[69px] absolute top-[40px] left-[40px]">
@@ -91,10 +118,12 @@ export const CoinTossBetPanel = ({
       <div className="absolute top-[453px] left-[64px] right-[64px]">
         <BetAmountInputPanel
           onSelectToken={onSelectToken}
-          selectedToken={selectedToken}
+          selectedToken={selectedCurrency}
           onMax={onMax}
           inputValue={inputValue}
           onInputValue={onInputValue}
+          maxBetAmount={maxBetAmount}
+          minBetAmount={minBetAmount}
         />
         <div className="w-[476px] h-[65px] mt-[40px]">
           <div className="flex flex-col gap-[17px]">
@@ -118,8 +147,32 @@ export const CoinTossBetPanel = ({
             <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
               Choose Head or Tail
             </button>
+          ) : showApproveFlow ? (
+            <div>
+              {approvalState !== ApprovalState.APPROVED && (
+                <ButtonConfirmed onClick={onApprove} disabled={approvalState !== ApprovalState.NOT_APPROVED} size="lg">
+                  {approvalState === ApprovalState.PENDING ? (
+                    <div className="flex items-center justify-center h-full space-x-2">
+                      <div>Approving</div>
+                      <Loader stroke="white" />
+                    </div>
+                  ) : (
+                    i18n._(t`Approve ${selectedCurrency?.symbol}`)
+                  )}
+                </ButtonConfirmed>
+              )}
+            </div>
+          ) : Boolean(error) ? (
+            <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
+              {error}
+            </button>
           ) : (
-            <button className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue">
+            <button
+              className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue"
+              onClick={() => {
+                onBet()
+              }}
+            >
               Bet {coinTossStatus === CoinTossStatus.HEAD ? 'Head' : 'Tail'}
             </button>
           )}

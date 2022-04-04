@@ -71,6 +71,8 @@ import VOTE_ABI from '../constants/abis/vote.json'
 import ZAP_ABI from '../constants/abis/zap.json'
 import FAUCET_ABI from '../constants/abis/faucet.json'
 import PRIATESALE_ABI from '../constants/abis/privatesale.json'
+import COINTOSS_ABI from '../constants/abis/cointoss.json'
+import DICEROLL_ABI from '../constants/abis/diceroll.json'
 
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
@@ -91,6 +93,8 @@ import {
   ZAP_ADDRESS,
   FAUCET_ADDRESS,
   PRIVATESALE_ADDRESS,
+  COINTOSS_ADDRESS,
+  DICEROLL_ADDRESS,
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -342,4 +346,14 @@ export function useFaucetContract(withSignerIfPossible?: boolean): Contract | nu
 export function usePrivateSaleContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(PRIVATESALE_ADDRESS[chainId], PRIATESALE_ABI, withSignerIfPossible)
+}
+
+export function useCoinTossContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(COINTOSS_ADDRESS[chainId], COINTOSS_ABI, withSignerIfPossible)
+}
+
+export function useDiceRollContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(DICEROLL_ADDRESS[chainId], DICEROLL_ABI, withSignerIfPossible)
 }

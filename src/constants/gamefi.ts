@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 export type DiceRollOption = {
