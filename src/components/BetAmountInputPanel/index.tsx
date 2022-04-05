@@ -7,6 +7,7 @@ import { CurrencyLogo } from '../CurrencyLogo'
 import { BigNumber as BN } from '@ethersproject/bignumber'
 import BigNumber from 'bignumber.js'
 import { getBalanceAmount } from 'app/functions/formatBalance'
+import useCoinTossCallback from 'app/hooks/useCoinTossCallback'
 
 interface BetAmountInputPanelProps {
   selectedToken: Currency | undefined
@@ -16,6 +17,7 @@ interface BetAmountInputPanelProps {
   onMax: () => void
   inputValue: string
   onInputValue: (value: string) => void
+  balance: CurrencyAmount<Currency>
 }
 export default function BetAmountInputPanel({
   selectedToken,
@@ -25,10 +27,13 @@ export default function BetAmountInputPanel({
   onMax,
   inputValue,
   onInputValue,
+  balance,
 }: BetAmountInputPanelProps) {
   const gameFiTokens = useGameFiTokens()
   const tokenList = Object.values(gameFiTokens)
 
+  const minBetBalance = getBalanceAmount(new BigNumber(minBetAmount?.toString()), selectedToken?.decimals)
+  const maxBetBalance = getBalanceAmount(new BigNumber(maxBetAmount?.toString()), selectedToken?.decimals)
   return (
     <div className="w-full">
       <div className="flex flex-row justify-between w-full">
@@ -36,13 +41,13 @@ export default function BetAmountInputPanel({
         <div className="flex flex-row gap-1 align-middle">
           <div className="text-[12px] leading-[24px] font-medium">Limit: </div>
           <div className="text-blue text-[14px] leading-[24px] font-bold">
-            {getBalanceAmount(new BigNumber(minBetAmount?.toString()), selectedToken?.decimals).toString()}{' '}
+            {!minBetBalance ? '-' : minBetBalance.toString()}{' '}
           </div>
           <div className="text-[12px] leading-[24px] font-medium">Max: </div>
           <div className="text-blue text-[14px] leading-[24px] font-bold">
-            {getBalanceAmount(new BigNumber(maxBetAmount?.toString()), selectedToken?.decimals).toString()}
+            {!maxBetBalance ? '-' : maxBetBalance.toString()}
           </div>
-          <div className="text-[14px] leading-[24px] font-bold">{'WCRO'}</div>
+          <div className="text-[14px] leading-[24px] font-bold">{selectedToken?.symbol}</div>
         </div>
       </div>
       <div className="rounded border border-[#2172E5] w-full h-[60px] bg-[#0D0C2B] mt-[8px] flex flex-row items-center">
@@ -93,6 +98,11 @@ export default function BetAmountInputPanel({
         >
           MAX
         </button>
+      </div>
+      <div className="flex flex-row gap-2 mt-2">
+        <div>Balance</div>
+        <div className="text-blue text-[14px] leading-[24px] font-bold flex">{balance?.toExact()}</div>
+        <div className="text-[14px] leading-[24px] font-bold">{selectedToken?.symbol}</div>
       </div>
     </div>
   )

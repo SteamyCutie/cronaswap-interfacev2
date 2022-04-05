@@ -335,9 +335,22 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "totalHeadsCount",
         "type": "uint256"
       },
+      {
+        "internalType": "uint256",
+        "name": "totalTailsCount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMinTaxFeePercent",
+    "outputs": [
       {
         "internalType": "uint256",
         "name": "",
@@ -348,8 +361,19 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getMinTaxFeePercent",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_betAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getMultiplier",
     "outputs": [
       {
         "internalType": "uint256",

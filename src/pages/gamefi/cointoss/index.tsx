@@ -8,7 +8,7 @@ import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
-import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
+import { CoinTossBetStatus, CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
@@ -16,10 +16,12 @@ import { useActiveWeb3React } from 'app/services/web3'
 import { useCurrencyBalance } from 'app/state/wallet/hooks'
 import { maxAmountSpend, tryParseAmount } from 'app/functions'
 import useCoinTossCallback from 'app/hooks/useCoinTossCallback'
-import { ApprovalState } from 'app/hooks'
+import { ApprovalState, useCoinTossContract } from 'app/hooks'
 import { splitSignature } from '@ethersproject/bytes'
 import BigNumber from 'bignumber.js'
 import { getBalanceAmount } from 'app/functions/formatBalance'
+import { useSingleCallResult } from 'app/state/multicall/hooks'
+import CoinTossBetModal from 'app/components/CoinTossBetModal'
 const { default: axios } = require('axios')
 
 export default function CoinToss() {
@@ -27,12 +29,19 @@ export default function CoinToss() {
   const { i18n } = useLingui()
 
   const router = useRouter()
-  const type = router.query.filter == null ? '' : (router.query.filter as string)
+  const type = router.query.filter == null ? 'allbet' : (router.query.filter as string)
   const tabStyle = 'px-[27px] py-[8px] rounded text-base font-normal cursor-pointer'
   const activeTabStyle = `${tabStyle} bg-[#0D0C2B]`
   const inactiveTabStyle = `${tabStyle}`
-  const [activeTab, setActiveTab] = useState<CoinTossReview>(CoinTossReview.ALLBETS)
+
+  const FILTER = {
+    allbets: CoinTossReview.ALLBETS,
+    yourbets: CoinTossReview.YOURBETS,
+    leaderboard: CoinTossReview.LEADERBOARD,
+  }
+  const [activeTab, setActiveTab] = useState<CoinTossReview>(0)
   const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
+  const [coinTossResult, setcoinTossResult] = useState<CoinTossStatus>(CoinTossStatus.NONE)
 
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
     setCoinTossStatus(selection)
@@ -48,7 +57,9 @@ export default function CoinToss() {
   }
 
   const handleMax = () => {
-    setinputValue(getBalanceAmount(new BigNumber(maxBetAmount?.toString()), selectedCurrency?.decimals).toString())
+    selectedTokenBalance.greaterThan(maxBetAmount?.toString())
+      ? setinputValue(getBalanceAmount(new BigNumber(maxBetAmount?.toString()), selectedCurrency?.decimals).toString())
+      : setinputValue(selectedTokenBalance.toExact())
   }
 
   const [inputValue, setinputValue] = useState<string>('0.0')
@@ -69,13 +80,17 @@ export default function CoinToss() {
     headsCount,
     tailsCount,
     betsCountByPlayer,
+    multiplier,
     minBetAmount,
     maxBetAmount,
+    betsByIndex,
+    topGamers,
+    betsByPlayer,
   } = useCoinTossCallback(selectedCurrency, inputValue)
+
   const handleClaim = () => {
     claimRewards()
   }
-  tryParseAmount
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
   useEffect(() => {
     if (approvalState === ApprovalState.PENDING) {
@@ -92,7 +107,10 @@ export default function CoinToss() {
       approvalState === ApprovalState.PENDING ||
       (approvalSubmitted && approvalState === ApprovalState.APPROVED))
   const [signatureData, setSignatureData] = useState(null)
-  const [betPending, setbetPending] = useState<boolean>(false)
+  const [betStatus, setbetStatus] = useState<CoinTossBetStatus>(CoinTossBetStatus.NOTPLACED)
+  const handleBetModalDismiss = () => {
+    setbetStatus(CoinTossBetStatus.NOTPLACED)
+  }
   const handleBet = () => {
     const msgParams = JSON.stringify({
       domain: {
@@ -138,7 +156,6 @@ export default function CoinToss() {
     })
 
     const placebet = async (signature) => {
-      setbetPending(true)
       const response = await axios.get('http://localhost:8080/placebet', {
         params: {
           player: account,
@@ -152,8 +169,12 @@ export default function CoinToss() {
       })
 
       console.log(response)
+      setbetStatus(CoinTossBetStatus.PLACED)
+      router.push('#')
       setinputValue('')
     }
+
+    setbetStatus(CoinTossBetStatus.PENDING)
     library
       .send('eth_signTypedData_v4', [account, msgParams])
       .then((signature) => {
@@ -164,6 +185,7 @@ export default function CoinToss() {
         setSignatureData(signature)
       })
   }
+
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>
@@ -174,6 +196,13 @@ export default function CoinToss() {
         {/* <div className="absolute top-1/4 -left-10 bg-blue bottom-4 w-3/5 rounded-full z-0 filter blur-[150px]" />
         <div className="absolute bottom-1/4 -right-10 bg-red top-4 w-3/5 rounded-full z-0  filter blur-[150px]" /> */}
         <div className="flex flex-col items-center">
+          <CoinTossBetModal
+            isOpen={betStatus !== CoinTossBetStatus.NOTPLACED}
+            onDismiss={handleBetModalDismiss}
+            coinTossBetStatus={betStatus}
+            coinTossStatus={coinTossStatus}
+            coinTossResult={coinTossStatus}
+          />
           {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}
 
@@ -193,7 +222,7 @@ export default function CoinToss() {
                 coinTossStatus={coinTossStatus}
                 onCoinTossSelect={handleCoinTossSelect}
                 onSelectToken={handleSelectToken}
-                selectedToken={selectedToken}
+                selectedToken={selectedCurrency}
                 onMax={handleMax}
                 inputValue={inputValue}
                 onInputValue={handleInputValue}
@@ -204,6 +233,8 @@ export default function CoinToss() {
                 onBet={handleBet}
                 minBetAmount={minBetAmount}
                 maxBetAmount={maxBetAmount}
+                balance={selectedTokenBalance}
+                multiplier={multiplier}
               />
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
@@ -250,7 +281,13 @@ export default function CoinToss() {
               </div>
             </div>
             <div className="mt-[22px]">
-              <GameReviewPanel />
+              <GameReviewPanel
+                selectedToken={selectedCurrency}
+                betsByIndex={betsByIndex}
+                activeTab={activeTab}
+                topGamers={topGamers}
+                betsByPlayer={betsByPlayer}
+              />
             </div>
           </div>
         </div>

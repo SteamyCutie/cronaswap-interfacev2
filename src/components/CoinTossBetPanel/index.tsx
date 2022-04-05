@@ -15,11 +15,12 @@ import { i18n } from '@lingui/core'
 import { t } from '@lingui/macro'
 import { BigNumber as BN } from '@ethersproject/bignumber'
 import BigNumber from 'bignumber.js'
+import { Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 
 interface CoinTossBetPanelProps {
   coinTossStatus: CoinTossStatus
   onCoinTossSelect: (value: CoinTossStatus) => void
-  selectedToken: string | ''
+  selectedToken: Currency | undefined
   onSelectToken: (value: string) => void
   onMax
   inputValue: string | ''
@@ -31,6 +32,8 @@ interface CoinTossBetPanelProps {
   showApproveFlow: boolean | 'false'
   minBetAmount: BN | undefined
   maxBetAmount: BN | undefined
+  balance: CurrencyAmount<Currency>
+  multiplier: number | 0
 }
 
 export const CoinTossBetPanel = ({
@@ -48,9 +51,10 @@ export const CoinTossBetPanel = ({
   showApproveFlow,
   minBetAmount,
   maxBetAmount,
+  balance,
+  multiplier,
 }: CoinTossBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
-  const selectedCurrency = useCurrency(selectedToken)
 
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
@@ -118,24 +122,25 @@ export const CoinTossBetPanel = ({
       <div className="absolute top-[453px] left-[64px] right-[64px]">
         <BetAmountInputPanel
           onSelectToken={onSelectToken}
-          selectedToken={selectedCurrency}
+          selectedToken={selectedToken}
           onMax={onMax}
           inputValue={inputValue}
           onInputValue={onInputValue}
           maxBetAmount={maxBetAmount}
           minBetAmount={minBetAmount}
+          balance={balance}
         />
-        <div className="w-[476px] h-[65px] mt-[40px]">
+        <div className="w-[476px] h-[65px] mt-[28px]">
           <div className="flex flex-col gap-[17px]">
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Your odds:</div>
-              <div className="text-[14px] leading-[24px] font-bold">{'-'}</div>
+              <div className="text-[14px] leading-[24px] font-bold">{((multiplier * 2) / 100).toFixed(2)} x</div>
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Payout:</div>
-              <div className="text-[14px] leading-[24px] font-bold">
-                {'0'}
-                {'WCRO'}
+              <div className="text-[14px] leading-[24px] font-bold flex flex-row gap-2">
+                <div>{(((multiplier * 2) / 100) * parseFloat(inputValue)).toFixed(2)}</div>
+                <div>{selectedToken?.symbol}</div>
               </div>
             </div>
           </div>
@@ -147,9 +152,9 @@ export const CoinTossBetPanel = ({
             <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
               Choose Head or Tail
             </button>
-          ) : showApproveFlow ? (
+          ) : showApproveFlow && approvalState !== ApprovalState.APPROVED ? (
             <div>
-              {approvalState !== ApprovalState.APPROVED && (
+              {
                 <ButtonConfirmed onClick={onApprove} disabled={approvalState !== ApprovalState.NOT_APPROVED} size="lg">
                   {approvalState === ApprovalState.PENDING ? (
                     <div className="flex items-center justify-center h-full space-x-2">
@@ -157,10 +162,10 @@ export const CoinTossBetPanel = ({
                       <Loader stroke="white" />
                     </div>
                   ) : (
-                    i18n._(t`Approve ${selectedCurrency?.symbol}`)
+                    i18n._(t`Approve ${selectedToken?.symbol}`)
                   )}
                 </ButtonConfirmed>
-              )}
+              }
             </div>
           ) : Boolean(error) ? (
             <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
