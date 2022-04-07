@@ -153,7 +153,7 @@ export default function CoinToss() {
       setbetStatus(CoinTossBetStatus.PLACED)
       setinputValue('')
     } catch {
-      setbetStatus(CoinTossBetStatus.PLACED)
+      setbetStatus(CoinTossBetStatus.NOTPLACED)
     }
   }
   const { onSign: handleBet } = useEIP712BetSignMessageGenerator(
