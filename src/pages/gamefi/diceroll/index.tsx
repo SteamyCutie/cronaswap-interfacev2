@@ -133,9 +133,7 @@ const DiceRoll = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-[22px]">
-              <GameReviewPanel />
-            </div>
+            <div className="mt-[22px]">{/* <GameReviewPanel /> */}</div>
           </div>
         </div>
       </div>

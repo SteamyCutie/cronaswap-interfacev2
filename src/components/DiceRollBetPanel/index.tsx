@@ -123,13 +123,13 @@ export const DiceRollBetPanel = ({
           ))}
         </div>
         <div className="mt-[100px] w-full">
-          <BetAmountInputPanel
+          {/* <BetAmountInputPanel
             onSelectToken={onSelectToken}
             selectedToken={selectedToken}
             onMax={onMax}
             inputValue={inputValue}
             onInputValue={onInputValue}
-          />
+          /> */}
         </div>
 
         <div className="w-full h-[65px] mt-[40px]">
