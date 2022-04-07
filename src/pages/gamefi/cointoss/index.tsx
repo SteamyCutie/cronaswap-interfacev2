@@ -8,7 +8,12 @@ import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
-import { CoinTossBetStatus, CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
+import {
+  CoinTossBetStatus,
+  CoinTossClaimRewardStatus,
+  CoinTossReview,
+  CoinTossStatus,
+} from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
@@ -89,8 +94,14 @@ export default function CoinToss() {
 
   const { betsByIndex, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
 
+  const [claimRewardStatus, setClaimRewardStatus] = useState<CoinTossClaimRewardStatus>(
+    CoinTossClaimRewardStatus.NOTCLAIMED
+  )
   const handleClaim = () => {
-    claimRewards()
+    setClaimRewardStatus(CoinTossClaimRewardStatus.PENDING)
+    claimRewards(() => {
+      setClaimRewardStatus(CoinTossClaimRewardStatus.NOTCLAIMED)
+    })
   }
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
   useEffect(() => {
@@ -113,22 +124,34 @@ export default function CoinToss() {
     betStatus !== CoinTossBetStatus.PENDING && setbetStatus(CoinTossBetStatus.NOTPLACED)
   }
   const placebet = async (signature) => {
-    const response = await axios.get('http://localhost:8080/placebet', {
-      params: {
-        player: account,
-        amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
-        choice: coinTossStatus.toString(),
-        token: selectedToken,
-        nonce: betsCountByPlayer.toString(),
-        deadline: '0',
-        signature: signature,
-      },
-    })
+    try {
+      const response = await axios.get('http://localhost:8080/placebet', {
+        params: {
+          player: account,
+          amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
+          choice: coinTossStatus.toString(),
+          token: selectedToken,
+          nonce: betsCountByPlayer.toString(),
+          deadline: '0',
+          signature: signature,
+        },
+      })
 
-    console.log(response)
-    setbetStatus(CoinTossBetStatus.PLACED)
-    router.push('#')
-    setinputValue('')
+      console.log(response)
+      debugger
+      const betPlaceResponse = response?.data
+      router.push('#')
+      if (betPlaceResponse?.success) {
+        setcoinTossResult(coinTossStatus)
+      } else {
+        setcoinTossResult(CoinTossStatus.TAIL - coinTossStatus)
+      }
+
+      setbetStatus(CoinTossBetStatus.PLACED)
+      setinputValue('')
+    } catch {
+      setbetStatus(CoinTossBetStatus.PLACED)
+    }
   }
   const { onSign: handleBet } = useEIP712BetSignMessageGenerator(
     'CoinToss',
@@ -166,7 +189,7 @@ export default function CoinToss() {
             onDismiss={handleBetModalDismiss}
             coinTossBetStatus={betStatus}
             coinTossStatus={coinTossStatus}
-            coinTossResult={coinTossStatus}
+            coinTossResult={coinTossResult}
           />
           {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}
@@ -203,7 +226,12 @@ export default function CoinToss() {
               />
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
-                <GameRewardClaimPanel rewards={rewards} selectedCurrency={selectedCurrency} onClaim={handleClaim} />
+                <GameRewardClaimPanel
+                  rewards={rewards}
+                  selectedCurrency={selectedCurrency}
+                  onClaim={handleClaim}
+                  claimRewardStatus={claimRewardStatus}
+                />
               </div>
             </div>
             <div className="w-full">

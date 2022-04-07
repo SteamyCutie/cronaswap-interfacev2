@@ -109,7 +109,7 @@ export function useCoinTossCallback_PlaceBet(
 ): {
   error?: string | ''
   rewards?: undefined | BigNumber
-  claimRewards?: undefined | (() => Promise<{ tx: string; error: string }>)
+  claimRewards?: undefined | ((onAfterClaim) => Promise<{ tx: string; error: string }>)
   approvalState?: ApprovalState | undefined
   approveCallback?: () => Promise<void>
   contract?: Contract
@@ -185,14 +185,17 @@ export function useCoinTossCallback_PlaceBet(
         ? `Insufficient ${selectedCurrency?.symbol} balance`
         : `Enter ${selectedCurrency?.symbol} amount`,
       rewards: rewards,
-      claimRewards: async () => {
+      claimRewards: async (onAfterClaim) => {
         try {
           const txReceipt = await conitossContract.claimRewards(selectedCurrency.wrapped.address)
+          await txReceipt.wait()
           addTransaction(txReceipt, {
             summary: `Get Rewards of ${selectedCurrency.symbol}`,
           })
+          onAfterClaim()
           return { tx: txReceipt, error: undefined }
         } catch (error) {
+          onAfterClaim()
           return { tx: undefined, error: error?.message }
         }
       },
@@ -264,10 +267,6 @@ export function useCoinTossCallback_GameReview(
 
 export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefined): {
   error?: string | ''
-  rewards?: undefined | BigNumber
-  claimRewards?: undefined | (() => Promise<{ tx: string; error: string }>)
-  approvalState?: ApprovalState | undefined
-  approveCallback?: () => Promise<void>
   contract?: Contract
   totalBetsCount?: number | 0
   totalBetsAmount?: BigNumber | undefined

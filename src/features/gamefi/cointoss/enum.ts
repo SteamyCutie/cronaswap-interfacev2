@@ -15,3 +15,9 @@ export enum CoinTossBetStatus {
   PENDING,
   PLACED,
 }
+
+export enum CoinTossClaimRewardStatus {
+  NOTCLAIMED,
+  PENDING,
+  CLAIMED,
+}

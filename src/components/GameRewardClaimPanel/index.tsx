@@ -5,12 +5,16 @@ import React, { useState } from 'react'
 import Web3Connect from '../Web3Connect'
 import BigNumber from 'bignumber.js'
 import { getBalanceAmount } from 'app/functions/formatBalance'
+import { CoinTossClaimRewardStatus } from 'app/features/gamefi/cointoss/enum'
+import Loader from '../Loader'
+import { ButtonConfirmed } from '../Button'
 interface GameRewardClaimPanelProps {
   selectedCurrency?: Currency | undefined
   rewards?: BN | undefined
   onClaim?: undefined | (() => void)
+  claimRewardStatus?: CoinTossClaimRewardStatus | undefined
 }
-const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim }: GameRewardClaimPanelProps) => {
+const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardStatus }: GameRewardClaimPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   return (
     <div className="w-[532px] h-[365px] bg-[#1C1B38] rounded">
@@ -39,8 +43,19 @@ const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim }: GameReward
             No Reward
           </button>
         ) : (
-          <button className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue" onClick={onClaim}>
-            Claim
+          <button
+            className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue disabled:bg-black disabled:cursor-not-allowed"
+            disabled={claimRewardStatus === CoinTossClaimRewardStatus.PENDING}
+            onClick={onClaim}
+          >
+            {claimRewardStatus === CoinTossClaimRewardStatus.PENDING ? (
+              <div className="flex items-center justify-center h-full space-x-2">
+                <div>Claiming</div>
+                <Loader stroke="white" />
+              </div>
+            ) : (
+              <div>Claim</div>
+            )}
           </button>
         )}
       </div>
