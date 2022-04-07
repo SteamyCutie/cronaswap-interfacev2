@@ -19,6 +19,7 @@ import {
   useCoinTossCallback_GameReview,
   useCoinTossCallback_PlaceBet,
   useCoinTossCallback_Volume,
+  useEIP712BetSignMessageGenerator,
 } from 'app/hooks/useCoinTossCallback'
 import { ApprovalState, useCoinTossContract } from 'app/hooks'
 import { splitSignature } from '@ethersproject/bytes'
@@ -111,88 +112,44 @@ export default function CoinToss() {
   const handleBetModalDismiss = () => {
     betStatus !== CoinTossBetStatus.PENDING && setbetStatus(CoinTossBetStatus.NOTPLACED)
   }
-  const handleBet = () => {
-    const msgParams = JSON.stringify({
-      domain: {
-        // Give a user friendly name to the specific contract you are signing for.
-        name: 'CoinToss',
-        // Just let's you know the latest version. Definitely make sure the field name is correct.
-        version: '1',
-        // Defining the chain aka Rinkeby testnet or Ethereum Main Net
-        chainId: chainId,
-        // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
-        verifyingContract: cointossContract.address,
-      },
-
-      // Defining the message signing data content.
-      message: {
+  const placebet = async (signature) => {
+    const response = await axios.get('http://localhost:8080/placebet', {
+      params: {
         player: account,
         amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
         choice: coinTossStatus.toString(),
         token: selectedToken,
-        nonce: betsCountByPlayer,
-        deadline: 0,
-      },
-      // Refers to the keys of the *types* object below.
-      primaryType: 'PlaceBet',
-      types: {
-        // TODO: Clarify if EIP712Domain refers to the domain the contract is hosted on
-        EIP712Domain: [
-          { name: 'name', type: 'string' },
-          { name: 'version', type: 'string' },
-          { name: 'chainId', type: 'uint256' },
-          { name: 'verifyingContract', type: 'address' },
-        ],
-        // Refer to PrimaryType
-        PlaceBet: [
-          { name: 'player', type: 'address' },
-          { name: 'amount', type: 'uint256' },
-          { name: 'choice', type: 'uint256' },
-          { name: 'token', type: 'address' },
-          { name: 'nonce', type: 'uint256' },
-          { name: 'deadline', type: 'uint256' },
-        ],
+        nonce: betsCountByPlayer.toString(),
+        deadline: '0',
+        signature: signature,
       },
     })
 
-    const placebet = async (signature) => {
-      const response = await axios.get('http://localhost:8080/placebet', {
-        params: {
-          player: account,
-          amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
-          choice: coinTossStatus.toString(),
-          token: selectedToken,
-          nonce: betsCountByPlayer.toString(),
-          deadline: '0',
-          signature: signature,
-        },
-      })
-
-      console.log(response)
-      setbetStatus(CoinTossBetStatus.PLACED)
-      router.push('#')
-      setinputValue('')
-    }
-
-    setbetStatus(CoinTossBetStatus.PENDING)
-    library
-      .send('eth_signTypedData_v4', [account, msgParams])
-      .then(
-        (signature) => {
-          placebet(signature)
-          return splitSignature(signature)
-        },
-        (reason) => {
-          setbetStatus(CoinTossBetStatus.NOTPLACED)
-        }
-      )
-      .then(
-        (signature) => {
-          setSignatureData(signature)
-        },
-        (reason) => {}
-      )
+    console.log(response)
+    setbetStatus(CoinTossBetStatus.PLACED)
+    router.push('#')
+    setinputValue('')
   }
+  const { onSign: handleBet } = useEIP712BetSignMessageGenerator(
+    'CoinToss',
+    '1',
+    chainId,
+    cointossContract,
+    account,
+    inputValue.toBigNumber(selectedCurrency?.decimals),
+    coinTossStatus,
+    selectedToken,
+    betsCountByPlayer,
+    0,
+    () => {
+      setbetStatus(CoinTossBetStatus.PENDING)
+    },
+    placebet,
+    () => {},
+    () => {
+      setbetStatus(CoinTossBetStatus.NOTPLACED)
+    }
+  )
 
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
