@@ -77,7 +77,9 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
     <div className="w-full h-[756px] bg-[#1C1B38] rounded flex flex-col">
       <div className="h-[64px] pt-4 pl-8 pr-4 relative">
         {fieldsList[activeTab].map((e) => (
-          <div className={`absolute ml-[${e?.lPos}px]`}>{e?.field}</div>
+          <div key="abc" className={`absolute ml-[${e?.lPos}px]`}>
+            {e?.field}
+          </div>
         ))}
       </div>
       <div className="h-[1px] bg-[#AFAFC5] bg-opacity-30"></div>
