@@ -92,3 +92,11 @@ export const FAUCET_ADDRESS: AddressMap = {
 export const PRIVATESALE_ADDRESS: AddressMap = {
   [ChainId.BSC_TESTNET]: '0xf3CAb862A2f696fa493db85749736411635fA273',
 }
+
+export const COINTOSS_ADDRESS: AddressMap = {
+  [ChainId.BSC_TESTNET]: '0x9b4CDfACfeC5609274FeCD670B6C3aC2A8B56456',
+}
+
+export const DICEROLL_ADDRESS: AddressMap = {
+  [ChainId.BSC_TESTNET]: '0x4174153feE0A334f4Eab306C274d14c899a4A687',
+}

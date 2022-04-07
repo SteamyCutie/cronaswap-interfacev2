@@ -1,49 +1,182 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLingui } from '@lingui/react'
 import Head from 'next/head'
 import Container from 'app/components/Container'
-import { map } from 'lodash'
-import QuestionHelper from 'app/components/QuestionHelper'
-import InformationHelper from 'app/components/InformationHelper'
 import { CoinTossBetPanel } from 'app/components/CoinTossBetPanel'
 import { CoinTossVolumePanel } from 'app/components/CoinTossVolumePanel'
 import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
-import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
+import {
+  CoinTossBetStatus,
+  CoinTossClaimRewardStatus,
+  CoinTossReview,
+  CoinTossStatus,
+} from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
-import { useGameFiTokens } from 'app/hooks/Tokens'
-import { CRONA_ADDRESS } from '@cronaswap/core-sdk'
+import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
+import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 import { useActiveWeb3React } from 'app/services/web3'
+import { useCurrencyBalance } from 'app/state/wallet/hooks'
+import { maxAmountSpend, tryParseAmount } from 'app/functions'
+import {
+  useCoinTossCallback_GameReview,
+  useCoinTossCallback_PlaceBet,
+  useCoinTossCallback_Volume,
+  useEIP712BetSignMessageGenerator,
+} from 'app/hooks/useCoinTossCallback'
+import { ApprovalState, useCoinTossContract } from 'app/hooks'
+import { splitSignature } from '@ethersproject/bytes'
+import BigNumber from 'bignumber.js'
+import { getBalanceAmount } from 'app/functions/formatBalance'
+import { useSingleCallResult } from 'app/state/multicall/hooks'
+import CoinTossBetModal from 'app/components/CoinTossBetModal'
+const { default: axios } = require('axios')
 
 export default function CoinToss() {
   const { account, chainId, library } = useActiveWeb3React()
   const { i18n } = useLingui()
 
   const router = useRouter()
-  const type = router.query.filter == null ? '' : (router.query.filter as string)
+  const type = router.query.filter == null ? 'allbet' : (router.query.filter as string)
   const tabStyle = 'px-[27px] py-[8px] rounded text-base font-normal cursor-pointer'
   const activeTabStyle = `${tabStyle} bg-[#0D0C2B]`
   const inactiveTabStyle = `${tabStyle}`
-  const [activeTab, setActiveTab] = useState<CoinTossReview>(CoinTossReview.ALLBETS)
+
+  const FILTER = {
+    allbets: CoinTossReview.ALLBETS,
+    yourbets: CoinTossReview.YOURBETS,
+    leaderboard: CoinTossReview.LEADERBOARD,
+  }
+  const [activeTab, setActiveTab] = useState<CoinTossReview>(0)
   const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
+  const [coinTossResult, setcoinTossResult] = useState<CoinTossStatus>(CoinTossStatus.NONE)
+
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
     setCoinTossStatus(selection)
   }
 
   const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
+  useEffect(() => {
+    setselectedToken(CRONA_ADDRESS[chainId])
+  }, [chainId])
+  const selectedCurrency = useCurrency(selectedToken)
+  const selectedTokenBalance = useCurrencyBalance(account ?? undefined, selectedCurrency ?? undefined)
+  const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(selectedTokenBalance)
 
   const handleSelectToken = (token: string) => {
     setselectedToken(token)
   }
 
-  const handleMax = () => {}
+  const handleMax = () => {
+    selectedTokenBalance.greaterThan(maxBetAmount?.toString())
+      ? setinputValue(getBalanceAmount(new BigNumber(maxBetAmount?.toString()), selectedCurrency?.decimals).toString())
+      : setinputValue(selectedTokenBalance.toExact())
+  }
 
   const [inputValue, setinputValue] = useState<string>('0.0')
   const handleInputValue = (value) => {
     setinputValue(value)
   }
+  const { totalBetsAmount, totalBetsCount, headsCount, tailsCount } = useCoinTossCallback_Volume(selectedCurrency)
+
+  const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
+  const {
+    error: cointossBetError,
+    rewards,
+    claimRewards,
+    approvalState,
+    approveCallback,
+    contract: cointossContract,
+    betsCountByPlayer,
+    multiplier,
+    minBetAmount,
+    maxBetAmount,
+  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount)
+
+  const { betsByIndex, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
+
+  const [claimRewardStatus, setClaimRewardStatus] = useState<CoinTossClaimRewardStatus>(
+    CoinTossClaimRewardStatus.NOTCLAIMED
+  )
+  const handleClaim = () => {
+    setClaimRewardStatus(CoinTossClaimRewardStatus.PENDING)
+    claimRewards(() => {
+      setClaimRewardStatus(CoinTossClaimRewardStatus.NOTCLAIMED)
+    })
+  }
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  useEffect(() => {
+    if (approvalState === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approvalState, approvalSubmitted])
+
+  const handleApprove = useCallback(async () => {
+    await approveCallback()
+  }, [approveCallback])
+  const showApproveFlow =
+    !cointossBetError &&
+    (approvalState === ApprovalState.NOT_APPROVED ||
+      approvalState === ApprovalState.PENDING ||
+      (approvalSubmitted && approvalState === ApprovalState.APPROVED))
+  const [signatureData, setSignatureData] = useState(null)
+  const [betStatus, setbetStatus] = useState<CoinTossBetStatus>(CoinTossBetStatus.NOTPLACED)
+  const handleBetModalDismiss = () => {
+    betStatus !== CoinTossBetStatus.PENDING && setbetStatus(CoinTossBetStatus.NOTPLACED)
+  }
+  const placebet = async (signature) => {
+    try {
+      const response = await axios.get('http://162.33.179.28/placebet', {
+        params: {
+          player: account,
+          amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
+          choice: coinTossStatus.toString(),
+          token: selectedToken,
+          nonce: betsCountByPlayer.toString(),
+          deadline: '0',
+          signature: signature,
+        },
+      })
+
+      console.log(response)
+      debugger
+      const betPlaceResponse = response?.data
+      router.push('#')
+      if (betPlaceResponse?.success) {
+        setcoinTossResult(coinTossStatus)
+      } else {
+        setcoinTossResult(CoinTossStatus.TAIL - coinTossStatus)
+      }
+
+      setbetStatus(CoinTossBetStatus.PLACED)
+      setinputValue('')
+    } catch {
+      setbetStatus(CoinTossBetStatus.NOTPLACED)
+    }
+  }
+  const { onSign: handleBet } = useEIP712BetSignMessageGenerator(
+    'CoinToss',
+    '1',
+    chainId,
+    cointossContract,
+    account,
+    inputValue.toBigNumber(selectedCurrency?.decimals),
+    coinTossStatus,
+    selectedToken,
+    betsCountByPlayer,
+    0,
+    () => {
+      setbetStatus(CoinTossBetStatus.PENDING)
+    },
+    placebet,
+    () => {},
+    () => {
+      setbetStatus(CoinTossBetStatus.NOTPLACED)
+    }
+  )
+
   return (
     <Container id="cointoss-page" maxWidth="full" className="">
       <Head>
@@ -54,16 +187,23 @@ export default function CoinToss() {
         {/* <div className="absolute top-1/4 -left-10 bg-blue bottom-4 w-3/5 rounded-full z-0 filter blur-[150px]" />
         <div className="absolute bottom-1/4 -right-10 bg-red top-4 w-3/5 rounded-full z-0  filter blur-[150px]" /> */}
         <div className="flex flex-col items-center">
+          <CoinTossBetModal
+            isOpen={betStatus !== CoinTossBetStatus.NOTPLACED}
+            onDismiss={handleBetModalDismiss}
+            coinTossBetStatus={betStatus}
+            coinTossStatus={coinTossStatus}
+            coinTossResult={coinTossResult}
+          />
           {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}
 
           <div className="mt-[64px] w-full">
             <CoinTossVolumePanel
-              tokenName={'WCRO'}
-              totalBetsCount={245123}
-              totalBetsAmount={1231231}
-              headWinRate={50.1}
-              tailWinRate={49.9}
+              token={selectedCurrency}
+              totalBetsCount={totalBetsCount}
+              totalBetsAmount={totalBetsAmount}
+              headWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * headsCount) / (headsCount + tailsCount)}
+              tailWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * tailsCount) / (headsCount + tailsCount)}
               houseEdge={1}
             />
           </div>
@@ -73,14 +213,28 @@ export default function CoinToss() {
                 coinTossStatus={coinTossStatus}
                 onCoinTossSelect={handleCoinTossSelect}
                 onSelectToken={handleSelectToken}
-                selectedToken={selectedToken}
+                selectedToken={selectedCurrency}
                 onMax={handleMax}
                 inputValue={inputValue}
                 onInputValue={handleInputValue}
+                error={cointossBetError}
+                approvalState={approvalState}
+                onApprove={handleApprove}
+                showApproveFlow={showApproveFlow}
+                onBet={handleBet}
+                minBetAmount={minBetAmount}
+                maxBetAmount={maxBetAmount}
+                balance={selectedTokenBalance}
+                multiplier={multiplier}
               />
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
-                <GameRewardClaimPanel />
+                <GameRewardClaimPanel
+                  rewards={rewards}
+                  selectedCurrency={selectedCurrency}
+                  onClaim={handleClaim}
+                  claimRewardStatus={claimRewardStatus}
+                />
               </div>
             </div>
             <div className="w-full">
@@ -91,39 +245,42 @@ export default function CoinToss() {
                       setActiveTab(CoinTossReview.ALLBETS)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=allbets">
-                      <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
-                        All Bets
-                      </div>
-                    </NavLink>
+                    <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
+                      All Bets
+                    </div>
+                    {/* <NavLink href="/cointoss?filter=allbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
                       setActiveTab(CoinTossReview.YOURBETS)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=yourbets">
-                      <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
-                        Your Bets
-                      </div>
-                    </NavLink>
+                    <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
+                      Your Bets
+                    </div>
+                    {/* <NavLink href="/cointoss?filter=yourbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
                       setActiveTab(CoinTossReview.LEADERBOARD)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=leaderboard">
-                      <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
-                        Leaderboard
-                      </div>
-                    </NavLink>
+                    <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
+                      Leaderboard
+                    </div>
+                    {/* <NavLink href="/cointoss?filter=leaderboard"></NavLink> */}
                   </div>
                 </div>
               </div>
             </div>
             <div className="mt-[22px]">
-              <GameReviewPanel />
+              <GameReviewPanel
+                selectedToken={selectedCurrency}
+                activeTab={activeTab}
+                betsByIndex={betsByIndex}
+                betsByPlayer={betsByPlayer}
+                topGamers={topGamers}
+              />
             </div>
           </div>
         </div>

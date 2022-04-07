@@ -9,3 +9,15 @@ export enum CoinTossReview {
   YOURBETS,
   LEADERBOARD,
 }
+
+export enum CoinTossBetStatus {
+  NOTPLACED,
+  PENDING,
+  PLACED,
+}
+
+export enum CoinTossClaimRewardStatus {
+  NOTCLAIMED,
+  PENDING,
+  CLAIMED,
+}

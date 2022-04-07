@@ -4,15 +4,36 @@ import InformationHelper from '../InformationHelper'
 import Web3Connect from '../Web3Connect'
 import Image from 'next/image'
 import BetAmountInputPanel from '../BetAmountInputPanel'
+import { splitSignature } from '@ethersproject/bytes'
+import { useState } from 'react'
+import { tryParseAmount } from 'app/functions'
+import { useCurrency } from 'app/hooks/Tokens'
+import { ApprovalState, useCoinTossContract } from 'app/hooks'
+import { ButtonConfirmed } from '../Button'
+import Loader from '../Loader'
+import { i18n } from '@lingui/core'
+import { t } from '@lingui/macro'
+import { BigNumber as BN } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
+import { Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 
 interface CoinTossBetPanelProps {
   coinTossStatus: CoinTossStatus
   onCoinTossSelect: (value: CoinTossStatus) => void
-  selectedToken: string | ''
+  selectedToken: Currency | undefined
   onSelectToken: (value: string) => void
   onMax
   inputValue: string | ''
   onInputValue: (value: string) => void
+  error: string | ''
+  onBet: () => void
+  approvalState: ApprovalState | undefined
+  onApprove: () => void
+  showApproveFlow: boolean | 'false'
+  minBetAmount: BN | undefined
+  maxBetAmount: BN | undefined
+  balance: CurrencyAmount<Currency>
+  multiplier: number | 0
 }
 
 export const CoinTossBetPanel = ({
@@ -23,8 +44,18 @@ export const CoinTossBetPanel = ({
   onMax,
   inputValue,
   onInputValue,
+  error,
+  onBet,
+  approvalState,
+  onApprove,
+  showApproveFlow,
+  minBetAmount,
+  maxBetAmount,
+  balance,
+  multiplier,
 }: CoinTossBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
+
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
       <div className="w-[252px] h-[69px] absolute top-[40px] left-[40px]">
@@ -95,18 +126,21 @@ export const CoinTossBetPanel = ({
           onMax={onMax}
           inputValue={inputValue}
           onInputValue={onInputValue}
+          maxBetAmount={maxBetAmount}
+          minBetAmount={minBetAmount}
+          balance={balance}
         />
-        <div className="w-[476px] h-[65px] mt-[40px]">
+        <div className="w-[476px] h-[65px] mt-[28px]">
           <div className="flex flex-col gap-[17px]">
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Your odds:</div>
-              <div className="text-[14px] leading-[24px] font-bold">{'-'}</div>
+              <div className="text-[14px] leading-[24px] font-bold">{((multiplier * 2) / 100).toFixed(2)} x</div>
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Payout:</div>
-              <div className="text-[14px] leading-[24px] font-bold">
-                {'0'}
-                {'WCRO'}
+              <div className="text-[14px] leading-[24px] font-bold flex flex-row gap-2">
+                <div>{(((multiplier * 2) / 100) * parseFloat(inputValue)).toFixed(2)}</div>
+                <div>{selectedToken?.symbol}</div>
               </div>
             </div>
           </div>
@@ -118,8 +152,32 @@ export const CoinTossBetPanel = ({
             <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
               Choose Head or Tail
             </button>
+          ) : showApproveFlow && approvalState !== ApprovalState.APPROVED ? (
+            <div>
+              {
+                <ButtonConfirmed onClick={onApprove} disabled={approvalState !== ApprovalState.NOT_APPROVED} size="lg">
+                  {approvalState === ApprovalState.PENDING ? (
+                    <div className="flex items-center justify-center h-full space-x-2">
+                      <div>Approving</div>
+                      <Loader stroke="white" />
+                    </div>
+                  ) : (
+                    i18n._(t`Approve ${selectedToken?.symbol}`)
+                  )}
+                </ButtonConfirmed>
+              }
+            </div>
+          ) : Boolean(error) ? (
+            <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
+              {error}
+            </button>
           ) : (
-            <button className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue">
+            <button
+              className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue"
+              onClick={() => {
+                onBet()
+              }}
+            >
               Bet {coinTossStatus === CoinTossStatus.HEAD ? 'Head' : 'Tail'}
             </button>
           )}

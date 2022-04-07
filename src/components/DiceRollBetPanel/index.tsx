@@ -116,7 +116,7 @@ export const DiceRollBetPanel = ({
         </div>
       </div>
       <div className="flex flex-col mx-[64px] top-[173px] items-center relative">
-        <div className="text-center font-bold text-base text-white">Select dice side</div>
+        <div className="text-base font-bold text-center text-white">Select dice side</div>
         <div className="mt-[64px] w-[474px] h-[64px] flex flex-row gap-[18px]">
           {[0, 1, 2, 3, 4, 5].map((e) => (
             <Dice diceSide={e} isSelected={diceRollOption[e]} onDiceSelect={handleDiceSelect} key={e}></Dice>
