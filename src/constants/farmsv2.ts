@@ -306,11 +306,11 @@ export const FARMSV2: AddressMap = {
       id: 14,
       pid: 14,
       symbol: 'CLP',
-      name: 'FTM-USDT',
+      name: 'multiFTM-USDT',
       token0: {
         id: '0xB44a9B6905aF7c801311e8F4E76932ee959c663C',
         name: 'Fantom',
-        symbol: 'FTM',
+        symbol: 'multiFTM',
         decimals: 18,
       },
       token1: {
@@ -348,11 +348,11 @@ export const FARMSV2: AddressMap = {
       id: 16,
       pid: 16,
       symbol: 'CLP',
-      name: 'MATIC-USDT',
+      name: 'multiMATIC-USDT',
       token0: {
         id: '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
         name: 'Matic Network',
-        symbol: 'MATIC',
+        symbol: 'multiMATIC',
         decimals: 18,
       },
       token1: {
@@ -592,6 +592,28 @@ export const FARMSV2: AddressMap = {
         symbol: 'CRO',
         decimals: 18,
       },
+      isZap: false,
+    },
+
+    '0xd712862C859A904Ce16A7BAbdfFdbCAf10946ebe': {
+      id: 28,
+      pid: 28,
+      symbol: 'CLP',
+      name: 'ARC-CRONA',
+      isCommunity: true,
+      token0: {
+        id: '0x289B8f552c9fD66f9cEA35B193F7ca73ae24A5d5',
+        name: 'Arcane',
+        symbol: 'ARC',
+        decimals: 18,
+      },
+      token1: {
+        id: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      isVote: false,
       isZap: false,
     },
   },
