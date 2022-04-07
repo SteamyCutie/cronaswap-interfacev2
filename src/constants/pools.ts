@@ -175,6 +175,27 @@ export const POOLS: AddressMap = {
       },
     },
 
+    '0x710086BB47caae9aad31002A12CE413f13329150': {
+      pid: 7,
+      name: 'CRONA-ARC',
+      tokenPerBlock: '0.17',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://arcanenft.financial/',
+      stakingToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0x289B8f552c9fD66f9cEA35B193F7ca73ae24A5d5',
+        name: 'ARC',
+        symbol: 'ARC',
+        decimals: 18,
+      },
+    },
+
     '0xCae8Ac27c13660F434765f28A471db39EC5c6A67': {
       pid: 7,
       name: 'CRONA-CROSS',
