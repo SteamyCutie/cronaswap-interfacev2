@@ -15,9 +15,10 @@ import { result } from 'lodash'
 
 const NOT_APPLICABLE = { error: 'Not Applicable!' }
 
-export default function useCoinTossCallback(
+export function useCoinTossCallback_PlaceBet(
   selectedCurrency: Currency | undefined,
-  inputValue: string | undefined
+  inputValue: string | undefined,
+  totalBetsCount: number | 0
 ): {
   error?: string | ''
   rewards?: undefined | BigNumber
@@ -25,17 +26,10 @@ export default function useCoinTossCallback(
   approvalState?: ApprovalState | undefined
   approveCallback?: () => Promise<void>
   contract?: Contract
-  totalBetsCount?: number | 0
-  totalBetsAmount?: BigNumber | undefined
-  headsCount?: number | 0
-  tailsCount?: number | 0
   betsCountByPlayer?: number | 0
   minBetAmount?: BigNumber | undefined
   maxBetAmount?: BigNumber | undefined
   multiplier?: number | 0
-  betsByIndex?: []
-  topGamers?: []
-  betsByPlayer?: []
 } {
   const { chainId, account } = useActiveWeb3React()
   const conitossContract = useCoinTossContract()
@@ -50,13 +44,7 @@ export default function useCoinTossCallback(
   const addTransaction = useTransactionAdder()
 
   const [rewards, setrewards] = useState<BigNumber>(undefined)
-  // const [totalBetsCount, settotalBetsCount] = useState<number>(0)
-  // const [totalBetsAmount, settotalBetsAmount] = useState<BigNumber>(undefined)
-  // const [headsCount, setheadsCount] = useState<number>(0)
-  // const [tailsCount, settailsCount] = useState<number>(0)
   const [betsCountByPlayer, setbetsCountByPlayer] = useState<number>(0)
-  const [betsByPlayer, setbetsByPlayer] = useState<[]>([])
-  // const [multiplier, setMultiplier] = useState<number>(0)
   let callResult = useSingleCallResult(conitossContract, 'getBetAmountRangeByToken', [
     selectedCurrency?.wrapped.address,
   ])?.result
@@ -72,116 +60,34 @@ export default function useCoinTossCallback(
     return BigNumber.from((callResult && callResult[0]?.toString()) ?? 0).toNumber()
   }, [callResult])
 
-  // callResult = useSingleCallResult(conitossContract, 'getBetsCountByPlayer')?.result
-  // const betsCountByPlayer = useMemo(async () => {
-  //   debugger
-  //   // return BigNumber.from(callResult?.toString() ?? 0).toNumber()
-  //   const rst = (await conitossContract.getBetsCountByPlayer()).toNumber()
-  //   return rst
-  // }, [callResult])
-
-  const totalBetInfo = useSingleCallResult(conitossContract, 'getBetsAmountAndCountByToken', [tokenAddress])?.result
-  const { totalBetsCount, totalBetsAmount } = useMemo(() => {
-    return {
-      totalBetsCount: BigNumber.from(totalBetInfo?.totalBetsCount.toString() ?? 0).toNumber(),
-      totalBetsAmount: BigNumber.from(totalBetInfo?.totalBetsAmount.toString() ?? 0),
+  useEffect(() => {
+    async function FetchPlayerInfo() {
+      try {
+        if (account) {
+          setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer()).toNumber())
+          setrewards(await conitossContract.getRewardsAmountByPlayer(tokenAddress))
+        }
+      } catch {}
     }
-  }, [totalBetInfo])
 
-  // callResult = useSingleCallResult(conitossContract, 'getRewardsAmountByPlayer', [tokenAddress])?.result
-  // const rewards: BigNumber = useMemo(() => {
-  //   return BigNumber.from(callResult?.toString() ?? 0)
-  // }, [callResult])
-  const totalCounts = useSingleCallResult(conitossContract, 'getHeadsTailsCount' /*[tokenAddress]*/)?.result
-  const { headsCount, tailsCount } = useMemo(() => {
-    return {
-      headsCount: BigNumber.from((totalCounts && totalCounts[0].toString()) ?? 0).toNumber(),
-      tailsCount: BigNumber.from((totalCounts && totalCounts[1].toString()) ?? 0).toNumber(),
-    }
-  }, [totalCounts])
-
-  callResult = useSingleCallResult(conitossContract, 'getBetsByIndex', ['100'])?.result
-  const betsByIndex = useMemo(() => {
-    return (callResult && callResult[0]) ?? []
-  }, [callResult])
-
-  callResult = useSingleCallResult(conitossContract, 'getTopGamers', [tokenAddress])?.result
-  const topGamers = useMemo(() => {
-    return (callResult && callResult[0]) ?? []
-  }, [callResult])
-
-  let promise = useMemo(async () => {
-    return account && (await conitossContract.getBetsCountByPlayer())
-  }, [account, selectedCurrency, selectedCurrencyAmount, balance])
-
-  promise.then((value) => {
-    setbetsCountByPlayer(value?.toNumber())
-  })
-
-  promise = useMemo(async () => {
-    return account && (await conitossContract.getRewardsAmountByPlayer(tokenAddress))
-  }, [account, selectedCurrency, selectedCurrencyAmount, balance])
-
-  promise.then((value) => {
-    setrewards(value)
-  })
-
-  promise = useMemo(async () => {
-    return account && (await conitossContract.getBetsByPlayer('100'))
-  }, [account, selectedCurrency, balance])
-
-  promise.then((value) => {
-    setbetsByPlayer(value)
-  })
-
-  // useEffect(() => {
-  //   async function FetchPlayerInfo() {
-  //     try {
-  //       // const betAmountRange = await conitossContract.getBetAmountRangeByToken(tokenAddress)
-  //       // setminBetAmount(betAmountRange[0])
-  //       // setmaxBetAmount(betAmountRange[1])
-  //       // setMultiplier(
-  //       //   await conitossContract.getMultiplier(tokenAddress, selectedCurrencyAmount?.quotient.toString() ?? '0')
-  //       // )
-
-  //       // const totalBetInfo = await conitossContract.getBetsAmountAndCountByToken(tokenAddress)
-  //       // settotalBetsCount(totalBetInfo?.totalBetsCount.toNumber())
-  //       // settotalBetsAmount(totalBetInfo?.totalBetsAmount)
-  //       // const totalCounts = await conitossContract.getHeadsTailsCount()
-  //       // setheadsCount(totalCounts[0].toNumber())
-  //       // settailsCount(totalCounts[1].toNumber())
-  //       if (account) {
-  //         // setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer()).toNumber())
-  //         // setrewards(await conitossContract.getRewardsAmountByPlayer(tokenAddress))
-  //       }
-  //     } catch {}
-  //   }
-
-  //   FetchPlayerInfo()
-  // }, [account, selectedCurrency, selectedCurrencyAmount, balance])
+    FetchPlayerInfo()
+  }, [account, selectedCurrency, totalBetsCount, balance])
   return useMemo(() => {
-    if (!chainId) return NOT_APPLICABLE
+    if (!chainId && conitossContract) return NOT_APPLICABLE
 
     const hasInputAmount = Boolean(selectedCurrencyAmount?.greaterThan('0'))
     const sufficientBalance = selectedCurrencyAmount && balance && !balance.lessThan(selectedCurrencyAmount)
     const rangedBalance =
-      (selectedCurrencyAmount &&
-        selectedCurrencyAmount.greaterThan(minBetAmount?.toString()) &&
-        selectedCurrencyAmount.lessThan(maxBetAmount?.toString())) ||
-      selectedCurrencyAmount?.equalTo(minBetAmount?.toString()) ||
-      selectedCurrencyAmount?.equalTo(maxBetAmount?.toString())
+      selectedCurrencyAmount &&
+      ((selectedCurrencyAmount?.greaterThan(minBetAmount?.toString()) &&
+        selectedCurrencyAmount?.lessThan(maxBetAmount?.toString())) ||
+        selectedCurrencyAmount?.equalTo(minBetAmount?.toString()) ||
+        selectedCurrencyAmount?.equalTo(maxBetAmount?.toString()))
     return {
-      betsByPlayer,
-      topGamers,
-      betsByIndex,
       multiplier,
       minBetAmount,
       maxBetAmount,
       betsCountByPlayer,
-      headsCount,
-      tailsCount,
-      totalBetsAmount,
-      totalBetsCount,
       approvalState,
       approveCallback,
       error: sufficientBalance
@@ -214,14 +120,102 @@ export default function useCoinTossCallback(
     rewards,
     minBetAmount,
     maxBetAmount,
-    totalBetsAmount,
-    totalBetsCount,
-    headsCount,
-    tailsCount,
     betsCountByPlayer,
     approvalState,
-    betsByIndex,
-    betsByPlayer,
-    topGamers,
   ])
+}
+
+export function useCoinTossCallback_GameReview(
+  selectedCurrency: Currency | undefined,
+  totalBetsCount: number | undefined
+): {
+  error?: string | ''
+  betsByIndex?: []
+  topGamers?: []
+  betsByPlayer?: []
+} {
+  const { chainId, account } = useActiveWeb3React()
+  const conitossContract = useCoinTossContract()
+
+  const tokenAddress = selectedCurrency?.wrapped.address
+  const [betsByPlayer, setbetsByPlayer] = useState<[]>([])
+  const [betsByIndex, setbetsByIndex] = useState<[]>([])
+  const [topGamers, settopGamers] = useState<[]>([])
+
+  // let callResult = useSingleCallResult(conitossContract, 'getBetsByIndex', ['100'])?.result
+  // const betsByIndex = useMemo(() => {
+  //   return (callResult && callResult[0]) ?? []
+  // }, [callResult])
+
+  // callResult = useSingleCallResult(conitossContract, 'getTopGamers', [tokenAddress])?.result
+  // const topGamers = useMemo(() => {
+  //   return (callResult && callResult[0]) ?? []
+  // }, [callResult])
+
+  useEffect(() => {
+    async function FetchPlayerInfo() {
+      try {
+        if (account) {
+          setbetsByPlayer(await conitossContract.getBetsByPlayer('100'))
+          // setbetsByPlayer(await conitossContract.getBetsByPlayer('100'))
+        }
+      } catch {}
+    }
+
+    FetchPlayerInfo()
+  }, [account, selectedCurrency, totalBetsCount])
+  return useMemo(() => {
+    if (!chainId && conitossContract) return NOT_APPLICABLE
+    return {
+      betsByPlayer,
+      topGamers,
+      betsByIndex,
+      contract: conitossContract,
+    }
+  }, [conitossContract, chainId, betsByIndex, betsByPlayer, topGamers, totalBetsCount])
+}
+
+export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefined): {
+  error?: string | ''
+  rewards?: undefined | BigNumber
+  claimRewards?: undefined | (() => Promise<{ tx: string; error: string }>)
+  approvalState?: ApprovalState | undefined
+  approveCallback?: () => Promise<void>
+  contract?: Contract
+  totalBetsCount?: number | 0
+  totalBetsAmount?: BigNumber | undefined
+  headsCount?: number | 0
+  tailsCount?: number | 0
+} {
+  const { chainId, account } = useActiveWeb3React()
+  const conitossContract = useCoinTossContract()
+
+  const tokenAddress = selectedCurrency?.wrapped.address
+
+  const totalBetInfo = useSingleCallResult(conitossContract, 'getBetsAmountAndCountByToken', [tokenAddress])?.result
+  const { totalBetsCount, totalBetsAmount } = useMemo(() => {
+    return {
+      totalBetsCount: BigNumber.from(totalBetInfo?.totalBetsCount.toString() ?? 0).toNumber(),
+      totalBetsAmount: BigNumber.from(totalBetInfo?.totalBetsAmount.toString() ?? 0),
+    }
+  }, [totalBetInfo])
+
+  const totalCounts = useSingleCallResult(conitossContract, 'getHeadsTailsCount' /*[tokenAddress]*/)?.result
+  const { headsCount, tailsCount } = useMemo(() => {
+    return {
+      headsCount: BigNumber.from((totalCounts && totalCounts[0].toString()) ?? 0).toNumber(),
+      tailsCount: BigNumber.from((totalCounts && totalCounts[1].toString()) ?? 0).toNumber(),
+    }
+  }, [totalCounts])
+  return useMemo(() => {
+    if (!chainId && conitossContract) return NOT_APPLICABLE
+
+    return {
+      headsCount,
+      tailsCount,
+      totalBetsAmount,
+      totalBetsCount,
+      contract: conitossContract,
+    }
+  }, [conitossContract, chainId, totalBetsAmount, totalBetsCount, headsCount, tailsCount])
 }

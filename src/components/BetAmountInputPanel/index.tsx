@@ -7,7 +7,6 @@ import { CurrencyLogo } from '../CurrencyLogo'
 import { BigNumber as BN } from '@ethersproject/bignumber'
 import BigNumber from 'bignumber.js'
 import { getBalanceAmount } from 'app/functions/formatBalance'
-import useCoinTossCallback from 'app/hooks/useCoinTossCallback'
 
 interface BetAmountInputPanelProps {
   selectedToken: Currency | undefined

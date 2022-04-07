@@ -27,7 +27,7 @@ export const CoinTossVolumePanel = ({
           desc: `Total ${token?.symbol} Bets`,
           hasInfo: false,
           unit: '',
-          value: totalBetsCount.toString(),
+          value: totalBetsCount?.toString(),
           width: '2/12',
         },
         {

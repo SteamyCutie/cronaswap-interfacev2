@@ -15,7 +15,11 @@ import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useCurrencyBalance } from 'app/state/wallet/hooks'
 import { maxAmountSpend, tryParseAmount } from 'app/functions'
-import useCoinTossCallback from 'app/hooks/useCoinTossCallback'
+import {
+  useCoinTossCallback_GameReview,
+  useCoinTossCallback_PlaceBet,
+  useCoinTossCallback_Volume,
+} from 'app/hooks/useCoinTossCallback'
 import { ApprovalState, useCoinTossContract } from 'app/hooks'
 import { splitSignature } from '@ethersproject/bytes'
 import BigNumber from 'bignumber.js'
@@ -66,6 +70,7 @@ export default function CoinToss() {
   const handleInputValue = (value) => {
     setinputValue(value)
   }
+  const { totalBetsAmount, totalBetsCount, headsCount, tailsCount } = useCoinTossCallback_Volume(selectedCurrency)
 
   const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
   const {
@@ -75,18 +80,13 @@ export default function CoinToss() {
     approvalState,
     approveCallback,
     contract: cointossContract,
-    totalBetsAmount,
-    totalBetsCount,
-    headsCount,
-    tailsCount,
     betsCountByPlayer,
     multiplier,
     minBetAmount,
     maxBetAmount,
-    betsByIndex,
-    topGamers,
-    betsByPlayer,
-  } = useCoinTossCallback(selectedCurrency, inputValue)
+  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount)
+
+  const { betsByIndex, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
 
   const handleClaim = () => {
     claimRewards()
@@ -109,7 +109,7 @@ export default function CoinToss() {
   const [signatureData, setSignatureData] = useState(null)
   const [betStatus, setbetStatus] = useState<CoinTossBetStatus>(CoinTossBetStatus.NOTPLACED)
   const handleBetModalDismiss = () => {
-    setbetStatus(CoinTossBetStatus.NOTPLACED)
+    betStatus !== CoinTossBetStatus.PENDING && setbetStatus(CoinTossBetStatus.NOTPLACED)
   }
   const handleBet = () => {
     const msgParams = JSON.stringify({
@@ -177,13 +177,21 @@ export default function CoinToss() {
     setbetStatus(CoinTossBetStatus.PENDING)
     library
       .send('eth_signTypedData_v4', [account, msgParams])
-      .then((signature) => {
-        placebet(signature)
-        return splitSignature(signature)
-      })
-      .then((signature) => {
-        setSignatureData(signature)
-      })
+      .then(
+        (signature) => {
+          placebet(signature)
+          return splitSignature(signature)
+        },
+        (reason) => {
+          setbetStatus(CoinTossBetStatus.NOTPLACED)
+        }
+      )
+      .then(
+        (signature) => {
+          setSignatureData(signature)
+        },
+        (reason) => {}
+      )
   }
 
   return (
@@ -249,33 +257,30 @@ export default function CoinToss() {
                       setActiveTab(CoinTossReview.ALLBETS)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=allbets">
-                      <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
-                        All Bets
-                      </div>
-                    </NavLink>
+                    <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
+                      All Bets
+                    </div>
+                    {/* <NavLink href="/cointoss?filter=allbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
                       setActiveTab(CoinTossReview.YOURBETS)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=yourbets">
-                      <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
-                        Your Bets
-                      </div>
-                    </NavLink>
+                    <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
+                      Your Bets
+                    </div>
+                    {/* <NavLink href="/cointoss?filter=yourbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
                       setActiveTab(CoinTossReview.LEADERBOARD)
                     }}
                   >
-                    <NavLink href="/cointoss?filter=leaderboard">
-                      <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
-                        Leaderboard
-                      </div>
-                    </NavLink>
+                    <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
+                      Leaderboard
+                    </div>
+                    {/* <NavLink href="/cointoss?filter=leaderboard"></NavLink> */}
                   </div>
                 </div>
               </div>
@@ -283,10 +288,10 @@ export default function CoinToss() {
             <div className="mt-[22px]">
               <GameReviewPanel
                 selectedToken={selectedCurrency}
-                betsByIndex={betsByIndex}
                 activeTab={activeTab}
-                topGamers={topGamers}
+                betsByIndex={betsByIndex}
                 betsByPlayer={betsByPlayer}
+                topGamers={topGamers}
               />
             </div>
           </div>

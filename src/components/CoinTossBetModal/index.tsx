@@ -20,24 +20,28 @@ import { CoinTossBetStatus, CoinTossStatus } from 'app/features/gamefi/cointoss/
 
 const CoinTossBetPending = ({ coinTossStatus }: { coinTossStatus: CoinTossStatus }) => {
   return (
-    <div className="w-[400px] h-[255px] bg-[#0D0C2B] rounded-[15px]">
-      <div className="flex flex-col mt-[64px] mx-[109px] items-center">
-        {coinTossStatus == CoinTossStatus.HEAD ? (
-          <Image
-            src="/images/pages/gamefi/cointoss/coin-head-active.png"
-            width="64px"
-            height="64px"
-            alt="Coin Head Active"
-          />
-        ) : (
-          <Image
-            src="/images/pages/gamefi/cointoss/coin-head-inactive.png"
-            width="64px"
-            height="64px"
-            alt="Coin Head Inactive"
-          />
-        )}
-        <h4 className="font-bold text-[36px] leading-[44.65px] mt-4">Bet Placed</h4>
+    <div>
+      <div className="h-[255px] rounded-[15px] pt-[64px]">
+        <div className="flex flex-col mx-[109px] items-center">
+          {coinTossStatus == CoinTossStatus.HEAD ? (
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-head-active.png"
+              width="64px"
+              height="64px"
+              alt="Coin Head Active"
+            />
+          ) : coinTossStatus == CoinTossStatus.TAIL ? (
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-tail-active.png"
+              width="64px"
+              height="64px"
+              alt="Coin Tail Active"
+            />
+          ) : (
+            <></>
+          )}
+          <h4 className="font-bold text-[36px] leading-[44.65px] mt-4">Bet Placed</h4>
+        </div>
       </div>
     </div>
   )
@@ -45,24 +49,28 @@ const CoinTossBetPending = ({ coinTossStatus }: { coinTossStatus: CoinTossStatus
 
 const CoinTossBetResult = ({ coinTossResult }: { coinTossResult: CoinTossStatus }) => {
   return (
-    <div className="w-[410px] h-[269px] bg-[#0D0C2B] rounded-[15px]">
-      <div className="flex flex-col mt-[64px] mx-[109px] items-center">
-        {coinTossResult == CoinTossStatus.HEAD ? (
-          <Image
-            src="/images/pages/gamefi/cointoss/coin-head-active.png"
-            width="80px"
-            height="80px"
-            alt="Coin Head Active"
-          />
-        ) : (
-          <Image
-            src="/images/pages/gamefi/cointoss/coin-head-inactive.png"
-            width="80px"
-            height="80px"
-            alt="Coin Head Inactive"
-          />
-        )}
-        <h4 className="font-bold text-[36px] leading-[44.65px] mt-4">Bet Result</h4>
+    <div>
+      <div className="h-[269px] rounded-[15px] pt-[64px]">
+        <div className="flex flex-col mx-[109px] items-center">
+          {coinTossResult == CoinTossStatus.HEAD ? (
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-head-active.png"
+              width="80px"
+              height="80px"
+              alt="Coin Head Active"
+            />
+          ) : coinTossResult == CoinTossStatus.TAIL ? (
+            <Image
+              src="/images/pages/gamefi/cointoss/coin-tail-active.png"
+              width="80px"
+              height="80px"
+              alt="Coin Tail Active"
+            />
+          ) : (
+            <></>
+          )}
+          <h4 className="font-bold text-[36px] leading-[44.65px] mt-4">Bet Result</h4>
+        </div>
       </div>
     </div>
   )
@@ -89,11 +97,13 @@ const CoinTossBetModal: FC<CoinTossBetModalProps> = ({
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxWidth={500} maxHeight={90}>
       {coinTossBetStatus === CoinTossBetStatus.PENDING ? (
         <CoinTossBetPending coinTossStatus={coinTossStatus} />
-      ) : (
+      ) : coinTossBetStatus === CoinTossBetStatus.PLACED ? (
         <CoinTossBetResult coinTossResult={coinTossResult} />
+      ) : (
+        <></>
       )}
     </Modal>
   )
