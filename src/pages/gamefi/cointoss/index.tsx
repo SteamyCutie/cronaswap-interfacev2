@@ -58,6 +58,9 @@ export default function CoinToss() {
   }
 
   const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
+  useEffect(() => {
+    setselectedToken(CRONA_ADDRESS[chainId])
+  }, [chainId])
   const selectedCurrency = useCurrency(selectedToken)
   const selectedTokenBalance = useCurrencyBalance(account ?? undefined, selectedCurrency ?? undefined)
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(selectedTokenBalance)
