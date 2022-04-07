@@ -273,7 +273,7 @@ export default function CoinToss() {
                 </div>
               </div>
             </div>
-            <div className="mt-[22px]">
+            <div className="mt-[22px] w-full">
               <GameReviewPanel
                 selectedToken={selectedCurrency}
                 activeTab={activeTab}

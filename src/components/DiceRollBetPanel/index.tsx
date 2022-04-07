@@ -4,12 +4,13 @@ import Web3Connect from '../Web3Connect'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import BetAmountInputPanel from '../BetAmountInputPanel'
+import { Currency } from '@cronaswap/core-sdk'
 
 interface DiceRollBetPanelProps {
   diceRollOption: DiceRollOption
   onDiceRollSelect: (value: DiceRollOption) => void
   winningChance: number | 0
-  selectedToken: string | ''
+  selectedToken: Currency | undefined
   onSelectToken: (value: string) => void
   onMax
   inputValue: string | ''
@@ -99,7 +100,7 @@ export const DiceRollBetPanel = ({
 
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
-      <div className="h-[69px] absolute top-[40px] left-[40px]">
+      {/* <div className="h-[69px] absolute top-[40px] left-[40px]">
         <h4 className="text-[36px] leading-[44.65px] font-bold text-white">Dice Roll</h4>
         <p className="text-[14px] leading-[16px] font-normal text-[#AFAFC5] mt-[8px]">
           6 different sides of dice. Guess the right one and vwala!
@@ -166,7 +167,7 @@ export const DiceRollBetPanel = ({
             <button className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue">Bet</button>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

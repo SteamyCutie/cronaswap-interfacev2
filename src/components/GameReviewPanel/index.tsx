@@ -43,13 +43,13 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
       default:
         break
     }
-  }, [activeTab, betsByIndex])
+  }, [activeTab, betsByIndex, topGamers, betsByPlayer])
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {
     return index
   }, [])
 
-  const hoverStyle = 'hover:bg-[#0D0C2B] hover:cursor-pointer hover:rounded'
+  const hoverStyle = ' hover:bg-[#0D0C2B] hover:cursor-pointer hover:rounded'
   const fieldsList = {
     [CoinTossReview.ALLBETS]: [
       { field: 'Player', lPos: 0 },
@@ -77,7 +77,9 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
     <div className="w-full h-[756px] bg-[#1C1B38] rounded flex flex-col">
       <div className="h-[64px] pt-4 pl-8 pr-4 relative">
         {fieldsList[activeTab].map((e) => (
-          <div className={`absolute ml-[${e?.lPos}px]`}>{e?.field}</div>
+          <div key={e} className={'absolute ml-[' + e?.lPos + 'px]'}>
+            {e?.field}
+          </div>
         ))}
       </div>
       <div className="h-[1px] bg-[#AFAFC5] bg-opacity-30"></div>
@@ -97,7 +99,7 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
                 ? ({ data, index, style }: { data: Array<BetHistory>; index: number; style: CSSProperties }) => (
                     <div style={style} key={index}>
                       {data[index] && selectedToken && (
-                        <div className={`pl-2 relative flex flex-row ${hoverStyle}`}>
+                        <div className={'pl-2 relative flex flex-row' + hoverStyle}>
                           <div className="">{shortenAddress(data[index]?.player)}</div>
                           <div className="absolute ml-[200px]">{shortenString(data[index]?.txn.toString(), 8)}</div>
 
@@ -133,7 +135,7 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
                 ? ({ data, index, style }: { data: Array<TopGamer>; index: number; style: CSSProperties }) => (
                     <div style={style} key={index}>
                       {data[index] && selectedToken && (
-                        <div className={`pl-2 relative flex flex-row ${hoverStyle}`}>
+                        <div className={'pl-2 relative flex flex-row' + hoverStyle}>
                           <div className="">{shortenAddress(data[index]?.player)}</div>
                           <div className="absolute ml-[454px]">{data[index]?.count.toNumber()}</div>
                           <div className="absolute ml-[860px]">
@@ -154,7 +156,7 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
                 ? ({ data, index, style }: { data: Array<BetHistory>; index: number; style: CSSProperties }) => (
                     <div style={style} key={index}>
                       {data[index] && selectedToken && (
-                        <div className={`pl-2 relative flex flex-row ${hoverStyle}`}>
+                        <div className={'pl-2 relative flex flex-row' + hoverStyle}>
                           <div className="">{shortenAddress(data[index]?.player)}</div>
                           <div className="absolute ml-[200px]">{shortenString(data[index]?.txn.toString(), 8)}</div>
                           <div className="absolute ml-[420px]">

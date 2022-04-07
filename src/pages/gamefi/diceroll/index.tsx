@@ -73,7 +73,7 @@ const DiceRoll = () => {
         <div className="flex flex-col items-center">
           {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}
-
+          {/* 
           <div className="mt-[64px] w-full">
             <DiceRollVolumePanel tokenName={'WCRO'} totalBetsCount={245} totalBetsAmount={123} houseEdge={1} />
           </div>
@@ -136,7 +136,7 @@ const DiceRoll = () => {
             <div className="mt-[22px]">
               <GameReviewPanel />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </Container>
