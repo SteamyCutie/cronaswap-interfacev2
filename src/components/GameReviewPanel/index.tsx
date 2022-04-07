@@ -50,9 +50,36 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
   }, [])
 
   const hoverStyle = 'hover:bg-[#0D0C2B] hover:cursor-pointer hover:rounded'
+  const fieldsList = {
+    [CoinTossReview.ALLBETS]: [
+      { field: 'Player', lPos: 0 },
+      { field: 'Transaction', lPos: 200 },
+      { field: 'Amount', lPos: 420 },
+      { field: 'Choice', lPos: 630 },
+      { field: 'Result', lPos: 820 },
+      { field: 'Payout', lPos: 980 },
+    ],
+    [CoinTossReview.YOURBETS]: [
+      { field: 'Player', lPos: 40 },
+      { field: 'Transaction', lPos: 200 },
+      { field: 'Amount', lPos: 420 },
+      { field: 'Choice', lPos: 630 },
+      { field: 'Result', lPos: 820 },
+      { field: 'Payout', lPos: 980 },
+    ],
+    [CoinTossReview.LEADERBOARD]: [
+      { field: 'Player', lPos: 0 },
+      { field: 'Wins', lPos: 454 },
+      { field: 'Payout', lPos: 860 },
+    ],
+  }
   return (
     <div className="w-full h-[756px] bg-[#1C1B38] rounded flex flex-col">
-      <div className="h-[64px]"></div>
+      <div className="h-[64px] pt-4 pl-8 pr-4 relative">
+        {fieldsList[activeTab].map((e) => (
+          <div className={`absolute ml-[${e?.lPos}px]`}>{e?.field}</div>
+        ))}
+      </div>
       <div className="h-[1px] bg-[#AFAFC5] bg-opacity-30"></div>
       <div className="h-full pt-4 pb-6 pl-6 pr-4">
         <AutoSizer disableWidth>

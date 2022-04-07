@@ -245,9 +245,10 @@ export function useCoinTossCallback_GameReview(
   useEffect(() => {
     async function FetchPlayerInfo() {
       try {
+        setbetsByIndex(await conitossContract.getBetsByIndex('100'))
+        settopGamers(await conitossContract.getTopGamers(tokenAddress))
         if (account) {
           setbetsByPlayer(await conitossContract.getBetsByPlayer('100'))
-          // setbetsByPlayer(await conitossContract.getBetsByPlayer('100'))
         }
       } catch {}
     }
