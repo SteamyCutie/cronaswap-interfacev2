@@ -194,6 +194,7 @@ export function useCoinTossCallback_PlaceBet(
           addTransaction(txReceipt, {
             summary: `Get Rewards of ${selectedCurrency.symbol}`,
           })
+          setrewards(BigNumber.from(0))
           onAfterClaim()
           return { tx: txReceipt, error: undefined }
         } catch (error) {
