@@ -25,17 +25,17 @@ interface TopGamer {
 interface GameReviewPanelProps {
   selectedToken: Currency | undefined
   activeTab: number | 0
-  betsByIndex: Array<BetHistory> | []
+  betsByToken: Array<BetHistory> | []
   betsByPlayer: Array<BetHistory> | []
   topGamers: Array<TopGamer> | []
 }
 
-function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, betsByPlayer }: GameReviewPanelProps) {
+function GameReviewPanel({ selectedToken, activeTab, betsByToken, topGamers, betsByPlayer }: GameReviewPanelProps) {
   const fixedListRef = useRef<FixedSizeList>()
   const itemData = useMemo(() => {
     switch (activeTab) {
       case CoinTossReview.ALLBETS:
-        return betsByIndex
+        return betsByToken
       case CoinTossReview.YOURBETS:
         return betsByPlayer
       case CoinTossReview.LEADERBOARD:
@@ -43,7 +43,7 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
       default:
         break
     }
-  }, [activeTab, betsByIndex, topGamers, betsByPlayer])
+  }, [activeTab, betsByToken, topGamers, betsByPlayer])
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {
     return index

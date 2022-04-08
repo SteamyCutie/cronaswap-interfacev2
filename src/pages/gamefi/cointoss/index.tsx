@@ -95,7 +95,7 @@ export default function CoinToss() {
     maxBetAmount,
   } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount)
 
-  const { betsByIndex, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
+  const { betsByToken, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
 
   const [claimRewardStatus, setClaimRewardStatus] = useState<CoinTossClaimRewardStatus>(
     CoinTossClaimRewardStatus.NOTCLAIMED
@@ -268,7 +268,7 @@ export default function CoinToss() {
               <GameReviewPanel
                 selectedToken={selectedCurrency}
                 activeTab={activeTab}
-                betsByIndex={betsByIndex}
+                betsByToken={betsByToken}
                 betsByPlayer={betsByPlayer}
                 topGamers={topGamers}
               />
