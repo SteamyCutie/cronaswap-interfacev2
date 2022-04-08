@@ -98,5 +98,5 @@ export const COINTOSS_ADDRESS: AddressMap = {
 }
 
 export const DICEROLL_ADDRESS: AddressMap = {
-  [ChainId.BSC_TESTNET]: '0x4174153feE0A334f4Eab306C274d14c899a4A687',
+  [ChainId.BSC_TESTNET]: '0xBd8Dd5b838F7134d56889fA8951cCf0e8E9ab3c7',
 }

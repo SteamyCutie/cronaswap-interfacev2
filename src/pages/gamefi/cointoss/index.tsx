@@ -118,7 +118,7 @@ export default function CoinToss() {
   }
   const placebet = async (signature) => {
     try {
-      const response = await axios.get('http://162.33.179.28/placebet', {
+      const response = await axios.get('http://162.33.179.28/placebetcointoss', {
         params: {
           player: account,
           amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),

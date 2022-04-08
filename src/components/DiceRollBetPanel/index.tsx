@@ -4,7 +4,15 @@ import Web3Connect from '../Web3Connect'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import BetAmountInputPanel from '../BetAmountInputPanel'
-import { Currency } from '@cronaswap/core-sdk'
+import Loader from '../Loader'
+import { i18n } from '@lingui/core'
+import { t } from '@lingui/macro'
+import { BigNumber as BN } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
+import { Currency, CurrencyAmount } from '@cronaswap/core-sdk'
+import { ApprovalState } from 'app/hooks'
+import { ButtonConfirmed } from '../Button'
+import { useMemo } from 'react'
 
 interface DiceRollBetPanelProps {
   diceRollOption: DiceRollOption
@@ -15,58 +23,68 @@ interface DiceRollBetPanelProps {
   onMax
   inputValue: string | ''
   onInputValue: (value: string) => void
+  error: string | ''
+  onBet: () => void
+  approvalState: ApprovalState | undefined
+  onApprove: () => void
+  showApproveFlow: boolean | 'false'
+  minBetAmount: BN | undefined
+  maxBetAmount: BN | undefined
+  balance: CurrencyAmount<Currency>
+  multiplier: number | 0
 }
 
 const Dice = ({ diceSide, isSelected, onDiceSelect }) => {
+  const dotBGStyle = useMemo(() => (isSelected ? ' bg-white' : ' bg-[#3089D6]'), [isSelected])
   return (
     <div
       className={`cursor-pointer w-[64px] h-[64px] px-3 py-3 border border-[#AFAFC5] rounded grid hover:bg-slate-800 active:bg-slate-700 ${
-        isSelected && 'bg-slate-700'
+        isSelected && 'bg-[#3089D6]'
       }`}
       onClick={() => {
         onDiceSelect(diceSide, !isSelected)
       }}
     >
       {diceSide == DiceRollStatus.D1 ? (
-        <div className="rounded w-[10px] h-[10px] bg-[#3089D6] place-self-center"></div>
+        <div className={'rounded w-[10px] h-[10px] place-self-center' + dotBGStyle}></div>
       ) : diceSide == DiceRollStatus.D2 ? (
         <>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] place-self-start"></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] place-self-end"></div>
+          <div className={'rounded w-[10px] h-[10px] place-self-start' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px] place-self-end' + dotBGStyle}></div>
         </>
       ) : diceSide == DiceRollStatus.D3 ? (
         <>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] place-self-start"></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] place-self-center"></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] place-self-end"></div>
+          <div className={'rounded w-[10px] h-[10px] place-self-start' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px] place-self-center' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px] place-self-end' + dotBGStyle}></div>
         </>
       ) : diceSide == DiceRollStatus.D4 ? (
         <>
           <div className="grid grid-cols-2 grid-rows-2 gap-5">
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
           </div>
         </>
       ) : diceSide == DiceRollStatus.D5 ? (
         <>
-          <div className="absolute rounded w-[10px] h-[10px] bg-[#3089D6] place-self-center"></div>
+          <div className="absolute rounded w-[10px] h-[10px] place-self-center"></div>
           <div className="grid grid-cols-2 grid-rows-2 gap-5">
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-            <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
           </div>
         </>
       ) : diceSide == DiceRollStatus.D6 ? (
         <div className="grid grid-cols-2 grid-rows-3 gap-x-5 gap-y-1">
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
-          <div className="rounded w-[10px] h-[10px] bg-[#3089D6] "></div>
+          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
+          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
         </div>
       ) : (
         <></>
@@ -84,6 +102,15 @@ export const DiceRollBetPanel = ({
   onMax,
   inputValue,
   onInputValue,
+  error,
+  onBet,
+  approvalState,
+  onApprove,
+  showApproveFlow,
+  minBetAmount,
+  maxBetAmount,
+  balance,
+  multiplier,
 }: DiceRollBetPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   const IsAnyChoiceSelected = (opt: DiceRollOption) =>
@@ -100,7 +127,7 @@ export const DiceRollBetPanel = ({
 
   return (
     <div className="w-[605px] h-[834px] bg-[#1C1B38] rounded relative">
-      {/* <div className="h-[69px] absolute top-[40px] left-[40px]">
+      <div className="h-[69px] absolute top-[40px] left-[40px]">
         <h4 className="text-[36px] leading-[44.65px] font-bold text-white">Dice Roll</h4>
         <p className="text-[14px] leading-[16px] font-normal text-[#AFAFC5] mt-[8px]">
           6 different sides of dice. Guess the right one and vwala!
@@ -130,14 +157,17 @@ export const DiceRollBetPanel = ({
             onMax={onMax}
             inputValue={inputValue}
             onInputValue={onInputValue}
+            maxBetAmount={maxBetAmount}
+            minBetAmount={minBetAmount}
+            balance={balance}
           />
         </div>
 
         <div className="w-full h-[65px] mt-[40px]">
           <div className="flex flex-col gap-[17px]">
             <div className="flex flex-row justify-between">
-              <div className="text-base font-normal align-middle">Betting odds:</div>
-              <div className="text-[14px] leading-[24px] font-bold">{'-'}</div>
+              <div className="text-base font-normal align-middle">Your odds:</div>
+              <div className="text-[14px] leading-[24px] font-bold">{((multiplier * 6) / 100).toFixed(2)} x</div>
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Chance:</div>
@@ -145,9 +175,9 @@ export const DiceRollBetPanel = ({
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Payout:</div>
-              <div className="text-[14px] leading-[24px] font-bold">
-                {'0'}
-                {'WCRO'}
+              <div className="text-[14px] leading-[24px] font-bold flex flex-row gap-2">
+                <div>{(((multiplier * 6) / 100) * parseFloat(inputValue)).toFixed(2)}</div>
+                <div>{selectedToken?.symbol}</div>
               </div>
             </div>
           </div>
@@ -163,11 +193,37 @@ export const DiceRollBetPanel = ({
             <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
               100 % Chance - You just loose edge amount
             </button>
+          ) : showApproveFlow && approvalState !== ApprovalState.APPROVED ? (
+            <div>
+              {
+                <ButtonConfirmed onClick={onApprove} disabled={approvalState !== ApprovalState.NOT_APPROVED} size="lg">
+                  {approvalState === ApprovalState.PENDING ? (
+                    <div className="flex items-center justify-center h-full space-x-2">
+                      <div>Approving</div>
+                      <Loader stroke="white" />
+                    </div>
+                  ) : (
+                    i18n._(t`Approve ${selectedToken?.symbol}`)
+                  )}
+                </ButtonConfirmed>
+              }
+            </div>
+          ) : Boolean(error) ? (
+            <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
+              {error}
+            </button>
           ) : (
-            <button className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue">Bet</button>
+            <button
+              className="w-full h-full bg-[#2172E5] rounded hover:bg-light-blue"
+              onClick={() => {
+                onBet()
+              }}
+            >
+              Bet
+            </button>
           )}
         </div>
-      </div> */}
+      </div>
     </div>
   )
 }

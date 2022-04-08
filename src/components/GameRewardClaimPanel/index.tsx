@@ -8,11 +8,12 @@ import { getBalanceAmount } from 'app/functions/formatBalance'
 import { CoinTossClaimRewardStatus } from 'app/features/gamefi/cointoss/enum'
 import Loader from '../Loader'
 import { ButtonConfirmed } from '../Button'
+import { DiceRollClaimRewardStatus } from 'app/features/gamefi/diceroll/enum'
 interface GameRewardClaimPanelProps {
   selectedCurrency?: Currency | undefined
   rewards?: BN | undefined
   onClaim?: undefined | (() => void)
-  claimRewardStatus?: CoinTossClaimRewardStatus | undefined
+  claimRewardStatus?: CoinTossClaimRewardStatus | DiceRollClaimRewardStatus | undefined
 }
 const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardStatus }: GameRewardClaimPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
