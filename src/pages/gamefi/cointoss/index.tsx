@@ -195,7 +195,7 @@ export default function CoinToss() {
               totalBetsAmount={totalBetsAmount}
               headWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * headsCount) / (headsCount + tailsCount)}
               tailWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * tailsCount) / (headsCount + tailsCount)}
-              houseEdge={1}
+              houseEdge={100 - multiplier}
             />
           </div>
           <div className="flex flex-col">
