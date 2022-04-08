@@ -35,7 +35,7 @@ import CoinTossBetModal from 'app/components/CoinTossBetModal'
 const { default: axios } = require('axios')
 
 export default function CoinToss() {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { i18n } = useLingui()
 
   const router = useRouter()
@@ -56,11 +56,12 @@ export default function CoinToss() {
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
     setCoinTossStatus(selection)
   }
-
+  //const defaultToken = useMemo(() => CRONA_ADDRESS[chainId], [chainId])
   const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
   useEffect(() => {
     setselectedToken(CRONA_ADDRESS[chainId])
   }, [chainId])
+
   const selectedCurrency = useCurrency(selectedToken)
   const selectedTokenBalance = useCurrencyBalance(account ?? undefined, selectedCurrency ?? undefined)
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(selectedTokenBalance)
@@ -80,8 +81,7 @@ export default function CoinToss() {
     setinputValue(value)
   }
   const { totalBetsAmount, totalBetsCount, headsCount, tailsCount } = useCoinTossCallback_Volume(selectedCurrency)
-
-  const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
+  // const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
   const {
     error: cointossBetError,
     rewards,
@@ -106,22 +106,12 @@ export default function CoinToss() {
       setClaimRewardStatus(CoinTossClaimRewardStatus.NOTCLAIMED)
     })
   }
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-  useEffect(() => {
-    if (approvalState === ApprovalState.PENDING) {
-      setApprovalSubmitted(true)
-    }
-  }, [approvalState, approvalSubmitted])
 
   const handleApprove = useCallback(async () => {
-    await approveCallback()
+    approveCallback()
   }, [approveCallback])
   const showApproveFlow =
-    !cointossBetError &&
-    (approvalState === ApprovalState.NOT_APPROVED ||
-      approvalState === ApprovalState.PENDING ||
-      (approvalSubmitted && approvalState === ApprovalState.APPROVED))
-  const [signatureData, setSignatureData] = useState(null)
+    !cointossBetError && (approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING)
   const [betStatus, setbetStatus] = useState<CoinTossBetStatus>(CoinTossBetStatus.NOTPLACED)
   const handleBetModalDismiss = () => {
     betStatus !== CoinTossBetStatus.PENDING && setbetStatus(CoinTossBetStatus.NOTPLACED)
@@ -141,9 +131,10 @@ export default function CoinToss() {
       })
 
       console.log(response)
-      debugger
       const betPlaceResponse = response?.data
       router.push('#')
+      if (response?.error) throw new Error(response?.error)
+
       if (betPlaceResponse?.success) {
         setcoinTossResult(coinTossStatus)
       } else {

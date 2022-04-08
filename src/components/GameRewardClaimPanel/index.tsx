@@ -38,7 +38,7 @@ const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardS
       <div className="items-stretch w-[452px] h-[60px] mx-10 mt-6">
         {!account ? (
           <Web3Connect color="blue" className="w-full h-full text-base text-white" />
-        ) : rewards?.eq(BN.from('0')) ? (
+        ) : !rewards || rewards?.eq(BN.from('0')) ? (
           <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
             No Reward
           </button>

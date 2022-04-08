@@ -103,7 +103,7 @@ const CoinTossBetModal: FC<CoinTossBetModalProps> = ({
       ) : coinTossBetStatus === CoinTossBetStatus.PLACED ? (
         <CoinTossBetResult coinTossResult={coinTossResult} />
       ) : (
-        <></>
+        <div></div>
       )}
     </Modal>
   )

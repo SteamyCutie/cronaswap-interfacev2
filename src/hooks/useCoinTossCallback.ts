@@ -150,15 +150,16 @@ export function useCoinTossCallback_PlaceBet(
   useEffect(() => {
     async function FetchPlayerInfo() {
       try {
-        if (account) {
-          setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer()).toNumber())
-          setrewards(await conitossContract.getRewardsAmountByPlayer(tokenAddress))
-        }
-      } catch {}
+        setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer()).toNumber())
+        setrewards(await conitossContract.getRewardsAmountByPlayer(tokenAddress))
+      } catch {
+        setbetsCountByPlayer(0)
+        setrewards(BigNumber.from(0))
+      }
     }
 
     FetchPlayerInfo()
-  }, [account, selectedCurrency, totalBetsCount, balance])
+  }, [chainId, account, selectedCurrency, totalBetsCount])
   return useMemo(() => {
     if (!chainId && conitossContract) return NOT_APPLICABLE
 
@@ -166,6 +167,7 @@ export function useCoinTossCallback_PlaceBet(
     const sufficientBalance = selectedCurrencyAmount && balance && !balance.lessThan(selectedCurrencyAmount)
     const rangedBalance =
       selectedCurrencyAmount &&
+      minBetAmount &&
       ((selectedCurrencyAmount?.greaterThan(minBetAmount?.toString()) &&
         selectedCurrencyAmount?.lessThan(maxBetAmount?.toString())) ||
         selectedCurrencyAmount?.equalTo(minBetAmount?.toString()) ||
@@ -204,6 +206,7 @@ export function useCoinTossCallback_PlaceBet(
   }, [
     conitossContract,
     chainId,
+    account,
     selectedCurrencyAmount,
     balance,
     addTransaction,
@@ -245,16 +248,18 @@ export function useCoinTossCallback_GameReview(
   useEffect(() => {
     async function FetchPlayerInfo() {
       try {
-        setbetsByIndex(await conitossContract.getBetsByIndex('100'))
-        settopGamers(await conitossContract.getTopGamers(tokenAddress))
+        setbetsByIndex(await conitossContract?.getBetsByIndex('100'))
+        settopGamers(await conitossContract?.getTopGamers(tokenAddress))
         if (account) {
-          setbetsByPlayer(await conitossContract.getBetsByPlayer('100'))
+          setbetsByPlayer(await conitossContract?.getBetsByPlayer('100'))
+        } else {
+          setbetsByPlayer([])
         }
       } catch {}
     }
 
     FetchPlayerInfo()
-  }, [account, selectedCurrency, totalBetsCount])
+  }, [account, selectedCurrency, totalBetsCount, chainId])
   return useMemo(() => {
     if (!chainId && conitossContract) return NOT_APPLICABLE
     return {
@@ -263,7 +268,7 @@ export function useCoinTossCallback_GameReview(
       betsByIndex,
       contract: conitossContract,
     }
-  }, [conitossContract, chainId, betsByIndex, betsByPlayer, topGamers, totalBetsCount])
+  }, [conitossContract, chainId, betsByIndex, betsByPlayer, topGamers, totalBetsCount, account])
 }
 
 export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefined): {
@@ -304,5 +309,5 @@ export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefine
       totalBetsCount,
       contract: conitossContract,
     }
-  }, [conitossContract, chainId, totalBetsAmount, totalBetsCount, headsCount, tailsCount])
+  }, [conitossContract, chainId, account, totalBetsAmount, totalBetsCount, headsCount, tailsCount])
 }
