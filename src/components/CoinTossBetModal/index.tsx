@@ -91,10 +91,6 @@ const CoinTossBetModal: FC<CoinTossBetModalProps> = ({
   coinTossStatus,
   coinTossResult,
 }) => {
-  const { chainId } = useActiveWeb3React()
-
-  if (!chainId) return null
-
   // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxWidth={500} maxHeight={90}>

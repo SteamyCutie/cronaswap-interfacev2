@@ -52,10 +52,6 @@ const DiceRollBetModal: FC<DiceRollBetModalProps> = ({
   diceRollOption,
   diceRollResult,
 }) => {
-  const { chainId } = useActiveWeb3React()
-
-  if (!chainId) return null
-
   const [intrvl, setIntrvl] = useState<NodeJS.Timeout>()
   const [diceFace, setdiceFace] = useState<number>(1)
   const rfSeq = [1, 6, 5, 4, 2, 3, 5, 6, 1, 4, 2, 3]
