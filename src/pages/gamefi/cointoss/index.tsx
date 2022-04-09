@@ -137,7 +137,6 @@ export default function CoinToss() {
       router.push('#')
       if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
 
-      debugger
       setcoinTossResult(betPlaceResponse?.result)
 
       setbetStatus(CoinTossBetStatus.PLACED)

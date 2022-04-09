@@ -150,7 +150,6 @@ const DiceRoll = () => {
       console.log(response)
       const betPlaceResponse = response?.data
       router.push('#')
-      debugger
       if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
 
       setdiceRollResult(betPlaceResponse?.result)

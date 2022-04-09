@@ -8,14 +8,28 @@ export default function AnimationDice({ diceFace }: AnimationDiceProps) {
   const dice = (
     <div className="dice-container">
       <div className={`dice face-${diceFace}`}>
-        <div className="face-1">
+        <div className="face-0">
           <div className="dot-container">
+            <div className="dot"></div>
+          </div>
+        </div>
+        <div className="face-2">
+          <div className="dot-container">
+            <div className="dot"></div>
+            <div className="dot"></div>
             <div className="dot"></div>
           </div>
         </div>
         <div className="face-3">
           <div className="dot-container">
             <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div>
+        </div>
+        <div className="face-1">
+          <div className="dot-container">
             <div className="dot"></div>
             <div className="dot"></div>
           </div>
@@ -26,24 +40,10 @@ export default function AnimationDice({ diceFace }: AnimationDiceProps) {
             <div className="dot"></div>
             <div className="dot"></div>
             <div className="dot"></div>
-          </div>
-        </div>
-        <div className="face-2">
-          <div className="dot-container">
-            <div className="dot"></div>
             <div className="dot"></div>
           </div>
         </div>
         <div className="face-5">
-          <div className="dot-container">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-          </div>
-        </div>
-        <div className="face-6">
           <div className="dot-container">
             <div className="dot"></div>
             <div className="dot"></div>
@@ -57,5 +57,5 @@ export default function AnimationDice({ diceFace }: AnimationDiceProps) {
     </div>
   )
 
-  return <div className="main-dice-container">{dice}</div>
+  return dice
 }

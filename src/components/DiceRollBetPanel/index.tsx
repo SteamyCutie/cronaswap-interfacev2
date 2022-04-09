@@ -13,6 +13,7 @@ import { Currency, CurrencyAmount } from '@cronaswap/core-sdk'
 import { ApprovalState } from 'app/hooks'
 import { ButtonConfirmed } from '../Button'
 import { useMemo } from 'react'
+import { toInteger } from 'lodash'
 
 interface DiceRollBetPanelProps {
   diceRollOption: DiceRollOption
@@ -34,61 +35,66 @@ interface DiceRollBetPanelProps {
   multiplier: number | 0
 }
 
-const Dice = ({ diceSide, isSelected, onDiceSelect }) => {
-  const dotBGStyle = useMemo(() => (isSelected ? ' bg-white' : ' bg-[#3089D6]'), [isSelected])
+const Dice = ({ diceSide, isSelected, onDiceSelect, size }) => {
+  const diceBGStyle = isSelected && ' bg-[#3089D6]'
+  const dotBGStyle = isSelected ? ' bg-white' : ' bg-[#3089D6]'
+  const cubeSizeStyle = ' w-[' + 64 + 'px] h-[' + 64 + 'px]'
+  console.log(cubeSizeStyle)
+  const dotSizeStyle = ' w-[' + '6' + 'px] h-[' + '6' + 'px]'
+  debugger
   return (
     <div
-      className={`cursor-pointer w-[64px] h-[64px] px-3 py-3 border border-[#AFAFC5] rounded grid hover:bg-slate-800 active:bg-slate-700 ${
-        isSelected && 'bg-[#3089D6]'
-      }`}
+      className={
+        'cursor-pointer border border-[#AFAFC5] rounded hover:bg-slate-800 active:bg-slate-700' +
+        diceBGStyle +
+        cubeSizeStyle
+      }
       onClick={() => {
         onDiceSelect(diceSide, !isSelected)
       }}
     >
-      {diceSide == DiceRollStatus.D1 ? (
-        <div className={'rounded w-[10px] h-[10px] place-self-center' + dotBGStyle}></div>
-      ) : diceSide == DiceRollStatus.D2 ? (
-        <>
-          <div className={'rounded w-[10px] h-[10px] place-self-start' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px] place-self-end' + dotBGStyle}></div>
-        </>
-      ) : diceSide == DiceRollStatus.D3 ? (
-        <>
-          <div className={'rounded w-[10px] h-[10px] place-self-start' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px] place-self-center' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px] place-self-end' + dotBGStyle}></div>
-        </>
-      ) : diceSide == DiceRollStatus.D4 ? (
-        <>
-          <div className="grid grid-cols-2 grid-rows-2 gap-5">
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          </div>
-        </>
-      ) : diceSide == DiceRollStatus.D5 ? (
-        <>
-          <div className={'absolute rounded w-[10px] h-[10px] place-self-center' + dotBGStyle}></div>
-          <div className="grid grid-cols-2 grid-rows-2 gap-5">
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-            <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          </div>
-        </>
-      ) : diceSide == DiceRollStatus.D6 ? (
-        <div className="grid grid-cols-2 grid-rows-3 gap-x-5 gap-y-1">
-          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-          <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
-        </div>
-      ) : (
-        <></>
-      )}
+      <div className={'grid w-full h-full grid-cols-3 grid-rows-3 place-items-center'}>
+        {diceSide == DiceRollStatus.D1 ? (
+          <div className={'rounded col-start-2 row-start-2' + dotBGStyle + dotSizeStyle}></div>
+        ) : diceSide == DiceRollStatus.D2 ? (
+          <>
+            <div className={'rounded col-start-1 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+          </>
+        ) : diceSide == DiceRollStatus.D3 ? (
+          <>
+            <div className={'rounded col-start-2 row-start-2' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-1 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+          </>
+        ) : diceSide == DiceRollStatus.D4 ? (
+          <>
+            <div className={'rounded col-start-1 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-1 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+          </>
+        ) : diceSide == DiceRollStatus.D5 ? (
+          <>
+            <div className={'rounded col-start-1 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-1 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-2 row-start-2' + dotBGStyle + dotSizeStyle}></div>
+          </>
+        ) : diceSide == DiceRollStatus.D6 ? (
+          <>
+            <div className={'rounded col-start-1 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-1 row-start-2' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-1 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-1' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-2' + dotBGStyle + dotSizeStyle}></div>
+            <div className={'rounded col-start-3 row-start-3' + dotBGStyle + dotSizeStyle}></div>
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   )
 }
@@ -147,7 +153,7 @@ export const DiceRollBetPanel = ({
         <div className="text-base font-bold text-center text-white">Select dice side</div>
         <div className="mt-[64px] w-[474px] h-[64px] flex flex-row gap-[18px]">
           {[0, 1, 2, 3, 4, 5].map((e) => (
-            <Dice diceSide={e} isSelected={diceRollOption[e]} onDiceSelect={handleDiceSelect} key={e}></Dice>
+            <Dice size={32} diceSide={e} isSelected={diceRollOption[e]} onDiceSelect={handleDiceSelect} key={e}></Dice>
           ))}
         </div>
         <div className="mt-[100px] w-full">
