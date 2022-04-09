@@ -69,7 +69,7 @@ const Dice = ({ diceSide, isSelected, onDiceSelect }) => {
         </>
       ) : diceSide == DiceRollStatus.D5 ? (
         <>
-          <div className="absolute rounded w-[10px] h-[10px] place-self-center"></div>
+          <div className={'absolute rounded w-[10px] h-[10px] place-self-center' + dotBGStyle}></div>
           <div className="grid grid-cols-2 grid-rows-2 gap-5">
             <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
             <div className={'rounded w-[10px] h-[10px]' + dotBGStyle}></div>
@@ -167,7 +167,7 @@ export const DiceRollBetPanel = ({
           <div className="flex flex-col gap-[17px]">
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Your odds:</div>
-              <div className="text-[14px] leading-[24px] font-bold">{((multiplier * 6) / 100).toFixed(2)} x</div>
+              <div className="text-[14px] leading-[24px] font-bold">{(multiplier / winningChance).toFixed(2)} x</div>
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Chance:</div>
@@ -176,7 +176,7 @@ export const DiceRollBetPanel = ({
             <div className="flex flex-row justify-between">
               <div className="text-base font-normal align-middle">Winning Payout:</div>
               <div className="text-[14px] leading-[24px] font-bold flex flex-row gap-2">
-                <div>{(((multiplier * 6) / 100) * parseFloat(inputValue)).toFixed(2)}</div>
+                <div>{((multiplier / winningChance) * parseFloat(inputValue)).toFixed(2)}</div>
                 <div>{selectedToken?.symbol}</div>
               </div>
             </div>

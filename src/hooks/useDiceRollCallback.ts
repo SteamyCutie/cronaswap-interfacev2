@@ -35,6 +35,10 @@ export function useEIP712BetSignMessageGenerator(
 ): { signature?: any; onSign?: () => void } {
   const { account, library } = useActiveWeb3React()
   const [signatureData, setSignatureData] = useState(null)
+  let diceRollOptionStr = ''
+  for (let i = 0; i < 6; i++) {
+    diceRollOptionStr += choice[i] ? '1' : '0'
+  }
   return {
     onSign: () => {
       const msgParams = JSON.stringify({
@@ -53,7 +57,7 @@ export function useEIP712BetSignMessageGenerator(
         message: {
           player: player,
           amount: amount.toString(),
-          choice: choice.toString(),
+          choice: diceRollOptionStr,
           token: token,
           nonce: nonce,
           deadline: deadline,

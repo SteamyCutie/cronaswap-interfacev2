@@ -5,6 +5,7 @@
 @import 'rc-slider/assets/index.css';
 
 @import './variables.css';
+@import './dice.css';
 
 @tailwind components;
 

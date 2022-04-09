@@ -32,6 +32,7 @@ import {
 import { ApprovalState } from 'app/hooks'
 import BigNumber from 'bignumber.js'
 import DiceRollBetModal from 'app/components/DiceRollBetModal'
+import AnimationDice from 'app/components/AnimationDice'
 const { default: axios } = require('axios')
 
 const DiceRoll = () => {
@@ -129,11 +130,16 @@ const DiceRoll = () => {
   }
   const placebet = async (signature) => {
     try {
-      const response = await axios.get('http://162.33.179.28/placebetdiceroll', {
+      let diceRollOptionStr = ''
+      for (let i = 0; i < 6; i++) {
+        diceRollOptionStr += diceRollOption[i] ? '1' : '0'
+      }
+      const response = await axios.get('http://162.33.179.28/placebet', {
         params: {
+          game: 'DiceRoll',
           player: account,
           amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
-          choice: diceRollOption.toString(),
+          choice: diceRollOptionStr,
           token: selectedToken,
           nonce: betsCountByPlayer.toString(),
           deadline: '0',
@@ -144,13 +150,10 @@ const DiceRoll = () => {
       console.log(response)
       const betPlaceResponse = response?.data
       router.push('#')
-      if (response?.error) throw new Error(response?.error)
+      debugger
+      if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
 
-      if (betPlaceResponse?.success) {
-        setdiceRollResult(DiceRollStatus.NONE)
-      } else {
-        setdiceRollResult(DiceRollStatus.NONE)
-      }
+      setdiceRollResult(betPlaceResponse?.result)
 
       setbetStatus(DiceRollBetStatus.PLACED)
       setinputValue('')

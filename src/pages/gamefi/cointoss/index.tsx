@@ -118,8 +118,10 @@ export default function CoinToss() {
   }
   const placebet = async (signature) => {
     try {
-      const response = await axios.get('http://162.33.179.28/placebetcointoss', {
+      //http://162.33.179.28/placebetcointoss
+      const response = await axios.get('http://162.33.179.28/placebet', {
         params: {
+          game: 'CoinToss',
           player: account,
           amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
           choice: coinTossStatus.toString(),
@@ -133,13 +135,10 @@ export default function CoinToss() {
       console.log(response)
       const betPlaceResponse = response?.data
       router.push('#')
-      if (response?.error) throw new Error(response?.error)
+      if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
 
-      if (betPlaceResponse?.success) {
-        setcoinTossResult(coinTossStatus)
-      } else {
-        setcoinTossResult(CoinTossStatus.TAIL - coinTossStatus)
-      }
+      debugger
+      setcoinTossResult(betPlaceResponse?.result)
 
       setbetStatus(CoinTossBetStatus.PLACED)
       setinputValue('')

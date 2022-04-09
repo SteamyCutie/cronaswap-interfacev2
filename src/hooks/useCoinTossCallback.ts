@@ -293,7 +293,6 @@ export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefine
     }
   }, [totalBetInfo])
 
-  debugger
   const totalCounts = useSingleCallResult(conitossContract, 'getHeadsTailsCountByToken', [tokenAddress])?.result
   const { headsCount, tailsCount } = useMemo(() => {
     return {
