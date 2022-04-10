@@ -38,9 +38,8 @@ interface DiceRollBetPanelProps {
 const Dice = ({ diceSide, isSelected, onDiceSelect, size }) => {
   const diceBGStyle = isSelected && ' bg-[#3089D6]'
   const dotBGStyle = isSelected ? ' bg-white' : ' bg-[#3089D6]'
-  const cubeSizeStyle = ' w-[' + 64 + 'px] h-[' + 64 + 'px]'
-  console.log(cubeSizeStyle)
-  const dotSizeStyle = ' w-[' + '6' + 'px] h-[' + '6' + 'px]'
+  const cubeSizeStyle = ' w-[64px] h-[64px] px-[12px] py-[12px]'
+  const dotSizeStyle = ' w-[10px] h-[10px]'
   debugger
   return (
     <div
