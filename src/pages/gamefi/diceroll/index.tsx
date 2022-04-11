@@ -6,17 +6,11 @@ import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
-import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { DiceRollVolumePanel } from 'app/components/DiceRollVolumePanel'
 import { DiceRollBetPanel } from 'app/components/DiceRollBetPanel'
 import { DiceRollOption } from 'app/constants/gamefi'
-import {
-  DiceRollBetStatus,
-  DiceRollClaimRewardStatus,
-  DiceRollReview,
-  DiceRollStatus,
-} from 'app/features/gamefi/diceroll/enum'
+import { DiceRollBetStatus, DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount, Token } from '@cronaswap/core-sdk'
 import { useActiveWeb3React } from 'app/services/web3'
@@ -33,6 +27,7 @@ import { ApprovalState } from 'app/hooks'
 import BigNumber from 'bignumber.js'
 import DiceRollBetModal from 'app/components/DiceRollBetModal'
 import AnimationDice from 'app/components/AnimationDice'
+import { GameType, GameReview } from 'app/features/gamefi'
 const { default: axios } = require('axios')
 
 const DiceRoll = () => {
@@ -45,7 +40,7 @@ const DiceRoll = () => {
   const tabStyle = 'px-[27px] py-[8px] rounded text-base font-normal cursor-pointer'
   const activeTabStyle = `${tabStyle} bg-[#0D0C2B]`
   const inactiveTabStyle = `${tabStyle}`
-  const [activeTab, setActiveTab] = useState<DiceRollReview>(DiceRollReview.ALLBETS)
+  const [activeTab, setActiveTab] = useState<GameReview>(GameReview.ALLBETS)
   const [diceRollOption, setDiceRollOption] = useState<DiceRollOption>({
     [DiceRollStatus.D1]: false,
     [DiceRollStatus.D2]: false,
@@ -245,30 +240,28 @@ const DiceRoll = () => {
                 <div className="flex flex-row">
                   <div
                     onClick={() => {
-                      setActiveTab(DiceRollReview.ALLBETS)
+                      setActiveTab(GameReview.ALLBETS)
                     }}
                   >
-                    <div className={activeTab === DiceRollReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
-                      All Bets
-                    </div>
+                    <div className={activeTab === GameReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>All Bets</div>
                     {/* <NavLink href="/cointoss?filter=allbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(DiceRollReview.YOURBETS)
+                      setActiveTab(GameReview.YOURBETS)
                     }}
                   >
-                    <div className={activeTab === DiceRollReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTab === GameReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
                       Your Bets
                     </div>
                     {/* <NavLink href="/cointoss?filter=yourbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(DiceRollReview.LEADERBOARD)
+                      setActiveTab(GameReview.LEADERBOARD)
                     }}
                   >
-                    <div className={activeTab === DiceRollReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTab === GameReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
                       Leaderboard
                     </div>
                     {/* <NavLink href="/cointoss?filter=leaderboard"></NavLink> */}
@@ -278,6 +271,7 @@ const DiceRoll = () => {
             </div>
             <div className="mt-[22px] w-full">
               <GameReviewPanel
+                game={GameType.DICEROLL}
                 selectedToken={selectedCurrency}
                 activeTab={activeTab}
                 betsByToken={betsByToken}

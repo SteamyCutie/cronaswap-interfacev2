@@ -7,7 +7,7 @@
   width: 160px;
   height: 160px;
   transform-style: preserve-3d;
-  transition: all 600ms ease-in-out;
+  transition: all 2s ease-in-out;
   transform-origin: center;
 }
 .coin.face-0 {

@@ -103,13 +103,13 @@ const CoinTossBetModal: FC<CoinTossBetModalProps> = ({
         const interval = setInterval(() => {
           setcoinFace(rfSeq[rfSeqId])
           rfSeqId = (rfSeqId + 1) % 2
-        }, 1000)
+        }, 3000)
         setIntrvl(interval)
         break
       case CoinTossBetStatus.PLACED:
         clearInterval(intrvl)
         const diceStype = document.querySelector('.coin')
-        diceStype['style']['transition'] = 'all 3s ease-in-out'
+        diceStype['style']['transition'] = 'all 4s ease-in-out'
         setcoinFace(coinTossResult)
         break
       case CoinTossBetStatus.NOTPLACED:

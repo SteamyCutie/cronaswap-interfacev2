@@ -43,7 +43,7 @@
   height: 160px;
   outline: 2px solid #00BBFF;
   outline-offset: -2px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;

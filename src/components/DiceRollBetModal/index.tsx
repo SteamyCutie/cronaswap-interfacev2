@@ -5,12 +5,7 @@ import Modal from '../Modal'
 import { useActiveWeb3React } from '../../services/web3'
 import { useLingui } from '@lingui/react'
 
-import {
-  DiceRollBetStatus,
-  DiceRollClaimRewardStatus,
-  DiceRollReview,
-  DiceRollStatus,
-} from 'app/features/gamefi/diceroll/enum'
+import { DiceRollBetStatus, DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import { DiceRollOption } from '../../constants/gamefi'
 import AnimationDice from '../AnimationDice'
 const DiceRollBetPending = ({ diceRollOption }: { diceRollOption: DiceRollOption }) => {

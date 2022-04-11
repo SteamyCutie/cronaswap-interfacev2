@@ -8,12 +8,7 @@ import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
-import {
-  CoinTossBetStatus,
-  CoinTossClaimRewardStatus,
-  CoinTossReview,
-  CoinTossStatus,
-} from 'app/features/gamefi/cointoss/enum'
+import { CoinTossBetStatus, CoinTossClaimRewardStatus, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
@@ -32,6 +27,7 @@ import BigNumber from 'bignumber.js'
 import { getBalanceAmount } from 'app/functions/formatBalance'
 import { useSingleCallResult } from 'app/state/multicall/hooks'
 import CoinTossBetModal from 'app/components/CoinTossBetModal'
+import { GameType, GameReview } from 'app/features/gamefi'
 const { default: axios } = require('axios')
 
 export default function CoinToss() {
@@ -45,11 +41,11 @@ export default function CoinToss() {
   const inactiveTabStyle = `${tabStyle}`
 
   const FILTER = {
-    allbets: CoinTossReview.ALLBETS,
-    yourbets: CoinTossReview.YOURBETS,
-    leaderboard: CoinTossReview.LEADERBOARD,
+    allbets: GameReview.ALLBETS,
+    yourbets: GameReview.YOURBETS,
+    leaderboard: GameReview.LEADERBOARD,
   }
-  const [activeTab, setActiveTab] = useState<CoinTossReview>(0)
+  const [activeTab, setActiveTab] = useState<GameReview>(0)
   const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
   const [coinTossResult, setcoinTossResult] = useState<CoinTossStatus>(CoinTossStatus.NONE)
 
@@ -231,30 +227,28 @@ export default function CoinToss() {
                 <div className="flex flex-row">
                   <div
                     onClick={() => {
-                      setActiveTab(CoinTossReview.ALLBETS)
+                      setActiveTab(GameReview.ALLBETS)
                     }}
                   >
-                    <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
-                      All Bets
-                    </div>
+                    <div className={activeTab === GameReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>All Bets</div>
                     {/* <NavLink href="/cointoss?filter=allbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(CoinTossReview.YOURBETS)
+                      setActiveTab(GameReview.YOURBETS)
                     }}
                   >
-                    <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTab === GameReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
                       Your Bets
                     </div>
                     {/* <NavLink href="/cointoss?filter=yourbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(CoinTossReview.LEADERBOARD)
+                      setActiveTab(GameReview.LEADERBOARD)
                     }}
                   >
-                    <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTab === GameReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
                       Leaderboard
                     </div>
                     {/* <NavLink href="/cointoss?filter=leaderboard"></NavLink> */}
@@ -264,6 +258,7 @@ export default function CoinToss() {
             </div>
             <div className="mt-[22px] w-full">
               <GameReviewPanel
+                game={GameType.COINTOSS}
                 selectedToken={selectedCurrency}
                 activeTab={activeTab}
                 betsByToken={betsByToken}
