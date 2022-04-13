@@ -10,7 +10,7 @@ import GameReviewPanel from 'app/components/GameReviewPanel'
 import { DiceRollVolumePanel } from 'app/components/DiceRollVolumePanel'
 import { DiceRollBetPanel } from 'app/components/DiceRollBetPanel'
 import { DiceRollOption } from 'app/constants/gamefi'
-import { DiceRollBetStatus, DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
+import { DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount, Token } from '@cronaswap/core-sdk'
 import { useActiveWeb3React } from 'app/services/web3'
@@ -27,7 +27,7 @@ import { ApprovalState } from 'app/hooks'
 import BigNumber from 'bignumber.js'
 import DiceRollBetModal from 'app/components/DiceRollBetModal'
 import AnimationDice from 'app/components/AnimationDice'
-import { GameType, GameReview } from 'app/features/gamefi'
+import { GameType, GameReview, GameBetStatus } from 'app/features/gamefi'
 const { default: axios } = require('axios')
 
 const DiceRoll = () => {
@@ -41,15 +41,24 @@ const DiceRoll = () => {
   const activeTabStyle = `${tabStyle} bg-[#0D0C2B]`
   const inactiveTabStyle = `${tabStyle}`
   const [activeTab, setActiveTab] = useState<GameReview>(GameReview.ALLBETS)
-  const [diceRollOption, setDiceRollOption] = useState<DiceRollOption>({
-    [DiceRollStatus.D1]: false,
-    [DiceRollStatus.D2]: false,
-    [DiceRollStatus.D3]: false,
-    [DiceRollStatus.D4]: false,
-    [DiceRollStatus.D5]: false,
-    [DiceRollStatus.D6]: false,
+  const [{ diceRollOption, diceRollResult, diceRollBetStatus, diceRollAfterBetError }, setDiceRollBetState] = useState<{
+    diceRollOption: DiceRollOption
+    diceRollResult: DiceRollStatus
+    diceRollBetStatus: GameBetStatus
+    diceRollAfterBetError: string
+  }>({
+    diceRollOption: {
+      [DiceRollStatus.D1]: false,
+      [DiceRollStatus.D2]: false,
+      [DiceRollStatus.D3]: false,
+      [DiceRollStatus.D4]: false,
+      [DiceRollStatus.D5]: false,
+      [DiceRollStatus.D6]: false,
+    },
+    diceRollResult: DiceRollStatus.NONE,
+    diceRollBetStatus: GameBetStatus.NOTPLACED,
+    diceRollAfterBetError: '',
   })
-  const [diceRollResult, setdiceRollResult] = useState<DiceRollStatus>(DiceRollStatus.NONE)
 
   const winningChance = useMemo(() => {
     let chance = 0
@@ -61,7 +70,12 @@ const DiceRoll = () => {
   }, [diceRollOption])
 
   const handleDiceSelect = (selection: DiceRollOption) => {
-    setDiceRollOption({ ...selection })
+    setDiceRollBetState({
+      diceRollOption: selection,
+      diceRollAfterBetError,
+      diceRollBetStatus,
+      diceRollResult,
+    })
   }
   //const defaultToken = useMemo(() => CRONA_ADDRESS[chainId], [chainId])
   const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
@@ -119,9 +133,14 @@ const DiceRoll = () => {
   }, [approveCallback])
   const showApproveFlow =
     !dicerollBetError && (approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING)
-  const [betStatus, setbetStatus] = useState<DiceRollBetStatus>(DiceRollBetStatus.NOTPLACED)
   const handleBetModalDismiss = () => {
-    betStatus !== DiceRollBetStatus.PENDING && setbetStatus(DiceRollBetStatus.NOTPLACED)
+    diceRollBetStatus !== GameBetStatus.PENDING &&
+      setDiceRollBetState({
+        diceRollAfterBetError,
+        diceRollBetStatus: GameBetStatus.NOTPLACED,
+        diceRollOption,
+        diceRollResult,
+      })
   }
   const placebet = async (signature) => {
     try {
@@ -147,12 +166,21 @@ const DiceRoll = () => {
       router.push('#')
       if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
 
-      setdiceRollResult(betPlaceResponse?.result)
+      setDiceRollBetState({
+        diceRollResult: betPlaceResponse?.result,
+        diceRollBetStatus: GameBetStatus.PLACED,
+        diceRollAfterBetError,
+        diceRollOption,
+      })
 
-      setbetStatus(DiceRollBetStatus.PLACED)
       setinputValue('')
     } catch {
-      setbetStatus(DiceRollBetStatus.NOTPLACED)
+      setDiceRollBetState({
+        diceRollResult,
+        diceRollBetStatus: GameBetStatus.FATAL,
+        diceRollAfterBetError: 'Network Error! Please check connection!',
+        diceRollOption,
+      })
     }
   }
   const { onSign: handleBet } = useEIP712BetSignMessageGenerator(
@@ -167,12 +195,22 @@ const DiceRoll = () => {
     betsCountByPlayer,
     0,
     () => {
-      setbetStatus(DiceRollBetStatus.PENDING)
+      setDiceRollBetState({
+        diceRollAfterBetError,
+        diceRollBetStatus: GameBetStatus.PENDING,
+        diceRollOption,
+        diceRollResult,
+      })
     },
     placebet,
     () => {},
     () => {
-      setbetStatus(DiceRollBetStatus.NOTPLACED)
+      setDiceRollBetState({
+        diceRollAfterBetError: 'User rejected sign!',
+        diceRollBetStatus: GameBetStatus.FATAL,
+        diceRollOption,
+        diceRollResult,
+      })
     }
   )
 
@@ -187,11 +225,12 @@ const DiceRoll = () => {
         <div className="absolute bottom-1/4 -right-10 bg-red top-4 w-3/5 rounded-full z-0  filter blur-[150px]" /> */}
         <div className="flex flex-col items-center">
           <DiceRollBetModal
-            isOpen={betStatus !== DiceRollBetStatus.NOTPLACED}
+            isOpen={diceRollBetStatus !== GameBetStatus.NOTPLACED}
             onDismiss={handleBetModalDismiss}
-            diceRollBetStatus={betStatus}
+            diceRollBetStatus={diceRollBetStatus}
             diceRollOption={diceRollOption}
             diceRollResult={diceRollResult}
+            diceRollAfterBetError={diceRollAfterBetError}
           />
           {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}

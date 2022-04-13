@@ -45,7 +45,6 @@ function GameReviewPanel({
 }: GameReviewPanelProps) {
   const fixedListRef = useRef<FixedSizeList>()
   const itemData = useMemo(() => {
-    debugger
     switch (activeTab) {
       case GameReview.ALLBETS:
         return betsByToken

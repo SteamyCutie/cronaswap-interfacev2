@@ -5,9 +5,11 @@ import Modal from '../Modal'
 import { useActiveWeb3React } from '../../services/web3'
 import { useLingui } from '@lingui/react'
 
-import { DiceRollBetStatus, DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
+import { DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import { DiceRollOption } from '../../constants/gamefi'
 import AnimationDice from '../AnimationDice'
+import { GameBetStatus } from 'app/features/gamefi'
+import { AlertTriangle } from 'react-feather'
 const DiceRollBetPending = ({ diceRollOption }: { diceRollOption: DiceRollOption }) => {
   return (
     <div>
@@ -32,12 +34,26 @@ const DiceRollBetResult = ({ diceRollResult }: { diceRollResult: DiceRollStatus 
   )
 }
 
+const DiceRollAfterBetError = ({ diceRollAfterBetError }) => {
+  return (
+    <div>
+      <div className="pt-[64px]">
+        <div className="flex flex-col items-center justify-center gap-3">
+          <AlertTriangle className="text-red" style={{ strokeWidth: 1.5 }} size={64} />
+          <div className="font-bold text-red text-[24px]">{diceRollAfterBetError}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 interface DiceRollBetModalProps {
   isOpen: boolean
   onDismiss: () => void
-  diceRollBetStatus: DiceRollBetStatus
+  diceRollBetStatus: GameBetStatus
   diceRollOption?: DiceRollOption
   diceRollResult?: DiceRollStatus
+  diceRollAfterBetError: string
 }
 
 const DiceRollBetModal: FC<DiceRollBetModalProps> = ({
@@ -46,6 +62,7 @@ const DiceRollBetModal: FC<DiceRollBetModalProps> = ({
   diceRollBetStatus,
   diceRollOption,
   diceRollResult,
+  diceRollAfterBetError,
 }) => {
   const [intrvl, setIntrvl] = useState<NodeJS.Timeout>()
   const [diceFace, setdiceFace] = useState<number>(1)
@@ -53,7 +70,8 @@ const DiceRollBetModal: FC<DiceRollBetModalProps> = ({
   let rfSeqId: number = 0
   useEffect(() => {
     switch (diceRollBetStatus) {
-      case DiceRollBetStatus.PENDING:
+      case GameBetStatus.FATAL:
+      case GameBetStatus.PENDING:
         clearInterval(intrvl)
         const interval = setInterval(() => {
           setdiceFace(rfSeq[rfSeqId])
@@ -61,13 +79,13 @@ const DiceRollBetModal: FC<DiceRollBetModalProps> = ({
         }, 1000)
         setIntrvl(interval)
         break
-      case DiceRollBetStatus.PLACED:
+      case GameBetStatus.PLACED:
         clearInterval(intrvl)
         const diceStype = document.querySelector('.dice')
         diceStype['style']['transition'] = 'all 3s ease-in-out'
         setdiceFace(diceRollResult)
         break
-      case DiceRollBetStatus.NOTPLACED:
+      case GameBetStatus.NOTPLACED:
         clearInterval(intrvl)
         break
     }
@@ -79,10 +97,12 @@ const DiceRollBetModal: FC<DiceRollBetModalProps> = ({
       <div className="flex flex-col items-center w-full mt-10">
         <AnimationDice diceFace={diceFace} />
       </div>
-      {diceRollBetStatus === DiceRollBetStatus.PENDING ? (
+      {diceRollBetStatus === GameBetStatus.PENDING ? (
         <DiceRollBetPending diceRollOption={diceRollOption} />
-      ) : diceRollBetStatus === DiceRollBetStatus.PLACED ? (
+      ) : diceRollBetStatus === GameBetStatus.PLACED ? (
         <DiceRollBetResult diceRollResult={diceRollResult} />
+      ) : diceRollBetStatus === GameBetStatus.FATAL ? (
+        <DiceRollAfterBetError diceRollAfterBetError={diceRollAfterBetError} />
       ) : (
         <div></div>
       )}

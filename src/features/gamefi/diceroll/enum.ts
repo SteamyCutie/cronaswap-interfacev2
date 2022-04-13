@@ -8,17 +8,17 @@ export enum DiceRollStatus {
   NONE,
 }
 
-export enum DiceRollReview {
-  ALLBETS,
-  YOURBETS,
-  LEADERBOARD,
-}
+// export enum DiceRollReview {
+//   ALLBETS,
+//   YOURBETS,
+//   LEADERBOARD,
+// }
 
-export enum DiceRollBetStatus {
-  NOTPLACED,
-  PENDING,
-  PLACED,
-}
+// export enum DiceRollBetStatus {
+//   NOTPLACED,
+//   PENDING,
+//   PLACED,
+// }
 
 export enum DiceRollClaimRewardStatus {
   NOTCLAIMED,

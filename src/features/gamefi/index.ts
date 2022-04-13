@@ -8,6 +8,7 @@ export enum GameBetStatus {
   NOTPLACED,
   PENDING,
   PLACED,
+  FATAL,
 }
 
 export enum GameType {
