@@ -133,7 +133,7 @@ const CoinTossBetModal: FC<CoinTossBetModalProps> = ({
         clearInterval(intrvl)
         break
     }
-  }, [GameBetStatus, coinTossResult])
+  }, [coinTossBetStatus, coinTossResult])
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxWidth={500} maxHeight={90}>
       <div className="flex flex-col items-center w-full mt-10">

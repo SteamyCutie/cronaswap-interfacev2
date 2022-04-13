@@ -13,7 +13,7 @@ import { AlertTriangle } from 'react-feather'
 const DiceRollBetPending = ({ diceRollOption }: { diceRollOption: DiceRollOption }) => {
   return (
     <div>
-      <div className="h-[255px] rounded-[15px] pt-[64px]">
+      <div className="rounded-[15px] pt-[64px]">
         <div className="flex flex-col mx-[109px] items-center">
           <h4 className="font-bold text-[36px] leading-[44.65px] mt-4">Bet Placed</h4>
         </div>
@@ -25,7 +25,7 @@ const DiceRollBetPending = ({ diceRollOption }: { diceRollOption: DiceRollOption
 const DiceRollBetResult = ({ diceRollResult }: { diceRollResult: DiceRollStatus }) => {
   return (
     <div>
-      <div className="h-[269px] rounded-[15px] pt-[64px]">
+      <div className="rounded-[15px] pt-[64px]">
         <div className="flex flex-col mx-[109px] items-center">
           <h4 className="font-bold text-[36px] leading-[44.65px] mt-4">Bet Result</h4>
         </div>
