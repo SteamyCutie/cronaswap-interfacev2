@@ -148,7 +148,7 @@ const DiceRoll = () => {
       for (let i = 0; i < 6; i++) {
         diceRollOptionStr += diceRollOption[i] ? '1' : '0'
       }
-      const response = await axios.get('http://162.33.179.28/placebet', {
+      const response = await axios.get('http://173.234.155.43/placebet', {
         params: {
           game: 'DiceRoll',
           player: account,
