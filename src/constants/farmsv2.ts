@@ -236,7 +236,7 @@ export const FARMSV2: AddressMap = {
         decimals: 6,
       },
       isVote: true,
-      isZap: true,
+      isZap: false,
     },
 
     '0x968fE4C06fdD503E278d89d5dFe29935A111476C': {
@@ -613,6 +613,23 @@ export const FARMSV2: AddressMap = {
         symbol: 'CRONA',
         decimals: 18,
       },
+      isVote: false,
+      isZap: false,
+    },
+
+    '0xdEb28305D5c8d5Ce3B3bc5398Ba81012580a5A11': {
+      id: 29,
+      pid: 29,
+      symbol: 'CLP',
+      name: 'CRYSTL-CRO',
+      isCommunity: true,
+      token0: {
+        id: '0xcbde0e17d14f49e10a10302a32d17ae88a7ecb8b',
+        name: 'CRYSTL Finance',
+        symbol: 'CRYSTL',
+        decimals: 18,
+      },
+      token1: { id: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', name: 'WCRO Token', symbol: 'CRO', decimals: 18 },
       isVote: false,
       isZap: false,
     },
