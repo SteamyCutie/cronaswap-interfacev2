@@ -1,12 +1,4 @@
-import {
-  Field,
-  replaceZapState,
-  selectCurrency,
-  selectLPToken,
-  setRecipient,
-  switchCurrencies,
-  typeInput,
-} from './actions'
+import { Field, replaceZapState, selectCurrency, selectLPToken, switchCurrencies, typeInput } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
 import { FarmPairInfo } from 'app/constants/farmsv1'
@@ -21,8 +13,6 @@ export interface ZapState {
     readonly lpTokenId: string | undefined
     readonly lpToken: FarmPairInfo | undefined
   }
-  // the typed recipient address or ENS name, or null if zap should go to sender
-  readonly recipient: string | null
 }
 
 const initialState: ZapState = {
@@ -35,7 +25,6 @@ const initialState: ZapState = {
     lpTokenId: '',
     lpToken: null,
   },
-  recipient: null,
 }
 
 export default createReducer<ZapState>(initialState, (builder) =>
@@ -52,12 +41,11 @@ export default createReducer<ZapState>(initialState, (builder) =>
         [field]: { lpTokenId: lpTokenId, lpToken: lpToken },
       }
     })
-    .addCase(replaceZapState, (state, { payload: { field, recipient, typedValue, inputCurrencyId } }) => {
+    .addCase(replaceZapState, (state, { payload: { field, typedValue, inputCurrencyId } }) => {
       return {
         ...state,
         [field]: { currencyId: inputCurrencyId },
         typedValue,
-        recipient,
       }
     })
     .addCase(switchCurrencies, (state) => {
@@ -71,8 +59,5 @@ export default createReducer<ZapState>(initialState, (builder) =>
         independentField: field,
         typedValue,
       }
-    })
-    .addCase(setRecipient, (state, { payload: { recipient } }) => {
-      state.recipient = recipient
     })
 )

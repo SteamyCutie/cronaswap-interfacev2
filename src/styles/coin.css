@@ -12,17 +12,20 @@
 }
 .coin.face-0 {
   transform: rotateY(0);
+  background-color: #00BBFF;
+  border-radius: 50%;
 }
 .coin.face-1 {
   transform: rotateY(900deg);
+  background-color: #ff9d80;
+  border-radius: 50%;
 }
 .coin [class^="face"] {
   position: absolute;
   width: 160px;
   height: 160px;
-  outline: 2px solid #00BBFF;
+  outline: 2px solid white;
   outline-offset: -2px;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,7 +36,7 @@
   font-size: 36px;
   font-weight: 700;
   font: bold;
-  color: #00BBFF;
+  color: white;
 }
 .coin .face-0 {
   transform: translateX(0) translateY(0) translateZ(10px);

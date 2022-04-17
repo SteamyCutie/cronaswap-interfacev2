@@ -15,7 +15,6 @@ export default function ConfirmZapModal({
   allowedSlippage,
   onConfirm,
   onDismiss,
-  recipient,
   zapErrorMessage,
   isOpen,
   attemptingTxn,
@@ -25,7 +24,6 @@ export default function ConfirmZapModal({
   trade: ZapTrade | undefined
   attemptingTxn: boolean
   txHash: string | undefined
-  recipient: string | null
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
@@ -34,14 +32,9 @@ export default function ConfirmZapModal({
 }) {
   const modalHeader = useCallback(() => {
     return trade ? (
-      <ZapModalHeader
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        recipient={recipient}
-        onAcceptChanges={onAcceptChanges}
-      />
+      <ZapModalHeader trade={trade} allowedSlippage={allowedSlippage} onAcceptChanges={onAcceptChanges} />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, trade])
+  }, [allowedSlippage, onAcceptChanges, trade])
 
   const modalBottom = useCallback(() => {
     return trade ? <ZapModalFooter onConfirm={onConfirm} trade={trade} zapErrorMessage={zapErrorMessage} /> : null

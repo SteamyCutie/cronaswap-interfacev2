@@ -109,9 +109,12 @@ const CoinTossBetModal: FC<CoinTossBetModalProps> = ({
   coinTossAfterBetError,
 }) => {
   const [intrvl, setIntrvl] = useState<NodeJS.Timeout>()
-  const [coinFace, setcoinFace] = useState<number>(1)
+  const [coinFace, setcoinFace] = useState<CoinTossStatus>(0)
   const rfSeq = [0, 1]
   let rfSeqId: number = 0
+  useEffect(() => {
+    setcoinFace(coinTossStatus)
+  }, [isOpen])
   useEffect(() => {
     switch (coinTossBetStatus) {
       case GameBetStatus.FATAL:

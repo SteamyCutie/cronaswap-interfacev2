@@ -404,7 +404,39 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "betsCountByPlayer",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "getBetsCountByToken",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "betsCountByToken",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBetsCountTotal",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "betsCountByTotal",
         "type": "uint256"
       }
     ],
@@ -587,23 +619,7 @@
       }
     ],
     "name": "placeBet",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "betsCountTotal",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "betsCountByPlayer",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "betsCountByToken",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -705,17 +721,17 @@
       },
       {
         "internalType": "uint256",
-        "name": "currentBetsCountTotal",
+        "name": "index1",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "currentBetsCountByPlayer",
+        "name": "index2",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "currentBetsCountByToken",
+        "name": "index3",
         "type": "uint256"
       }
     ],

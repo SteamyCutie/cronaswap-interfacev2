@@ -114,9 +114,13 @@ const DiceRoll = () => {
     multiplier,
     minBetAmount,
     maxBetAmount,
-  } = useDiceRollCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount)
+  } = useDiceRollCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount, diceRollBetStatus)
 
-  const { betsByToken, betsByPlayer, topGamers } = useDiceRollCallback_GameReview(selectedCurrency, totalBetsCount)
+  const { betsByToken, betsByPlayer, topGamers } = useDiceRollCallback_GameReview(
+    selectedCurrency,
+    totalBetsCount,
+    diceRollBetStatus
+  )
 
   const [claimRewardStatus, setClaimRewardStatus] = useState<DiceRollClaimRewardStatus>(
     DiceRollClaimRewardStatus.NOTCLAIMED

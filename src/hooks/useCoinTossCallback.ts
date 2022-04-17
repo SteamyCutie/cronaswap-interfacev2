@@ -13,6 +13,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useSingleCallResult } from 'app/state/multicall/hooks'
 import { result } from 'lodash'
 import { splitSignature } from '@ethersproject/bytes'
+import { GameBetStatus } from 'app/features/gamefi'
 
 const NOT_APPLICABLE = { error: 'Not Applicable!' }
 
@@ -105,7 +106,8 @@ export function useEIP712BetSignMessageGenerator(
 export function useCoinTossCallback_PlaceBet(
   selectedCurrency: Currency | undefined,
   inputValue: string | undefined,
-  totalBetsCount: number | 0
+  totalBetsCount: number | 0,
+  coinTossBetStatus: GameBetStatus | undefined
 ): {
   error?: string | ''
   rewards?: undefined | BigNumber
@@ -159,7 +161,7 @@ export function useCoinTossCallback_PlaceBet(
     }
 
     FetchPlayerInfo()
-  }, [chainId, account, selectedCurrency, totalBetsCount])
+  }, [chainId, account, selectedCurrency, totalBetsCount, coinTossBetStatus])
   return useMemo(() => {
     if (!chainId && conitossContract) return NOT_APPLICABLE
 
@@ -216,12 +218,14 @@ export function useCoinTossCallback_PlaceBet(
     maxBetAmount,
     betsCountByPlayer,
     approvalState,
+    coinTossBetStatus,
   ])
 }
 
 export function useCoinTossCallback_GameReview(
   selectedCurrency: Currency | undefined,
-  totalBetsCount: number | undefined
+  totalBetsCount: number | undefined,
+  coinTossBetStatus: GameBetStatus | undefined
 ): {
   error?: string | ''
   betsByToken?: []
@@ -260,7 +264,7 @@ export function useCoinTossCallback_GameReview(
     }
 
     FetchPlayerInfo()
-  }, [account, selectedCurrency, totalBetsCount, chainId])
+  }, [account, selectedCurrency, chainId, totalBetsCount, coinTossBetStatus])
   return useMemo(() => {
     if (!chainId && conitossContract) return NOT_APPLICABLE
     return {
@@ -269,7 +273,7 @@ export function useCoinTossCallback_GameReview(
       betsByToken,
       contract: conitossContract,
     }
-  }, [conitossContract, chainId, betsByToken, betsByPlayer, topGamers, totalBetsCount, account])
+  }, [conitossContract, chainId, betsByToken, betsByPlayer, topGamers, totalBetsCount, account, coinTossBetStatus])
 }
 
 export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefined): {

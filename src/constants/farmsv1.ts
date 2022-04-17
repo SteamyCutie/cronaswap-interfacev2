@@ -25,7 +25,7 @@ export type PairInfo = {
 export type FarmPairInfo = {
   id: number
   pid: number
-  token0: TokenInfo
+  token0?: TokenInfo
   token1?: TokenInfo
   name?: string
   symbol?: string

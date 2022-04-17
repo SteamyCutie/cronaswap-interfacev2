@@ -99,9 +99,13 @@ export default function CoinToss() {
     multiplier,
     minBetAmount,
     maxBetAmount,
-  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount)
+  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount, coinTossBetStatus)
 
-  const { betsByToken, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
+  const { betsByToken, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(
+    selectedCurrency,
+    totalBetsCount,
+    coinTossBetStatus
+  )
 
   const [claimRewardStatus, setClaimRewardStatus] = useState<CoinTossClaimRewardStatus>(
     CoinTossClaimRewardStatus.NOTCLAIMED
@@ -130,7 +134,7 @@ export default function CoinToss() {
 
   const placebet = async (signature) => {
     try {
-      //http://162.33.179.28/placebetcointoss
+      //http://173.234.155.43/placebet
       const response = await axios.get('http://173.234.155.43/placebet', {
         params: {
           game: 'CoinToss',

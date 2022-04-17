@@ -21,12 +21,10 @@ import DoubleCurrencyLogo from 'app/components/DoubleLogo'
 export default function ZapModalHeader({
   trade,
   allowedSlippage,
-  recipient,
   onAcceptChanges,
 }: {
   trade: ZapTrade
   allowedSlippage: Percent
-  recipient: string | null
   onAcceptChanges: () => void
 }) {
   const { i18n } = useLingui()
