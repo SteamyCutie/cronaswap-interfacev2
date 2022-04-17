@@ -41,10 +41,10 @@ export const Dice = ({ diceSide, isSelected, onDiceSelect, size, dotSize }) => {
   const diceSizeStyle = {
     width: size + 'px',
     height: size + 'px',
-    'padding-left': (size * 12) / 64 + 'px',
-    'padding-right': (size * 12) / 64 + 'px',
-    'padding-top': (size * 12) / 64 + 'px',
-    'padding-bottom': (size * 12) / 64 + 'px',
+    paddingLeft: (size * 12) / 64 + 'px',
+    paddingRight: (size * 12) / 64 + 'px',
+    paddingTop: (size * 12) / 64 + 'px',
+    paddingBottom: (size * 12) / 64 + 'px',
   }
   const dotSizeStyle = {
     width: dotSize + 'px',

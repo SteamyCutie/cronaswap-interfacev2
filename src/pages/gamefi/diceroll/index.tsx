@@ -23,6 +23,8 @@ import {
   useDiceRollCallback_Volume,
   useEIP712BetSignMessageGenerator,
 } from 'app/hooks/useDiceRollCallback'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
+
 import { ApprovalState } from 'app/hooks'
 import BigNumber from 'bignumber.js'
 import DiceRollBetModal from 'app/components/DiceRollBetModal'
@@ -146,6 +148,8 @@ const DiceRoll = () => {
         diceRollResult,
       })
   }
+
+  const addTransaction = useTransactionAdder()
   const placebet = async (signature) => {
     try {
       let diceRollOptionStr = ''
@@ -176,6 +180,8 @@ const DiceRoll = () => {
         diceRollAfterBetError,
         diceRollOption,
       })
+
+      addTransaction({ hash: betPlaceResponse?.txn }, { summary: 'DiceRoll Place Bet' })
 
       setinputValue('')
     } catch (err) {

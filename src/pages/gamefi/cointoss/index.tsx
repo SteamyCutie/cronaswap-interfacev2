@@ -28,6 +28,7 @@ import { getBalanceAmount } from 'app/functions/formatBalance'
 import { useSingleCallResult } from 'app/state/multicall/hooks'
 import CoinTossBetModal from 'app/components/CoinTossBetModal'
 import { GameType, GameReview, GameBetStatus } from 'app/features/gamefi'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
 const { default: axios } = require('axios')
 
 export default function CoinToss() {
@@ -132,6 +133,7 @@ export default function CoinToss() {
       })
   }
 
+  const addTransaction = useTransactionAdder()
   const placebet = async (signature) => {
     try {
       //http://173.234.155.43/placebet
@@ -159,6 +161,9 @@ export default function CoinToss() {
         coinTossStatus,
         coinTossBetStatus: GameBetStatus.PLACED,
       })
+
+      addTransaction({ hash: betPlaceResponse?.txn }, { summary: 'DiceRoll Place Bet' })
+
       setinputValue('')
     } catch (err) {
       setCoinTossBetState({
