@@ -117,7 +117,7 @@ const DiceRoll = () => {
     multiplier,
     minBetAmount,
     maxBetAmount,
-  } = useDiceRollCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount, diceRollBetStatus)
+  } = useDiceRollCallback_PlaceBet(selectedCurrency, inputValue)
 
   const { betsByToken, betsByPlayer, topGamers } = useDiceRollCallback_GameReview(
     selectedCurrency,

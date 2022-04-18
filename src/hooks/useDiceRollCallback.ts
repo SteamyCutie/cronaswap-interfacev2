@@ -111,9 +111,7 @@ export function useEIP712BetSignMessageGenerator(
 
 export function useDiceRollCallback_PlaceBet(
   selectedCurrency: Currency | undefined,
-  inputValue: string | undefined,
-  totalBetsCount: number | 0,
-  diceRollBetStatus: GameBetStatus | undefined
+  inputValue: string | undefined
 ): {
   error?: string | ''
   rewardToken?: Currency | undefined
@@ -139,8 +137,6 @@ export function useDiceRollCallback_PlaceBet(
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const addTransaction = useTransactionAdder()
 
-  const [reward, setreward] = useState<BigNumber>(undefined)
-  const [betsCountByPlayer, setbetsCountByPlayer] = useState<number>(0)
   let callResult = useSingleCallResult(dicerollContract, 'getBetAmountRangeByToken', [
     selectedCurrency?.wrapped.address,
   ])?.result
@@ -163,19 +159,34 @@ export function useDiceRollCallback_PlaceBet(
 
   const rewardToken: Currency = useCurrency(rewardTokenAddr)
 
-  useEffect(() => {
-    async function FetchPlayerInfo() {
-      try {
-        setbetsCountByPlayer((await dicerollContract.getBetsCountByPlayer(tokenAddress)).toNumber())
-        setreward(await dicerollContract.getRewardAmountByPlayer())
-      } catch {
-        setbetsCountByPlayer(0)
-        setreward(BigNumber.from(0))
-      }
-    }
+  callResult = useSingleCallResult(dicerollContract, 'getBetsCountByPlayerNotSender', [
+    account,
+    selectedCurrency?.wrapped.address,
+  ])?.result
+  const betsCountByPlayer: number = useMemo(() => {
+    return BigNumber.from((callResult && callResult[0]?.toString()) ?? 0).toNumber()
+  }, [callResult])
 
-    FetchPlayerInfo()
-  }, [chainId, account, selectedCurrency, totalBetsCount, diceRollBetStatus])
+  callResult = useSingleCallResult(dicerollContract, 'getRewardAmountByPlayerNotSender', [account])?.result
+  const reward: BigNumber = useMemo(() => {
+    return BigNumber.from((callResult && callResult[0]?.toString()) ?? 0)
+  }, [callResult])
+
+  // const [reward, setreward] = useState<BigNumber>(undefined)
+  // const [betsCountByPlayer, setbetsCountByPlayer] = useState<number>(0)
+  // useEffect(() => {
+  //   async function FetchPlayerInfo() {
+  //     try {
+  //       setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer(tokenAddress)).toNumber())
+  //       setreward(await conitossContract.getRewardAmountByPlayer())
+  //     } catch {
+  //       setbetsCountByPlayer(0)
+  //       setreward(BigNumber.from(0))
+  //     }
+  //   }
+
+  //   FetchPlayerInfo()
+  // }, [chainId, account, selectedCurrency, totalBetsCount, coinTossBetStatus])
   return useMemo(() => {
     if (!chainId && dicerollContract) return NOT_APPLICABLE
 
@@ -211,7 +222,6 @@ export function useDiceRollCallback_PlaceBet(
           addTransaction(txReceipt, {
             summary: `Get Reward of ${selectedCurrency.symbol}`,
           })
-          setreward(BigNumber.from(0))
           onAfterClaim()
           return { tx: txReceipt, error: undefined }
         } catch (error) {
@@ -233,7 +243,6 @@ export function useDiceRollCallback_PlaceBet(
     maxBetAmount,
     betsCountByPlayer,
     approvalState,
-    diceRollBetStatus,
     rewardToken,
   ])
 }

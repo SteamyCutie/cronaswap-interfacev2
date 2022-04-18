@@ -101,7 +101,7 @@ export default function CoinToss() {
     multiplier,
     minBetAmount,
     maxBetAmount,
-  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount, coinTossBetStatus)
+  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue)
 
   const { betsByToken, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(
     selectedCurrency,

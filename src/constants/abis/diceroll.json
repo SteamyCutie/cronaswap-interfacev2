@@ -409,6 +409,30 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_player",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "getBetsCountByPlayerNotSender",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "betsCountByPlayer",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       }
@@ -477,6 +501,25 @@
   {
     "inputs": [],
     "name": "getRewardAmountByPlayer",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_player",
+        "type": "address"
+      }
+    ],
+    "name": "getRewardAmountByPlayerNotSender",
     "outputs": [
       {
         "internalType": "uint256",
