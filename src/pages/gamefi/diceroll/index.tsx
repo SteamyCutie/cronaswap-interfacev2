@@ -107,8 +107,9 @@ const DiceRoll = () => {
   // const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
   const {
     error: dicerollBetError,
-    rewards,
-    claimRewards,
+    reward,
+    rewardToken,
+    claimReward,
     approvalState,
     approveCallback,
     contract: dicerollContract,
@@ -129,7 +130,7 @@ const DiceRoll = () => {
   )
   const handleClaim = () => {
     setClaimRewardStatus(DiceRollClaimRewardStatus.PENDING)
-    claimRewards(() => {
+    claimReward(() => {
       setClaimRewardStatus(DiceRollClaimRewardStatus.NOTCLAIMED)
     })
   }
@@ -156,6 +157,7 @@ const DiceRoll = () => {
       for (let i = 0; i < 6; i++) {
         diceRollOptionStr += diceRollOption[i] ? '1' : '0'
       }
+      //http://173.234.155.43/placebet
       const response = await axios.get('http://173.234.155.43/placebet', {
         params: {
           game: 'DiceRoll',
@@ -277,8 +279,8 @@ const DiceRoll = () => {
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
                 <GameRewardClaimPanel
-                  rewards={rewards}
-                  selectedCurrency={selectedCurrency}
+                  rewardAmount={reward}
+                  rewardCurrency={rewardToken}
                   onClaim={handleClaim}
                   claimRewardStatus={claimRewardStatus}
                 />

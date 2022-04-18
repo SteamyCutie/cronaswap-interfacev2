@@ -91,8 +91,9 @@ export default function CoinToss() {
   // const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
   const {
     error: cointossBetError,
-    rewards,
-    claimRewards,
+    reward,
+    rewardToken,
+    claimReward,
     approvalState,
     approveCallback,
     contract: cointossContract,
@@ -113,7 +114,7 @@ export default function CoinToss() {
   )
   const handleClaim = () => {
     setClaimRewardStatus(CoinTossClaimRewardStatus.PENDING)
-    claimRewards(() => {
+    claimReward(() => {
       setClaimRewardStatus(CoinTossClaimRewardStatus.NOTCLAIMED)
     })
   }
@@ -259,8 +260,8 @@ export default function CoinToss() {
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
                 <GameRewardClaimPanel
-                  rewards={rewards}
-                  selectedCurrency={selectedCurrency}
+                  rewardAmount={reward}
+                  rewardCurrency={rewardToken}
                   onClaim={handleClaim}
                   claimRewardStatus={claimRewardStatus}
                 />

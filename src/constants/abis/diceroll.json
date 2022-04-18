@@ -53,7 +53,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "rewards",
+        "name": "payout",
         "type": "uint256"
       }
     ],
@@ -97,22 +97,16 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "rewardsAmount",
+        "name": "rewardAmount",
         "type": "uint256"
       }
     ],
-    "name": "RewardsProvided",
+    "name": "RewardProvided",
     "type": "event"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-      }
-    ],
-    "name": "claimRewards",
+    "inputs": [],
+    "name": "claimReward",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -238,7 +232,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "rewards",
+            "name": "payout",
             "type": "uint256"
           }
         ],
@@ -309,7 +303,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "rewards",
+            "name": "payout",
             "type": "uint256"
           }
         ],
@@ -380,7 +374,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "rewards",
+            "name": "payout",
             "type": "uint256"
           }
         ],
@@ -436,7 +430,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "betsCountByTotal",
+        "name": "betsCountTotal",
         "type": "uint256"
       }
     ],
@@ -481,19 +475,39 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-      }
-    ],
-    "name": "getRewardsAmountByPlayer",
+    "inputs": [],
+    "name": "getRewardAmountByPlayer",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRewardAmountMilliPercent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRewardToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -537,7 +551,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "rewardsAmount",
+            "name": "payoutAmount",
             "type": "uint256"
           },
           {
@@ -546,7 +560,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct Game.TotalRewardsInfo[30]",
+        "internalType": "struct Game.TotalPayoutInfo[30]",
         "name": "",
         "type": "tuple[30]"
       }
@@ -687,6 +701,32 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_rewardAmountMilliPercent",
+        "type": "uint256"
+      }
+    ],
+    "name": "setRewardAmountMilliPercent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_rewardToken",
+        "type": "address"
+      }
+    ],
+    "name": "setRewardToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_token",
         "type": "address"
@@ -738,6 +778,82 @@
     "name": "setTxnOfBetHistory",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "toString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "toString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "toString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "value",
+        "type": "bytes32"
+      }
+    ],
+    "name": "toString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {

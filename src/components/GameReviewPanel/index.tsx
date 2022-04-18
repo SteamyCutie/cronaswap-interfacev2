@@ -18,12 +18,12 @@ interface BetHistory {
   playerOption: CoinTossStatus | DiceRollOption | any
   resultOption: CoinTossStatus | DiceRollStatus
   wasSuccess: boolean
-  rewards: BigNumber
+  payout: BigNumber
 }
 interface TopGamer {
   // index: BigNumber
   player: string
-  rewardsAmount: BigNumber
+  payoutAmount: BigNumber
   count: BigNumber
 }
 interface GameReviewPanelProps {
@@ -169,7 +169,7 @@ function GameReviewPanel({
                           <div className="absolute ml-[980px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.rewards.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
+                                {data[index]?.payout.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
@@ -190,7 +190,7 @@ function GameReviewPanel({
                           <div className="absolute ml-[860px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.rewardsAmount
+                                {data[index]?.payoutAmount
                                   .div(BigNumber.from(10).pow(selectedToken?.decimals))
                                   .toFixed(2)}{' '}
                               </div>
@@ -262,7 +262,7 @@ function GameReviewPanel({
                           <div className="absolute ml-[980px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.rewards.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
+                                {data[index]?.payout.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
