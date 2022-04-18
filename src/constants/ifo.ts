@@ -58,6 +58,86 @@ const ifos: Ifo[] = [
     tokenOfferingPrice: 0.15,
     version: 2,
   },
+  {
+    id: 'duet',
+    address: {
+      [ChainId.CRONOS]: '0xDF24BE326af4c1fb888f567f41D9a981A4752cf1',
+    },
+    isActive: false,
+    name: 'DUET',
+    poolBasic: {
+      saleAmount: '1,200,000 DUET',
+      raiseAmount: '$360,000',
+      cronaToBurn: '$0',
+      distributionRatio: 0.2,
+      raiseToken: CRONA,
+    },
+    poolUnlimited: {
+      saleAmount: '4,800,000 DUET',
+      raiseAmount: '$1,440,000',
+      cronaToBurn: '$0',
+      distributionRatio: 0.8,
+      raiseToken: USDC,
+    },
+    offerToken: {
+      [ChainId.CRONOS]: new Token(
+        ChainId.CRONOS,
+        '0x95EE03e1e2C5c4877f9A298F1C0D6c98698FAB7B',
+        18,
+        'DUET',
+        'Duet Governance Token'
+      ),
+    },
+    releaseTimestamp: 1646922000,
+    claimDelayTime: 10800, //delay 3 hours
+    veCronaCheckPoint: 1646813700, //start time
+
+    campaignId: '511190000',
+    twitterUrl: 'https://twitter.com/duetprotocol',
+    telegramUrl: 'https://t.me/duetprotocol',
+    articleUrl: 'https://pancakeswap.finance/voting/proposal/QmXwoYYd8rkahVbxiGKsTa4rYRRFWPxhRGAHy3hVwK3Q2z',
+    description:
+      'DUET Protocol is a multi-chain synthetic assets ecosystem, enabling pegged assets from various markets – from individual stocks, to indexes, ETFs, and commodities.',
+    tokenOfferingPrice: 0.3,
+    version: 2,
+  },
+  {
+    id: 'era',
+    address: {
+      [ChainId.CRONOS]: '0x527201a43f8da24ce9b7c21744a0706942f41fa3',
+    },
+    isActive: false,
+    name: 'ERA (Game of Truth)',
+    poolBasic: {
+      saleAmount: '4,000,000 ERA',
+      raiseAmount: '$360,000',
+      cronaToBurn: '$0',
+      distributionRatio: 0.2,
+      raiseToken: CRONA,
+    },
+    poolUnlimited: {
+      saleAmount: '16,000,000 ERA',
+      raiseAmount: '$1,440,000',
+      cronaToBurn: '$0',
+      distributionRatio: 0.8,
+      raiseToken: USDC,
+    },
+    offerToken: {
+      [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x6f9F0c4ad9Af7EbD61Ac5A1D4e0F2227F7B0E5f9', 18, 'ERA', 'Era Token'),
+    },
+    releaseTimestamp: 1646922000,
+    claimDelayTime: 10800, //delay 3 hours
+    veCronaCheckPoint: 1646813700, //start time
+
+    campaignId: '511180000',
+    twitterUrl: 'https://twitter.com/Era7_official',
+    telegramUrl: 'https://t.me/Era7_Official',
+    articleUrl: 'https://pancakeswap.finance/voting/proposal/QmTfN1SKnFidF6XCDcpga7zAf69mFfhb26Zy9b85dYskxW',
+    description:
+      'Drawing from their experience in traditional games such as Awakening of Dragon, Era7: Game of Truth combines elements of DeFi, NFTs, and Trading Cards into a play-to-earn game steeped in mythology and magic.',
+    tokenOfferingPrice: 0.09,
+    version: 2,
+  },
 ]
 
 export default ifos
