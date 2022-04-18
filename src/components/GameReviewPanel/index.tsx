@@ -242,6 +242,7 @@ function GameReviewPanel({
                                           size={40}
                                           isSelected={false}
                                           onDiceSelect={() => {}}
+                                          key={index}
                                         />
                                       )
                                     )
