@@ -8,15 +8,15 @@ import { useLingui } from '@lingui/react'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import Typography from '../../components/Typography'
 import { IfoQuestions } from 'app/features/ifov2/IfoQuestions'
-import { IfoCurrentCard } from 'app/features/ifov2/IfoCurrentCard'
+import { IfoFinishedCard } from 'app/features/ifov2/IfoFinishedCard'
 import ifos from 'app/constants/ifo'
 import { useGetPublicIfoData, useGetWalletIfoData } from 'app/features/ifov2/hooks'
 import Button from 'app/components/Button'
 
-export default function Ifo(): JSX.Element {
+export default function History(): JSX.Element {
   const { i18n } = useLingui()
 
-  const activeIfo = ifos.find((ifo) => ifo.isActive)
+  const activeIfo = ifos.find((ifo) => !ifo.isActive)
 
   const publicIfoData = useGetPublicIfoData(activeIfo)
   const walletIfoData = useGetWalletIfoData(activeIfo)
@@ -25,7 +25,7 @@ export default function Ifo(): JSX.Element {
   const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-dark-900`
   const inactiveTabStyle = `${tabStyle} text-secondary`
 
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(1)
 
   return (
     <Container id="farm-page" className="grid h-full px-2 py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
@@ -80,7 +80,7 @@ export default function Ifo(): JSX.Element {
         </div>
 
         {/* ifo body */}
-        <IfoCurrentCard ifo={activeIfo} publicIfoData={publicIfoData} walletIfoData={walletIfoData} />
+        <IfoFinishedCard ifo={activeIfo} publicIfoData={publicIfoData} walletIfoData={walletIfoData} />
 
         {/* faq */}
         <IfoQuestions ifo={activeIfo} publicIfoData={publicIfoData} />
