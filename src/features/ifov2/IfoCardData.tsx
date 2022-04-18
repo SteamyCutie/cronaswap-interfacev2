@@ -24,7 +24,7 @@ const IfoCardData: React.FC<Props> = ({ ifo }) => {
   const [depositValue, setDepositValue] = useState('')
 
   return (
-    <div className="grid my-8 border-[2px] border-b-[3px] border-[#383241] text-[#f4eeff] rounded-[32px]">
+    <div className="grid my-8 border-[2px] border-b-[3px] border-[#383241] text-[#f4eeff] rounded-[32px] animate-fade">
       <div
         className={`flex items-center justify-end w-full h-[112px] bg-no-repeat bg-cover bg-center rounded-[30px] rounded-b-[${
           isOpen ? '0px' : '30px'
@@ -32,7 +32,6 @@ const IfoCardData: React.FC<Props> = ({ ifo }) => {
         style={{ backgroundImage: `url('/images/ifo/${ifo.id}-bg.svg'), url('/images/ifo/${ifo.id}-bg.png')` }}
       >
         <Button
-          id="btn-create-new-pool"
           color="blue"
           variant="outlined"
           size="sm"
@@ -47,8 +46,13 @@ const IfoCardData: React.FC<Props> = ({ ifo }) => {
         </Button>
       </div>
       {isOpen && (
-        <div className="flex w-full bg-[#1e1d20] rounded-b-[28px]">
-          <div className="grid items-center w-full gap-4 m-4">
+        <div className="grid w-full bg-[#1e1d20] rounded-b-[28px] animate-fade">
+          <div className="flex-row items-center w-full overflow-hidden">
+            <div className="flex rounded-[50%] w-[100%] -translate-y-[50%] scale-150 bg-[#372f47] h-[100px] justify-center items-end pb-3 text-[18px] font-extrabold text-white/70">
+              Sale Finished!
+            </div>
+          </div>
+          <div className="grid items-center gap-4 mx-4 mt-0 mb-6">
             <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-6 rounded-lg bg-dark-800">
                 <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
