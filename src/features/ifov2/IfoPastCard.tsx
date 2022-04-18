@@ -8,24 +8,22 @@ import Image from 'next/image'
 import { DiscordIcon, MediumIcon, TwitterIcon } from 'app/components/Icon'
 import { PublicIfoData, WalletIfoData } from './hooks/types'
 import { Ifo } from 'app/constants/types'
+import { useGetPublicIfoData, useGetWalletIfoData } from 'app/features/ifov2/hooks'
+import IfoCardData from './IfoCardData'
 
-export const IfoFinishedCard = ({
-  ifo,
-  publicIfoData,
-  walletIfoData,
-}: {
-  ifo: Ifo
-  publicIfoData: PublicIfoData
-  walletIfoData: WalletIfoData
-}) => {
+export const IfoPastCard = ({ inactiveIfo }: { inactiveIfo: Ifo[] }) => {
   const { i18n } = useLingui()
   const [depositValue, setDepositValue] = useState('')
 
   return (
     <div className="flex flex-row justify-between gap-4">
-      <div className="w-full rounded bg-dark-900">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {/* Base sale */}
+      <div className="w-full rounded">
+        <div className="max-w-[800px] m-auto w-full">
+          {inactiveIfo.map((ifo) => (
+            <IfoCardData key={ifo.id} ifo={ifo} />
+          ))}
+        </div>
+        {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 md:ml-4 bg-dark-800">
             <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
               <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
@@ -46,7 +44,6 @@ export const IfoFinishedCard = ({
               </div>
             </div>
 
-            {/* input */}
             <div className="col-span-2 px-4 text-center md:col-span-1">
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                 {i18n._(t`Wallet Balance`)}: 182.99
@@ -72,7 +69,6 @@ export const IfoFinishedCard = ({
               </Button>
             </div>
 
-            {/* info */}
             <div className="flex flex-col flex-grow px-4 pb-4 space-y-2">
               <div className="flex justify-between gap-0.5">
                 <div className="text-xs font-medium leading-4 currentColor">Your committed:</div>
@@ -93,7 +89,6 @@ export const IfoFinishedCard = ({
             </div>
           </div>
 
-          {/* Unlimited Sale */}
           <div className="space-y-6 rounded-lg md:mt-4 md:mb-4 bg-dark-800">
             <div className="flex flex-row justify-between p-6 rounded-t item-center bg-dark-600">
               <div className="flex flex-row items-center text-2xl font-bold text-high-emphesis">
@@ -114,7 +109,6 @@ export const IfoFinishedCard = ({
               </div>
             </div>
 
-            {/* input */}
             <div className="col-span-2 px-4 text-center md:col-span-1">
               <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
                 {i18n._(t`Wallet Balance`)}: 182.99
@@ -140,7 +134,6 @@ export const IfoFinishedCard = ({
               </Button>
             </div>
 
-            {/* info */}
             <div className="flex flex-col flex-grow px-4 pb-4 space-y-2">
               <div className="flex justify-between gap-0.5">
                 <div className="text-xs font-medium leading-4 currentColor">Your committed:</div>
@@ -169,15 +162,9 @@ export const IfoFinishedCard = ({
             </div>
           </div>
 
-          {/* ifo info */}
           <div className="relative flex flex-col px-4 pt-8 space-y-8 rounded-r bg-dark-800">
             <div className="absolute inset-0 opacity-50 filter saturate-0 ">
-              <Image
-                src="/images/ifo/ifo-bg.png"
-                className="object-cover w-full"
-                layout="fill"
-                alt="IFO Background image"
-              />
+              <Image src="/images/ifo/mifo-bg.png" className="object-cover w-full" layout="fill" alt="IFO Background image" />
             </div>
             <div className="mx-auto">
               <Image src="/images/ifo/crona.png" alt="CronaSwap" width="285px" height="55px" />
@@ -226,7 +213,7 @@ export const IfoFinishedCard = ({
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
