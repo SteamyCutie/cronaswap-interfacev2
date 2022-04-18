@@ -148,12 +148,12 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "minBetAmount",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "maxBetAmount",
         "type": "uint256"
       }
     ],
@@ -253,6 +253,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_betsCount",
         "type": "uint256"
@@ -317,12 +322,108 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_betsCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBetsByToken",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "txn",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "player",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum CoinToss.BetOption",
+            "name": "playerOption",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum CoinToss.BetOption",
+            "name": "resultOption",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "wasSuccess",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewards",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct CoinToss.Bet[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
     "name": "getBetsCountByPlayer",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "betsCountByPlayer",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "getBetsCountByToken",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "betsCountByToken",
         "type": "uint256"
       }
     ],
@@ -331,7 +432,26 @@
   },
   {
     "inputs": [],
-    "name": "getHeadsTailsCount",
+    "name": "getBetsCountTotal",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "betsCountByTotal",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "getHeadsTailsCountByToken",
     "outputs": [
       {
         "internalType": "uint256",
@@ -609,35 +729,39 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "_txn",
+        "type": "bytes32"
+      },
+      {
         "internalType": "address",
-        "name": "",
+        "name": "_player",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "topGamersListByToken",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "rewardsAmount",
+        "name": "index1",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "count",
+        "name": "index2",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index3",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "setTxnOfBetHistory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../services/web3'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { useCoinTossContract, useWETH9Contract } from './useContract'
+import { useDiceRollContract, useWETH9Contract } from './useContract'
 import { maxAmountSpend } from 'app/functions'
 import { ApprovalState, useApproveCallback } from './useApproveCallback'
 import { Contract } from '@ethersproject/contracts'
@@ -13,6 +13,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useSingleCallResult } from 'app/state/multicall/hooks'
 import { result } from 'lodash'
 import { splitSignature } from '@ethersproject/bytes'
+import { DiceRollOption } from 'app/constants/gamefi'
 import { GameBetStatus } from 'app/features/gamefi'
 
 const NOT_APPLICABLE = { error: 'Not Applicable!' }
@@ -24,7 +25,7 @@ export function useEIP712BetSignMessageGenerator(
   verifyingContract: Contract | undefined,
   player: string | undefined,
   amount: BigNumber | undefined,
-  choice: number | undefined,
+  choice: DiceRollOption | undefined,
   token: string | '',
   nonce: number | undefined,
   deadline: number | undefined,
@@ -35,6 +36,10 @@ export function useEIP712BetSignMessageGenerator(
 ): { signature?: any; onSign?: () => void } {
   const { account, library } = useActiveWeb3React()
   const [signatureData, setSignatureData] = useState(null)
+  let diceRollOptionStr = ''
+  for (let i = 0; i < 6; i++) {
+    diceRollOptionStr += choice[i] ? '1' : '0'
+  }
   return {
     onSign: () => {
       const msgParams = JSON.stringify({
@@ -53,7 +58,7 @@ export function useEIP712BetSignMessageGenerator(
         message: {
           player: player,
           amount: amount.toString(),
-          choice: choice.toString(),
+          choice: diceRollOptionStr,
           token: token,
           nonce: nonce,
           deadline: deadline,
@@ -72,7 +77,7 @@ export function useEIP712BetSignMessageGenerator(
           PlaceBet: [
             { name: 'player', type: 'address' },
             { name: 'amount', type: 'uint256' },
-            { name: 'choice', type: 'uint256' },
+            { name: 'choice', type: 'string' },
             { name: 'token', type: 'address' },
             { name: 'nonce', type: 'uint256' },
             { name: 'deadline', type: 'uint256' },
@@ -103,11 +108,11 @@ export function useEIP712BetSignMessageGenerator(
   }
 }
 
-export function useCoinTossCallback_PlaceBet(
+export function useDiceRollCallback_PlaceBet(
   selectedCurrency: Currency | undefined,
   inputValue: string | undefined,
   totalBetsCount: number | 0,
-  coinTossBetStatus: GameBetStatus | undefined
+  diceRollBetStatus: GameBetStatus | undefined
 ): {
   error?: string | ''
   rewards?: undefined | BigNumber
@@ -121,27 +126,27 @@ export function useCoinTossCallback_PlaceBet(
   multiplier?: number | 0
 } {
   const { chainId, account } = useActiveWeb3React()
-  const conitossContract = useCoinTossContract()
+  const dicerollContract = useDiceRollContract()
   const balance = maxAmountSpend(useCurrencyBalance(account ?? undefined, selectedCurrency))
   const selectedCurrencyAmount = useMemo(
     () => tryParseAmount(inputValue, selectedCurrency),
     [selectedCurrency, inputValue]
   )
   const tokenAddress = selectedCurrency?.wrapped.address
-  const [approvalState, approveCallback] = useApproveCallback(selectedCurrencyAmount, conitossContract?.address)
+  const [approvalState, approveCallback] = useApproveCallback(selectedCurrencyAmount, dicerollContract?.address)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const addTransaction = useTransactionAdder()
 
   const [rewards, setrewards] = useState<BigNumber>(undefined)
   const [betsCountByPlayer, setbetsCountByPlayer] = useState<number>(0)
-  let callResult = useSingleCallResult(conitossContract, 'getBetAmountRangeByToken', [
+  let callResult = useSingleCallResult(dicerollContract, 'getBetAmountRangeByToken', [
     selectedCurrency?.wrapped.address,
   ])?.result
   const { minBetAmount, maxBetAmount } = useMemo(() => {
     return { minBetAmount: callResult && callResult[0], maxBetAmount: callResult && callResult[1] }
   }, [callResult])
 
-  callResult = useSingleCallResult(conitossContract, 'getMultiplier', [
+  callResult = useSingleCallResult(dicerollContract, 'getMultiplier', [
     tokenAddress,
     selectedCurrencyAmount?.quotient.toString() ?? '0',
   ])?.result
@@ -152,8 +157,8 @@ export function useCoinTossCallback_PlaceBet(
   useEffect(() => {
     async function FetchPlayerInfo() {
       try {
-        setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer(tokenAddress)).toNumber())
-        setrewards(await conitossContract.getRewardsAmountByPlayer(tokenAddress))
+        setbetsCountByPlayer((await dicerollContract.getBetsCountByPlayer(tokenAddress)).toNumber())
+        setrewards(await dicerollContract.getRewardsAmountByPlayer(tokenAddress))
       } catch {
         setbetsCountByPlayer(0)
         setrewards(BigNumber.from(0))
@@ -161,9 +166,9 @@ export function useCoinTossCallback_PlaceBet(
     }
 
     FetchPlayerInfo()
-  }, [chainId, account, selectedCurrency, totalBetsCount, coinTossBetStatus])
+  }, [chainId, account, selectedCurrency, totalBetsCount, diceRollBetStatus])
   return useMemo(() => {
-    if (!chainId && conitossContract) return NOT_APPLICABLE
+    if (!chainId && dicerollContract) return NOT_APPLICABLE
 
     const hasInputAmount = Boolean(selectedCurrencyAmount?.greaterThan('0'))
     const sufficientBalance = selectedCurrencyAmount && balance && !balance.lessThan(selectedCurrencyAmount)
@@ -191,7 +196,7 @@ export function useCoinTossCallback_PlaceBet(
       rewards: rewards,
       claimRewards: async (onAfterClaim) => {
         try {
-          const txReceipt = await conitossContract.claimRewards(selectedCurrency.wrapped.address)
+          const txReceipt = await dicerollContract.claimRewards(selectedCurrency.wrapped.address)
           await txReceipt.wait()
           addTransaction(txReceipt, {
             summary: `Get Rewards of ${selectedCurrency.symbol}`,
@@ -204,10 +209,10 @@ export function useCoinTossCallback_PlaceBet(
           return { tx: undefined, error: error?.message }
         }
       },
-      contract: conitossContract,
+      contract: dicerollContract,
     }
   }, [
-    conitossContract,
+    dicerollContract,
     chainId,
     account,
     selectedCurrencyAmount,
@@ -218,14 +223,14 @@ export function useCoinTossCallback_PlaceBet(
     maxBetAmount,
     betsCountByPlayer,
     approvalState,
-    coinTossBetStatus,
+    diceRollBetStatus,
   ])
 }
 
-export function useCoinTossCallback_GameReview(
+export function useDiceRollCallback_GameReview(
   selectedCurrency: Currency | undefined,
   totalBetsCount: number | undefined,
-  coinTossBetStatus: GameBetStatus | undefined
+  diceRollBetStatus: GameBetStatus | undefined
 ): {
   error?: string | ''
   betsByToken?: []
@@ -233,19 +238,19 @@ export function useCoinTossCallback_GameReview(
   betsByPlayer?: []
 } {
   const { chainId, account } = useActiveWeb3React()
-  const conitossContract = useCoinTossContract()
+  const dicerollContract = useDiceRollContract()
 
   const tokenAddress = selectedCurrency?.wrapped.address
   const [betsByPlayer, setbetsByPlayer] = useState<[]>([])
   const [betsByToken, setbetsByToken] = useState<[]>([])
   const [topGamers, settopGamers] = useState<[]>([])
 
-  // let callResult = useSingleCallResult(conitossContract, 'getBetsByIndex', ['100'])?.result
+  // let callResult = useSingleCallResult(dicerollContract, 'getBetsByIndex', ['100'])?.result
   // const betsByIndex = useMemo(() => {
   //   return (callResult && callResult[0]) ?? []
   // }, [callResult])
 
-  // callResult = useSingleCallResult(conitossContract, 'getTopGamers', [tokenAddress])?.result
+  // callResult = useSingleCallResult(dicerollContract, 'getTopGamers', [tokenAddress])?.result
   // const topGamers = useMemo(() => {
   //   return (callResult && callResult[0]) ?? []
   // }, [callResult])
@@ -253,10 +258,10 @@ export function useCoinTossCallback_GameReview(
   useEffect(() => {
     async function FetchPlayerInfo() {
       try {
-        setbetsByToken(await conitossContract?.getBetsByToken(tokenAddress, '100'))
-        settopGamers(await conitossContract?.getTopGamers(tokenAddress))
+        setbetsByToken(await dicerollContract?.getBetsByToken(tokenAddress, '100'))
+        settopGamers(await dicerollContract?.getTopGamers(tokenAddress))
         if (account) {
-          setbetsByPlayer(await conitossContract?.getBetsByPlayer(tokenAddress, '100'))
+          setbetsByPlayer(await dicerollContract?.getBetsByPlayer(tokenAddress, '100'))
         } else {
           setbetsByPlayer([])
         }
@@ -264,32 +269,30 @@ export function useCoinTossCallback_GameReview(
     }
 
     FetchPlayerInfo()
-  }, [account, selectedCurrency, chainId, totalBetsCount, coinTossBetStatus])
+  }, [account, selectedCurrency, totalBetsCount, chainId, diceRollBetStatus])
   return useMemo(() => {
-    if (!chainId && conitossContract) return NOT_APPLICABLE
+    if (!chainId && dicerollContract) return NOT_APPLICABLE
     return {
       betsByPlayer,
       topGamers,
       betsByToken,
-      contract: conitossContract,
+      contract: dicerollContract,
     }
-  }, [conitossContract, chainId, betsByToken, betsByPlayer, topGamers, totalBetsCount, account, coinTossBetStatus])
+  }, [dicerollContract, chainId, betsByToken, betsByPlayer, topGamers, totalBetsCount, account, diceRollBetStatus])
 }
 
-export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefined): {
+export function useDiceRollCallback_Volume(selectedCurrency: Currency | undefined): {
   error?: string | ''
   contract?: Contract
   totalBetsCount?: number | 0
   totalBetsAmount?: BigNumber | undefined
-  headsCount?: number | 0
-  tailsCount?: number | 0
 } {
   const { chainId, account } = useActiveWeb3React()
-  const conitossContract = useCoinTossContract()
+  const dicerollContract = useDiceRollContract()
 
   const tokenAddress = selectedCurrency?.wrapped.address
 
-  const totalBetInfo = useSingleCallResult(conitossContract, 'getBetsAmountAndCountByToken', [tokenAddress])?.result
+  const totalBetInfo = useSingleCallResult(dicerollContract, 'getBetsAmountAndCountByToken', [tokenAddress])?.result
   const { totalBetsCount, totalBetsAmount } = useMemo(() => {
     return {
       totalBetsCount: BigNumber.from(totalBetInfo?.totalBetsCount.toString() ?? 0).toNumber(),
@@ -297,22 +300,13 @@ export function useCoinTossCallback_Volume(selectedCurrency: Currency | undefine
     }
   }, [totalBetInfo])
 
-  const totalCounts = useSingleCallResult(conitossContract, 'getHeadsTailsCountByToken', [tokenAddress])?.result
-  const { headsCount, tailsCount } = useMemo(() => {
-    return {
-      headsCount: BigNumber.from((totalCounts && totalCounts[0].toString()) ?? 0).toNumber(),
-      tailsCount: BigNumber.from((totalCounts && totalCounts[1].toString()) ?? 0).toNumber(),
-    }
-  }, [totalCounts])
   return useMemo(() => {
-    if (!chainId && conitossContract) return NOT_APPLICABLE
+    if (!chainId && dicerollContract) return NOT_APPLICABLE
 
     return {
-      headsCount,
-      tailsCount,
       totalBetsAmount,
       totalBetsCount,
-      contract: conitossContract,
+      contract: dicerollContract,
     }
-  }, [conitossContract, chainId, account, totalBetsAmount, totalBetsCount, headsCount, tailsCount])
+  }, [dicerollContract, chainId, account, totalBetsAmount, totalBetsCount])
 }

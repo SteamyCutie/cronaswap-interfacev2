@@ -28,7 +28,9 @@
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.6.0",
-    "cli-table": "0.3.6"
+    "cli-table": "0.3.6",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2"
   },
   "devDependencies": {
     "@binance-chain/bsc-connector": "^1.0.0",
@@ -83,7 +85,6 @@
     "@types/jest": "^27.0.2",
     "@types/node": "^15.12.2",
     "@types/qs": "^6.9.7",
-    "@types/react": "^17.0.11",
     "@uniswap/token-lists": "1.0.0-beta.24",
     "@visx/axis": "^1.17.1",
     "@visx/brush": "^1.18.1",

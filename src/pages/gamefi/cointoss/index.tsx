@@ -8,12 +8,7 @@ import SwapCroToWCro from 'app/components/SwapCroToWCro'
 import GameRewardClaimPanel from 'app/components/GameRewardClaimPanel'
 import { useRouter } from 'next/router'
 import NavLink from 'app/components/NavLink'
-import {
-  CoinTossBetStatus,
-  CoinTossClaimRewardStatus,
-  CoinTossReview,
-  CoinTossStatus,
-} from 'app/features/gamefi/cointoss/enum'
+import { CoinTossClaimRewardStatus, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount } from '@cronaswap/core-sdk'
@@ -32,10 +27,12 @@ import BigNumber from 'bignumber.js'
 import { getBalanceAmount } from 'app/functions/formatBalance'
 import { useSingleCallResult } from 'app/state/multicall/hooks'
 import CoinTossBetModal from 'app/components/CoinTossBetModal'
+import { GameType, GameReview, GameBetStatus } from 'app/features/gamefi'
+import { useTransactionAdder } from 'app/state/transactions/hooks'
 const { default: axios } = require('axios')
 
 export default function CoinToss() {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { i18n } = useLingui()
 
   const router = useRouter()
@@ -45,22 +42,33 @@ export default function CoinToss() {
   const inactiveTabStyle = `${tabStyle}`
 
   const FILTER = {
-    allbets: CoinTossReview.ALLBETS,
-    yourbets: CoinTossReview.YOURBETS,
-    leaderboard: CoinTossReview.LEADERBOARD,
+    allbets: GameReview.ALLBETS,
+    yourbets: GameReview.YOURBETS,
+    leaderboard: GameReview.LEADERBOARD,
   }
-  const [activeTab, setActiveTab] = useState<CoinTossReview>(0)
-  const [coinTossStatus, setCoinTossStatus] = useState<CoinTossStatus>(CoinTossStatus.NONE)
-  const [coinTossResult, setcoinTossResult] = useState<CoinTossStatus>(CoinTossStatus.NONE)
+  const [activeTab, setActiveTab] = useState<GameReview>(0)
+
+  const [{ coinTossStatus, coinTossResult, coinTossAfterBetError, coinTossBetStatus }, setCoinTossBetState] = useState<{
+    coinTossStatus: CoinTossStatus
+    coinTossResult: CoinTossStatus
+    coinTossAfterBetError: string | undefined
+    coinTossBetStatus: GameBetStatus
+  }>({
+    coinTossStatus: CoinTossStatus.NONE,
+    coinTossResult: CoinTossStatus.NONE,
+    coinTossAfterBetError: undefined,
+    coinTossBetStatus: GameBetStatus.NOTPLACED,
+  })
 
   const handleCoinTossSelect = (selection: CoinTossStatus) => {
-    setCoinTossStatus(selection)
+    setCoinTossBetState({ coinTossAfterBetError, coinTossBetStatus, coinTossResult, coinTossStatus: selection })
   }
-
+  //const defaultToken = useMemo(() => CRONA_ADDRESS[chainId], [chainId])
   const [selectedToken, setselectedToken] = useState<string>(CRONA_ADDRESS[chainId])
   useEffect(() => {
     setselectedToken(CRONA_ADDRESS[chainId])
   }, [chainId])
+
   const selectedCurrency = useCurrency(selectedToken)
   const selectedTokenBalance = useCurrencyBalance(account ?? undefined, selectedCurrency ?? undefined)
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(selectedTokenBalance)
@@ -80,8 +88,7 @@ export default function CoinToss() {
     setinputValue(value)
   }
   const { totalBetsAmount, totalBetsCount, headsCount, tailsCount } = useCoinTossCallback_Volume(selectedCurrency)
-
-  const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
+  // const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
   const {
     error: cointossBetError,
     rewards,
@@ -93,9 +100,13 @@ export default function CoinToss() {
     multiplier,
     minBetAmount,
     maxBetAmount,
-  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount)
+  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount, coinTossBetStatus)
 
-  const { betsByIndex, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(selectedCurrency, totalBetsCount)
+  const { betsByToken, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(
+    selectedCurrency,
+    totalBetsCount,
+    coinTossBetStatus
+  )
 
   const [claimRewardStatus, setClaimRewardStatus] = useState<CoinTossClaimRewardStatus>(
     CoinTossClaimRewardStatus.NOTCLAIMED
@@ -106,30 +117,29 @@ export default function CoinToss() {
       setClaimRewardStatus(CoinTossClaimRewardStatus.NOTCLAIMED)
     })
   }
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-  useEffect(() => {
-    if (approvalState === ApprovalState.PENDING) {
-      setApprovalSubmitted(true)
-    }
-  }, [approvalState, approvalSubmitted])
 
   const handleApprove = useCallback(async () => {
-    await approveCallback()
+    approveCallback()
   }, [approveCallback])
   const showApproveFlow =
-    !cointossBetError &&
-    (approvalState === ApprovalState.NOT_APPROVED ||
-      approvalState === ApprovalState.PENDING ||
-      (approvalSubmitted && approvalState === ApprovalState.APPROVED))
-  const [signatureData, setSignatureData] = useState(null)
-  const [betStatus, setbetStatus] = useState<CoinTossBetStatus>(CoinTossBetStatus.NOTPLACED)
+    !cointossBetError && (approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING)
   const handleBetModalDismiss = () => {
-    betStatus !== CoinTossBetStatus.PENDING && setbetStatus(CoinTossBetStatus.NOTPLACED)
+    coinTossBetStatus !== GameBetStatus.PENDING &&
+      setCoinTossBetState({
+        coinTossAfterBetError,
+        coinTossBetStatus: GameBetStatus.NOTPLACED,
+        coinTossResult,
+        coinTossStatus,
+      })
   }
+
+  const addTransaction = useTransactionAdder()
   const placebet = async (signature) => {
     try {
-      const response = await axios.get('http://162.33.179.28/placebet', {
+      //http://173.234.155.43/placebet
+      const response = await axios.get('http://173.234.155.43/placebet', {
         params: {
+          game: 'CoinToss',
           player: account,
           amount: inputValue.toBigNumber(selectedCurrency?.decimals).toString(),
           choice: coinTossStatus.toString(),
@@ -141,19 +151,27 @@ export default function CoinToss() {
       })
 
       console.log(response)
-      debugger
       const betPlaceResponse = response?.data
       router.push('#')
-      if (betPlaceResponse?.success) {
-        setcoinTossResult(coinTossStatus)
-      } else {
-        setcoinTossResult(CoinTossStatus.TAIL - coinTossStatus)
-      }
+      if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
 
-      setbetStatus(CoinTossBetStatus.PLACED)
+      setCoinTossBetState({
+        coinTossResult: betPlaceResponse?.result,
+        coinTossAfterBetError,
+        coinTossStatus,
+        coinTossBetStatus: GameBetStatus.PLACED,
+      })
+
+      addTransaction({ hash: betPlaceResponse?.txn }, { summary: 'DiceRoll Place Bet' })
+
       setinputValue('')
-    } catch {
-      setbetStatus(CoinTossBetStatus.NOTPLACED)
+    } catch (err) {
+      setCoinTossBetState({
+        coinTossResult,
+        coinTossAfterBetError: err.message, //'Network Error! Please check connection',
+        coinTossStatus,
+        coinTossBetStatus: GameBetStatus.FATAL,
+      })
     }
   }
   const { onSign: handleBet } = useEIP712BetSignMessageGenerator(
@@ -168,12 +186,22 @@ export default function CoinToss() {
     betsCountByPlayer,
     0,
     () => {
-      setbetStatus(CoinTossBetStatus.PENDING)
+      setCoinTossBetState({
+        coinTossAfterBetError,
+        coinTossBetStatus: GameBetStatus.PENDING,
+        coinTossResult,
+        coinTossStatus,
+      })
     },
     placebet,
     () => {},
     () => {
-      setbetStatus(CoinTossBetStatus.NOTPLACED)
+      setCoinTossBetState({
+        coinTossAfterBetError: 'User Rejected Sign!',
+        coinTossBetStatus: GameBetStatus.FATAL,
+        coinTossResult,
+        coinTossStatus,
+      })
     }
   )
 
@@ -188,11 +216,12 @@ export default function CoinToss() {
         <div className="absolute bottom-1/4 -right-10 bg-red top-4 w-3/5 rounded-full z-0  filter blur-[150px]" /> */}
         <div className="flex flex-col items-center">
           <CoinTossBetModal
-            isOpen={betStatus !== CoinTossBetStatus.NOTPLACED}
+            isOpen={coinTossBetStatus !== GameBetStatus.NOTPLACED}
             onDismiss={handleBetModalDismiss}
-            coinTossBetStatus={betStatus}
+            coinTossBetStatus={coinTossBetStatus}
             coinTossStatus={coinTossStatus}
             coinTossResult={coinTossResult}
+            coinTossAfterBetError={coinTossAfterBetError}
           />
           {/* <div className="text-[5vw] font-bold text-white font-sans leading-[89.3px]">Coin Toss Game</div>
             <div className="max-w-[469px] text-center text-white text-[18px] leading-[24px] mt-[14px]"></div> */}
@@ -204,7 +233,7 @@ export default function CoinToss() {
               totalBetsAmount={totalBetsAmount}
               headWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * headsCount) / (headsCount + tailsCount)}
               tailWinRate={headsCount + tailsCount === 0 ? 0 : (100.0 * tailsCount) / (headsCount + tailsCount)}
-              houseEdge={1}
+              houseEdge={100 - multiplier}
             />
           </div>
           <div className="flex flex-col">
@@ -242,30 +271,28 @@ export default function CoinToss() {
                 <div className="flex flex-row">
                   <div
                     onClick={() => {
-                      setActiveTab(CoinTossReview.ALLBETS)
+                      setActiveTab(GameReview.ALLBETS)
                     }}
                   >
-                    <div className={activeTab === CoinTossReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>
-                      All Bets
-                    </div>
+                    <div className={activeTab === GameReview.ALLBETS ? activeTabStyle : inactiveTabStyle}>All Bets</div>
                     {/* <NavLink href="/cointoss?filter=allbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(CoinTossReview.YOURBETS)
+                      setActiveTab(GameReview.YOURBETS)
                     }}
                   >
-                    <div className={activeTab === CoinTossReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTab === GameReview.YOURBETS ? activeTabStyle : inactiveTabStyle}>
                       Your Bets
                     </div>
                     {/* <NavLink href="/cointoss?filter=yourbets"></NavLink> */}
                   </div>
                   <div
                     onClick={() => {
-                      setActiveTab(CoinTossReview.LEADERBOARD)
+                      setActiveTab(GameReview.LEADERBOARD)
                     }}
                   >
-                    <div className={activeTab === CoinTossReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
+                    <div className={activeTab === GameReview.LEADERBOARD ? activeTabStyle : inactiveTabStyle}>
                       Leaderboard
                     </div>
                     {/* <NavLink href="/cointoss?filter=leaderboard"></NavLink> */}
@@ -273,11 +300,12 @@ export default function CoinToss() {
                 </div>
               </div>
             </div>
-            <div className="mt-[22px]">
+            <div className="mt-[22px] w-full">
               <GameReviewPanel
+                game={GameType.COINTOSS}
                 selectedToken={selectedCurrency}
                 activeTab={activeTab}
-                betsByIndex={betsByIndex}
+                betsByToken={betsByToken}
                 betsByPlayer={betsByPlayer}
                 topGamers={topGamers}
               />

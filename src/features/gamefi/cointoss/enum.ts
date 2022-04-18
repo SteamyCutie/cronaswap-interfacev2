@@ -4,17 +4,18 @@ export enum CoinTossStatus {
   NONE,
 }
 
-export enum CoinTossReview {
-  ALLBETS,
-  YOURBETS,
-  LEADERBOARD,
-}
+// export enum CoinTossReview {
+//   ALLBETS,
+//   YOURBETS,
+//   LEADERBOARD,
+// }
 
-export enum CoinTossBetStatus {
-  NOTPLACED,
-  PENDING,
-  PLACED,
-}
+// export enum CoinTossBetStatus {
+//   NOTPLACED,
+//   PENDING,
+//   PLACED,
+//   FATAL,
+// }
 
 export enum CoinTossClaimRewardStatus {
   NOTCLAIMED,

@@ -79,7 +79,7 @@ export const POOLS: AddressMap = {
       pid: 2,
       name: 'CRONA-CROISSANT',
       tokenPerBlock: '1.25',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://croissant.games/',
       stakingToken: {
@@ -158,7 +158,7 @@ export const POOLS: AddressMap = {
       pid: 6,
       name: 'CRONA-SPHERE',
       tokenPerBlock: '0.06',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://cronosphere.org/',
       stakingToken: {

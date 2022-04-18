@@ -9,15 +9,7 @@ import {
   Trade as V2Trade,
 } from '@cronaswap/core-sdk'
 
-import {
-  Field,
-  replaceZapState,
-  selectCurrency,
-  selectLPToken,
-  setRecipient,
-  switchCurrencies,
-  typeInput,
-} from './actions'
+import { Field, replaceZapState, selectCurrency, selectLPToken, switchCurrencies, typeInput } from './actions'
 import { isAddress, isZero } from '../../functions/validate'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useCallback, useEffect, useState } from 'react'
@@ -53,7 +45,6 @@ export function useZapActionHandlers(): {
   onLPTokenSelection: (field: Field, lpToken: FarmPairInfo) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
-  onChangeRecipient: (recipient: string | null) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -92,28 +83,12 @@ export function useZapActionHandlers(): {
     [dispatch]
   )
 
-  const onChangeRecipient = useCallback(
-    (recipient: string | null) => {
-      dispatch(setRecipient({ recipient }))
-    },
-    [dispatch]
-  )
-
   return {
     onSwitchTokens,
     onLPTokenSelection,
     onCurrencySelection,
     onUserInput,
-    onChangeRecipient,
   }
-}
-
-// TODO: Swtich for ours...
-const BAD_RECIPIENT_ADDRESSES: { [chainId: string]: { [address: string]: true } } = {
-  [ChainId.ETHEREUM]: {
-    '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac': true, // v2 factory
-    '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F': true, // v2 router 02
-  },
 }
 
 /**
@@ -152,7 +127,6 @@ export function useDerivedZapInfo(doArcher = false): {
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { lpTokenId: outputLPTokenId, lpToken: outputLPToken },
-    recipient,
   } = useZapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -164,15 +138,30 @@ export function useDerivedZapInfo(doArcher = false): {
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, inputCurrency ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(parsedAmount, undefined, {
-    maxHops: singleHopOnly ? 1 : undefined,
-  })
+  // const outputCurrency1: Currency = useCurrency(outputLPToken?.token0?.id)
+  // const outputCurrency2: Currency = useCurrency(outputLPToken?.token1?.id)
+  // debugger
+  // const bestTrade1ExactIn = useTradeExactIn(
+  //   isExactIn ? parsedAmount?.divide(2) : undefined,
+  //   outputCurrency1 ?? undefined,
+  //   {
+  //     maxHops: singleHopOnly ? 1 : undefined,
+  //   }
+  // )
 
-  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, {
-    maxHops: singleHopOnly ? 1 : undefined,
-  })
+  // const bestTrade2ExactIn = useTradeExactIn(
+  //   isExactIn ? parsedAmount?.divide(2) : undefined,
+  //   outputCurrency2 ?? undefined,
+  //   {
+  //     maxHops: singleHopOnly ? 1 : undefined,
+  //   }
+  // )
 
-  const zapTrade = { inputCurrency: inputCurrency, inputAmount: parsedAmount, outputLPToken: outputLPToken }
+  const zapTrade: ZapTrade = {
+    inputCurrency: inputCurrency,
+    inputAmount: parsedAmount,
+    outputLPToken: outputLPToken,
+  }
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -203,7 +192,10 @@ export function useDerivedZapInfo(doArcher = false): {
     inputError = inputError ?? i18n._(t`Select a LP token`)
   }
 
-  const allowedSlippage = undefined //useSwapSlippageTolerance(v2Trade)
+  // const allowedSlippage1 = useSwapSlippageTolerance(zapTrade?.trade1)
+  // const allowedSlippage2 = useSwapSlippageTolerance(zapTrade?.trade2)
+  // const allowedSlippage = allowedSlippage1.greaterThan(allowedSlippage2) ? allowedSlippage2 : allowedSlippage1
+  const allowedSlippage = undefined
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount]
@@ -271,7 +263,6 @@ export function queryParametersToZapState(parsedQs: ParsedQs, chainId: ChainId =
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
-    recipient,
   }
 }
 
@@ -305,7 +296,6 @@ export function useDefaultsFromURLSearch():
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        recipient: expertMode ? parsed.recipient : null,
       })
     )
 

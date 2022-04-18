@@ -1,0 +1,153 @@
+.dice-container {
+  height: 160px;
+  width: 160px;
+  perspective: 1000px;
+}
+.dice {
+  width: 160px;
+  height: 160px;
+  transform-style: preserve-3d;
+  transition: all 600ms;
+}
+.dice.face-0 {
+  transform: rotateX(0);
+}
+.dice.face-1 {
+  transform: rotateY(90deg);
+}
+.dice.face-2 {
+  transform: rotateX(-90deg);
+}
+.dice.face-3 {
+  transform: rotateX(90deg);
+}
+.dice.face-4 {
+  transform: rotateY(-90deg);
+}
+.dice.face-5 {
+  transform: rotateX(-180deg);
+}
+.dot-container {
+  display: grid;
+  grid-template-columns: repeat(3, 28.8px);
+  grid-template-rows: repeat(3, 28.8px);
+  grid-gap: 7.2px 7.2px;
+}
+.dot {
+  background-color: #00BBFF;
+  border-radius: 50%;
+}
+.dice [class^="face"] {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  outline: 2px solid #00BBFF;
+  outline-offset: -2px;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20%;
+}
+.dice .face-0 {
+  transform: translateX(0) translateY(0) translateZ(80px);
+}
+.dice .face-0 .dot-container .dot {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+}
+.dice .face-2 {
+  transform: translateX(0) translateY(-50%) translateZ(0) rotateX(450deg);
+}
+.dice .face-2 .dot-container .dot:nth-child(1) {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-2 .dot-container .dot:nth-child(2) {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+}
+.dice .face-2 .dot-container .dot:nth-child(3) {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-1 {
+  transform: translateX(-50%) translateY(0%) translateZ(0) rotateY(450deg);
+}
+.dice .face-1 .dot-container .dot:nth-child(1) {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-1 .dot-container .dot:nth-child(2) {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-3 {
+  transform: translateX(0) translateY(50%) translateZ(0) rotateX(450deg);
+}
+.dice .face-3 .dot-container .dot:nth-child(1) {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-3 .dot-container .dot:nth-child(2) {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-3 .dot-container .dot:nth-child(3) {
+  grid-column: 3 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-3 .dot-container .dot:nth-child(4) {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-4 {
+  transform: translateX(50%) translateY(0%) translateZ(0) rotateY(450deg);
+}
+.dice .face-4 .dot-container .dot:nth-child(1) {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-4 .dot-container .dot:nth-child(2) {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-4 .dot-container .dot:nth-child(5) {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+}
+.dice .face-4 .dot-container .dot:nth-child(3) {
+  grid-column: 3 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-4 .dot-container .dot:nth-child(4) {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-5 {
+  transform: translateX(0) translateY(0) translateZ(-80px);
+}
+.dice .face-5 .dot-container .dot:nth-child(1) {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-5 .dot-container .dot:nth-child(2) {
+  grid-column: 3 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-5 .dot-container .dot:nth-child(3) {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+}
+.dice .face-5 .dot-container .dot:nth-child(4) {
+  grid-column: 1 / span 1;
+  grid-row: 2 / span 1;
+}
+.dice .face-5 .dot-container .dot:nth-child(5) {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+}
+.dice .face-5 .dot-container .dot:nth-child(6) {
+  grid-column: 3 / span 1;
+  grid-row: 2 / span 1;
+}

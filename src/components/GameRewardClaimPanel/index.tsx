@@ -8,11 +8,12 @@ import { getBalanceAmount } from 'app/functions/formatBalance'
 import { CoinTossClaimRewardStatus } from 'app/features/gamefi/cointoss/enum'
 import Loader from '../Loader'
 import { ButtonConfirmed } from '../Button'
+import { DiceRollClaimRewardStatus } from 'app/features/gamefi/diceroll/enum'
 interface GameRewardClaimPanelProps {
   selectedCurrency?: Currency | undefined
   rewards?: BN | undefined
   onClaim?: undefined | (() => void)
-  claimRewardStatus?: CoinTossClaimRewardStatus | undefined
+  claimRewardStatus?: CoinTossClaimRewardStatus | DiceRollClaimRewardStatus | undefined
 }
 const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardStatus }: GameRewardClaimPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
@@ -38,7 +39,7 @@ const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardS
       <div className="items-stretch w-[452px] h-[60px] mx-10 mt-6">
         {!account ? (
           <Web3Connect color="blue" className="w-full h-full text-base text-white" />
-        ) : rewards?.eq(BN.from('0')) ? (
+        ) : !rewards || rewards?.eq(BN.from('0')) ? (
           <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
             No Reward
           </button>

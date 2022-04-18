@@ -38,7 +38,7 @@ import {
   useUserSingleHopOnly,
   useUserSlippageToleranceWithDefault,
 } from '../../../state/user/hooks'
-import { maxAmountSpend, warningSeverity } from 'app/functions'
+import { computeFiatValuePriceImpact, maxAmountSpend, warningSeverity } from 'app/functions'
 import { useUSDCValue } from 'app/hooks/useUSDCPrice'
 import { AutoRow, RowBetween } from 'app/components/Row'
 import { Zap as ZapIcon } from 'react-feather'
@@ -52,13 +52,14 @@ import ProgressSteps from '../../../components/ProgressSteps'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import ConfirmZapModal from 'app/features/zap/ConfirmZapModal'
 import { useAllTokens, useCurrency, useZapInTokens } from 'app/hooks/Tokens'
+import { useSwapCallback } from 'app/hooks/useSwapCallback'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function Zap() {
   const { i18n } = useLingui()
 
-  const { independentField, typedValue, recipient } = useZapState()
+  const { independentField, typedValue } = useZapState()
 
   // for expert mode
   const [isExpertMode, setExpertMode] = useExpertModeManager()
@@ -86,6 +87,51 @@ export default function Zap() {
   const deadline = useTransactionDeadline()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
 
+  // // the callback to execute the swap
+  // const { callback: swapCallback1, error: swapCallbackError1 } = useSwapCallback(
+  //   zapTrade?.trade1,
+  //   allowedSlippage,
+  //   undefined,
+  //   undefined
+  // )
+  // // the callback to execute the swap
+  // const { callback: swapCallback2, error: swapCallbackError2 } = useSwapCallback(
+  //   zapTrade?.trade2,
+  //   allowedSlippage,
+  //   undefined,
+  //   undefined
+  // )
+
+  // const priceImpact1 = computeFiatValuePriceImpact(
+  //   useUSDCValue(zapTrade?.trade1?.inputAmount),
+  //   useUSDCValue(zapTrade?.trade1?.outputAmount)
+  // )
+  // const priceImpact2 = computeFiatValuePriceImpact(
+  //   useUSDCValue(zapTrade?.trade2?.inputAmount),
+  //   useUSDCValue(zapTrade?.trade2?.outputAmount)
+  // )
+  // const priceImpactSeverity = useMemo(() => {
+  //   const executionPriceImpact1 = zapTrade?.trade1?.priceImpact
+  //   const severity1 = warningSeverity(
+  //     executionPriceImpact1 && priceImpact1
+  //       ? executionPriceImpact1.greaterThan(priceImpact1)
+  //         ? executionPriceImpact1
+  //         : priceImpact1
+  //       : executionPriceImpact1 ?? priceImpact1
+  //   )
+
+  //   const executionPriceImpact2 = zapTrade?.trade2?.priceImpact
+  //   const severity2 = warningSeverity(
+  //     executionPriceImpact2 && priceImpact1
+  //       ? executionPriceImpact2.greaterThan(priceImpact2)
+  //         ? executionPriceImpact2
+  //         : priceImpact2
+  //       : executionPriceImpact2 ?? priceImpact2
+  //   )
+
+  //   return severity1 > severity2 ? severity1 : severity2
+  // }, [priceImpact1, priceImpact2, zapTrade])
+
   const zapContract: Contract | null = useZapContract()
 
   // allowance handling
@@ -112,19 +158,11 @@ export default function Zap() {
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[ZapField.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmount?.equalTo(maxInputAmount))
 
-  const { onSwitchTokens, onCurrencySelection, onLPTokenSelection, onUserInput, onChangeRecipient } =
-    useZapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onLPTokenSelection, onUserInput } = useZapActionHandlers()
 
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(ZapField.INPUT, value)
-    },
-    [onUserInput]
-  )
-
-  const handleTypeOutput = useCallback(
-    (value: string) => {
-      onUserInput(ZapField.OUTPUT, value)
     },
     [onUserInput]
   )
@@ -263,7 +301,6 @@ export default function Zap() {
             onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
             txHash={txHash}
-            recipient={recipient}
             allowedSlippage={allowedSlippage}
             onConfirm={handleZap}
             zapErrorMessage={zapErrorMessage}

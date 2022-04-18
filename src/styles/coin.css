@@ -1,0 +1,46 @@
+.coin-container {
+  height: 160px;
+  width: 160px;
+  perspective: 1000px;
+}
+.coin {
+  width: 160px;
+  height: 160px;
+  transform-style: preserve-3d;
+  transition: all 2s ease-in-out;
+  transform-origin: center;
+}
+.coin.face-0 {
+  transform: rotateY(0);
+  background-color: #00BBFF;
+  border-radius: 50%;
+}
+.coin.face-1 {
+  transform: rotateY(900deg);
+  background-color: #ff9d80;
+  border-radius: 50%;
+}
+.coin [class^="face"] {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  outline: 2px solid white;
+  outline-offset: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.face-container {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  font: bold;
+  color: white;
+}
+.coin .face-0 {
+  transform: translateX(0) translateY(0) translateZ(10px);
+}
+.coin .face-1 {
+  transform: translateX(0) translateY(0) translateZ(-10px) rotateY(180deg);
+}

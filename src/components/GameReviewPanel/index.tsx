@@ -2,17 +2,21 @@ import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 're
 import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CoinTossReview, CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
+import { CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import { Currency } from '@cronaswap/core-sdk'
 import { shortenAddress, shortenString } from 'app/functions'
+import { GameType, GameReview } from 'app/features/gamefi'
+import { Dice } from '../DiceRollBetPanel'
+import { DiceRollOption } from 'app/constants/gamefi'
+import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 interface BetHistory {
   index: BigNumber
   txn: BigNumber
   player: string
   token: string
   amount: BigNumber
-  playerOption: CoinTossStatus
-  resultOption: CoinTossStatus
+  playerOption: CoinTossStatus | DiceRollOption | any
+  resultOption: CoinTossStatus | DiceRollStatus
   wasSuccess: boolean
   rewards: BigNumber
 }
@@ -25,59 +29,68 @@ interface TopGamer {
 interface GameReviewPanelProps {
   selectedToken: Currency | undefined
   activeTab: number | 0
-  betsByIndex: Array<BetHistory> | []
+  betsByToken: Array<BetHistory> | []
   betsByPlayer: Array<BetHistory> | []
   topGamers: Array<TopGamer> | []
+  game?: GameType | undefined
 }
 
-function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, betsByPlayer }: GameReviewPanelProps) {
+function GameReviewPanel({
+  selectedToken,
+  activeTab,
+  betsByToken,
+  topGamers,
+  betsByPlayer,
+  game,
+}: GameReviewPanelProps) {
   const fixedListRef = useRef<FixedSizeList>()
   const itemData = useMemo(() => {
     switch (activeTab) {
-      case CoinTossReview.ALLBETS:
-        return betsByIndex
-      case CoinTossReview.YOURBETS:
+      case GameReview.ALLBETS:
+        return betsByToken
+      case GameReview.YOURBETS:
         return betsByPlayer
-      case CoinTossReview.LEADERBOARD:
+      case GameReview.LEADERBOARD:
         return topGamers
       default:
         break
     }
-  }, [activeTab, betsByIndex])
+  }, [activeTab, betsByToken, topGamers, betsByPlayer])
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {
     return index
   }, [])
 
-  const hoverStyle = 'hover:bg-[#0D0C2B] hover:cursor-pointer hover:rounded'
+  const hoverStyle = ' hover:bg-[#0D0C2B] hover:cursor-pointer hover:rounded'
   const fieldsList = {
-    [CoinTossReview.ALLBETS]: [
+    [GameReview.ALLBETS]: [
       { field: 'Player', lPos: 0 },
       { field: 'Transaction', lPos: 200 },
       { field: 'Amount', lPos: 420 },
       { field: 'Choice', lPos: 630 },
-      { field: 'Result', lPos: 820 },
+      { field: 'Result', lPos: game === GameType.COINTOSS ? 820 : game === GameType.DICEROLL ? 870 : 820 },
       { field: 'Payout', lPos: 980 },
     ],
-    [CoinTossReview.YOURBETS]: [
-      { field: 'Player', lPos: 40 },
+    [GameReview.YOURBETS]: [
+      { field: 'RoundID', lPos: 40 },
       { field: 'Transaction', lPos: 200 },
       { field: 'Amount', lPos: 420 },
       { field: 'Choice', lPos: 630 },
-      { field: 'Result', lPos: 820 },
+      { field: 'Result', lPos: game === GameType.COINTOSS ? 820 : game === GameType.DICEROLL ? 870 : 820 },
       { field: 'Payout', lPos: 980 },
     ],
-    [CoinTossReview.LEADERBOARD]: [
+    [GameReview.LEADERBOARD]: [
       { field: 'Player', lPos: 0 },
       { field: 'Wins', lPos: 454 },
       { field: 'Payout', lPos: 860 },
     ],
   }
+
   return (
     <div className="w-full h-[756px] bg-[#1C1B38] rounded flex flex-col">
       <div className="h-[64px] pt-4 pl-8 pr-4 relative">
         {fieldsList[activeTab].map((e) => (
-          <div key="abc" className={`absolute ml-[${e?.lPos}px]`}>
+          <div key={e?.field} className={'absolute ml-[' + e?.lPos + 'px]'}>
             {e?.field}
           </div>
         ))}
@@ -95,11 +108,11 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
               itemSize={56}
               itemKey={itemKey}
             >
-              {activeTab == CoinTossReview.ALLBETS
+              {activeTab == GameReview.ALLBETS
                 ? ({ data, index, style }: { data: Array<BetHistory>; index: number; style: CSSProperties }) => (
-                    <div style={style} key={index}>
+                    <div key={index} style={{ ...style, paddingTop: '12px' }}>
                       {data[index] && selectedToken && (
-                        <div className={`pl-2 relative flex flex-row ${hoverStyle}`}>
+                        <div className={'pl-2 relative flex flex-row items-center' + hoverStyle}>
                           <div className="">{shortenAddress(data[index]?.player)}</div>
                           <div className="absolute ml-[200px]">{shortenString(data[index]?.txn.toString(), 8)}</div>
 
@@ -108,34 +121,70 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
                               <div>
                                 {data[index]?.amount.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
                               </div>
-                              <div className="absolute ml-10">{selectedToken?.symbol}</div>
+                              <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
+                                {selectedToken?.symbol}
+                              </div>
                             </div>
                           </div>
-
-                          <div className="absolute ml-[630px]">
-                            {data[index]?.playerOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
-                          </div>
-                          <div className="absolute ml-[820px]">
-                            {data[index]?.resultOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
-                          </div>
-
+                          {game === GameType.COINTOSS ? (
+                            <>
+                              <div className="absolute ml-[630px]">
+                                {data[index]?.playerOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
+                              </div>
+                              <div className="absolute ml-[820px]">
+                                {data[index]?.resultOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
+                              </div>
+                            </>
+                          ) : (
+                            game === GameType.DICEROLL && (
+                              <>
+                                <div className="absolute ml-[630px] flex flex-row gap-1">
+                                  {data[index]?.playerOption?.map((e, index) => {
+                                    return (
+                                      e && (
+                                        <Dice
+                                          diceSide={index}
+                                          dotSize={6}
+                                          size={40}
+                                          isSelected={false}
+                                          onDiceSelect={() => {}}
+                                          key={index}
+                                        />
+                                      )
+                                    )
+                                  })}
+                                </div>
+                                <div className="absolute ml-[870px]">
+                                  <Dice
+                                    diceSide={data[index]?.resultOption}
+                                    dotSize={6}
+                                    size={40}
+                                    isSelected={true}
+                                    onDiceSelect={() => {}}
+                                  />
+                                </div>
+                              </>
+                            )
+                          )}
                           <div className="absolute ml-[980px]">
                             <div className="relative flex flex-row ">
                               <div className="">
                                 {data[index]?.rewards.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
                               </div>
-                              <div className="absolute ml-10">{selectedToken?.symbol}</div>
+                              <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
+                                {selectedToken?.symbol}
+                              </div>
                             </div>
                           </div>
                         </div>
                       )}
                     </div>
                   )
-                : activeTab == CoinTossReview.LEADERBOARD
+                : activeTab == GameReview.LEADERBOARD
                 ? ({ data, index, style }: { data: Array<TopGamer>; index: number; style: CSSProperties }) => (
-                    <div style={style} key={index}>
+                    <div key={index} style={style}>
                       {data[index] && selectedToken && (
-                        <div className={`pl-2 relative flex flex-row ${hoverStyle}`}>
+                        <div className={'pl-2 relative flex flex-row' + hoverStyle}>
                           <div className="">{shortenAddress(data[index]?.player)}</div>
                           <div className="absolute ml-[454px]">{data[index]?.count.toNumber()}</div>
                           <div className="absolute ml-[860px]">
@@ -145,40 +194,79 @@ function GameReviewPanel({ selectedToken, activeTab, betsByIndex, topGamers, bet
                                   .div(BigNumber.from(10).pow(selectedToken?.decimals))
                                   .toFixed(2)}{' '}
                               </div>
-                              <div className="absolute ml-10">{selectedToken?.symbol}</div>
+                              <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
+                                {selectedToken?.symbol}
+                              </div>
                             </div>
                           </div>
                         </div>
                       )}
                     </div>
                   )
-                : activeTab == CoinTossReview.YOURBETS
+                : activeTab == GameReview.YOURBETS
                 ? ({ data, index, style }: { data: Array<BetHistory>; index: number; style: CSSProperties }) => (
-                    <div style={style} key={index}>
+                    <div key={index} style={{ ...style, paddingTop: '8px' }}>
                       {data[index] && selectedToken && (
-                        <div className={`pl-2 relative flex flex-row ${hoverStyle}`}>
-                          <div className="">{shortenAddress(data[index]?.player)}</div>
+                        <div className={'pl-2 relative flex flex-row items-center' + hoverStyle}>
+                          <div className="">{data[index]?.index.toNumber()}</div>
                           <div className="absolute ml-[200px]">{shortenString(data[index]?.txn.toString(), 8)}</div>
                           <div className="absolute ml-[420px]">
                             <div className="relative flex flex-row ">
                               <div className="">
                                 {data[index]?.amount.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
                               </div>
-                              <div className="absolute ml-10">{selectedToken?.symbol}</div>
+                              <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
+                                {selectedToken?.symbol}
+                              </div>
                             </div>
                           </div>
-                          <div className="absolute ml-[630px]">
-                            {data[index]?.playerOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
-                          </div>
-                          <div className="absolute ml-[820px]">
-                            {data[index]?.resultOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
-                          </div>
+                          {game === GameType.COINTOSS ? (
+                            <>
+                              <div className="absolute ml-[630px]">
+                                {data[index]?.playerOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
+                              </div>
+                              <div className="absolute ml-[820px]">
+                                {data[index]?.resultOption == CoinTossStatus.HEAD ? 'Head' : 'Tail'}
+                              </div>
+                            </>
+                          ) : (
+                            game === GameType.DICEROLL && (
+                              <>
+                                <div className="absolute ml-[630px] flex flex-row gap-1">
+                                  {data[index]?.playerOption?.map((e, index) => {
+                                    return (
+                                      e && (
+                                        <Dice
+                                          diceSide={index}
+                                          dotSize={6}
+                                          size={40}
+                                          isSelected={false}
+                                          onDiceSelect={() => {}}
+                                        />
+                                      )
+                                    )
+                                  })}
+                                </div>
+                                <div className="absolute ml-[870px]">
+                                  <Dice
+                                    diceSide={data[index]?.resultOption}
+                                    dotSize={6}
+                                    size={40}
+                                    isSelected={true}
+                                    onDiceSelect={() => {}}
+                                  />
+                                </div>
+                              </>
+                            )
+                          )}
                           <div className="absolute ml-[980px]">
                             <div className="relative flex flex-row ">
                               <div className="">
                                 {data[index]?.rewards.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
                               </div>
-                              <div className="absolute ml-10">{selectedToken?.symbol}</div>
+                              <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
+                                {selectedToken?.symbol}
+                              </div>
                             </div>
                           </div>
                         </div>
