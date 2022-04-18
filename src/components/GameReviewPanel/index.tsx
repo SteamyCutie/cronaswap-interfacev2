@@ -1,30 +1,32 @@
 import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 'react'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber as BN } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
 import { CoinTossStatus } from 'app/features/gamefi/cointoss/enum'
 import { Currency } from '@cronaswap/core-sdk'
-import { shortenAddress, shortenString } from 'app/functions'
+import { shortenAddress, shortenString, tryParseAmount } from 'app/functions'
 import { GameType, GameReview } from 'app/features/gamefi'
 import { Dice } from '../DiceRollBetPanel'
 import { DiceRollOption } from 'app/constants/gamefi'
 import { DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
+import { getBalanceAmount } from 'app/functions/formatBalance'
 interface BetHistory {
-  index: BigNumber
-  txn: BigNumber
+  index: BN
+  txn: BN
   player: string
   token: string
-  amount: BigNumber
+  amount: BN
   playerOption: CoinTossStatus | DiceRollOption | any
   resultOption: CoinTossStatus | DiceRollStatus
   wasSuccess: boolean
-  payout: BigNumber
+  payout: BN
 }
 interface TopGamer {
-  // index: BigNumber
+  // index: BN
   player: string
-  payoutAmount: BigNumber
-  count: BigNumber
+  payoutAmount: BN
+  count: BN
 }
 interface GameReviewPanelProps {
   selectedToken: Currency | undefined
@@ -119,7 +121,10 @@ function GameReviewPanel({
                           <div className="absolute ml-[420px]">
                             <div className="relative flex flex-row ">
                               <div>
-                                {data[index]?.amount.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
+                                {getBalanceAmount(
+                                  new BigNumber(data[index]?.amount?.toString()),
+                                  selectedToken?.decimals
+                                ).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
@@ -169,7 +174,10 @@ function GameReviewPanel({
                           <div className="absolute ml-[980px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.payout.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
+                                {getBalanceAmount(
+                                  new BigNumber(data[index]?.payout?.toString()),
+                                  selectedToken?.decimals
+                                ).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
@@ -190,9 +198,10 @@ function GameReviewPanel({
                           <div className="absolute ml-[860px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.payoutAmount
-                                  .div(BigNumber.from(10).pow(selectedToken?.decimals))
-                                  .toFixed(2)}{' '}
+                                {getBalanceAmount(
+                                  new BigNumber(data[index]?.payoutAmount?.toString()),
+                                  selectedToken?.decimals
+                                ).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
@@ -213,7 +222,10 @@ function GameReviewPanel({
                           <div className="absolute ml-[420px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.amount.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
+                                {getBalanceAmount(
+                                  new BigNumber(data[index]?.amount?.toString()),
+                                  selectedToken?.decimals
+                                ).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
@@ -263,7 +275,10 @@ function GameReviewPanel({
                           <div className="absolute ml-[980px]">
                             <div className="relative flex flex-row ">
                               <div className="">
-                                {data[index]?.payout.div(BigNumber.from(10).pow(selectedToken?.decimals)).toFixed(2)}{' '}
+                                {getBalanceAmount(
+                                  new BigNumber(data[index]?.payout?.toString()),
+                                  selectedToken?.decimals
+                                ).toFixed(2)}{' '}
                               </div>
                               <div className="absolute ml-[60px] text-[14px] leading-[24px] font-bold">
                                 {selectedToken?.symbol}
