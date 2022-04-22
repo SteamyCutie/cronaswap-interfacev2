@@ -137,8 +137,7 @@ export default function CoinToss() {
   const addTransaction = useTransactionAdder()
   const placebet = async (signature) => {
     try {
-      //http://173.234.155.43/placebet
-      const response = await axios.get('http://173.234.155.43/placebet', {
+      const response = await axios.get('https://gamefi.cronaswap.org/placebet', {
         params: {
           game: 'CoinToss',
           player: account,

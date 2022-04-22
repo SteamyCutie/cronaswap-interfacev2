@@ -55,7 +55,7 @@ function GameReviewPanel({
       case GameReview.YOURBETS:
         return betsByPlayer
       case GameReview.LEADERBOARD:
-        return topGamers
+        return topGamers.filter((value: TopGamer) => value?.count.toNumber() !== 0)
       default:
         break
     }
