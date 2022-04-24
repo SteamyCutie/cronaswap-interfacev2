@@ -37,7 +37,7 @@ export const POOLS: AddressMap = {
       pid: 0,
       name: 'CRONA-WCRO',
       tokenPerBlock: '0.05',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://app.cronaswap.org',
       stakingToken: {
