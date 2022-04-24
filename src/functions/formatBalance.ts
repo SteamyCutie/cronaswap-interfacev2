@@ -19,7 +19,7 @@ export const getBalanceAmount = (amount: BigNumber, decimals = 18) => {
  * This function is not really necessary but is used throughout the site.
  */
 export const getBalanceNumber = (balance: BigNumber, decimals = 18) => {
-  return getBalanceAmount(balance, decimals).toNumber()
+  return isNaN(getBalanceAmount(balance, decimals).toNumber()) ? 0 : getBalanceAmount(balance, decimals).toNumber()
 }
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, displayDecimals?: number) => {

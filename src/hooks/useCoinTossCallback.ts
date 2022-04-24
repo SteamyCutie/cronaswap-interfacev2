@@ -14,6 +14,7 @@ import { useSingleCallResult } from 'app/state/multicall/hooks'
 import { result } from 'lodash'
 import { splitSignature } from '@ethersproject/bytes'
 import { GameBetStatus } from 'app/features/gamefi'
+import { useCurrency } from './Tokens'
 
 const NOT_APPLICABLE = { error: 'Not Applicable!' }
 
@@ -105,13 +106,12 @@ export function useEIP712BetSignMessageGenerator(
 
 export function useCoinTossCallback_PlaceBet(
   selectedCurrency: Currency | undefined,
-  inputValue: string | undefined,
-  totalBetsCount: number | 0,
-  coinTossBetStatus: GameBetStatus | undefined
+  inputValue: string | undefined
 ): {
   error?: string | ''
-  rewards?: undefined | BigNumber
-  claimRewards?: undefined | ((onAfterClaim) => Promise<{ tx: string; error: string }>)
+  rewardToken?: Currency | undefined
+  reward?: undefined | BigNumber
+  claimReward?: undefined | ((onAfterClaim) => Promise<{ tx: string; error: string }>)
   approvalState?: ApprovalState | undefined
   approveCallback?: () => Promise<void>
   contract?: Contract
@@ -132,8 +132,6 @@ export function useCoinTossCallback_PlaceBet(
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const addTransaction = useTransactionAdder()
 
-  const [rewards, setrewards] = useState<BigNumber>(undefined)
-  const [betsCountByPlayer, setbetsCountByPlayer] = useState<number>(0)
   let callResult = useSingleCallResult(conitossContract, 'getBetAmountRangeByToken', [
     selectedCurrency?.wrapped.address,
   ])?.result
@@ -149,19 +147,41 @@ export function useCoinTossCallback_PlaceBet(
     return BigNumber.from((callResult && callResult[0]?.toString()) ?? 0).toNumber()
   }, [callResult])
 
-  useEffect(() => {
-    async function FetchPlayerInfo() {
-      try {
-        setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer(tokenAddress)).toNumber())
-        setrewards(await conitossContract.getRewardsAmountByPlayer(tokenAddress))
-      } catch {
-        setbetsCountByPlayer(0)
-        setrewards(BigNumber.from(0))
-      }
-    }
+  callResult = useSingleCallResult(conitossContract, 'getRewardToken', [])?.result
+  const rewardTokenAddr: string = useMemo(() => {
+    return callResult && callResult[0]?.toString()
+  }, [callResult])
 
-    FetchPlayerInfo()
-  }, [chainId, account, selectedCurrency, totalBetsCount, coinTossBetStatus])
+  const rewardToken: Currency = useCurrency(rewardTokenAddr)
+
+  callResult = useSingleCallResult(conitossContract, 'getBetsCountByPlayerNotSender', [
+    account,
+    selectedCurrency?.wrapped.address,
+  ])?.result
+  const betsCountByPlayer: number = useMemo(() => {
+    return BigNumber.from((callResult && callResult[0]?.toString()) ?? 0).toNumber()
+  }, [callResult])
+
+  callResult = useSingleCallResult(conitossContract, 'getRewardAmountByPlayerNotSender', [account])?.result
+  const reward: BigNumber = useMemo(() => {
+    return BigNumber.from((callResult && callResult[0]?.toString()) ?? 0)
+  }, [callResult])
+
+  // const [reward, setreward] = useState<BigNumber>(undefined)
+  // const [betsCountByPlayer, setbetsCountByPlayer] = useState<number>(0)
+  // useEffect(() => {
+  //   async function FetchPlayerInfo() {
+  //     try {
+  //       setbetsCountByPlayer((await conitossContract.getBetsCountByPlayer(tokenAddress)).toNumber())
+  //       setreward(await conitossContract.getRewardAmountByPlayer())
+  //     } catch {
+  //       setbetsCountByPlayer(0)
+  //       setreward(BigNumber.from(0))
+  //     }
+  //   }
+
+  //   FetchPlayerInfo()
+  // }, [chainId, account, selectedCurrency, totalBetsCount, coinTossBetStatus])
   return useMemo(() => {
     if (!chainId && conitossContract) return NOT_APPLICABLE
 
@@ -181,6 +201,7 @@ export function useCoinTossCallback_PlaceBet(
       betsCountByPlayer,
       approvalState,
       approveCallback,
+      rewardToken,
       error: sufficientBalance
         ? rangedBalance
           ? undefined
@@ -188,15 +209,14 @@ export function useCoinTossCallback_PlaceBet(
         : hasInputAmount
         ? `Insufficient ${selectedCurrency?.symbol} balance`
         : `Enter ${selectedCurrency?.symbol} amount`,
-      rewards: rewards,
-      claimRewards: async (onAfterClaim) => {
+      reward: reward,
+      claimReward: async (onAfterClaim) => {
         try {
-          const txReceipt = await conitossContract.claimRewards(selectedCurrency.wrapped.address)
+          const txReceipt = await conitossContract.claimReward()
           await txReceipt.wait()
           addTransaction(txReceipt, {
-            summary: `Get Rewards of ${selectedCurrency.symbol}`,
+            summary: `Get Reward of ${selectedCurrency.symbol}`,
           })
-          setrewards(BigNumber.from(0))
           onAfterClaim()
           return { tx: txReceipt, error: undefined }
         } catch (error) {
@@ -213,12 +233,12 @@ export function useCoinTossCallback_PlaceBet(
     selectedCurrencyAmount,
     balance,
     addTransaction,
-    rewards,
+    reward,
     minBetAmount,
     maxBetAmount,
     betsCountByPlayer,
     approvalState,
-    coinTossBetStatus,
+    rewardToken,
   ])
 }
 

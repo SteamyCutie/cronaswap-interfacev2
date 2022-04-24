@@ -51,9 +51,9 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
       {/* step */}
       <h2 className="mb-8 text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">How to take part</h2>
 
-      <ul role="list" className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-4 lg:gap-y-4 lg:space-y-0 mb-4">
+      <ul role="list" className="mb-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-4 lg:gap-y-4 lg:space-y-0">
         <li className="flex p-6 rounded-lg bg-dark-800">
-          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+          <div className="absolute flex items-center justify-center w-12 h-12 text-white bg-indigo-500 rounded-md">
             <AdjustmentsIcon className="h-8" />
           </div>
           <div className="ml-16">
@@ -67,7 +67,7 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
         </li>
 
         <li className="flex p-6 rounded-lg bg-dark-800">
-          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+          <div className="absolute flex items-center justify-center w-12 h-12 text-white bg-indigo-500 rounded-md">
             <TerminalIcon className="h-8" />
           </div>
           <div className="ml-16">
@@ -82,7 +82,7 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
         </li>
 
         <li className="flex p-6 rounded-lg bg-dark-800">
-          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+          <div className="absolute flex items-center justify-center w-12 h-12 text-white bg-indigo-500 rounded-md">
             <ClockIcon className="h-8" />
           </div>
           <div className="ml-16">
@@ -96,7 +96,7 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
         </li>
 
         <li className="flex p-6 rounded-lg bg-dark-800">
-          <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+          <div className="absolute flex items-center justify-center w-12 h-12 text-white bg-indigo-500 rounded-md">
             <ClockIcon className="h-8" />
           </div>
           <div className="ml-16">
@@ -111,7 +111,7 @@ export const IfoQuestions = ({ ifo, publicIfoData }: { ifo: Ifo; publicIfoData: 
       </ul>
 
       <div className="mx-auto divide-y-2 divide-dark-800">
-        <h2 className="text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">
+        <h2 className="pt-8 text-3xl font-extrabold text-center text-high-emphesis sm:text-4xl">
           Frequently Asked Questions
         </h2>
         <dl className="mt-6 space-y-6 divide-y-2 divide-dark-800">

@@ -91,8 +91,9 @@ export default function CoinToss() {
   // const selectedCurrencyAmount = tryParseAmount(inputValue, selectedCurrency)
   const {
     error: cointossBetError,
-    rewards,
-    claimRewards,
+    reward,
+    rewardToken,
+    claimReward,
     approvalState,
     approveCallback,
     contract: cointossContract,
@@ -100,7 +101,7 @@ export default function CoinToss() {
     multiplier,
     minBetAmount,
     maxBetAmount,
-  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue, totalBetsCount, coinTossBetStatus)
+  } = useCoinTossCallback_PlaceBet(selectedCurrency, inputValue)
 
   const { betsByToken, betsByPlayer, topGamers } = useCoinTossCallback_GameReview(
     selectedCurrency,
@@ -113,7 +114,7 @@ export default function CoinToss() {
   )
   const handleClaim = () => {
     setClaimRewardStatus(CoinTossClaimRewardStatus.PENDING)
-    claimRewards(() => {
+    claimReward(() => {
       setClaimRewardStatus(CoinTossClaimRewardStatus.NOTCLAIMED)
     })
   }
@@ -136,8 +137,7 @@ export default function CoinToss() {
   const addTransaction = useTransactionAdder()
   const placebet = async (signature) => {
     try {
-      //http://173.234.155.43/placebet
-      const response = await axios.get('http://173.234.155.43/placebet', {
+      const response = await axios.get('https://gamefi.cronaswap.org/placebet', {
         params: {
           game: 'CoinToss',
           player: account,
@@ -259,8 +259,8 @@ export default function CoinToss() {
               <div className="flex flex-col gap-10">
                 <SwapCroToWCro />
                 <GameRewardClaimPanel
-                  rewards={rewards}
-                  selectedCurrency={selectedCurrency}
+                  rewardAmount={reward}
+                  rewardCurrency={rewardToken}
                   onClaim={handleClaim}
                   claimRewardStatus={claimRewardStatus}
                 />

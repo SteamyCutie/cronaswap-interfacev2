@@ -10,19 +10,24 @@ import Loader from '../Loader'
 import { ButtonConfirmed } from '../Button'
 import { DiceRollClaimRewardStatus } from 'app/features/gamefi/diceroll/enum'
 interface GameRewardClaimPanelProps {
-  selectedCurrency?: Currency | undefined
-  rewards?: BN | undefined
+  rewardCurrency?: Currency | undefined
+  rewardAmount?: BN | undefined
   onClaim?: undefined | (() => void)
   claimRewardStatus?: CoinTossClaimRewardStatus | DiceRollClaimRewardStatus | undefined
 }
-const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardStatus }: GameRewardClaimPanelProps) => {
+const GameRewardClaimPanel = ({
+  rewardCurrency,
+  rewardAmount,
+  onClaim,
+  claimRewardStatus,
+}: GameRewardClaimPanelProps) => {
   const { account, chainId, library } = useActiveWeb3React()
   return (
     <div className="w-[532px] h-[365px] bg-[#1C1B38] rounded">
       <div className="mt-10 ml-10">
         <h4 className="text-white font-bold text-[36px] leading-[44.65px]">Play-To-Earn Rewards</h4>
         <p className="mt-2 text-[14px] leading-[16px] font-normal">
-          Earn CROISSANT when you lose, when you use CRONA for wagers!
+          Earn {rewardCurrency?.symbol} when you lose, when you use {rewardCurrency?.symbol} for wagers!
         </p>
       </div>
       <div className="flex flex-col mx-10 mt-10">
@@ -32,14 +37,14 @@ const GameRewardClaimPanel = ({ selectedCurrency, rewards, onClaim, claimRewardS
 
         <div className="border mt-2 border-[#2172E5] bg-[#0D0C2B] rounded h-[60px] flex flex-row items-center pl-6">
           <h5 className="font-bold text-[24px] leading-[29.77px]">{`${
-            rewards ? getBalanceAmount(new BigNumber(rewards?.toString()), selectedCurrency?.decimals) : 0
-          } ${selectedCurrency?.symbol}`}</h5>
+            rewardAmount ? getBalanceAmount(new BigNumber(rewardAmount?.toString()), rewardCurrency?.decimals) : 0
+          } ${rewardCurrency?.symbol}`}</h5>
         </div>
       </div>
       <div className="items-stretch w-[452px] h-[60px] mx-10 mt-6">
         {!account ? (
           <Web3Connect color="blue" className="w-full h-full text-base text-white" />
-        ) : !rewards || rewards?.eq(BN.from('0')) ? (
+        ) : !rewardAmount || rewardAmount?.eq(BN.from('0')) ? (
           <button className="w-full h-full bg-black rounded cursor-not-allowed" disabled={true}>
             No Reward
           </button>
