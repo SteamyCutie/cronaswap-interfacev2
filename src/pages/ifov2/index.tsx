@@ -44,24 +44,24 @@ export default function Ifo(): JSX.Element {
             <Typography variant="sm" weight={400}>
               {i18n._(t`Buy new tokens launching on Cronos Chain.`)}
             </Typography>
-            <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
+            {/* <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2 mt-2 text-sm font-bold font-Poppins">
                 <div className="text-light-blue">{i18n._(t`Apply for IFO`)}</div>
                 <ArrowRightIcon height={14} className="" />
               </div>
-            </a>
+            </a> */}
           </div>
 
-          {/* <div className="flex gap-3">
+          <div className="flex gap-3">
             <Button id="btn-create-new-pool" color="blue" variant="outlined" size="sm">
               <a href="https://forms.gle/4MTpS6NquqWUVSZw8" target="_blank" rel="noreferrer">
                 {i18n._(t`Apply for IFO`)}
               </a>
             </Button>
-          </div> */}
+          </div>
 
           {/* tab */}
-          <div className="flex m-auto item-center mb-2 rounded md:m-0 md:w-3/12 h-14 bg-dark-800">
+          {/* <div className="flex m-auto item-center mb-2 rounded md:m-0 md:w-3/12 h-14 bg-dark-800">
             <div className="w-6/12 h-full p-1">
               <NavLink href="/ifov2">
                 <div className={activeTab === 0 ? activeTabStyle : inactiveTabStyle}>
@@ -76,7 +76,7 @@ export default function Ifo(): JSX.Element {
                 </div>
               </NavLink>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* ifo body */}
