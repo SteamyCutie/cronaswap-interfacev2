@@ -70,6 +70,26 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#E8831D',
   },
 
+  METAMASK_FOR_MOBILE: {
+    connector: async () => {
+      const DefiConnectConnector = (await import('deficonnect')).DeFiWeb3Connector
+      return new DefiConnectConnector({
+        supportedChainIds: [25, 338],
+        rpc: {
+          25: 'https://evm-cronos.crypto.org/', // cronos mainet
+          338: 'https://cronos-testnet-3.crypto.org:8545', // cronos testnet
+        },
+        pollingInterval: 15000,
+      })
+    },
+    name: 'MetaMask',
+    iconName: 'metamask.png',
+    description: 'Connect to Metamask Wallet',
+    href: 'https://metamask.io/',
+    color: '#E8831D',
+    mobileOnly: true,
+  },
+
   CRYPTO_WALLET: {
     connector: async () => {
       const DefiConnectConnector = (await import('deficonnect')).DeFiWeb3Connector
