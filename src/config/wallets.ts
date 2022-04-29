@@ -88,6 +88,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: 'https://metamask.io/',
     color: '#E8831D',
     mobileOnly: true,
+    mobile: true,
   },
 
   CRYPTO_WALLET: {
