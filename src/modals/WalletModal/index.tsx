@@ -134,7 +134,7 @@ export default function WalletModal({
           return null
         }
 
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (!window.web3 && !window.ethereum && (option.mobile || option.mobileOnly)) {
           return (
             <Option
               onClick={() => {
