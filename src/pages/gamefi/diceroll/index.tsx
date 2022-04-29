@@ -9,7 +9,7 @@ import NavLink from 'app/components/NavLink'
 import GameReviewPanel from 'app/components/GameReviewPanel'
 import { DiceRollVolumePanel } from 'app/components/DiceRollVolumePanel'
 import { DiceRollBetPanel } from 'app/components/DiceRollBetPanel'
-import { DiceRollOption } from 'app/constants/gamefi'
+import { DiceRollOption, GAMEFI_SERVER } from 'app/constants/gamefi'
 import { DiceRollClaimRewardStatus, DiceRollStatus } from 'app/features/gamefi/diceroll/enum'
 import { useCurrency, useGameFiTokens } from 'app/hooks/Tokens'
 import { CRONA_ADDRESS, Currency, CurrencyAmount, Token } from '@cronaswap/core-sdk'
@@ -157,7 +157,7 @@ const DiceRoll = () => {
       for (let i = 0; i < 6; i++) {
         diceRollOptionStr += diceRollOption[i] ? '1' : '0'
       }
-      const response = await axios.get('https://gamefi.cronaswap.org/placebet', {
+      const response = await axios.get(GAMEFI_SERVER, {
         params: {
           game: 'DiceRoll',
           player: account,

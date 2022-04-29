@@ -28,3 +28,6 @@ export type TopGamerInfo = {
   winCount: number
   rewardsAmount: string
 }
+
+export const GAMEFI_SERVER = 'https://gamefi.cronaswap.org/placebet'
+export const LOCAL_GAMEFI_SERVER = 'http://localhost:9696/placebet'
