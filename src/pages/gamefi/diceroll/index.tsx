@@ -173,7 +173,12 @@ const DiceRoll = () => {
       console.log(response)
       const betPlaceResponse = response?.data
       router.push('#')
-      if (betPlaceResponse?.error) throw new Error(betPlaceResponse?.error)
+      if (betPlaceResponse?.error) {
+        let reason = betPlaceResponse?.error
+        if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
+
+        throw new Error(reason)
+      }
 
       setDiceRollBetState({
         diceRollResult: betPlaceResponse?.result,
