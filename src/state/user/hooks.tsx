@@ -13,6 +13,7 @@ import {
   updateUserExpertMode,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
+  updateUserGasPrice,
 } from './actions'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAppDispatch, useAppSelector } from '../hooks'
@@ -308,22 +309,37 @@ export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Pe
   )
 }
 
-export function useGasPrice(): string {
-  const chainId = process.env.REACT_APP_CHAIN_ID
-  const userGas = useSelector<AppState, AppState['user']['gasPrice']>((state) => state.user.gasPrice)
-  return chainId === ChainId.CRONOS.toString() ? userGas : GAS_PRICE_GWEI.testnet
+export function useUserGasPriceManager(): [string, GAS_PRICE_IN_GWEI, (userGasPriceGwei: GAS_PRICE_IN_GWEI) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userGasPriceGwei = useSelector<AppState, AppState['user']['userGasPriceGwei']>((state) => {
+    return state.user.userGasPriceGwei
+  })
+
+  const userGasPrice = GAS_PRICE[userGasPriceGwei]
+  const setUserGasPrice = useCallback(
+    (userGasPriceGwei: GAS_PRICE_IN_GWEI) => {
+      dispatch(updateUserGasPrice({ userGasPriceGwei }))
+    },
+    [dispatch]
+  )
+
+  return [userGasPrice, userGasPriceGwei, setUserGasPrice]
 }
 
-export enum GAS_PRICE {
-  default = '5000',
-  fast = '6000',
-  instant = '7000',
+export enum GAS_PRICE_IN_GWEI {
+  DEFAULT = '5000',
+  FAST = '6000',
+  INSTANT = '7000',
   testnet = '5000',
 }
 
-export const GAS_PRICE_GWEI = {
-  default: parseUnits(GAS_PRICE.default, 'gwei').toString(),
-  fast: parseUnits(GAS_PRICE.fast, 'gwei').toString(),
-  instant: parseUnits(GAS_PRICE.instant, 'gwei').toString(),
-  testnet: parseUnits(GAS_PRICE.testnet, 'gwei').toString(),
+export const GAS_PRICE = {
+  DEFAULT: parseUnits(GAS_PRICE_IN_GWEI.DEFAULT, 'gwei').toString(),
+  FAST: parseUnits(GAS_PRICE_IN_GWEI.FAST, 'gwei').toString(),
+  INSTANT: parseUnits(GAS_PRICE_IN_GWEI.INSTANT, 'gwei').toString(),
+  testnet: parseUnits(GAS_PRICE_IN_GWEI.testnet, 'gwei').toString(),
+  [GAS_PRICE_IN_GWEI.DEFAULT]: parseUnits(GAS_PRICE_IN_GWEI.DEFAULT, 'gwei').toString(),
+  [GAS_PRICE_IN_GWEI.FAST]: parseUnits(GAS_PRICE_IN_GWEI.FAST, 'gwei').toString(),
+  [GAS_PRICE_IN_GWEI.INSTANT]: parseUnits(GAS_PRICE_IN_GWEI.INSTANT, 'gwei').toString(),
+  [GAS_PRICE_IN_GWEI.testnet]: parseUnits(GAS_PRICE_IN_GWEI.testnet, 'gwei').toString(),
 }

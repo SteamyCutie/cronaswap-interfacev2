@@ -1,5 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from '../../state/user/hooks'
+import {
+  GAS_PRICE_IN_GWEI,
+  useSetUserSlippageTolerance,
+  useUserGasPriceManager,
+  useUserSlippageTolerance,
+  useUserTransactionTTL,
+} from '../../state/user/hooks'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { Percent } from '@cronaswap/core-sdk'
@@ -9,6 +15,7 @@ import { classNames } from '../../functions'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Button from '../Button'
+import ToggleButtonGroup from '../ToggleButton'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -33,6 +40,8 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   const setUserSlippageTolerance = useSetUserSlippageTolerance()
 
   const [deadline, setDeadline] = useUserTransactionTTL()
+
+  const [gasPrice, gasPriceGwei, setGasPrice] = useUserGasPriceManager()
 
   const [slippageInput, setSlippageInput] = useState('')
   const [slippageError, setSlippageError] = useState<SlippageError | false>(false)
@@ -89,6 +98,35 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   return (
     <div className="grid gap-4">
       <div className="grid gap-2">
+        <div className="flex items-center">
+          <Typography variant="sm" className="text-high-emphesis">
+            {i18n._(t`Transaction Gas Price`)}
+          </Typography>
+
+          <QuestionHelper text={i18n._(t`Higher the gas price, Faster the transaction`)} />
+          <div className="ml-2 text-sm underline">{gasPriceGwei} Gwei</div>
+        </div>
+        <div className="flex items-center">
+          <ToggleButtonGroup
+            size="sm"
+            variant="filled"
+            value={gasPriceGwei}
+            onChange={(val: GAS_PRICE_IN_GWEI) => {
+              setGasPrice(val)
+            }}
+            className="flex gap-2"
+          >
+            <ToggleButtonGroup.Button value={GAS_PRICE_IN_GWEI.DEFAULT} className="!px-3 text-xs border">
+              Default
+            </ToggleButtonGroup.Button>
+            <ToggleButtonGroup.Button value={GAS_PRICE_IN_GWEI.FAST} className="!px-3 text-xs border">
+              Fast
+            </ToggleButtonGroup.Button>
+            <ToggleButtonGroup.Button value={GAS_PRICE_IN_GWEI.INSTANT} className="!px-3 text-xs border">
+              Instant
+            </ToggleButtonGroup.Button>
+          </ToggleButtonGroup>
+        </div>
         <div className="flex items-center">
           <Typography variant="sm" className="text-high-emphesis">
             {i18n._(t`Slippage tolerance`)}

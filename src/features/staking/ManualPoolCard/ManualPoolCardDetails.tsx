@@ -14,7 +14,7 @@ import { useLingui } from '@lingui/react'
 import { useTokenBalance } from '../../../state/wallet/hooks'
 import { formatNumber, getExplorerLink, formatNumberScale } from '../../../functions'
 import { useCronaVaultContract, useDashboardV1Contract, useMasterChefContract } from 'hooks/useContract'
-import { useGasPrice } from 'state/user/hooks'
+import { useUserGasPriceManager } from 'state/user/hooks'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
 import { getBalanceAmount } from 'functions/formatBalance'
 import { getCronaPrice } from 'features/staking/useStaking'
@@ -140,14 +140,14 @@ export default function ManualPoolCardDetails() {
     }
   }
   getHarvestAmount()
-  const gasPrice = useGasPrice()
+  const [gasPrice] = useUserGasPriceManager()
   const handleHarvestFarm = async () => {
     if (!walletConnected) {
       toggleWalletModal()
     } else {
       setPendingHarvestTx(true)
       try {
-        const tx = await masterChefContract.leaveStaking('0', { ...options, gasPrice })
+        const tx = await masterChefContract.leaveStaking('0', { ...options, gasPrice: gasPrice })
         addTransaction(tx, {
           summary: `${i18n._(t`Harvest`)} CRONA`,
         })

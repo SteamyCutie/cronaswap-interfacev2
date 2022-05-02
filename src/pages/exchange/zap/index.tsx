@@ -35,6 +35,7 @@ import { useRouter } from 'next/router'
 import useTransactionDeadline from '../../../hooks/useTransactionDeadline'
 import {
   useExpertModeManager,
+  useUserGasPriceManager,
   useUserSingleHopOnly,
   useUserSlippageToleranceWithDefault,
 } from '../../../state/user/hooks'
@@ -226,6 +227,7 @@ export default function Zap() {
   }, [attemptingTxn, onUserInput, zapErrorMessage, txHash])
 
   const addTransaction = useTransactionAdder()
+  const [gasPrice] = useUserGasPriceManager()
   const handleZap = async function () {
     setZapState({
       attemptingTxn: true,

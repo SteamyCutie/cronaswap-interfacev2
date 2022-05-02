@@ -13,10 +13,12 @@ import {
   updateUserExpertMode,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
+  updateUserGasPrice,
 } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
+import { GAS_PRICE_IN_GWEI } from './hooks'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -36,6 +38,9 @@ export interface UserState {
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
+
+  // gas prive for swap transaction
+  userGasPriceGwei: GAS_PRICE_IN_GWEI
 
   tokens: {
     [chainId: number]: {
@@ -65,6 +70,7 @@ export const initialState: UserState = {
   userSingleHopOnly: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
+  userGasPriceGwei: GAS_PRICE_IN_GWEI.DEFAULT,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
@@ -106,6 +112,10 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserDeadline, (state, action) => {
       state.userDeadline = action.payload.userDeadline
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserGasPrice, (state, action) => {
+      state.userGasPriceGwei = action.payload.userGasPriceGwei
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserSingleHopOnly, (state, action) => {

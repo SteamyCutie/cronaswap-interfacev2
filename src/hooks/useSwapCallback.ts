@@ -169,7 +169,8 @@ export function useSwapCallback(
   trade: V2Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | undefined | null
+  signatureData: SignatureData | undefined | null,
+  gasPrice: string
 ): {
   state: SwapCallbackState
   callback: null | (() => Promise<string>)
@@ -300,7 +301,7 @@ export function useSwapCallback(
             // let the wallet try if we can't estimate the gas
             ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             // gasPrice: !eip1559 && chainId === ChainId.HARMONY ? BigNumber.from('2000000000') : undefined,
-            gasPrice: !eip1559 ? BigNumber.from('5000000000000') : undefined, // modify by CronaSwap
+            gasPrice: BigNumber.from(gasPrice), // modify by CronaSwap
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {

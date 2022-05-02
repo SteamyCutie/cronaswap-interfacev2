@@ -14,6 +14,7 @@ import {
 } from '../../../state/swap/hooks'
 import {
   useExpertModeManager,
+  useUserGasPriceManager,
   useUserSingleHopOnly,
   useUserSlippageTolerance,
   useUserTransactionTTL,
@@ -237,12 +238,14 @@ export default function Swap() {
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
+  const [gasPrice] = useUserGasPriceManager()
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData,
+    gasPrice
   )
 
   const [singleHopOnly] = useUserSingleHopOnly()

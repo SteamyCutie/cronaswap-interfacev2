@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { GAS_PRICE_IN_GWEI } from './hooks'
 
 export interface SerializedToken {
   chainId: number
@@ -16,6 +17,7 @@ export interface SerializedPair {
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
+export const updateUserGasPrice = createAction<{ userGasPriceGwei: GAS_PRICE_IN_GWEI }>('user/updateUserGasPrice')
 export const updateUserSingleHopOnly = createAction<{
   userSingleHopOnly: boolean
 }>('user/updateUserSingleHopOnly')
