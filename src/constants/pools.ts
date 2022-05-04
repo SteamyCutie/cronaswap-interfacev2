@@ -137,7 +137,7 @@ export const POOLS: AddressMap = {
       pid: 5,
       name: 'CRONA-BANK',
       tokenPerBlock: '0.01',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://www.crobank.xyz/',
       stakingToken: {
