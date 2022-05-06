@@ -44,7 +44,7 @@ export default function WalletModal({
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
+  const [pendingWallet, setPendingWallet] = useState<{ connector?: AbstractConnector; id: string } | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
 
@@ -78,7 +78,10 @@ export default function WalletModal({
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  const tryActivation = async (connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined) => {
+  const tryActivation = async (
+    connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined,
+    id: string
+  ) => {
     let name = ''
     let conn = typeof connector === 'function' ? await connector() : connector
 
@@ -94,7 +97,7 @@ export default function WalletModal({
       action: 'Change Wallet',
       label: name,
     })
-    setPendingWallet(conn) // set wallet for pending view
+    setPendingWallet({ connector: conn, id }) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
@@ -138,7 +141,7 @@ export default function WalletModal({
           return (
             <Option
               onClick={() => {
-                tryActivation(option.connector)
+                tryActivation(option.connector, key)
               }}
               id={`connect-${key}`}
               key={key}
@@ -193,7 +196,7 @@ export default function WalletModal({
             onClick={() => {
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                : !option.href && tryActivation(option.connector)
+                : !option.href && tryActivation(option.connector, key)
             }}
             key={key}
             active={option.connector === connector}
@@ -247,7 +250,8 @@ export default function WalletModal({
         <div className="flex flex-col space-y-6">
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
-              connector={pendingWallet}
+              id={pendingWallet.id}
+              connector={pendingWallet.connector}
               error={pendingError}
               setPendingError={setPendingError}
               tryActivation={tryActivation}

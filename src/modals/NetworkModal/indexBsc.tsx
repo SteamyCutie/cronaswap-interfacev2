@@ -54,7 +54,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'TCRO',
       decimals: 18,
     },
-    rpcUrls: ['https://evm-t3.cronos.org'],
+    rpcUrls: ['https://cronos-testnet-3.crypto.org:8545'],
     blockExplorerUrls: ['https://cronos.org/explorer/testnet3'],
   },
   [ChainId.BSC_TESTNET]: {

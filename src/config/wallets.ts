@@ -7,7 +7,7 @@ export const RPC = {
   // https://evm-cronos.crypto.org
   // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
   [ChainId.CRONOS]: 'https://rpc.cronaswap.io',
-  [ChainId.CRONOS_TESTNET]: 'https://evm-t3.cronos.org',
+  [ChainId.CRONOS_TESTNET]: 'https://cronos-testnet-3.crypto.org:8545',
   [ChainId.ETHEREUM]: 'https://mainnet.infura.io/v3/6120c21d46cb482d9cdabe463da74dd5',
   [ChainId.BSC]: 'https://bsc-dataseed.binance.org/',
   [ChainId.BSC_TESTNET]: 'https://data-seed-prebsc-1-s1.binance.org:8545',
@@ -71,24 +71,13 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
 
   METAMASK_FOR_MOBILE: {
-    connector: async () => {
-      const DefiConnectConnector = (await import('deficonnect')).DeFiWeb3Connector
-      return new DefiConnectConnector({
-        supportedChainIds: [25, 338],
-        rpc: {
-          25: 'https://evm-cronos.crypto.org/', // cronos mainet
-          338: 'https://cronos-testnet-3.crypto.org:8545', // cronos testnet
-        },
-        pollingInterval: 15000,
-      })
-    },
     name: 'MetaMask',
     iconName: 'metamask.png',
-    description: 'Connect to Metamask Wallet',
-    href: 'https://metamask.io/',
+    description: 'Open in MetaMask App',
+    href: 'https://metamask.app.link/dapp/app.cronaswap.org',
     color: '#E8831D',
-    mobileOnly: true,
     mobile: true,
+    mobileOnly: true,
   },
 
   CRYPTO_WALLET: {
@@ -108,7 +97,31 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Connect to Crypto DeFi Wallet',
     href: null,
     color: '#4196FC',
+  },
+  WALLET_LINK: {
+    connector: async () => {
+      const WalletLinkConnector = (await import('@web3-react/walletlink-connector')).WalletLinkConnector
+      return new WalletLinkConnector({
+        url: RPC[ChainId.ETHEREUM],
+        appName: 'CronaSwap',
+        appLogoUrl:
+          'https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png',
+      })
+    },
+    name: 'Coinbase Wallet',
+    iconName: 'coinbase.svg',
+    description: 'Use Coinbase Wallet app on mobile device',
+    href: null,
+    color: '#315CF5',
+  },
+  COINBASE_LINK: {
+    name: 'Open in Coinbase Wallet',
+    iconName: 'coinbase.svg',
+    description: 'Open in Coinbase Wallet app.',
+    href: 'https://go.cb-w.com',
+    color: '#315CF5',
     mobile: true,
+    mobileOnly: true,
   },
 
   WALLET_CONNECT: {

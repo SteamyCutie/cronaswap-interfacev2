@@ -10,6 +10,7 @@ declare global {
   interface Window {
     ethereum?: {
       isMetaMask?: true
+      isCoinbaseWallet?: true
       on?: (...args: any[]) => void
       removeListener?: (...args: any[]) => void
       autoRefreshOnNetworkChange?: boolean

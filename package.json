@@ -33,8 +33,10 @@
     "@types/react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@apollo/client": "^3.6.1",
     "@binance-chain/bsc-connector": "^1.0.0",
     "@clover-network/clover-connector": "^1.0.0",
+    "@coinbase/wallet-sdk": "^3.0.11",
     "@commitlint/cli": "^13.0.0",
     "@commitlint/config-conventional": "^13.0.0",
     "@cronaswap/core-sdk": "1.0.15",
@@ -118,6 +120,7 @@
     "eth-permit": "^0.1.10",
     "fast-json-stable-stringify": "^2.1.0",
     "fuse.js": "^6.4.6",
+    "graphql": "^14.5.8",
     "graphql-tag": "^2.12.5",
     "husky": "^7.0.0",
     "identity-obj-proxy": "^3.0.0",
@@ -196,8 +199,8 @@
     "cids": "^1.1.9",
     "multicodec": "^3.2.1",
     "multihashes": "^4.0.3",
-    "web3": "^1.7.0",
     "react-gauge-chart": "^0.4.0",
-    "recharts": "^2.1.9"
+    "recharts": "^2.1.9",
+    "web3": "^1.7.0"
   }
 }

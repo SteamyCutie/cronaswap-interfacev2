@@ -6,15 +6,17 @@ import Option from './Option'
 import React from 'react'
 
 export default function PendingView({
+  id,
   connector,
   error = false,
   setPendingError,
   tryActivation,
 }: {
+  id: string
   connector?: AbstractConnector
   error?: boolean
   setPendingError: (error: boolean) => void
-  tryActivation: (connector: AbstractConnector) => void
+  tryActivation: (connector: AbstractConnector, id: string) => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
 
@@ -29,7 +31,7 @@ export default function PendingView({
                 className="p-2 ml-4 text-xs font-semibold select-none hover:cursor-pointer"
                 onClick={() => {
                   setPendingError(false)
-                  connector && tryActivation(connector)
+                  connector && tryActivation(connector, id)
                 }}
               >
                 Try Again
@@ -40,9 +42,9 @@ export default function PendingView({
           )}
         </div>
       </div>
-      {Object.keys(SUPPORTED_WALLETS).map((key) => {
-        const option = SUPPORTED_WALLETS[key]
-        if (option.connector === connector) {
+      {Object.keys(SUPPORTED_WALLETS).map((_key) => {
+        const option = SUPPORTED_WALLETS[_key]
+        if (id === _key) {
           if (option.connector === injected) {
             if (isMetamask && option.name !== 'MetaMask') {
               return null
@@ -53,8 +55,8 @@ export default function PendingView({
           }
           return (
             <Option
-              id={`connect-${key}`}
-              key={key}
+              id={`connect-${_key}`}
+              key={_key}
               clickable={false}
               color={option.color}
               header={option.name}
