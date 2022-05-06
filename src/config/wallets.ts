@@ -102,6 +102,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     connector: async () => {
       const WalletLinkConnector = (await import('@web3-react/walletlink-connector')).WalletLinkConnector
       return new WalletLinkConnector({
+        supportedChainIds: [25, 338],
         url: RPC[ChainId.ETHEREUM],
         appName: 'CronaSwap',
         appLogoUrl:

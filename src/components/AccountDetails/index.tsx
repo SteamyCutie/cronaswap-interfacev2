@@ -17,6 +17,7 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../services/web3'
 import { useDispatch } from 'react-redux'
 import { useLingui } from '@lingui/react'
+import Size from '@visx/legend/lib/legends/Size'
 
 const WalletIcon: FC<{ size?: number; src: string; alt: string }> = ({ size, src, alt, children }) => {
   return (
@@ -65,22 +66,33 @@ const AccountDetails: FC<AccountDetailsProps> = ({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
-    return <div className="font-medium text-baseline text-secondary">Connected with {name}</div>
+    return (
+      <div className="flex flex-row items-center gap-5 font-medium text-baseline text-secondary">
+        <div>Connected with {name}</div>
+        {getStatusIcon(32)}
+      </div>
+    )
   }
 
-  function getStatusIcon() {
+  function getStatusIcon(size: number) {
     if (connector === injected) {
-      return null
+      if (window?.ethereum?.isMetaMask) {
+        return <WalletIcon src="/images/wallets/metamask.png" alt="Injected MetaMask" size={size} />
+      } else if (window?.ethereum?.isCoinbaseWallet) {
+        return <WalletIcon src="/images/wallets/coinbase.svg" alt="Injected Coinbase" size={size} />
+      } else {
+        return <WalletIcon src="/images/wallets/metamask.png" alt="Injected (MetaMask etc...)" size={size} />
+      }
       // return <IconWrapper size={16}>{/* <Identicon /> */}</IconWrapper>
     } else if (connector.constructor.name === 'WalletConnectConnector') {
-      return <WalletIcon src="/wallet-connect.svg" alt="Wallet Connect" size={16} />
+      return <WalletIcon src="/images/wallets/wallet-connect.svg" alt="Wallet Connect" size={size} />
     } else if (connector.constructor.name === 'WalletLinkConnector') {
-      return <WalletIcon src="/coinbase.svg" alt="Coinbase" size={16} />
+      return <WalletIcon src="/images/wallets/coinbase.svg" alt="Coinbase" size={size} />
     } else if (connector.constructor.name === 'FortmaticConnector') {
-      return <WalletIcon src="/formatic.png" alt="Fortmatic" size={16} />
+      return <WalletIcon src="/formatic.png" alt="Fortmatic" size={size} />
     } else if (connector.constructor.name === 'PortisConnector') {
       return (
-        <WalletIcon src="/portnis.png" alt="Portis" size={16}>
+        <WalletIcon src="/portnis.png" alt="Portis" size={size}>
           <Button
             onClick={async () => {
               // casting as PortisConnector here defeats the lazyload purpose
@@ -92,7 +104,7 @@ const AccountDetails: FC<AccountDetailsProps> = ({
         </WalletIcon>
       )
     } else if (connector.constructor.name === 'TorusConnector') {
-      return <WalletIcon src="/torus.png" alt="Torus" size={16} />
+      return <WalletIcon src="/torus.png" alt="Torus" size={size} />
     }
     return null
   }
@@ -139,12 +151,12 @@ const AccountDetails: FC<AccountDetailsProps> = ({
           <div id="web3-account-identifier-row" className="flex flex-col justify-center space-y-3">
             {ENSName ? (
               <div className="bg-dark-800">
-                {getStatusIcon()}
+                {/* {getStatusIcon()} */}
                 <Typography>{ENSName}</Typography>
               </div>
             ) : (
               <div className="px-3 py-2 rounded bg-dark-800">
-                {getStatusIcon()}
+                {/* {getStatusIcon()} */}
                 <Typography>{account && shortenAddress(account)}</Typography>
               </div>
             )}

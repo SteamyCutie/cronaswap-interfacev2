@@ -36,13 +36,17 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
   if (connector === injected) {
-    if (window?.ethereum?.isMetaMask) {
-      return <Image src="/images/wallets/metamask.png" alt="Injected MetaMask" width={20} height={20} />
-    } else if (window?.ethereum?.isCoinbaseWallet) {
-      return <Image src="/images/wallets/coinbase.svg" alt="Injected Coinbase" width={20} height={20} />
-    } else {
-      return <Image src="/images/wallets/metamask.png" alt="Injected (MetaMask etc...)" width={20} height={20} />
-    }
+    return (
+      <IconWrapper size={16}>
+        {window?.ethereum?.isMetaMask ? (
+          <Image src="/images/wallets/metamask.png" alt="Injected MetaMask" width={20} height={20} />
+        ) : window?.ethereum?.isCoinbaseWallet ? (
+          <Image src="/images/wallets/coinbase.svg" alt="Injected Coinbase" width={20} height={20} />
+        ) : (
+          <Image src="/images/wallets/metamask.png" alt="Injected (MetaMask etc...)" width={20} height={20} />
+        )}
+      </IconWrapper>
+    )
     // return <Identicon />
   } else if (connector.constructor.name === 'WalletConnectConnector') {
     return (
