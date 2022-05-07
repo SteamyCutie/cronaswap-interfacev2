@@ -15,6 +15,7 @@ import useENS from './useENS'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import useTransactionDeadline from './useTransactionDeadline'
+import { GAS_PRICE } from 'app/state/user/hooks'
 
 export enum SwapCallbackState {
   INVALID,
@@ -301,7 +302,7 @@ export function useSwapCallback(
             // let the wallet try if we can't estimate the gas
             ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             // gasPrice: !eip1559 && chainId === ChainId.HARMONY ? BigNumber.from('2000000000') : undefined,
-            gasPrice: BigNumber.from(gasPrice), // modify by CronaSwap
+            gasPrice: BigNumber.from(gasPrice ? gasPrice : GAS_PRICE.DEFAULT), // modify by CronaSwap
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
