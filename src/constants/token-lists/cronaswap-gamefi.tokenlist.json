@@ -8,60 +8,8 @@
   },
   "tags": {},
   "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/master/assets/logox200.png",
-  "keywords": [
-    "cronaswap",
-    "default"
-  ],
+  "keywords": ["cronaswap", "default"],
   "tokens": [
-    {
-      "address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
-      "chainId": 1,
-      "name": "Curve DAO Token",
-      "symbol": "CRV",
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/crv.jpg"
-    },
-    {
-      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-      "chainId": 1,
-      "name": "Dai Stablecoin",
-      "symbol": "DAI",
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/dai.jpg"
-    },
-    {
-      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "chainId": 1,
-      "name": "USD Coin",
-      "symbol": "USDC",
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/usdc.jpg"
-    },
-    {
-      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-      "chainId": 1,
-      "name": "Tether USD",
-      "symbol": "USDT",
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/usdt.jpg"
-    },
-    {
-      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-      "chainId": 1,
-      "name": "Wrapped Bitcoin",
-      "symbol": "WBTC",
-      "decimals": 8,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/btc.jpg"
-    },
-    {
-      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-      "chainId": 1,
-      "name": "Wrapped Ether",
-      "symbol": "WETH",
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/sushiswap/icons/master/token/eth.jpg"
-    },
-    
     {
       "name": "Crona Token",
       "symbol": "CRONA",
@@ -71,38 +19,6 @@
       "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xadbd1231fb360047525BEdF962581F3eee7b49fe/logo.png"
     },
     {
-      "name": "Dai Stablecoin",
-      "symbol": "DAI",
-      "address": "0xF2001B145b43032AAF5Ee2884e456CCd805F677D",
-      "chainId": 25,
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xF2001B145b43032AAF5Ee2884e456CCd805F677D/logo.png"
-    },
-    {
-      "name": "USD Coin",
-      "symbol": "USDC",
-      "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
-      "chainId": 25,
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xc21223249CA28397B4B6541dfFaEcC539BfF0c59/logo.png"
-    },
-    {
-      "name": "Tether USD",
-      "symbol": "USDT",
-      "address": "0x66e428c3f67a68878562e79A0234c1F83c208770",
-      "chainId": 25,
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0x66e428c3f67a68878562e79A0234c1F83c208770/logo.png"
-    },
-    {
-      "name": "Wrapped BTC",
-      "symbol": "WBTC",
-      "address": "0x062E66477Faf219F25D27dCED647BF57C3107d52",
-      "chainId": 25,
-      "decimals": 8,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0x062E66477Faf219F25D27dCED647BF57C3107d52/logo.png"
-    },
-    {
       "name": "WCRO Token",
       "symbol": "WCRO",
       "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
@@ -110,15 +26,7 @@
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23/logo.png"
     },
-    {
-      "name": "Wrapped ETH",
-      "symbol": "WETH",
-      "address": "0xe44Fd7fCb2b1581822D0c862B68222998a0c299a",
-      "chainId": 25,
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/cronaswap/default-token-list/main/assets/tokens/cronos/0xe44Fd7fCb2b1581822D0c862B68222998a0c299a/logo.png"
-    },
-    
+
     {
       "name": "Crona Token",
       "symbol": "CRONA",

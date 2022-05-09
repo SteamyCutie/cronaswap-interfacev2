@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { SUPPORTED_WALLETS, injected } from '../../config/wallets'
+import React, { useCallback, useEffect, useState } from 'react'
+import { SUPPORTED_WALLETS, injected, RPC } from '../../config/wallets'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
@@ -19,6 +19,8 @@ import { isMobile } from 'react-device-detect'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import usePrevious from '../../hooks/usePrevious'
+import { SUPPORTED_NETWORKS } from '../ChainModal'
+import { ChainId } from '@cronaswap/core-sdk'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -39,6 +41,7 @@ export default function WalletModal({
   // console.log({ ENSName })
   // important that these are destructed from the account-specific web3-react context
   const { active, account, connector, activate, error, deactivate } = useWeb3React()
+  // const {library} = useWeb3React<Web3Provider>()
 
   const { i18n } = useLingui()
 
@@ -77,6 +80,45 @@ export default function WalletModal({
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+
+  const switchNetwork = async (chainIdToSwitch?: number) => {
+    if (chainIdToSwitch === undefined) chainIdToSwitch = ChainId.CRONOS
+
+    const params = SUPPORTED_NETWORKS[chainIdToSwitch]
+
+    // const provider = window?.ethereum
+
+    // provider
+    //   ?.request({
+    //     method: 'wallet_switchEthereumChain',
+    //     params: [{ chainId: SUPPORTED_NETWORKS[chainIdToSwitch].chainId }, account],
+    //   })
+    //   .then(() => {})
+    //   .catch((error) => {
+    //     error.code === 4902 &&
+    //       provider
+    //         ?.request({
+    //           method: 'wallet_addEthereumChain',
+    //           params: [params, account],
+    //         })
+    //         .then(() => {})
+    //         .catch((error) => {})
+    //   })
+
+    const library = await connector.getProvider()
+    debugger
+    library
+      ?.send('wallet_switchEthereumChain', [{ chainId: SUPPORTED_NETWORKS[chainIdToSwitch].chainId }, account])
+      .then(() => {})
+      .catch((error) => {
+        library
+          ?.send('wallet_addEthereumChain', [params, account])
+          .then(() => {})
+          .catch((error) => {
+            console.error(error)
+          })
+      })
+  }
 
   const tryActivation = async (
     connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined,
@@ -224,6 +266,20 @@ export default function WalletModal({
               <h5>{i18n._(t`Please connect to the appropriate Cronos network.`)}</h5>
             ) : (
               i18n._(t`Error connecting. Try refreshing the page.`)
+            )}
+            {window?.ethereum && (
+              <>
+                <div style={{ marginTop: '1rem' }} />
+                <ButtonError
+                  error={true}
+                  size="sm"
+                  onClick={() => {
+                    switchNetwork()
+                  }}
+                >
+                  {i18n._(t`Switch to Cronos Network`)}
+                </ButtonError>
+              </>
             )}
             <div style={{ marginTop: '1rem' }} />
             <ButtonError error={true} size="sm" onClick={deactivate}>

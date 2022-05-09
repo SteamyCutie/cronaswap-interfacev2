@@ -17,7 +17,6 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../services/web3'
 import { useDispatch } from 'react-redux'
 import { useLingui } from '@lingui/react'
-import Size from '@visx/legend/lib/legends/Size'
 
 const WalletIcon: FC<{ size?: number; src: string; alt: string }> = ({ size, src, alt, children }) => {
   return (
