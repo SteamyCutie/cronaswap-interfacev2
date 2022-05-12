@@ -58,7 +58,7 @@ export const POOLS: AddressMap = {
       pid: 1,
       name: 'CRONA-CROBLANC',
       tokenPerBlock: '5.03',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://app.croblanc.com',
       stakingToken: {

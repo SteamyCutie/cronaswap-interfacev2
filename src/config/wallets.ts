@@ -6,7 +6,7 @@ import { NetworkConnector } from '../entities/connectors/NetworkConnector'
 export const RPC = {
   // https://evm-cronos.crypto.org
   // [ChainId.ETHEREUM]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
-  [ChainId.CRONOS]: 'https://rpc.cronaswap.io',
+  [ChainId.CRONOS]: 'https://rpc.vvs.finance',
   [ChainId.CRONOS_TESTNET]: 'https://cronos-testnet-3.crypto.org:8545',
   [ChainId.ETHEREUM]: 'https://mainnet.infura.io/v3/6120c21d46cb482d9cdabe463da74dd5',
   [ChainId.BSC]: 'https://bsc-dataseed.binance.org/',
