@@ -15,6 +15,7 @@ import { result } from 'lodash'
 import { splitSignature } from '@ethersproject/bytes'
 import { GameBetStatus } from 'app/features/gamefi'
 import { useCurrency } from './Tokens'
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
 
 const NOT_APPLICABLE = { error: 'Not Applicable!' }
 
@@ -253,6 +254,94 @@ export function useCoinTossCallback_GameReview(
   betsByPlayer?: []
 } {
   const { chainId, account } = useActiveWeb3React()
+  const conitossContract = useCoinTossContract()
+
+  const tokenAddress = selectedCurrency?.wrapped.address
+  const [betsByPlayer, setbetsByPlayer] = useState<[]>([])
+  const [betsByToken, setbetsByToken] = useState<[]>([])
+  const [topGamers, settopGamers] = useState<[]>([])
+
+  // let callResult = useSingleCallResult(conitossContract, 'getBetsByIndex', ['100'])?.result
+  // const betsByIndex = useMemo(() => {
+  //   return (callResult && callResult[0]) ?? []
+  // }, [callResult])
+
+  // callResult = useSingleCallResult(conitossContract, 'getTopGamers', [tokenAddress])?.result
+  // const topGamers = useMemo(() => {
+  //   return (callResult && callResult[0]) ?? []
+  // }, [callResult])
+
+  useEffect(() => {
+    async function FetchPlayerInfo() {
+      try {
+        setbetsByToken(await conitossContract?.getBetsByToken(tokenAddress, '100'))
+        settopGamers(await conitossContract?.getTopGamers(tokenAddress))
+        if (account) {
+          setbetsByPlayer(await conitossContract?.getBetsByPlayer(tokenAddress, '100'))
+        } else {
+          setbetsByPlayer([])
+        }
+      } catch {}
+    }
+
+    FetchPlayerInfo()
+  }, [account, selectedCurrency, chainId, totalBetsCount, coinTossBetStatus])
+  return useMemo(() => {
+    if (!chainId && conitossContract) return NOT_APPLICABLE
+    return {
+      betsByPlayer,
+      topGamers,
+      betsByToken,
+      contract: conitossContract,
+    }
+  }, [conitossContract, chainId, betsByToken, betsByPlayer, topGamers, totalBetsCount, account, coinTossBetStatus])
+}
+
+export function useCoinTossCallback_GameReview_FromSubgraph(
+  selectedCurrency: Currency | undefined,
+  totalBetsCount: number | undefined,
+  coinTossBetStatus: GameBetStatus | undefined
+): {
+  error?: string | ''
+  betsByToken?: []
+  topGamers?: []
+  betsByPlayer?: []
+} {
+  const { chainId, account } = useActiveWeb3React()
+  const APIURL = 'https://graph.cronaswap.org/subgraphs/name/gamefi/graphql'
+
+  const betsQuery = `
+  query($count: Int, $token: string, $player: string) {
+    bets(first: $count, where: {player: $player, token: $token}) {
+      id
+      index
+      txn
+      amount
+      playerOption
+      resultOption
+      wasSuccess
+      payout
+    }
+  }
+`
+  const client = new ApolloClient({
+    uri: APIURL,
+    cache: new InMemoryCache(),
+  })
+  client
+    .query({
+      query: gql(betsQuery),
+      variables: {
+        count: 100,
+        token: selectedCurrency?.wrapped?.address,
+        player: account,
+      },
+    })
+    .then((data) => console.log('Subgraph data: ', data))
+    .catch((err) => {
+      console.log('Error fetching data: ', err)
+    })
+
   const conitossContract = useCoinTossContract()
 
   const tokenAddress = selectedCurrency?.wrapped.address
