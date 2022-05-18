@@ -299,9 +299,10 @@ export default function Zap() {
             />
             <AutoColumn className="md py-2.5" gap={'md'}>
               {/* body */}
-              <div id="remove-liquidity-output" className="p-1 rounded bg-dark-800">
+              <div id="remove-liquidity-output" className="p-4 rounded bg-dark-800">
                 1-click convert tokens to LP tokens.
                 <br />
+                <div className="text-yellow text-xs">WARNING: Zap can cause slippage. Small amounts only.</div>
               </div>
             </AutoColumn>
             <BottomGrouping>
