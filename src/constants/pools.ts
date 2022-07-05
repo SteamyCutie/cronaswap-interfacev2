@@ -179,7 +179,7 @@ export const POOLS: AddressMap = {
       pid: 7,
       name: 'CRONA-ARC',
       tokenPerBlock: '0.17',
-      isFinished: false,
+      isFinished: true,
       category: PoolCategory.COMMUNITY,
       projectLink: 'https://arcanenft.financial/',
       stakingToken: {
