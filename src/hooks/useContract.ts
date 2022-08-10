@@ -73,6 +73,7 @@ import FAUCET_ABI from '../constants/abis/faucet.json'
 import PRIATESALE_ABI from '../constants/abis/privatesale.json'
 import COINTOSS_ABI from '../constants/abis/cointoss.json'
 import DICEROLL_ABI from '../constants/abis/diceroll.json'
+import TREASURY_ABI from '../constants/abis/grona-treasury.json'
 
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
@@ -95,6 +96,7 @@ import {
   PRIVATESALE_ADDRESS,
   COINTOSS_ADDRESS,
   DICEROLL_ADDRESS,
+  TREASURY_ADDRESS,
 } from '../constants/addresses'
 
 const UNI_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
@@ -286,6 +288,11 @@ export function useDashboardV1Contract(withSignerIfPossible?: boolean): Contract
 export function useDashboardV2Contract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(DASHBOARDV2_ADDRESS[chainId], DASHBOARD_ABIV2, withSignerIfPossible)
+}
+
+export function useTreasuryContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(TREASURY_ADDRESS[chainId], TREASURY_ABI, withSignerIfPossible)
 }
 
 export function useRewardPoolContract(withSignerIfPossible?: boolean): Contract | null {

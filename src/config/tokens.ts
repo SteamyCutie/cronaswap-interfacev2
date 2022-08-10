@@ -1,4 +1,5 @@
 import { ChainId, CRONA_ADDRESS, Token, WETH9 } from '@cronaswap/core-sdk'
+import { GRONA_ADDRESS } from 'app/constants/addresses'
 
 export const ETHEREUM: { [key: string]: Token } = {
   DAI: new Token(ChainId.CRONOS, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
@@ -66,6 +67,12 @@ export const XCRONA: ChainTokenMap = {
     'xCRONA',
     'CronaBar'
   ),
+}
+
+export const GRONA: ChainTokenMap = {
+  [ChainId.CRONOS]: new Token(ChainId.CRONOS, GRONA_ADDRESS[ChainId.CRONOS], 18, 'GRONA', 'Golden CRONA'),
+  [ChainId.CRONOS_TESTNET]: new Token(ChainId.CRONOS_TESTNET, GRONA_ADDRESS[ChainId.CRONOS_TESTNET], 18, 'GRONA', 'Golden CRONA'),
+  [ChainId.BSC_TESTNET]: new Token(ChainId.BSC_TESTNET, GRONA_ADDRESS[ChainId.BSC_TESTNET], 18, 'GRONA', 'Golden CRONA'),
 }
 
 export type ChainTokenMap = {
