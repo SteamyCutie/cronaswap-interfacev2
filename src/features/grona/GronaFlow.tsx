@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 
 const GronaFlow = () => {
-  const styleCell = 'p-2 md:p-4 rounded-xl bg-dark-700 items-center text-center grid align-middle text-sm md:text-base font-medium'
+  const styleCell = 'p-2 md:p-4 rounded-xl bg-dark-1000/50 items-center text-center grid align-middle text-sm md:text-base font-medium'
   const styleCard = `${styleCell} grid gap-1 items-center justify-center justify-items-center w-full text-center text-sm md:text-base`
   const styleCellBordered = `border-dark-800  p-4 flex items-center justify-center text-sm md:text-base font-medium`
   const styleCellHead = `${styleCellBordered} border-b-2 mb-2 -ml-4`;

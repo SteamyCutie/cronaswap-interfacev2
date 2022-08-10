@@ -18,8 +18,8 @@ import Loader from 'app/components/Loader'
 import { RowBetween } from 'app/components/Row'
 
 const GronaControl = () => {
-  const styleCard = 'flex flex-col gap-3 w-full rounded-xl bg-light-secondary dark:bg-dark-secondary gap-3'
-  const styleItem = 'flex flex-col p-8 py-6 rounded-xl bg-light dark:bg-dark w-full text-center justify-start'
+  const styleCard = 'flex flex-col gap-3 w-full rounded-xl gap-3'
+  const styleItem = 'flex flex-col p-8 py-6 rounded-xl bg-dark-1000/60 w-full text-center justify-start'
 
   const convertRate = 0.7
   const returnFee = 0.02
@@ -87,7 +87,7 @@ const GronaControl = () => {
       <div className={`${styleCard} md:rounded-r-none md:pr-3 mt-8`}>
         <div className={`${styleItem} font-medium text-lg`}>
           <p className="">Convert</p>
-          <p className="flex items-center justify-center font-bold text-yellow-light">
+          <p className="flex items-center justify-center font-bold text-yellow">
             CRONA <ChevronRightIcon width={24} /> GRONA
           </p>
         </div>
@@ -100,7 +100,7 @@ const GronaControl = () => {
           </RowBetween>
           <div className="relative flex items-center w-full mb-4">
             <NumericalInput
-              className="w-full px-4 py-4 pr-20 rounded-md text-2xl font-semibold focus:ring focus:ring-light-stroke dark:focus:ring-dark-stroke bg-light-secondary dark:bg-dark-secondary"
+              className="w-full px-4 py-4 pr-20 rounded-md text-2xl font-semibold focus:ring focus:ring-dark-700 bg-dark-700/40"
               value={depositValue}
               onUserInput={setDepositValue}
             />
@@ -118,7 +118,7 @@ const GronaControl = () => {
                     )
                   }
                 }}
-                className="absolute border-0 right-4 focus:ring focus:ring-light-stroke dark:focus:ring-dark-stroke"
+                className="absolute border-0 right-4 focus:ring focus:ring-dark-700"
               >
                 {i18n._(t`MAX`)}
               </Button>
@@ -195,7 +195,7 @@ const GronaControl = () => {
       <div className={`${styleCard} md:rounded-l-none md:pl-3 mt-8`}>
         <div className={`${styleItem} font-medium text-lg`}>
           <p className="">Return</p>
-          <p className="flex items-center justify-center font-bold text-yellow-light">
+          <p className="flex items-center justify-center font-bold text-yellow">
             GRONA <ChevronRightIcon width={24} /> CRONA
           </p>
         </div>
@@ -208,7 +208,7 @@ const GronaControl = () => {
           </RowBetween>
           <div className="relative flex items-center w-full mb-4">
             <NumericalInput
-              className="w-full px-4 py-4 pr-20 rounded-md text-2xl font-semibold focus:ring focus:ring-light-stroke dark:focus:ring-dark-stroke bg-light-secondary dark:bg-dark-secondary"
+              className="w-full px-4 py-4 pr-20 rounded-md text-2xl font-semibold focus:ring focus:ring-dark-700 bg-dark-700/40"
               value={returnValue}
               onUserInput={setReturnValue}
             />
@@ -222,7 +222,7 @@ const GronaControl = () => {
                     setReturnValue(earnBalance?.toFixed(earningToken?.decimals))
                   }
                 }}
-                className="absolute border-0 right-4 focus:ring focus:ring-light-stroke dark:focus:ring-dark-stroke"
+                className="absolute border-0 right-4 focus:ring focus:ring-dark-700"
               >
                 {i18n._(t`MAX`)}
               </Button>

@@ -25,7 +25,7 @@ export default function Grona() {
       <div className="col-span-4 space-y-6 lg:col-span-3">
         {/* Hero */}
         <div
-          className="flex-row items-center justify-between w-full p-8 space-y-2 bg-no-repeat md:p-16 rounded-2xl md:flex bg-dark-700"
+          className="flex-row items-center justify-between w-full p-8 space-y-2 bg-no-repeat md:p-16 rounded-2xl md:flex bg-dark-900/80"
           style={{ backgroundImage: "url('/images/grona/grona.png')", backgroundPosition: '95%' }}
         >
           <div className="gap-8 md:block">
@@ -33,7 +33,7 @@ export default function Grona() {
               {i18n._(t`Golden CRONA`)}
             </Typography>
             <a href="" target="_blank" rel="noreferrer">
-              <div className="flex items-center gap-4 mt-2 text-lg font-medium text-blue md:mt-4">
+              <div className="flex items-center gap-2 mt-2 text-lg font-medium text-blue md:mt-4">
                 <div className="">{i18n._(t`Learn more`)}</div>
                 <ChevronRightIcon height={14} className="" />
               </div>
@@ -52,7 +52,7 @@ export default function Grona() {
           <ExclamationIcon className="w-1/3 md:w-auto" height={64} />
         </div> */}
 
-        <div className='bg-dark-700 p-4 md:p-6 rounded-2xl'>
+        <div className='bg-dark-900/80 p-4 md:p-6 rounded-2xl'>
           <Alert
             title={i18n._(t`Golden CRONA mechanism`)}
             message={i18n._(t`Converting GRONA involves paying a 28% burn fee and a 2% reflect fee for a total cost of 30%. This means that for every 1 CRONA you trade in, you will receive 0.7 GRONA.`)}
@@ -63,7 +63,7 @@ export default function Grona() {
           <GronaControl />
         </div>
         {/* <GronaUtility /> */}
-        <div className='bg-dark-700 p-4 md:p-6 rounded-2xl'>
+        <div className='bg-dark-900/80 p-4 md:p-6 rounded-2xl'>
           <GronaFlow />
         </div>
       </div>
