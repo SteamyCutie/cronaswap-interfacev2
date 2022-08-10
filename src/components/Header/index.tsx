@@ -113,6 +113,16 @@ function AppBar(): JSX.Element {
                           </a>
                         </NavLink>
                       )}
+                      {chainId && featureEnabled(Feature.GRONA, chainId) && (
+                        <NavLink href={'/grona'}>
+                          <a
+                            id={`stake-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`GRONA`)}
+                          </a>
+                        </NavLink>
+                      )}
                       {chainId && featureEnabled(Feature.BOOST, chainId) && (
                         <NavLink href={'/boostv2'}>
                           <a
@@ -285,6 +295,17 @@ function AppBar(): JSX.Element {
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`Stake`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.GRONA, chainId) && (
+                  <Link href={'/grona'}>
+                    <a
+                      id={`stake-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`GRONA`)}
                     </a>
                   </Link>
                 )}

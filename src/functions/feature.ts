@@ -9,6 +9,7 @@ export enum Feature {
   ANALYTICS = 'Analytics',
   MIGRATE = 'Migrate',
   STAKING = 'Staking',
+  GRONA = 'GRONA',
   LAUNCH = 'Launch',
   BOOST = 'Boost',
   BRIDGE = 'Bridge',
@@ -58,16 +59,17 @@ const features = {
     Feature.IFO,
     // Feature.MISO,
     Feature.STAKING,
+    Feature.GRONA,
     Feature.BOOST,
     Feature.GAMEFI,
   ],
 }
 
-export function featureEnabled(feature: Feature, chainId: ChainId): boolean {
+export const featureEnabled = (feature: Feature, chainId: ChainId): boolean => { 
   return features?.[chainId]?.includes(feature)
 }
 
-export function chainsWithFeature(feature: Feature): ChainId[] {
+export const chainsWithFeature = (feature: Feature): ChainId[] => {
   return Object.keys(features)
     .filter((chain) => features[chain].includes(feature))
     .map((chain) => ChainId[chain])
