@@ -13,7 +13,7 @@ import GronaUtility from 'app/features/grona/GronaUtility'
 import GronaFlow from 'app/features/grona/GronaFlow'
 
 export default function Grona() {
-  const { i18n } = useLingui();
+  const { i18n } = useLingui()
 
   return (
     <Container id="bar-page" className="py-4 md:py-8 lg:py-12" maxWidth="7xl">
@@ -34,7 +34,9 @@ export default function Grona() {
             </Typography>
             <a href="" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2 mt-2 text-lg font-medium text-blue md:mt-4">
-                <div className="">{i18n._(t`Learn more`)}</div>
+                <a href="https://docs.cronaswap.org/tokenomics/grona" target="_blank" rel="noreferrer">
+                  {i18n._(t`Learn more`)}
+                </a>
                 <ChevronRightIcon height={14} className="" />
               </div>
             </a>
@@ -52,10 +54,12 @@ export default function Grona() {
           <ExclamationIcon className="w-1/3 md:w-auto" height={64} />
         </div> */}
 
-        <div className='bg-dark-900/80 p-4 md:p-6 rounded-2xl'>
+        <div className="bg-dark-900/80 p-4 md:p-6 rounded-2xl">
           <Alert
             title={i18n._(t`Golden CRONA mechanism`)}
-            message={i18n._(t`Converting GRONA involves paying a 28% burn fee and a 2% reflect fee for a total cost of 30%. This means that for every 1 CRONA you trade in, you will receive 0.7 GRONA.`)}
+            message={i18n._(
+              t`Converting GRONA involves paying a 28% burn fee and a 2% reflect fee for a total cost of 30%. This means that for every 1 CRONA you trade in, you will receive 0.7 GRONA.`
+            )}
             type="warning"
             dismissable={false}
             className="!rounded-xl"
@@ -63,7 +67,7 @@ export default function Grona() {
           <GronaControl />
         </div>
         {/* <GronaUtility /> */}
-        <div className='bg-dark-900/80 p-4 md:p-6 rounded-2xl'>
+        <div className="bg-dark-900/80 p-4 md:p-6 rounded-2xl">
           <GronaFlow />
         </div>
       </div>

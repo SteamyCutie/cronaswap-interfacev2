@@ -35,6 +35,7 @@ const features = {
     Feature.BRIDGE,
     Feature.BOOST,
     Feature.GAMEFI,
+    Feature.GRONA,
   ],
 
   [ChainId.CRONOS_TESTNET]: [
@@ -65,7 +66,7 @@ const features = {
   ],
 }
 
-export const featureEnabled = (feature: Feature, chainId: ChainId): boolean => { 
+export const featureEnabled = (feature: Feature, chainId: ChainId): boolean => {
   return features?.[chainId]?.includes(feature)
 }
 

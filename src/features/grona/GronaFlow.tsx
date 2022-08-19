@@ -2,11 +2,12 @@ import React from 'react'
 import Link from 'next/link'
 
 const GronaFlow = () => {
-  const styleCell = 'p-2 md:p-4 rounded-xl bg-dark-1000/50 items-center text-center grid align-middle text-sm md:text-base font-medium'
+  const styleCell =
+    'p-2 md:p-4 rounded-xl bg-dark-1000/50 items-center text-center grid align-middle text-sm md:text-base font-medium'
   const styleCard = `${styleCell} grid gap-1 items-center justify-center justify-items-center w-full text-center text-sm md:text-base`
   const styleCellBordered = `border-dark-800  p-4 flex items-center justify-center text-sm md:text-base font-medium`
-  const styleCellHead = `${styleCellBordered} border-b-2 mb-2 -ml-4`;
-  const styleCellBody = `${styleCellBordered} border-r-2 mr-2 -mt-4 p-4`;
+  const styleCellHead = `${styleCellBordered} border-b-2 mb-2 -ml-4`
+  const styleCellBody = `${styleCellBordered} border-r-2 mr-2 -mt-4 p-4`
 
   return (
     <div className="grid items-start justify-center grid-cols-1 gap-2 p-2 md:p-4">
@@ -54,16 +55,26 @@ const GronaFlow = () => {
         The 2% reflect fee applies to all $GRONA transactions, including transfer, staking, unstaking, and participation
         in IFOs.
       </div>
-      <div className={`${styleCard} !text-lg`}>You do not accumulate reflect fees when your GRONA is staked in a pool.</div>
+      <div className={`${styleCard} !text-lg`}>
+        You do not accumulate reflect fees when your GRONA is staked in a pool.
+      </div>
       <div className="flex justify-center mt-4">
-        <Link href="/" passHref>
+        {/* <Link href="/" passHref>
           <a target="_blank" rel="norefferer noopenner" className="text-blue text-lg font-semibold">
             Learn More
           </a>
-        </Link>
+        </Link> */}
+        <a
+          href="https://docs.cronaswap.org/tokenomics/grona"
+          target="_blank"
+          rel="noreferrer"
+          className="text-blue text-lg font-semibold"
+        >
+          Learn More
+        </a>
       </div>
     </div>
   )
 }
 
-export default GronaFlow;
+export default GronaFlow

@@ -61,7 +61,7 @@ export function usePoolsInfo(pool) {
     pool.smartChef,
   ])?.result
   const stakingTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [
-    pool.stakingToken.id,
+    pool.pid == 8 ? '0xadbd1231fb360047525bedf962581f3eee7b49fe' : pool.stakingToken.id, // pid=8 is grona, grona no liquidity no price, use crona as token
     parseUnits('1', pool.stakingToken.decimals),
   ])?.result
   const earningTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [

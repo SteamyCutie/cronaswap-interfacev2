@@ -65,20 +65,11 @@ function AppBar(): JSX.Element {
                             id={`yield-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Farm V2`)}
+                            {i18n._(t`Farm`)}
                           </a>
                         </NavLink>
                       )}
-                      {chainId && featureEnabled(Feature.FARMV1, chainId) && (
-                        <NavLink href={'/farmv1'}>
-                          <a
-                            id={`yield-nav-link`}
-                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                          >
-                            {i18n._(t`Farm V1`)}
-                          </a>
-                        </NavLink>
-                      )}
+
                       {chainId && featureEnabled(Feature.LENDING, chainId) && (
                         <>
                           <NavLink href={'/lending'}>
@@ -91,18 +82,7 @@ function AppBar(): JSX.Element {
                           </NavLink>
                         </>
                       )}
-                      {chainId && featureEnabled(Feature.IFO, chainId) && (
-                        <>
-                          <NavLink href={'/ifov2'}>
-                            <a
-                              id={`lend-nav-link`}
-                              className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                            >
-                              {i18n._(t`IFO`)}
-                            </a>
-                          </NavLink>
-                        </>
-                      )}
+
                       {chainId && featureEnabled(Feature.STAKING, chainId) && (
                         <NavLink href={'/stake'}>
                           <a
@@ -117,12 +97,25 @@ function AppBar(): JSX.Element {
                         <NavLink href={'/grona'}>
                           <a
                             id={`stake-nav-link`}
-                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                            className="p-2 text-baseline text-yellow hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
                             {i18n._(t`GRONA`)}
                           </a>
                         </NavLink>
                       )}
+                      {chainId && featureEnabled(Feature.IFO, chainId) && (
+                        <>
+                          <NavLink href={'/ifov2'}>
+                            <a
+                              id={`lend-nav-link`}
+                              className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                            >
+                              {i18n._(t`IFO`)}
+                            </a>
+                          </NavLink>
+                        </>
+                      )}
+
                       {chainId && featureEnabled(Feature.BOOST, chainId) && (
                         <NavLink href={'/boostv2'}>
                           <a
@@ -145,11 +138,21 @@ function AppBar(): JSX.Element {
                         </NavLink>
                       )}
 
-                      {chainId && featureEnabled(Feature.AMMV1, chainId) && (
+                      {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                        <NavLink href={'/farmv1'}>
+                          <a
+                            id={`yield-nav-link`}
+                            className="p-2 text-baseline text-red hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`V1 (legacy)`)}
+                          </a>
+                        </NavLink>
+                      )}
+                      {/* {chainId && featureEnabled(Feature.AMMV1, chainId) && (
                         <ExternalLink endIcon={<LinkIcon size={16} />} href={'https://appv1.cronaswap.org'}>
                           <Typography variant="base">{i18n._(t`V1 (old)`)}</Typography>
                         </ExternalLink>
-                      )}
+                      )} */}
 
                       {/* {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
                         <NavLink href={'/bridge'}>
@@ -252,18 +255,6 @@ function AppBar(): JSX.Element {
                   </a>
                 </Link>
 
-                {chainId && featureEnabled(Feature.FARMV1, chainId) && (
-                  <Link href={'/farmv1'}>
-                    <a
-                      id={`farm-nav-link`}
-                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                    >
-                      {' '}
-                      {i18n._(t`Farm V1`)}
-                    </a>
-                  </Link>
-                )}
-
                 {chainId && featureEnabled(Feature.FARMV2, chainId) && (
                   <Link href={'/farmv2'}>
                     <a
@@ -272,18 +263,6 @@ function AppBar(): JSX.Element {
                     >
                       {' '}
                       {i18n._(t`Farm V2`)}
-                    </a>
-                  </Link>
-                )}
-
-                {chainId && featureEnabled(Feature.IFO, chainId) && (
-                  <Link href={'/ifov2'}>
-                    <a
-                      id={`farm-nav-link`}
-                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                    >
-                      {' '}
-                      {i18n._(t`IFO`)}
                     </a>
                   </Link>
                 )}
@@ -303,9 +282,21 @@ function AppBar(): JSX.Element {
                   <Link href={'/grona'}>
                     <a
                       id={`stake-nav-link`}
-                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                      className="p-2 text-baseline text-yellow hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`GRONA`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.IFO, chainId) && (
+                  <Link href={'/ifov2'}>
+                    <a
+                      id={`farm-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {' '}
+                      {i18n._(t`IFO`)}
                     </a>
                   </Link>
                 )}
@@ -332,7 +323,19 @@ function AppBar(): JSX.Element {
                   </Link>
                 )}
 
-                {chainId && featureEnabled(Feature.AMMV1, chainId) && (
+                {chainId && featureEnabled(Feature.FARMV1, chainId) && (
+                  <Link href={'/farmv1'}>
+                    <a
+                      id={`farm-nav-link`}
+                      className="p-2 text-baseline text-red hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {' '}
+                      {i18n._(t`V1 (legacy)`)}
+                    </a>
+                  </Link>
+                )}
+
+                {/* {chainId && featureEnabled(Feature.AMMV1, chainId) && (
                   <ExternalLink
                     id={`analytics-nav-link`}
                     href={'https://appv1.cronaswap.org'}
@@ -340,7 +343,7 @@ function AppBar(): JSX.Element {
                   >
                     {i18n._(t`V1 (old)`)}
                   </ExternalLink>
-                )}
+                )} */}
 
                 {chainId && featureEnabled(Feature.ANALYTICS, chainId) && (
                   <ExternalLink

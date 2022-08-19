@@ -54,7 +54,7 @@ const IncentivePoolItemDetail = ({
   )
 
   // CRONA balance
-  const balance = useTokenBalance(account, CRONA[chainId])
+  const balance = useTokenBalance(account, stakingToken)
 
   // TODO: Replace these
   const { amount } = useUserInfo(pool, stakingToken)
