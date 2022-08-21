@@ -236,6 +236,27 @@ export const POOLS: AddressMap = {
         decimals: 18,
       },
     },
+
+    '0xa6b7cEBEdF89db224F31046F0720Ca9Dc8C74eb6': {
+      pid: 8,
+      name: 'GRONA-CRONA',
+      tokenPerBlock: '3.9',
+      isFinished: false,
+      category: PoolCategory.COMMUNITY,
+      projectLink: 'https://app.cronaswap.org',
+      stakingToken: {
+        id: '0x3916598D3C1aA1252D3F7Bf5b428B1303d87A9CC',
+        name: 'Golden CRONA',
+        symbol: 'GRONA',
+        decimals: 18,
+      },
+      earningToken: {
+        id: '0xadbd1231fb360047525bedf962581f3eee7b49fe',
+        name: 'CronSwap',
+        symbol: 'CRONA',
+        decimals: 18,
+      },
+    },
   },
 
   [ChainId.CRONOS_TESTNET]: {
