@@ -138,6 +138,17 @@ function AppBar(): JSX.Element {
                         </NavLink>
                       )}
 
+                      {chainId && featureEnabled(Feature.NODE, chainId) && (
+                        <NavLink href={'/cronanode'}>
+                          <a
+                            id={`cronanode-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`CronaNode`)}
+                          </a>
+                        </NavLink>
+                      )}
+
                       {chainId && featureEnabled(Feature.FARMV1, chainId) && (
                         <NavLink href={'/farmv1'}>
                           <a
@@ -319,6 +330,17 @@ function AppBar(): JSX.Element {
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`GameFi`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.NODE, chainId) && (
+                  <Link href={'/cronanode'}>
+                    <a
+                      id={`cronanode-nav-link`}
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`CronaNode`)}
                     </a>
                   </Link>
                 )}
