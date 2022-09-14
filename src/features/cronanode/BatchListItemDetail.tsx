@@ -1,13 +1,13 @@
 import { Disclosure, Transition } from '@headlessui/react'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useLingui } from '@lingui/react'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
-import { CRONA, Token, ZERO } from '@cronaswap/core-sdk'
+import { Token, ZERO } from '@cronaswap/core-sdk'
 import { formatNumber, formatNumberScale, getExplorerLink, tryParseAmount } from 'app/functions'
-import { ApprovalState, useApproveCallback } from 'app/hooks'
+import { ApprovalState, useApproveCallback, useBatchNodeContract, useContract } from 'app/hooks'
 import { getAddress } from '@ethersproject/address'
 import { useTokenBalance } from 'app/state/wallet/hooks'
 import Button from 'app/components/Button'
@@ -16,9 +16,12 @@ import NumericalInput from 'app/components/NumericalInput'
 import { t } from '@lingui/macro'
 import ExternalLink from 'app/components/ExternalLink'
 import Typography from 'app/components/Typography'
-import { useUserInfo } from './hooks'
+import { useBatchInfo, useUserInfo } from './hooks'
 import useSmartChef from './useSmartChef'
 import { ClockIcon } from '@heroicons/react/outline'
+import { CRONA, GRONA } from 'app/config/tokens'
+import { useBuyBatch, useHarvestBatch } from './useBatches'
+import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
 
 const BatchListItemDetail = ({
   batch,
@@ -26,39 +29,44 @@ const BatchListItemDetail = ({
   const { i18n } = useLingui()
 
   const { account, chainId } = useActiveWeb3React()
-  const [pendingTx, setPendingTx] = useState(false)
-  const [depositValue, setDepositValue] = useState('')
-  const [withdrawValue, setWithdrawValue] = useState('')
 
+  const stakingToken = GRONA[chainId]
+  const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit, stakingTokenPrice } = useBatchInfo(batch, account, stakingToken);
+
+  const [pendingConvert, setPendingConvert] = useState(false)
+  const [pendingReturn, setPendingReturn] = useState(false)
+
+  const [pendingTx, setPendingTx] = useState(false)
+  const [depositValue, setDepositValue] = useState<string>('')
+
+  const nodeContract = useContract(batch.batchNode, BATCH_NODE_ABI);
+
+  const typedDepositValue = tryParseAmount((Number(depositValue) * price?.toFixed(stakingToken.decimals)).toString(), stakingToken)
+
+  const stakeBalance = useTokenBalance(account, stakingToken)
+
+  const [approvalState, approve] = useApproveCallback(typedDepositValue, nodeContract?.address)
   const addTransaction = useTransactionAdder()
 
-  // const stakingToken = new Token(
-  //   chainId,
-  //   getAddress(pool.stakingToken?.id),
-  //   pool.stakingToken.decimals,
-  //   pool.stakingToken.symbol,
-  //   pool.stakingToken.name
-  // )
+  const { handleBuy } = useBuyBatch()
+  const { handleHarvest } = useHarvestBatch()
 
-  // const earningToken = new Token(
-  //   chainId,
-  //   getAddress(pool.earningToken?.id),
-  //   pool.earningToken.decimals,
-  //   pool.earningToken.symbol,
-  //   pool.earningToken.name
-  // )
-
-  // CRONA balance
-  // const balance = useTokenBalance(account, stakingToken)
+  const buy = useCallback(async () => {
+    try {
+      setPendingConvert(true)
+      let tx = await handleBuy(depositValue)
+      addTransaction(tx, {
+        summary: `${i18n._(t`Buying `)} ${depositValue} batches with ${typedDepositValue} ${stakingToken?.symbol}`,
+      })
+      setPendingConvert(false)
+    } catch (e) {
+      setPendingConvert(false)
+      console.warn(e)
+    }
+  }, [handleBuy, depositValue, addTransaction, stakingToken?.symbol])
 
   // // TODO: Replace these
   // const { amount } = useUserInfo(pool, stakingToken)
-
-  // const typedDepositValue = tryParseAmount(depositValue, stakingToken)
-  // const typedWithdrawValue = tryParseAmount(withdrawValue, stakingToken)
-
-  // const [approvalState, approve] = useApproveCallback(typedDepositValue, pool.smartChef)
-  const [approvalState] = ApprovalState.APPROVED
 
   // const { deposit, withdraw, emergencyWithdraw, harvest } = useSmartChef(pool)
 
@@ -92,6 +100,7 @@ const BatchListItemDetail = ({
                   color="blue"
                   size="xs"
                   onClick={() => {
+                    setDepositValue(bondsAvailable)
                   }}
                   className="absolute border-0 right-4 focus:ring focus:ring-light-purple"
                 >
@@ -101,44 +110,43 @@ const BatchListItemDetail = ({
             </div>
 
             <div className='flex space-x-2'>
-              {/* {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? ( */}
-              <Button
-                className="w-full"
-                color="gradient"
-              // disabled={approvalState === ApprovalState.PENDING}
-              // onClick={approve}
-              >
-                {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)}</Dots> : i18n._(t`Approve`)}
-              </Button>
-              {/* ) : ( */}
-              <Button
-                className="w-full"
-                color="blue"
-                disabled={
-                  false
-                  // pendingTx ||
-                  // !typedDepositValue ||
-                  // (pool.pid === 0 && Number(depositValue) > 30000) ||
-                  // balance?.lessThan(typedDepositValue)
-                }
-                onClick={async () => {
-                  // setPendingTx(true)
-                  // try {
-                  //   // KMP decimals depend on asset, SLP is always 18
-                  //   const tx = await deposit(depositValue.toBigNumber(stakingToken?.decimals))
+              {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
+                <Button
+                  className="w-full"
+                  color="gradient"
+                  disabled={approvalState === ApprovalState.PENDING}
+                  onClick={approve}
+                >
+                  {approvalState === ApprovalState.PENDING ? <Dots>{i18n._(t`Approving`)}</Dots> : i18n._(t`Approve`)}
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  color="blue"
+                  disabled={
+                    pendingTx ||
+                    !typedDepositValue ||
+                    // (pool.pid === 0 && Number(depositValue) > 30000) ||
+                    stakeBalance?.lessThan(typedDepositValue)
+                  }
+                  onClick={async () => {
+                    // setPendingTx(true)
+                    // try {
+                    //   // KMP decimals depend on asset, SLP is always 18
+                    //   const tx = await deposit(depositValue.toBigNumber(stakingToken?.decimals))
 
-                  //   addTransaction(tx, {
-                  //     summary: `${i18n._(t`Deposit`)} ${stakingToken?.symbol}`,
-                  //   })
-                  // } catch (error) {
-                  //   console.error(error)
-                  // }
-                  // setPendingTx(false)
-                }}
-              >
-                {i18n._(t`Buy`)}
-              </Button>
-              {/* )} */}
+                    //   addTransaction(tx, {
+                    //     summary: `${i18n._(t`Deposit`)} ${stakingToken?.symbol}`,
+                    //   })
+                    // } catch (error) {
+                    //   console.error(error)
+                    // }
+                    // setPendingTx(false)
+                  }}
+                >
+                  {i18n._(t`Buy`)}
+                </Button>
+              )}
             </div>
           </div>
           <div className="col-span-2 text-center md:col-span-1 items-center grid">
@@ -146,7 +154,7 @@ const BatchListItemDetail = ({
               Your bonds
             </div>
             <div className="relative w-full border-2 border-secondary rounded-md text-center text-lg font-semibold py-4 text-primary">
-              {batch.totalBonds - batch.bondsAvailable} / {batch.totalBonds}
+              {formatNumber(batchSold)} / {formatNumber(batchLimit)}
             </div>
           </div>
           <div className="col-span-2 md:col-span-1">
@@ -157,7 +165,7 @@ const BatchListItemDetail = ({
                   <div className="text-2xl font-bold">
                     {' '}
                     {/* {formatNumber(pendingReward?.toFixed(earningToken?.decimals))} */}
-                    {0}
+                    {formatNumber(pending)}
                   </div>
                   <div className="text-sm">
                     ~
@@ -165,7 +173,7 @@ const BatchListItemDetail = ({
                       Number(pendingReward?.toFixed(earningToken?.decimals)) * Number(earningTokenPrice?.toFixed(18)),
                       true
                     )} */}
-                    {0}
+                    {formatNumber(pending * Number(stakingTokenPrice?.toFixed(18)))}
                   </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle gap-y-1">

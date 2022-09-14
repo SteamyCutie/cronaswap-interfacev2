@@ -68,6 +68,10 @@ export const TREASURY_ADDRESS: AddressMap = {
   [ChainId.BSC_TESTNET]: '0xFb30529a85306B6A11a0Fb330b8902a32BFaA121',
 }
 
+export const BATCHNODE_ADDRESS: AddressMap = {
+  [ChainId.BSC_TESTNET]: '0xc02F875faE1404D2a3f000583b270aeA47ca04Cf',
+}
+
 // Seed / Private / Public Sale
 export const SEED_SALE_ADDRESS: AddressMap = {
   [ChainId.CRONOS]: '0x94f3Dfc9E8AE00892984d8fA003BF09a46987DFd',

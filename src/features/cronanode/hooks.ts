@@ -6,6 +6,7 @@ import { useBlockNumber } from 'app/state/application/hooks'
 import { useSingleCallResult, useSingleContractMultipleMethods } from 'app/state/multicall/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import SMART_CHEF_ABI from 'app/constants/abis/smartChef.json'
+import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
 import { parseUnits } from '@ethersproject/units'
 
 export function useUserInfo(pool, token) {
@@ -48,6 +49,40 @@ export function usePendingReward(pool, token) {
   const amount = value ? JSBI.BigInt(value.toString()) : undefined
 
   return amount ? CurrencyAmount.fromRawAmount(token, amount) : undefined
+}
+
+export function useBatchInfo(batch, account, stakingToken) {
+  const dashboardContract = useDashboardV2Contract()
+
+  const stakingTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [
+    stakingToken.address,
+    parseUnits('1', stakingToken.decimals),
+  ])?.result
+
+  const contract = useContract(batch.batchNode, BATCH_NODE_ABI);
+
+  const pending = useSingleCallResult(contract, 'pending', [account])?.result
+  const bondsAvailable = useSingleCallResult(contract, 'available')?.result
+  const batchLimit = useSingleCallResult(contract, 'batchLimit')?.result
+  const batchSold = useSingleCallResult(contract, 'batchSold')?.result
+  const expiration = useSingleCallResult(contract, 'expiration')?.result
+  const price = useSingleCallResult(contract, 'price')?.result
+  const rewardPerNodePerSecond = useSingleCallResult(contract, 'rewardPerNodePerSecond')?.result
+  const startTime = useSingleCallResult(contract, 'startTime')?.result
+  const userLimit = useSingleCallResult(contract, 'userLimit')?.result
+
+  return {
+    pending: pending?.[0],
+    bondsAvailable: bondsAvailable?.[0],
+    batchLimit: batchLimit?.[0],
+    batchSold: batchSold?.[0],
+    expiration: expiration?.[0],
+    price: price?.[0],
+    rewardPerNodePerSecond: rewardPerNodePerSecond?.[0],
+    startTime: startTime?.[0],
+    userLimit: userLimit?.[0],
+    stakingTokenPrice: stakingTokenPrice?.valueInUSD
+  }
 }
 
 // fetch pools info
