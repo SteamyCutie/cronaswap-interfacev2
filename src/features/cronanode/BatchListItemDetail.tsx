@@ -31,6 +31,7 @@ const BatchListItemDetail = ({
   const { account, chainId } = useActiveWeb3React()
 
   const stakingToken = GRONA[chainId]
+  const earningToken = CRONA[chainId]
   const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit, stakingTokenPrice } = useBatchInfo(batch, account, stakingToken);
 
   const [pendingConvert, setPendingConvert] = useState(false)
@@ -48,8 +49,8 @@ const BatchListItemDetail = ({
   const [approvalState, approve] = useApproveCallback(typedDepositValue, nodeContract?.address)
   const addTransaction = useTransactionAdder()
 
-  const { handleBuy } = useBuyBatch()
-  const { handleHarvest } = useHarvestBatch()
+  const { handleBuy } = useBuyBatch(batch)
+  const { handleHarvest } = useHarvestBatch(batch)
 
   const buy = useCallback(async () => {
     try {
@@ -64,6 +65,20 @@ const BatchListItemDetail = ({
       console.warn(e)
     }
   }, [handleBuy, depositValue, addTransaction, stakingToken?.symbol])
+
+  const harvest = useCallback(async () => {
+    try {
+      setPendingReturn(true)
+      let tx = await handleHarvest()
+      addTransaction(tx, {
+        summary: `${i18n._(t`Claiming rewards in `)} ${earningToken?.symbol}`,
+      })
+      setPendingReturn(false)
+    } catch (e) {
+      setPendingReturn(false)
+      console.warn(e)
+    }
+  }, [handleHarvest, addTransaction, earningToken?.symbol])
 
   // // TODO: Replace these
   // const { amount } = useUserInfo(pool, stakingToken)
@@ -129,20 +144,7 @@ const BatchListItemDetail = ({
                     // (pool.pid === 0 && Number(depositValue) > 30000) ||
                     stakeBalance?.lessThan(typedDepositValue)
                   }
-                  onClick={async () => {
-                    // setPendingTx(true)
-                    // try {
-                    //   // KMP decimals depend on asset, SLP is always 18
-                    //   const tx = await deposit(depositValue.toBigNumber(stakingToken?.decimals))
-
-                    //   addTransaction(tx, {
-                    //     summary: `${i18n._(t`Deposit`)} ${stakingToken?.symbol}`,
-                    //   })
-                    // } catch (error) {
-                    //   console.error(error)
-                    // }
-                    // setPendingTx(false)
-                  }}
+                  onClick={buy}
                 >
                   {i18n._(t`Buy`)}
                 </Button>
@@ -164,15 +166,10 @@ const BatchListItemDetail = ({
                 <div className="flex flex-col w-1/2 px-4 align-middle">
                   <div className="text-2xl font-bold">
                     {' '}
-                    {/* {formatNumber(pendingReward?.toFixed(earningToken?.decimals))} */}
                     {formatNumber(pending)}
                   </div>
                   <div className="text-sm">
                     ~
-                    {/* {formatNumber(
-                      Number(pendingReward?.toFixed(earningToken?.decimals)) * Number(earningTokenPrice?.toFixed(18)),
-                      true
-                    )} */}
                     {formatNumber(pending * Number(stakingTokenPrice?.toFixed(18)))}
                   </div>
                 </div>
@@ -188,20 +185,8 @@ const BatchListItemDetail = ({
                       // Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) <= 0 ? 'outlined' : 'filled'
                       'filled'
                     }
-                    // disabled={Number(formatNumber(pendingReward?.toFixed(earningToken?.decimals))) <= 0}
-                    disabled={false}
-                    onClick={async () => {
-                      setPendingTx(true)
-                      try {
-                        // const tx = await harvest()
-                        // addTransaction(tx, {
-                        //   summary: `${i18n._(t`Harvest`)} ${earningToken?.symbol}`,
-                        // })
-                      } catch (error) {
-                        console.error(error)
-                      }
-                      setPendingTx(false)
-                    }}
+                    disabled={Number(formatNumber(pending?.toFixed(earningToken?.decimals))) <= 0}
+                    onClick={harvest}
                   >
                     {i18n._(t`Claim Rewards`)}
                   </Button>

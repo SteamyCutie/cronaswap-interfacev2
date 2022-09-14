@@ -1,6 +1,7 @@
 import { BATCHES } from 'app/constants/batches'
 import { useActiveWeb3React } from 'app/services/web3'
-import { useBatchNodeContract } from 'app/hooks'
+import { useBatchNodeContract, useContract } from 'app/hooks'
+import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
 
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
@@ -32,7 +33,7 @@ export default useBatches
 
 export const buy = async (contract, amount: string) => {
   try {
-    return await contract.buy(amount.toBigNumber(18).toString())
+    return await contract.buy(amount)
   } catch (err) {
     return console.warn(err)
   }
@@ -46,8 +47,8 @@ export const harvest = async (contract) => {
   }
 }
 
-export const useBuyBatch = () => {
-  const nodeContract = useBatchNodeContract()
+export const useBuyBatch = (batch) => {
+  const nodeContract = useContract(batch?.batchNode, BATCH_NODE_ABI);
 
   const handleBuy = useCallback(
     async (amount: string) => {
@@ -63,8 +64,8 @@ export const useBuyBatch = () => {
   return { handleBuy }
 }
 
-export const useHarvestBatch = () => {
-  const nodeContract = useBatchNodeContract()
+export const useHarvestBatch = (batch) => {
+  const nodeContract = useContract(batch?.batchNode, BATCH_NODE_ABI);
 
   const handleHarvest = useCallback(
     async () => {
