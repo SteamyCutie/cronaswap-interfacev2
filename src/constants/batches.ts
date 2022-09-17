@@ -12,8 +12,8 @@ type AddressMap = {
 
 export const BATCHES: AddressMap = {
   [ChainId.BSC_TESTNET]: {
-    '0xaEE229d77671A0683efFeC08069634EcA7F10E86': {
+    '0x4b5b334e2F5284C7Cd9cB09118C5189Bc8be3F34': {
       bid: 1,
-    }
-  }
+    },
+  },
 }
