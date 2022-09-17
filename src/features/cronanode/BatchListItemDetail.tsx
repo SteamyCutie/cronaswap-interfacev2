@@ -32,7 +32,7 @@ const BatchListItemDetail = ({
 
   const stakingToken = GRONA[chainId]
   const earningToken = CRONA[chainId]
-  const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit, stakingTokenPrice } = useBatchInfo(batch, account, stakingToken);
+  const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit, earningTokenPrice } = useBatchInfo(batch, account, earningToken);
 
   const [pendingConvert, setPendingConvert] = useState(false)
   const [pendingReturn, setPendingReturn] = useState(false)
@@ -169,8 +169,8 @@ const BatchListItemDetail = ({
                     {formatNumber(pending?.toFixed(earningToken?.decimals))}
                   </div>
                   <div className="text-sm">
-                    ~
-                    {formatNumber(pending?.toFixed(earningToken?.decimals) * stakingTokenPrice?.toFixed(stakingToken?.decimals))}
+                    ~ $
+                    {formatNumber(pending?.toFixed(earningToken?.decimals) * earningTokenPrice?.toFixed(earningToken?.decimals))}
                   </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle gap-y-1">

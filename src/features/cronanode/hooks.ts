@@ -51,12 +51,12 @@ export function usePendingReward(pool, token) {
   return amount ? CurrencyAmount.fromRawAmount(token, amount) : undefined
 }
 
-export function useBatchInfo(batch, account, stakingToken) {
+export function useBatchInfo(batch, account, earningToken) {
   const dashboardContract = useDashboardV2Contract()
 
-  const stakingTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [
-    stakingToken.address,
-    parseUnits('1', stakingToken.decimals),
+  const earningTokenPrice = useSingleCallResult(dashboardContract, 'valueOfAsset', [
+    earningToken.address,
+    parseUnits('1', earningToken.decimals),
   ])?.result
 
   const contract = useContract(batch.batchNode, BATCH_NODE_ABI);
@@ -81,7 +81,7 @@ export function useBatchInfo(batch, account, stakingToken) {
     rewardPerNodePerSecond: rewardPerNodePerSecond?.[0],
     startTime: startTime?.[0],
     userLimit: userLimit?.[0],
-    stakingTokenPrice: stakingTokenPrice?.valueInUSD
+    earningTokenPrice: earningTokenPrice?.valueInUSD
   }
 }
 
