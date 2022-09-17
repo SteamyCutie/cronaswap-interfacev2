@@ -193,7 +193,7 @@ const BatchListItemDetail = ({
                 </div>
               </div>
               <div className="flex flex-col p-2 space-y-2">
-                <div className="flex flex-row justify-between px-2 text-md">
+                <div className="flex flex-row justify-between px-2 text-md hidden">
                   <div className='text-sm'>Next rewards in</div>
                   <div className='text-md'>Block / {formatNumber(86000)}</div>
                 </div>
