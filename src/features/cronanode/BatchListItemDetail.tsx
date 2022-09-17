@@ -170,7 +170,7 @@ const BatchListItemDetail = ({
                   </div>
                   <div className="text-sm">
                     ~
-                    {formatNumber(pending * Number(stakingTokenPrice?.toFixed(18)))}
+                    {formatNumber(pending?.toFixed(earningToken?.decimals) * stakingTokenPrice?.toFixed(stakingToken?.decimals))}
                   </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle gap-y-1">
