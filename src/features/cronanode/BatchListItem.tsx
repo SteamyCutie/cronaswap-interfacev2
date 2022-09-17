@@ -24,6 +24,7 @@ const BatchListItem = ({ batch, ...rest }) => {
   const { account, chainId } = useActiveWeb3React()
 
   const stakingToken = GRONA[chainId]
+  const earningToken = CRONA[chainId]
 
   const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit } = useBatchInfo(batch, account, stakingToken);
   // const { apr, endInBlock, bonusEndBlock, totalStaked, stakingTokenPrice, earningTokenPrice } = usePoolsInfo(pool)
@@ -51,7 +52,7 @@ const BatchListItem = ({ batch, ...rest }) => {
               <div className="flex flex-col justify-center w-2/12 lg:w-1/12 space-y-1">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Earned`)}</div>
                 <div className="text-xs font-bold md:text-base">
-                  {formatNumber(pending)}
+                  {formatNumber(pending?.toFixed(earningToken?.decimals))}
                 </div>
               </div>
 
