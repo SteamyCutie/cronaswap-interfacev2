@@ -57,7 +57,7 @@ const BatchListItemDetail = ({
       setPendingConvert(true)
       let tx = await handleBuy(depositValue)
       addTransaction(tx, {
-        summary: `${i18n._(t`Buying `)} ${depositValue} batches with ${typedDepositValue} ${stakingToken?.symbol}`,
+        summary: `${i18n._(t`Buying `)} ${depositValue} batches with ${typedDepositValue.toFixed(stakingToken.decimals)} ${stakingToken?.symbol}`,
       })
       setPendingConvert(false)
     } catch (e) {
@@ -166,7 +166,7 @@ const BatchListItemDetail = ({
                 <div className="flex flex-col w-1/2 px-4 align-middle">
                   <div className="text-2xl font-bold">
                     {' '}
-                    {formatNumber(pending)}
+                    {formatNumber(pending?.toFixed(earningToken?.decimals))}
                   </div>
                   <div className="text-sm">
                     ~

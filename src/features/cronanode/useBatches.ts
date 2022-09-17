@@ -33,7 +33,7 @@ export default useBatches
 
 export const buy = async (contract, amount: string) => {
   try {
-    return await contract.buy(amount)
+    return await contract?.buy(amount)
   } catch (err) {
     return console.warn(err)
   }
@@ -41,7 +41,7 @@ export const buy = async (contract, amount: string) => {
 
 export const harvest = async (contract) => {
   try {
-    return await contract.harvest()
+    return await contract?.harvest()
   } catch (err) {
     return console.warn(err)
   }
@@ -70,7 +70,7 @@ export const useHarvestBatch = (batch) => {
   const handleHarvest = useCallback(
     async () => {
       try {
-        return await handleHarvest(nodeContract)
+        return await harvest(nodeContract)
       } catch (e) {
         return false;
       }
