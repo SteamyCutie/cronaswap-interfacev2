@@ -59,9 +59,10 @@ export function useBatchInfo(batch, account, earningToken) {
     parseUnits('1', earningToken.decimals),
   ])?.result
 
-  const contract = useContract(batch.batchNode, BATCH_NODE_ABI);
+  const contract = useContract(batch.batchNode, BATCH_NODE_ABI)
 
   const pending = useSingleCallResult(contract, 'pending', [account])?.result
+  const userBought = useSingleCallResult(contract, 'userBought', [account])?.result
   const bondsAvailable = useSingleCallResult(contract, 'available')?.result
   const batchLimit = useSingleCallResult(contract, 'batchLimit')?.result
   const batchSold = useSingleCallResult(contract, 'batchSold')?.result
@@ -73,6 +74,7 @@ export function useBatchInfo(batch, account, earningToken) {
 
   return {
     pending: pending?.[0],
+    userBought: userBought?.[0],
     bondsAvailable: bondsAvailable?.[0],
     batchLimit: batchLimit?.[0],
     batchSold: batchSold?.[0],
@@ -81,7 +83,7 @@ export function useBatchInfo(batch, account, earningToken) {
     rewardPerNodePerSecond: rewardPerNodePerSecond?.[0],
     startTime: startTime?.[0],
     userLimit: userLimit?.[0],
-    earningTokenPrice: earningTokenPrice?.valueInUSD
+    earningTokenPrice: earningTokenPrice?.valueInUSD,
   }
 }
 

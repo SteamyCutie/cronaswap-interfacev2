@@ -23,16 +23,26 @@ import { CRONA, GRONA } from 'app/config/tokens'
 import { useBuyBatch, useHarvestBatch } from './useBatches'
 import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
 
-const BatchListItemDetail = ({
-  batch,
-}) => {
+const BatchListItemDetail = ({ batch }) => {
   const { i18n } = useLingui()
 
   const { account, chainId } = useActiveWeb3React()
 
   const stakingToken = GRONA[chainId]
   const earningToken = CRONA[chainId]
-  const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit, earningTokenPrice } = useBatchInfo(batch, account, earningToken);
+  const {
+    pending,
+    userBought,
+    bondsAvailable,
+    batchLimit,
+    batchSold,
+    expiration,
+    price,
+    rewardPerNodePerSecond,
+    startTime,
+    userLimit,
+    earningTokenPrice,
+  } = useBatchInfo(batch, account, earningToken)
 
   const [pendingConvert, setPendingConvert] = useState(false)
   const [pendingReturn, setPendingReturn] = useState(false)
@@ -40,9 +50,12 @@ const BatchListItemDetail = ({
   const [pendingTx, setPendingTx] = useState(false)
   const [depositValue, setDepositValue] = useState<string>('')
 
-  const nodeContract = useContract(batch.batchNode, BATCH_NODE_ABI);
+  const nodeContract = useContract(batch.batchNode, BATCH_NODE_ABI)
 
-  const typedDepositValue = tryParseAmount((Number(depositValue) * price?.toFixed(stakingToken.decimals)).toString(), stakingToken)
+  const typedDepositValue = tryParseAmount(
+    (Number(depositValue) * price?.toFixed(stakingToken.decimals)).toString(),
+    stakingToken
+  )
 
   const stakeBalance = useTokenBalance(account, stakingToken)
 
@@ -57,7 +70,9 @@ const BatchListItemDetail = ({
       setPendingConvert(true)
       let tx = await handleBuy(depositValue)
       addTransaction(tx, {
-        summary: `${i18n._(t`Buying `)} ${depositValue} batches with ${typedDepositValue.toFixed(stakingToken.decimals)} ${stakingToken?.symbol}`,
+        summary: `${i18n._(t`Buying `)} ${depositValue} batches with ${typedDepositValue.toFixed(
+          stakingToken.decimals
+        )} ${stakingToken?.symbol}`,
       })
       setPendingConvert(false)
     } catch (e) {
@@ -103,6 +118,13 @@ const BatchListItemDetail = ({
         {/* <div className="grid grid-cols-2 gap-4 p-4"> */}
         <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-3">
           <div className="col-span-2 text-center md:col-span-1 items-center grid">
+            {account && (
+              <div className="flex flex-row justify-between">
+                <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
+                  Your GRONA balance: {formatNumberScale(stakeBalance?.toSignificant(6, undefined, 2) ?? 0, false, 4)}
+                </div>
+              </div>
+            )}
             <div className="relative flex items-center mb-4 w-full">
               <NumericalInput
                 className="w-full px-4 py-4 pr-20 rounded bg-dark-700 focus:ring focus:ring-dark-purple"
@@ -124,7 +146,7 @@ const BatchListItemDetail = ({
               )}
             </div>
 
-            <div className='flex space-x-2'>
+            <div className="flex space-x-2">
               {approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING ? (
                 <Button
                   className="w-full"
@@ -152,11 +174,9 @@ const BatchListItemDetail = ({
             </div>
           </div>
           <div className="col-span-2 text-center md:col-span-1 items-center grid">
-            <div className="pr-4 mb-2 text-center cursor-pointer">
-              Your bonds
-            </div>
+            <div className="pr-4 mb-2 text-center cursor-pointer">Your bonds</div>
             <div className="relative w-full border-2 border-secondary rounded-md text-center text-lg font-semibold py-4 text-primary">
-              {formatNumber(batchSold)} / {formatNumber(batchLimit)}
+              {formatNumber(userBought)} / {formatNumber(batchLimit)}
             </div>
           </div>
           <div className="col-span-2 md:col-span-1">
@@ -164,13 +184,12 @@ const BatchListItemDetail = ({
             <div className="flex flex-col justify-between text-sm gap-1 mt-1 rounded-lg bg-dark-700">
               <div className="flex mt-4">
                 <div className="flex flex-col w-1/2 px-4 align-middle">
-                  <div className="text-2xl font-bold">
-                    {' '}
-                    {formatNumber(pending?.toFixed(earningToken?.decimals))}
-                  </div>
+                  <div className="text-2xl font-bold"> {formatNumber(pending?.toFixed(earningToken?.decimals))}</div>
                   <div className="text-sm">
                     ~ $
-                    {formatNumber(pending?.toFixed(earningToken?.decimals) * earningTokenPrice?.toFixed(earningToken?.decimals))}
+                    {formatNumber(
+                      pending?.toFixed(earningToken?.decimals) * earningTokenPrice?.toFixed(earningToken?.decimals)
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-4 align-middle gap-y-1">
@@ -194,8 +213,8 @@ const BatchListItemDetail = ({
               </div>
               <div className="flex flex-col p-2 space-y-2">
                 <div className="flex flex-row justify-between px-2 text-md hidden">
-                  <div className='text-sm'>Next rewards in</div>
-                  <div className='text-md'>Block / {formatNumber(86000)}</div>
+                  <div className="text-sm">Next rewards in</div>
+                  <div className="text-md">Block / {formatNumber(86000)}</div>
                 </div>
               </div>
             </div>
