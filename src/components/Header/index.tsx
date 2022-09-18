@@ -138,13 +138,13 @@ function AppBar(): JSX.Element {
                         </NavLink>
                       )}
 
-                      {chainId && featureEnabled(Feature.NODE, chainId) && (
-                        <NavLink href={'/cronanode'}>
+                      {chainId && featureEnabled(Feature.BOND, chainId) && (
+                        <NavLink href={'/cronabond'}>
                           <a
-                            id={`cronanode-nav-link`}
+                            id={`cronabond-nav-link`}
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`CronaNode`)}
+                            {i18n._(t`CronaBond`)}
                           </a>
                         </NavLink>
                       )}
@@ -334,13 +334,13 @@ function AppBar(): JSX.Element {
                   </Link>
                 )}
 
-                {chainId && featureEnabled(Feature.NODE, chainId) && (
-                  <Link href={'/cronanode'}>
+                {chainId && featureEnabled(Feature.BOND, chainId) && (
+                  <Link href={'/cronabond'}>
                     <a
-                      id={`cronanode-nav-link`}
+                      id={`cronabond-nav-link`}
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
-                      {i18n._(t`CronaNode`)}
+                      {i18n._(t`CronaBond`)}
                     </a>
                   </Link>
                 )}

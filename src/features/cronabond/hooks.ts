@@ -6,7 +6,7 @@ import { useBlockNumber } from 'app/state/application/hooks'
 import { useSingleCallResult, useSingleContractMultipleMethods } from 'app/state/multicall/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import SMART_CHEF_ABI from 'app/constants/abis/smartChef.json'
-import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
+import BATCH_BOND_ABI from 'app/constants/abis/batch-bond.json'
 import { parseUnits } from '@ethersproject/units'
 
 export function useUserInfo(pool, token) {
@@ -59,7 +59,7 @@ export function useBatchInfo(batch, account, earningToken) {
     parseUnits('1', earningToken.decimals),
   ])?.result
 
-  const contract = useContract(batch.batchNode, BATCH_NODE_ABI)
+  const contract = useContract(batch.batchBond, BATCH_BOND_ABI)
 
   const pending = useSingleCallResult(contract, 'pending', [account])?.result
   const userBought = useSingleCallResult(contract, 'userBought', [account])?.result
@@ -68,7 +68,7 @@ export function useBatchInfo(batch, account, earningToken) {
   const batchSold = useSingleCallResult(contract, 'batchSold')?.result
   const expiration = useSingleCallResult(contract, 'expiration')?.result
   const price = useSingleCallResult(contract, 'price')?.result
-  const rewardPerNodePerSecond = useSingleCallResult(contract, 'rewardPerNodePerSecond')?.result
+  const rewardPerBondPerSecond = useSingleCallResult(contract, 'rewardPerBondPerSecond')?.result
   const startTime = useSingleCallResult(contract, 'startTime')?.result
   const userLimit = useSingleCallResult(contract, 'userLimit')?.result
 
@@ -80,7 +80,7 @@ export function useBatchInfo(batch, account, earningToken) {
     batchSold: batchSold?.[0],
     expiration: expiration?.[0],
     price: price?.[0],
-    rewardPerNodePerSecond: rewardPerNodePerSecond?.[0],
+    rewardPerBondPerSecond: rewardPerBondPerSecond?.[0],
     startTime: startTime?.[0],
     userLimit: userLimit?.[0],
     earningTokenPrice: earningTokenPrice?.valueInUSD,

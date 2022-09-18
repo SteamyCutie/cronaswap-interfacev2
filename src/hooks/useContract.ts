@@ -74,7 +74,7 @@ import PRIATESALE_ABI from '../constants/abis/privatesale.json'
 import COINTOSS_ABI from '../constants/abis/cointoss.json'
 import DICEROLL_ABI from '../constants/abis/diceroll.json'
 import TREASURY_ABI from '../constants/abis/grona-treasury.json'
-import BATCHNODE_ABI from '../constants/abis/batch-node.json'
+import BATCHBOND_ABI from '../constants/abis/batch-bond.json'
 
 import { getContract } from '../functions/contract'
 import { useActiveWeb3React } from '../services/web3'
@@ -297,9 +297,9 @@ export function useTreasuryContract(withSignerIfPossible?: boolean): Contract | 
   return useContract(TREASURY_ADDRESS[chainId], TREASURY_ABI, withSignerIfPossible)
 }
 
-export function useBatchNodeContract(withSignerIfPossible?: boolean): Contract | null {
+export function useBatchBondContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(BATCHNODE_ADDRESS[chainId], BATCHNODE_ABI, withSignerIfPossible)
+  return useContract(BATCHNODE_ADDRESS[chainId], BATCHBOND_ABI, withSignerIfPossible)
 }
 
 export function useRewardPoolContract(withSignerIfPossible?: boolean): Contract | null {

@@ -6,22 +6,18 @@ import { useLingui } from '@lingui/react'
 import { useActiveWeb3React } from 'app/services/web3'
 import { useTransactionAdder } from 'app/state/transactions/hooks'
 import { Token, ZERO } from '@cronaswap/core-sdk'
-import { formatNumber, formatNumberScale, getExplorerLink, tryParseAmount } from 'app/functions'
-import { ApprovalState, useApproveCallback, useBatchNodeContract, useContract } from 'app/hooks'
+import { formatNumber, formatNumberScale, tryParseAmount } from 'app/functions'
+import { ApprovalState, useApproveCallback, useContract } from 'app/hooks'
 import { getAddress } from '@ethersproject/address'
 import { useTokenBalance } from 'app/state/wallet/hooks'
 import Button from 'app/components/Button'
 import Dots from 'app/components/Dots'
 import NumericalInput from 'app/components/NumericalInput'
 import { t } from '@lingui/macro'
-import ExternalLink from 'app/components/ExternalLink'
-import Typography from 'app/components/Typography'
 import { useBatchInfo, useUserInfo } from './hooks'
-import useSmartChef from './useSmartChef'
-import { ClockIcon } from '@heroicons/react/outline'
 import { CRONA, GRONA } from 'app/config/tokens'
 import { useBuyBatch, useHarvestBatch } from './useBatches'
-import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
+import BATCH_BOND_ABI from 'app/constants/abis/batch-bond.json'
 
 const BatchListItemDetail = ({ batch }) => {
   const { i18n } = useLingui()
@@ -38,7 +34,7 @@ const BatchListItemDetail = ({ batch }) => {
     batchSold,
     expiration,
     price,
-    rewardPerNodePerSecond,
+    rewardPerBondPerSecond,
     startTime,
     userLimit,
     earningTokenPrice,
@@ -50,7 +46,7 @@ const BatchListItemDetail = ({ batch }) => {
   const [pendingTx, setPendingTx] = useState(false)
   const [depositValue, setDepositValue] = useState<string>('')
 
-  const nodeContract = useContract(batch.batchNode, BATCH_NODE_ABI)
+  const bondContract = useContract(batch.batchBond, BATCH_BOND_ABI)
 
   const typedDepositValue = tryParseAmount(
     (Number(depositValue) * price?.toFixed(stakingToken.decimals)).toString(),
@@ -59,7 +55,7 @@ const BatchListItemDetail = ({ batch }) => {
 
   const stakeBalance = useTokenBalance(account, stakingToken)
 
-  const [approvalState, approve] = useApproveCallback(typedDepositValue, nodeContract?.address)
+  const [approvalState, approve] = useApproveCallback(typedDepositValue, bondContract?.address)
   const addTransaction = useTransactionAdder()
 
   const { handleBuy } = useBuyBatch(batch)
@@ -174,9 +170,12 @@ const BatchListItemDetail = ({ batch }) => {
             </div>
           </div>
           <div className="col-span-2 text-center md:col-span-1 items-center grid">
-            <div className="pr-4 mb-2 text-center cursor-pointer">Your bonds</div>
-            <div className="relative w-full border-2 border-secondary rounded-md text-center text-lg font-semibold py-4 text-primary">
-              {formatNumber(userBought)} / {formatNumber(batchLimit)}
+            {/* <div className="pr-4 mb-2 text-center cursor-pointer">Your bonds</div> */}
+            <div className="relative w-full border border-secondary rounded-md text-center text-lg font-semibold py-4 text-primary">
+              Your bonds {formatNumber(userBought)} / {formatNumber(batchLimit)}
+            </div>
+            <div className="relative w-full border border-secondary rounded-md text-center text-lg font-semibold py-4 text-primary">
+              Total rewards per bond is 540 crona
             </div>
           </div>
           <div className="col-span-2 md:col-span-1">

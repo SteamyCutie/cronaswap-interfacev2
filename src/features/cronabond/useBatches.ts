@@ -1,7 +1,7 @@
 import { BATCHES } from 'app/constants/batches'
 import { useActiveWeb3React } from 'app/services/web3'
-import { useBatchNodeContract, useContract } from 'app/hooks'
-import BATCH_NODE_ABI from 'app/constants/abis/batch-node.json'
+import { useContract } from 'app/hooks'
+import BATCH_BOND_ABI from 'app/constants/abis/batch-bond.json'
 
 import _ from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
@@ -14,7 +14,7 @@ const useBatches = () => {
 
   const fetchAllBatches = useCallback(async () => {
     const batches = Object.keys(BATCHES[chainId]).map((key) => {
-      return { ...BATCHES[chainId][key], batchNode: key }
+      return { ...BATCHES[chainId][key], batchBond: key }
     })
 
     const sorted = _.orderBy(batches, ['apr'], ['desc'])
@@ -48,7 +48,7 @@ export const harvest = async (contract) => {
 }
 
 export const useBuyBatch = (batch) => {
-  const nodeContract = useContract(batch?.batchNode, BATCH_NODE_ABI);
+  const nodeContract = useContract(batch?.batchBond, BATCH_BOND_ABI)
 
   const handleBuy = useCallback(
     async (amount: string) => {
@@ -65,18 +65,15 @@ export const useBuyBatch = (batch) => {
 }
 
 export const useHarvestBatch = (batch) => {
-  const nodeContract = useContract(batch?.batchNode, BATCH_NODE_ABI);
+  const nodeContract = useContract(batch?.batchBond, BATCH_BOND_ABI)
 
-  const handleHarvest = useCallback(
-    async () => {
-      try {
-        return await harvest(nodeContract)
-      } catch (e) {
-        return false;
-      }
-    },
-    [nodeContract]
-  )
+  const handleHarvest = useCallback(async () => {
+    try {
+      return await harvest(nodeContract)
+    } catch (e) {
+      return false
+    }
+  }, [nodeContract])
 
   return { handleHarvest }
 }

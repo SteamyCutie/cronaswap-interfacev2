@@ -5,19 +5,11 @@ import { ChevronDownIcon } from '@heroicons/react/solid'
 
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
-import { useCurrency } from 'app/hooks/Tokens'
-import { classNames, formatNumber, formatPercent, formatNumberScale, minimum } from 'app/functions'
-import { CurrencyLogoArray } from 'app/components/CurrencyLogo'
+import { classNames, formatNumber } from 'app/functions'
 import BatchListItemDetail from './BatchListItemDetail'
-import { usePendingReward, useBatchInfo } from './hooks'
-import { CalculatorIcon } from '@heroicons/react/solid'
-import ROICalculatorModal from 'app/components/ROICalculatorModal'
-import { getAddress } from '@ethersproject/address'
+import { useBatchInfo } from './hooks'
 import { CRONA } from '@cronaswap/core-sdk'
-import { useTokenBalance } from 'state/wallet/hooks'
-import Pool from 'pages/exchange/pool'
 import { GRONA } from 'app/config/tokens'
-import { max } from 'lodash'
 
 const BatchListItem = ({ batch, ...rest }) => {
   const { i18n } = useLingui()
@@ -33,7 +25,7 @@ const BatchListItem = ({ batch, ...rest }) => {
     batchSold,
     expiration,
     price,
-    rewardPerNodePerSecond,
+    rewardPerBondPerSecond,
     startTime,
     userLimit,
   } = useBatchInfo(batch, account, stakingToken)
@@ -79,7 +71,7 @@ const BatchListItem = ({ batch, ...rest }) => {
               <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Daily APR`)}</div>
                 <div className="text-xs font-bold md:text-base">
-                  {formatNumber((rewardPerNodePerSecond / price) * 86400 * 100)} %
+                  {formatNumber((rewardPerBondPerSecond / price) * 86400 * 100)} %
                 </div>
               </div>
 

@@ -17,7 +17,7 @@ export enum Feature {
   MISO = 'Miso',
   IFO = 'Ifo',
   GAMEFI = 'GameFi',
-  NODE = 'CronaNode',
+  BOND = 'CronaBond',
 }
 
 const features = {
@@ -64,7 +64,7 @@ const features = {
     Feature.GRONA,
     Feature.BOOST,
     // Feature.GAMEFI,
-    Feature.NODE,
+    Feature.BOND,
   ],
 }
 
