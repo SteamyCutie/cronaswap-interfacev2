@@ -26,7 +26,17 @@ const BatchListItem = ({ batch, ...rest }) => {
   const stakingToken = GRONA[chainId]
   const earningToken = CRONA[chainId]
 
-  const { pending, bondsAvailable, batchLimit, batchSold, expiration, price, rewardPerNodePerSecond, startTime, userLimit } = useBatchInfo(batch, account, stakingToken);
+  const {
+    pending,
+    bondsAvailable,
+    batchLimit,
+    batchSold,
+    expiration,
+    price,
+    rewardPerNodePerSecond,
+    startTime,
+    userLimit,
+  } = useBatchInfo(batch, account, stakingToken)
   // const { apr, endInBlock, bonusEndBlock, totalStaked, stakingTokenPrice, earningTokenPrice } = usePoolsInfo(pool)
 
   // const pendingReward = usePendingReward(pool, earningToken)
@@ -46,7 +56,7 @@ const BatchListItem = ({ batch, ...rest }) => {
           >
             <div className="flex gap-x-2">
               <div className="flex items-center w-1/2 col-span-2 space-x-4 lg:gap-5 lg:w-2/12 lg:col-span-1">
-                Batch ID - {batch.bid}
+                Batch - {batch.bid}
               </div>
 
               <div className="flex flex-col justify-center w-2/12 lg:w-1/12 space-y-1">
@@ -58,22 +68,18 @@ const BatchListItem = ({ batch, ...rest }) => {
 
               <div className="flex-col justify-center w-4/12 space-y-1 lg:w-2/12 lg:block">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Total bonds`)}</div>
-                <div className="text-xs font-bold md:text-base">
-                  {formatNumber(batchLimit)}
-                </div>
+                <div className="text-xs font-bold md:text-base">{formatNumber(batchLimit)}</div>
               </div>
 
               <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Bonds available`)}</div>
-                <div className="text-xs font-bold md:text-base">
-                  {formatNumber(bondsAvailable)}
-                </div>
+                <div className="text-xs font-bold md:text-base">{formatNumber(bondsAvailable)}</div>
               </div>
 
               <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Daily APR`)}</div>
                 <div className="text-xs font-bold md:text-base">
-                  {formatNumber(rewardPerNodePerSecond / price * 86400 * 100)} %
+                  {formatNumber((rewardPerNodePerSecond / price) * 86400 * 100)} %
                 </div>
               </div>
 
@@ -86,9 +92,7 @@ const BatchListItem = ({ batch, ...rest }) => {
 
               <div className="flex-col justify-center hidden space-y-1 lg:w-2/12 lg:block">
                 <div className="text-xs md:text-[14px] text-secondary">{i18n._(t`Expire period`)}</div>
-                <div className="text-xs font-bold md:text-base">
-                  {formatNumber(expiration / 86400)} days
-                </div>
+                <div className="text-xs font-bold md:text-base">{formatNumber(expiration / 86400)} days</div>
               </div>
 
               <div className="flex flex-col items-center justify-center lg:w-1/12">
@@ -97,9 +101,7 @@ const BatchListItem = ({ batch, ...rest }) => {
             </div>
           </Disclosure.Button>
 
-          {open && (
-            <BatchListItemDetail batch={batch} />
-          )}
+          {open && <BatchListItemDetail batch={batch} />}
         </div>
       )}
     </Disclosure>

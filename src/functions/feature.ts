@@ -35,7 +35,7 @@ const features = {
     Feature.STAKING,
     Feature.BRIDGE,
     Feature.BOOST,
-    Feature.GAMEFI,
+    // Feature.GAMEFI,
     Feature.GRONA,
   ],
 
@@ -49,7 +49,7 @@ const features = {
     Feature.MISO,
     Feature.STAKING,
     Feature.BOOST,
-    Feature.GAMEFI,
+    // Feature.GAMEFI,
   ],
 
   [ChainId.BSC_TESTNET]: [
@@ -63,7 +63,7 @@ const features = {
     Feature.STAKING,
     Feature.GRONA,
     Feature.BOOST,
-    Feature.GAMEFI,
+    // Feature.GAMEFI,
     Feature.NODE,
   ],
 }

@@ -218,6 +218,9 @@ const BatchListItemDetail = ({ batch }) => {
                 </div>
               </div>
             </div>
+            <div className="text-xs pt-2 text-yellow">
+              * User can claim rewards, principal deposits can't be withdrawn.
+            </div>
           </div>
         </div>
       </Disclosure.Panel>
