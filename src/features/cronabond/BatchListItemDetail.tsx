@@ -116,8 +116,8 @@ const BatchListItemDetail = ({ batch }) => {
           <div className="col-span-2 text-center md:col-span-1 items-center grid">
             {account && (
               <div className="flex flex-row justify-between">
-                <div className="pr-4 mb-2 text-left cursor-pointer text-secondary">
-                  Your GRONA balance: {formatNumberScale(stakeBalance?.toSignificant(6, undefined, 2) ?? 0, false, 4)}
+                <div className="pr-4 mb-2 text-left cursor-pointer text-sm text-secondary">
+                  Your GRONA balance: <span className="font-bold text-primary">{formatNumberScale(stakeBalance?.toSignificant(6, undefined, 2) ?? 0, false, 4)}</span>
                 </div>
               </div>
             )}
@@ -179,15 +179,15 @@ const BatchListItemDetail = ({ batch }) => {
             </div>
           </div>
           <div className="col-span-2 md:col-span-1">
-            Crona Earned
+            <div className="text-sm text-secondary">Crona Earned</div>
             <div className="flex flex-col justify-between text-sm gap-1 mt-1 rounded-lg bg-dark-700">
               <div className="flex mt-4">
                 <div className="flex flex-col w-1/2 px-4 align-middle">
                   <div className="text-2xl font-bold"> {formatNumber(pending?.toFixed(earningToken?.decimals))}</div>
                   <div className="text-sm">
-                    ~ $
+                    ~
                     {formatNumber(
-                      pending?.toFixed(earningToken?.decimals) * earningTokenPrice?.toFixed(earningToken?.decimals)
+                      pending?.toFixed(earningToken?.decimals) * earningTokenPrice?.toFixed(earningToken?.decimals), true
                     )}
                   </div>
                 </div>
@@ -218,7 +218,7 @@ const BatchListItemDetail = ({ batch }) => {
               </div>
             </div>
             <div className="text-xs pt-2 text-yellow">
-              * User can claim rewards, principal deposits can't be withdrawn.
+              * User can claim rewards, principal deposits can&apos;t be withdrawn.
             </div>
           </div>
         </div>
